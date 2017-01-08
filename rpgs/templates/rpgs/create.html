@@ -1,0 +1,23 @@
+{% extends "tgrsite/main.html" %}
+
+
+{% block body %}
+
+<h1>Create an RPG</h1>
+<form action="{% url 'create_done' %}" method="POST">
+	{% csrf_token %}
+	{{ form.non_field.errors }}
+	{% for field in form %}
+		<div>
+			<div>
+				{% if field.field.required %} * {% endif %}
+				{{field.label_tag}}
+			</div>
+			<div>
+				{{ field }}
+			</div>
+		</div><br>
+	{% endfor %}
+	<input type="submit" class="form-control">
+</form>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'tgrsite/main.html' %}
+{% block body %}
+
+<h2>Society Execs</h2>
+
+{% for role in execs %}
+	<div class="media">
+		<div class="media-left">
+			<img class="media-object" src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {{ role.incumbent }}">
+		</div>
+		<div class="media-body">
+			<h5 class="media-heading">
+			{% if role.incumbent %}
+			<a href="{% url 'user' role.incumbent.id %}">
+				{{ role.incumbent }}
+			</a>
+			{% else %}
+				{{ role.incumbent }}
+			{% endif %}
+			 - {{ role.role_title }}</h5>
+			{{ role.bio }}
+		</div>
+	</div>
+
+{% endfor %}
+
+<style type="text/css">
+img {
+	width: 72px;
+	height: 72px;
+}
+</style>
+
+{% endblock %}
+

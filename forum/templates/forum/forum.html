@@ -1,0 +1,53 @@
+{% extends "tgrsite/main.html" %}
+
+
+{% block body %}
+
+<h2>{{ current }}</h2>
+
+{% if current.parent.id %}
+	in
+	<a href="{% url 'subforum' current.parent.id %}">
+		{{current.parent}}
+	</a>
+
+	<br><br>
+{% elif current != 'Forum' %}
+	in <a href="{% url 'forum' %}">Forum</a>
+	<br><br>
+{% endif %}
+
+{% if forums %}
+
+{% if current == 'Forum' %}
+FORUMS
+{% else %}
+SUBFORUMS
+{% endif %}
+<ul>
+{% for forum in forums %}
+	<li><a href="{% url 'subforum' forum.id %}">{{ forum }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+	{% if not threads and current == 'Forum' %}
+		Looks like the forum doesn't exist!<br>
+		Contact the <a href="{% url 'exec' %}">webmonkey</a>.
+	{% endif %}
+{% endif %}
+
+{% if threads %}
+THREADS
+<ul>
+	{% for thread in threads %}
+		<li><a href="{% url 'viewthread' thread.id %}">
+			{% if thread.is_pinned %}
+				<i class="fa fa-camera-retro"> </i>
+			{% endif %}
+			[{{ thread.pub_date }}] {{ thread.title }} <small> - {{thread.author.equiv_user.username}}</small>
+		</a></li>
+	{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

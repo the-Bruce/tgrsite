@@ -1,0 +1,18 @@
+{% comment %}
+Renders a single thread "response" (including the inital post)
+Included by thread.html which is responsible for rendering a whole thread
+{% endcomment %}
+
+{% load db_tags %}
+
+<div class="media">
+	<div class="media-left">
+		<a href="#">
+			<img class="media-object" src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {% resolve response.author.id "users" "Member" %}">
+			{% resolve response.author.id "users" "Member" %}
+		</a>
+	</div>
+	<div class="media-body">
+		{{ response.body }}
+	</div>
+</div>

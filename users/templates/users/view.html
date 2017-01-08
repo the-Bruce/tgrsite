@@ -1,0 +1,52 @@
+{% extends 'tgrsite/main.html' %}
+{% block body %}
+
+<div class="jumbotron">
+	<img src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {{member.equiv_user.username}}">
+
+	<h1>{{ member.equiv_user.username }}</h1>
+		{% if execroles %}
+		<h2>
+		{% for x in execroles %}
+			{% if x != execroles|first %} / {% endif %}
+			{{x.role_title}}
+		{%endfor%}
+		</h2>
+		{% endif %}
+	
+	<p>{{ member.bio }}</p>
+
+	{% if recent_threads %}
+	<h4>Recent threads</h4>
+	<ul>
+	{% for thread in recent_threads %}
+		<li><a href="{% url 'viewthread' thread.id %}">{{thread.title|truncatewords:5}}</a></li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+
+	{% if recent_responses %}
+	<h4>Recent repsonses</h4>
+	<ul>
+		
+	{% for response in recent_responses %}
+		<li><a href="{% url 'viewresponse' pk=response.thread.id response_id=response.id %}">{{response.body|truncatewords:5}}</a></li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+
+	{% if rpgs %}
+	<h4>RPGs running</h4>
+	<ul>
+	{% for rpg in rpgs %}
+		<li><a href="{% url 'rpg' rpg.id %}">{{rpg.title}}</a></li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+
+	{%if me%}
+	<a href="{% url 'edit' %}">Edit profile</a>
+	{% endif %}
+</div>
+
+{% endblock %}

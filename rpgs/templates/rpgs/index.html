@@ -1,0 +1,12 @@
+{% extends "tgrsite/main.html" %}
+
+
+{% block body %}
+
+<h1>RPGs</h1>
+{% for rpg in rpgs %}
+{% include "rpgs/detail.html" with embed="true" %}
+{% endfor %}
+<a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create RPG</button></a>
+
+{% endblock %}

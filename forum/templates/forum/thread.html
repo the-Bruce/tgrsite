@@ -1,0 +1,35 @@
+{% extends "tgrsite/main.html" %}
+
+{% comment %}
+thread.html renders a single thread, specified in the "thread" context variable
+{% endcomment %}
+
+{% comment response_id %}
+Context's "response_id" the second number in the url, which is the response ID for linking (for now), or None.
+{% endcomment %}
+TODO: make this do something
+{{ response_id }}
+
+
+
+{% block body %}
+
+<h2>{{ thread.title }}</h2>
+<h3>
+	in
+	<a href="{% url 'subforum' thread.forum.id %}">{{ thread.forum }}</a>
+</h3>
+
+{% include 'forum/response.html' with response=thread %}
+{% for response in responses %}
+	{% include 'forum/response.html' %}
+{% endfor %}
+
+<style type="text/css">
+img {
+	width: 64px;
+	height: 64px;
+}
+</style>
+
+{% endblock %}

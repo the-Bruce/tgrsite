@@ -1,0 +1,21 @@
+{% extends 'tgrsite/main.html' %}
+{% block body %}
+
+	{% if result == 'success' %}
+	Successfully updated.
+	{% elif result == 'invalid' %}
+	There were problems with the form.
+	{% endif %}
+
+	<form action="{% url 'update' %}" method="POST">
+		{% csrf_token %}
+
+		<div class="form-group">
+			{{ userform.as_p }}
+			{{ memberform.as_p }}
+		</div>
+
+	<input type="submit" class="form-control">
+	</form>
+
+{% endblock %}
