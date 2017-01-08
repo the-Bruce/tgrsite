@@ -29,6 +29,7 @@ urlpatterns = [
 
 	# these are part of the users app
 	# but I wanted the URLs to be eg /login rather than /user/login
+	url(r'^login/', usersviews.login_view, name='login'),
 	url(r'^login/done/', usersviews.login_process, name='login-done'),
 	url(r'^logout/', usersviews.logout_view, name='logout'),
 
