@@ -28,11 +28,14 @@
 		TODO: If user is in the current game, replace this with a 'leave' link
 		TODO: create 'manage' widget for people who own/are GMs of a game
 		{% endcomment %}
+
+		{% if request.user.is_authenticated %}
 		<form action="{% url 'rpg_join'%}" method="POST">
 			{% csrf_token %}
 			<input type="hidden" name="id" value="{{rpg.id}}">
 			<input class="btn btn-default" type="submit" value="Sign Up">
 		</form>
+		{% endif %}
 	</div>
 </div>
 {% if not embed %}

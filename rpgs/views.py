@@ -5,6 +5,7 @@ import os
 
 # testing
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
 
 from users.models import Member
 
@@ -36,11 +37,11 @@ class Join(View):
 			res = HttpResponse('You need to be logged in.', status=302)
 			return res
 
+@login_required
 def create(request):
-	if request.user.is_authenticated:
-		return render(request, 'rpgs/create.html', {'form': RpgForm})
-	else:
-		return HttpResponseRedirect(reverse('login'))
+	return render(request, 'rpgs/create.html', {'form': RpgForm})
+
+@login_required
 def create_done(request):
 	# create a new RPG from all the form's fields
 	# except the middleware token

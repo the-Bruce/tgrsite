@@ -36,7 +36,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
-    'templatetags.apps.TemplatetagsConfig',
     'rpgs.apps.RpgsConfig',
     'statics.apps.StaticsConfig',
     'exec.apps.ExecConfig',
@@ -128,3 +127,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static_resources'),)

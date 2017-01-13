@@ -2,17 +2,20 @@
 Renders a single thread "response" (including the inital post)
 Included by thread.html which is responsible for rendering a whole thread
 {% endcomment %}
-
-{% load db_tags %}
-
-<div class="media">
-	<div class="media-left">
-		<a href="{% url 'user' thread.author.id %}">
-			<img class="media-object avatar" src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {% resolve response.author.id "users" "Member" %}">
-			{% resolve response.author.id "users" "Member" %}
-		</a>
+<div class="panel panel-default"><div class="panel-body">
+	<div class="media">
+		<div class="media-left">
+			<a href="{% url 'user' thread.author.id %}">
+				<img class="media-object avatar" src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {{ response.author }}">
+				{{response.author}}
+			</a>
+		</div>
+		<div class="media-body">
+			<div class="panel panel-default"><div class="panel-body">
+				{{ response.body }}
+				<br>
+				{{ response.author.signature }}
+			</div></div>
+		</div>
 	</div>
-	<div class="media-body">
-		{{ response.body }}
-	</div>
-</div>
+</div></div>
