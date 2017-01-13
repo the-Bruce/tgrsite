@@ -2,7 +2,7 @@
 {% block body %}
 
 <div class="jumbotron">
-	<img src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {{member.equiv_user.username}}">
+	<img src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {{member.equiv_user.username}}" class="avatar">
 
 	<h1>{{ member.equiv_user.username }}</h1>
 		{% if execroles %}
@@ -13,7 +13,7 @@
 		{%endfor%}
 		</h2>
 		{% endif %}
-	
+
 	<p>{{ member.bio }}</p>
 
 	{% if recent_threads %}
@@ -28,7 +28,7 @@
 	{% if recent_responses %}
 	<h4>Recent repsonses</h4>
 	<ul>
-		
+
 	{% for response in recent_responses %}
 		<li><a href="{% url 'viewresponse' pk=response.thread.id response_id=response.id %}">{{response.body|truncatewords:5}}</a></li>
 	{% endfor %}

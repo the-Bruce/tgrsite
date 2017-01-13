@@ -7,6 +7,11 @@
 {% for rpg in rpgs %}
 {% include "rpgs/detail.html" with embed="true" %}
 {% endfor %}
+
+{% if request.user.is_authenticated %}
 <a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create RPG</button></a>
+{% else %}
+<!-- this is where the "signup" button goes if you are logged in -->
+{% endif %}
 
 {% endblock %}

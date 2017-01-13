@@ -10,8 +10,12 @@ class Forum(models.Model):
 	parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
 	title = models.CharField(max_length=64)
 	title.verbose_name = 'Name'
+
+	description = models.CharField(max_length=256, blank=True)
+
 	def get_subforums(self):
 		return Forum.objects.filter(parent=self.id)
+
 	def get_subforums_str(self):
 		return [str(x) for x in self.get_subforums()]
 	get_subforums.short_description='Subforums'
@@ -19,6 +23,10 @@ class Forum(models.Model):
 
 	def get_parentless_forums():
 		return Forum.objects.filter(parent__isnull=True)
+
+	def get_threads_count(self):
+		return Thread.objects.filter(forum=self.id).count()
+	get_threads_count.short_description='threads'
 
 # Forum thread
 class Thread(models.Model):
@@ -34,7 +42,7 @@ class Thread(models.Model):
 
 	title = models.CharField(max_length=64)
 	body = models.CharField(max_length=8192)
-	pub_date = models.DateField('date published')
+	pub_date = models.DateTimeField('date published')
 
 	is_pinned = models.BooleanField(default=False)
 
@@ -53,5 +61,5 @@ class Response(models.Model):
 	thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
 	# Do thread responses need titles?
 	body = models.CharField(max_length=8192)
-	pub_date = models.DateField('date posted')
+	pub_date = models.DateTimeField('date posted')
 	author = models.ForeignKey(Member, on_delete=models.PROTECT)

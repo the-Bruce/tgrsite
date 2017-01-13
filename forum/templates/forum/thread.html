@@ -25,6 +25,21 @@ TODO: make this do something
 	{% include 'forum/response.html' %}
 {% endfor %}
 
+{% if request.user.is_authenticated %}
+
+<form action="{% url 'createresponse' %}" method="POST">
+	{% csrf_token %}
+	<div class="form-group">
+		{{form}}
+		<input type="hidden" name="thread" value="{{thread.id}}">
+	</div>
+	<input type="submit" value="Respond" class="form-control">
+</form>
+
+
+
+{% endif %}
+
 <style type="text/css">
 img {
 	width: 64px;

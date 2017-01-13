@@ -31,18 +31,22 @@ class Join(View):
 		if request.user.is_authenticated:
 			return HttpResponse('watch this space')
 		else:
-			# redirect to signup
-			res = HttpResponse('You need to be signed up.', status=302)
+			# redirect to signup?
+			# TODO
+			res = HttpResponse('You need to be logged in.', status=302)
 			return res
 
 def create(request):
-	return render(request, 'rpgs/create.html', {'form': RpgForm})
+	if request.user.is_authenticated:
+		return render(request, 'rpgs/create.html', {'form': RpgForm})
+	else:
+		return HttpResponseRedirect(reverse('login'))
 def create_done(request):
 	# create a new RPG from all the form's fields
 	# except the middleware token
 	# and am_i_gm which is used here instead
 	args = {i : request.POST.get(i, None) for i in request.POST if i!='csrfmiddlewaretoken' and i!='am_i_gm'}
-	
+
 	args['creator_id'] = request.user.member.id
 
 	# Make a form in order to validate the data
@@ -56,6 +60,6 @@ def create_done(request):
 	ins.save()
 	if(request.POST.get('am_i_gm', None)):
 		ins.game_masters.add(me)
-	
+
 	# redirect to RPG
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk': ins.id}) + '?status=created')

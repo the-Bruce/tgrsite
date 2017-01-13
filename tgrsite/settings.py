@@ -18,6 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # TODO: Once the mail server is set up change this to be the internal webmonkey address
 ADMINS=  [('Webmonkey', 'garenarterius1@gmail.com')]
 MANAGERS=[('Webmonkey', 'garenarterius1@gmail.com')]
+LOGIN_URL='/login/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/

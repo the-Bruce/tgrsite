@@ -6,17 +6,17 @@
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		<span aria-hidden="true">&times;</span>
 	</button>
-	Username or password was incorrect.
+	Invalid user for spooky reasons.
 </div>
 {% endif %}
 
-<form action="{% url 'login-done' %}?next={{next}}" method="POST">
+<form action="{% url 'signup-done' %}" method="POST">
 	{% csrf_token %}
 	<div class="form-group">
 		{{form.as_p}}
 	</div>
-	<input type="submit" value="Log In" class="form-control">
+	<input type="submit" value="Sign Me Up" class="form-control">
 </form>
 
-<a href="{% url 'signup' %}">Sign Up</a>
+<a href="{% url 'login' %}">Log In</a>
 {% endblock %}

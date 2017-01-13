@@ -29,6 +29,18 @@ class UserForm(ModelForm):
 		# email needs to be an email field though
 		widgets['email'] = EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs)
 
+class SignupForm(ModelForm):
+	class Meta:
+		model = User
+		fields = ['username', 'email', 'password']
+
+		widgets = {
+			'username': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'email': EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'password': PasswordInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+		}
+
+
 class MemberForm(ModelForm):
 	class Meta:
 		model = Member
