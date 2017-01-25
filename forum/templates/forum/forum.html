@@ -28,7 +28,8 @@ SUBFORUMS
 {% for forum in forums %}
 	<li>
 		<a href="{% url 'subforum' forum.id %}">{{ forum }}</a>
-		<small><em>&middot; {{forum.description|default:"no description"}}</em> &middot; {{forum.get_threads_count}} thread{{forum.get_threads_count|pluralize}}</small>
+		<small><em>&middot; {{forum.description|default:"no description"}}</em>
+		&middot; {{ forum.get_threads_count }} thread{{forum.get_threads_count|pluralize}}</small>
 	</li>
 {% endfor %}
 </ul>
@@ -47,7 +48,14 @@ THREADS: {{current.get_threads_count}}
 			{% if thread.is_pinned %}
 				<i class="fa fa-sticky-note-o"> </i>
 			{% endif %}
-			[{{ thread.pub_date }}] {{ thread.title }} <small> - {{thread.author.equiv_user.username}}</small>
+			[{{ thread.pub_date }}] {{ thread.title }}
+			&middot;
+			<small>
+			{{thread.author.equiv_user.username}}
+			&middot;
+			{{thread.get_response_count}}
+			response{{thread.get_response_count|pluralize}}
+			</small>
 		</a></li>
 	{% endfor %}
 </ul>

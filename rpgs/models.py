@@ -56,6 +56,7 @@ class Rpg(models.Model):
 		# TODO TODO TODO TODO TODO
 	def contains_player(self, player_key):
 		#whatever = Rpg.objects.filter()
+		pass
 
 	THURSDAY = 0
 	SATURDAY_A = 1

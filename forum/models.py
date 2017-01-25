@@ -68,6 +68,9 @@ class Thread(models.Model):
 	# we should not be "hard" deleting users
 	author = models.ForeignKey(Member, on_delete=models.PROTECT)
 
+	def get_response_count(self):
+		return Response.objects.filter(thread=self.id).count()
+
 class Response(models.Model):
 	def __str__(self):
 		return self.body
