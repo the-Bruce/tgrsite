@@ -7,7 +7,26 @@ class Forum(models.Model):
 		return self.title
 
 	# subforuming
-	parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
+	parent = models.ForeignKey(
+		'self',
+		on_delete=models.CASCADE,
+		blank=True, null=True,
+		related_name='subforums')
+
+	def get_parent_tree(self):
+		if self.parent is None: return '-'
+		tree = ''
+		x = self.parent
+		while True:
+			tree = ' / ' + str(x) + tree
+			if x.parent is not None:
+				x = x.parent
+			else:
+				break
+		# cut off the leading slash lol
+		return tree[3:]
+	get_parent_tree.short_description = 'location'
+
 	title = models.CharField(max_length=64)
 	title.verbose_name = 'Name'
 

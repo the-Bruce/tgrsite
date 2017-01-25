@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'tgrsite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
+# TODO: remove sqlite3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -124,6 +124,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+# TODO: Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static_resources'),)

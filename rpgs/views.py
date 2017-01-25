@@ -24,16 +24,16 @@ class Detail(generic.DetailView):
 
 class Join(View):
 	def get(self, request):
+		# TODO: redirect
 		res = HttpResponseBadRequest('You shouldn\'t visit this URL in your browser - use the <a href=' + reverse('rpgs') + '>RPG page</a> instead.')
 		return res
 
+	@login_required
 	def post(self, request):
 		# if user is signed in:
 		if request.user.is_authenticated:
 			return HttpResponse('watch this space')
 		else:
-			# redirect to signup?
-			# TODO
 			res = HttpResponse('You need to be logged in.', status=302)
 			return res
 
@@ -54,7 +54,7 @@ def create_done(request):
 	fargs = RpgForm(args)
 
 	if not fargs.is_valid():
-		return HttpResponse('Form invalid?!?!?!')
+		return HttpResponse('Unknown error, contact webmonkey quoting rv57')
 	me = Member.objects.get(id=request.user.member.id)
 
 	ins = Rpg(**args)
@@ -64,3 +64,34 @@ def create_done(request):
 
 	# redirect to RPG
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk': ins.id}) + '?status=created')
+
+@login_required
+# TODO: make sure they have the required permission
+def edit(request, pk):
+	rpg = get_object_or_404(Rpg, id=pk)
+	form = RpgForm(instance=rpg)
+	context = {'form': form, 'id': pk}
+	return render(request, 'rpgs/edit.html', context)
+
+
+@login_required
+def edit_process(request, pk):
+	form = RpgForm(
+		request.POST,
+		instance=
+		get_object_or_404(
+			Rpg, id=pk)
+		)
+	if(form.is_valid):
+		form.save()
+		return HttpResponseRedirect(reverse('rpg', kwargs={'pk':pk}))
+	# TODO: be less damn lazy
+	else:
+		return HttpResponseBadRequest()
+
+@login_required
+def delete(request, pk):
+	# TODO: DEFINITELY REQUIRE PROPER ACCESS PERMISSION
+	# TODO: ask user for confirmation !
+	Rpg.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('rpgs'))

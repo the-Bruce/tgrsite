@@ -18,7 +18,8 @@ class UserAdmin(BaseUserAdmin):
 	inlines = (MemberInline,)
 
 class MemberAdmin(admin.ModelAdmin):
-	inlines = (RpgInline,)
+	#inlines = (RpgInline,)
+	pass
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

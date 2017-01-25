@@ -1,14 +1,14 @@
-<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-{% comment Alternate versions of Boostrap with the BOOSTRA.386 theme %}
 <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
-<link rel="stylesheet" href="/static/386/css/bootstrap.min.css" type="text/css">
-<script src="/static/386/js/bootstrap.min.js"></script>
-{% endcomment %}
+
+{% comment %}Alternate versions of Boostrap with the BOOSTRA.386 theme{% endcomment %}
+{%if True %}
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% else %}
+	<link rel="stylesheet" href="/static/386/css/bootstrap.min.css" type="text/css">
+	<script src="/static/386/js/bootstrap.min.js"></script>
+{% endif %}
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 

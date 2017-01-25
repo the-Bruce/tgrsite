@@ -52,7 +52,7 @@ THREADS: {{current.get_threads_count}}
 	{% endfor %}
 </ul>
 {% endif %}
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and current != 'Forum' %}
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#createThreadCollapse" aria-expanded="false" aria-controls="createThreadCollapse">Create Thread</button>
 <div class="collapse" id="createThreadCollapse">
 	<div class="panel panel-default">

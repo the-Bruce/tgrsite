@@ -25,7 +25,7 @@ class ResponseAdmin(admin.ModelAdmin):
 
 class ForumAdmin(admin.ModelAdmin):
 	model = Forum
-	list_display = ('title', 'description', 'get_threads_count', 'get_subforums_str')
+	list_display = ('title', 'description', 'get_parent_tree', 'get_threads_count', 'get_subforums_str')
 	inlines = [ForumInline, ThreadInline]
 
 admin.site.register(Thread, ThreadAdmin)

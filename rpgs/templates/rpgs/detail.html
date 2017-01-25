@@ -7,9 +7,18 @@
 </div>
 {% endif %}
 <div class="panel panel-default">
+
 	<div class="panel-heading">
-		<h2><a href="{% url "rpg" rpg.id %}">{{ rpg.title }}</a></h2>
+		<h2>
+			<a href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
+			<span class="pull-right">
+				<a href="{% url 'rpg_edit' rpg.id %}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+				<a href="{% url 'rpg_delete' rpg.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+			</span>
+		</h2>
+		
 	</div>
+
 	<div class="panel-body">
 		<em>{{ rpg.system }}</em>
 		<pre>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</pre>
@@ -29,6 +38,7 @@
 		TODO: create 'manage' widget for people who own/are GMs of a game
 		{% endcomment %}
 
+		{% comment TODO: THIS %} {% endcomment %}
 		{% if request.user.is_authenticated %}
 		<form action="{% url 'rpg_join'%}" method="POST">
 			{% csrf_token %}

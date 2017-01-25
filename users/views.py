@@ -69,10 +69,14 @@ def update(request):
 			return HttpResponseRedirect(reverse('edit') + '?result=invalid')
 
 	else:
-		return HttpResponse('GET !')
+		return HttpResponseRedirect(reverse('me'))
 
 # view for the login form
 def login_view(request):
+	# if they try and view the login page, and are logged in, redirect
+	if(request.user.is_authenticated):
+		return HttpResponseRedirect(request.GET.get('next') or reverse('me'))
+	
 	form = LoginForm()
 	context = {'form': form, 'result': request.GET.get('result'), 'next': request.GET.get('next')}
 	return render(request, 'users/login.html', context)
@@ -86,6 +90,11 @@ def login_process(request):
 		login(request, user)
 		return HttpResponseRedirect(request.GET.get('next') or '/')
 	else:
+		# FIXME
+		# there is a bug here where the user will successfully log in
+		# but this branch will still be met
+		# Current fix is to make sure that the login page will always redirect to the user page
+		# when a user is logged in (which it should do anyway)
 		return HttpResponseRedirect(reverse('login') + '?result=invalid')
 
 def signup_view(request):
@@ -105,10 +114,10 @@ def signup_process(request):
 			login(request, auth)
 			return HttpResponseRedirect(reverse('me'))
 		else:
-			return HttpResponse('auth after signup failed to login')
+			return HttpResponse('Unknown error, contact webmonkey quoting uv108')
 	else:
 		# TODO: Proper error lol
-		return HttpResponse('form not valid')
+		return HttpResponse('Unknown error, contact webmonkey, quoting uv101')
 
 def logout_view(request):
 	logout(request)

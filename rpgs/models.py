@@ -12,7 +12,7 @@ class Rpg(models.Model):
 	# string list of game masters, comma separated, and with "and"
 	def game_master_list(self):
 
-		# TODO: restructure this so we don't mess with rendering inside a model
+		# TODO: restructure this so we don't mess with rendering inside a model i.e. using a template tag
 		gmstrings = [
 			# stop from escaping
 			mark_safe(
@@ -52,6 +52,10 @@ class Rpg(models.Model):
 	# get string name of timeslot
 	def timeslot_str(self):
 		return self.TIMESLOT_CHOICES[self.timeslot][1]
+
+		# TODO TODO TODO TODO TODO
+	def contains_player(self, player_key):
+		#whatever = Rpg.objects.filter()
 
 	THURSDAY = 0
 	SATURDAY_A = 1

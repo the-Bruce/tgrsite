@@ -36,7 +36,12 @@ TODO: make this do something
 	<input type="submit" value="Respond" class="form-control">
 </form>
 
+{% else %}
 
+<a href="{% url 'signup' %}next={{request.path}}">Sign up</a>
+or
+<a href="{% url 'login' %}next={{request.path}}">log in</a>
+to respond. 
 
 {% endif %}
 
