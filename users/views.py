@@ -119,3 +119,4 @@ def spawn_user(username, email, password):
 	Member.objects.create(equiv_user=u)
 	u.save()
 	return u
+
