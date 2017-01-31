@@ -97,9 +97,12 @@ def signup_process(request):
 	form = SignupForm(request.POST)
 	if(form.is_valid()):
 
-		u = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
-		m = Member.objects.create(equiv_user=u)
-		u.save()
+		#u = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
+		#m = Member.objects.create(equiv_user=u)
+		#u.save()
+
+		u = spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
+
 		auth = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 		if auth is not None:
 			login(request, auth)
@@ -119,4 +122,3 @@ def spawn_user(username, email, password):
 	Member.objects.create(equiv_user=u)
 	u.save()
 	return u
-
