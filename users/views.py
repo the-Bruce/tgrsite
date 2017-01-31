@@ -113,3 +113,9 @@ def signup_process(request):
 def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect('/')
+
+def spawn_user(username, email, password):
+	u = User.objects.create_user(username, email, password)
+	Member.objects.create(equiv_user=u)
+	u.save()
+	return u
