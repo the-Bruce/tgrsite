@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rpgs.apps.RpgsConfig',
     'statics.apps.StaticsConfig',
     'exec.apps.ExecConfig',
+    'messaging.apps.MessagingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
