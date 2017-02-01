@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.models
 
 # Models
 from django.contrib.auth.models import User
@@ -17,4 +18,4 @@ class Messaging(TestCase):
 		alice = User.objects.get(username='Alice')
 		bob = User.objects.get(username='Bob')
 		eve = User.objects.get(username='Eve')
-		# TODO: Tests
+

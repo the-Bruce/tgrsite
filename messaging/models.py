@@ -3,7 +3,7 @@ from django.db import models
 from users.models import Member
 
 class MessageThread(models.Model):
-	participants = set()
+	participants = models.ManyToManyField(Member)
 
 class Message(models.Model):
 	thread = models.ManyToManyField(MessageThread)
