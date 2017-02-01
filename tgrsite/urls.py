@@ -24,4 +24,5 @@ urlpatterns = [
 	# static pages ish
 	# these will be located on the root path
 	url(r'^', include('statics.urls')),
+
 ]

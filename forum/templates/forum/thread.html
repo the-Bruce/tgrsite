@@ -14,7 +14,16 @@ TODO: make this do something
 
 {% block body %}
 
-<h2>{{ thread.title }}</h2>
+<h2>
+{% if thread.author == user.member %}
+<a href="{% url 'thread_delete' thread.id %}"><i class="fa fa-trash"></i></a>
+<a href="{% url 'thread_edit' thread.id %}"><i class="fa fa-pencil"></i></a>
+{% endif %}
+
+{{ thread.title }}
+</h2>
+
+
 <h3>
 	in
 	<a href="{% url 'subforum' thread.forum.id %}">{{ thread.forum }}</a>
@@ -33,6 +42,7 @@ TODO: make this do something
 		{{form}}
 		<input type="hidden" name="thread" value="{{thread.id}}">
 	</div>
+	<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> tentatively supported here.
 	<input type="submit" value="Respond" class="form-control">
 </form>
 

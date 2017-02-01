@@ -1,0 +1,13 @@
+{% extends "tgrsite/main.html" %}
+
+
+{% block body %}
+
+<h1>Edit post</h1>
+<form action="{% url 'thread_edit_done' %}" method="POST">
+	{% csrf_token %}
+	{{ form.non_field.errors }}
+	{{form.as_p}}
+	<input type="submit" class="form-control">
+</form>
+{% endblock %}

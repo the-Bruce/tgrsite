@@ -79,3 +79,23 @@ def create_response(request):
 		return HttpResponseRedirect(reverse('viewthread', kwargs={'pk': request.POST.get('thread')}))
 	else:
 		return HttpResponse(repr(form.errors))
+
+@login_required
+def delete_thread(request, pk):
+	thread = Thread.objects.get(id=pk)
+	if thread.author.equiv_user.id != request.user.id:
+		return HttpResponseForbidden()
+	url = reverse('subforum', kwargs={'pk': thread.forum.id})
+	thread.delete()
+	return HttpResponseRedirect(url)
+
+@login_required
+def edit_thread_view(request, pk):
+	thread = Thread.objects.get(id=pk)
+	form = ThreadForm(instance=thread)
+	context = {'form': form}
+	return render(request, 'forum/edit_thread.html', context)
+
+def edit_thread_process(request):
+	# TODO
+	pass
