@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'statics.apps.StaticsConfig',
     'exec.apps.ExecConfig',
     'templatetags.apps.TemplatetagsConfig',
+    'messaging.apps.MessagingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
