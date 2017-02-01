@@ -1,3 +1,5 @@
+{% load markdown_tags %}
+
 {% comment %}
 Renders a single thread "response" (including the inital post)
 Included by thread.html which is responsible for rendering a whole thread
@@ -12,7 +14,7 @@ Included by thread.html which is responsible for rendering a whole thread
 		</div>
 		<div class="media-body">
 			<div class="panel panel-default"><div class="panel-body">
-				{{ response.body }}
+				{{ response.body|parse_md }}
 				<br>
 				{{ response.author.signature }}
 			</div></div>
