@@ -71,7 +71,7 @@ THREADS: {{current.get_threads_count}}
 					{{form}}
 					<input type="hidden" name="forum" value="{{current.id}}">
 				</div>
-				<input type="submit" class="form-control">
+				<input type="submit" class="form-control" value="Post">
 			</form>
 		</div>
 	</div>
@@ -79,4 +79,10 @@ THREADS: {{current.get_threads_count}}
 
 {% endif %}
 
+{% comment markdown %}
+{% load markdown_tags %}
+This will be escaped!
+{{ '<a href="">This is how you parse Markdown ;)</a>'|parse_md }}
+{% endcomment %}
 {% endblock %}
+
