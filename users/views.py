@@ -128,6 +128,8 @@ def logout_view(request):
 
 def spawn_user(username, email, password):
 	u = User.objects.create_user(username, email, password)
-	Member.objects.create(equiv_user=u)
+	m = Member.objects.create(equiv_user=u)
+	u.member = m
 	u.save()
+	m.save()
 	return u
