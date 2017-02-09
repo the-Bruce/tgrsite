@@ -10,7 +10,6 @@ class Member(models.Model):
 	bio = models.CharField(max_length=4096, blank=True)
 	signature = models.CharField(max_length = 1024, blank=True)
 
-	# Sends message to a user
-	# Utility method
-	def direct_message(self, other):
-		pass
+	# todo: keep track of the last time the user viewed messages page
+	# so that any "new" messages will give notifications
+	# (i.e. messages that arrived after that time)

@@ -8,6 +8,7 @@ def send_message(member, thread, message):
 	return Message.objects.create(sender=member, thread=thread, content=message)
 
 def index(request):
+	# todo: update member's "last access to messages page" variable
 	threads = MessageThread.objects.filter(participants=request.user.member)
 	context = {
 		'threads': threads
