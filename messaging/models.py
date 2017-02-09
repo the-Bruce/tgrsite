@@ -31,6 +31,11 @@ class MessageThread(models.Model):
 			
 		return thread
 
+	def get_messages(self):
+		return self.message_set.order_by('timestamp')
+	def get_latest(self):
+		return self.message_set.latest(field_name='timestamp')
+
 class Message(models.Model):
 	def __str__(self):
 		return str(self.sender) + ': ' + str(self.content)

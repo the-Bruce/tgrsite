@@ -2,10 +2,18 @@
 
 
 {% block body %}
-Messaging page
+<ul>
 	{% for x in threads %}
-	<p>{{x}}</p>
+	<li>
+		<strong>{{x}} ({{x.get_latest.timestamp}})</strong>
+		<ul>
+		{% for y in x.get_messages %}
+			<li>{{y}}</li>
+		{% endfor %}
+		</ul>
+	</li>
+	<br>
 	{% endfor %}
-
+</ul>
 {% endblock %}
 

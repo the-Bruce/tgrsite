@@ -9,5 +9,7 @@ def send_message(member, thread, message):
 
 def index(request):
 	threads = MessageThread.objects.filter(participants=request.user.member)
-	context = {'threads': threads}
+	context = {
+		'threads': threads
+	}
 	return render(request, 'messaging/index.html', context)
