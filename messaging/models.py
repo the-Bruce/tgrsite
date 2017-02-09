@@ -31,11 +31,6 @@ class MessageThread(models.Model):
 			
 		return thread
 
-	def get_threads_for(member):
-		return MessageThread.objects.filter(participants=member)
-
-
-
 class Message(models.Model):
 	def __str__(self):
 		return str(self.sender) + ': ' + str(self.content)
