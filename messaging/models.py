@@ -37,3 +37,4 @@ class Message(models.Model):
 	thread = models.ForeignKey(MessageThread)
 	sender = models.ForeignKey(Member)
 	content = models.CharField(blank=False, max_length=4096)
+	timestamp = models.DateTimeField(auto_now_add=True)
