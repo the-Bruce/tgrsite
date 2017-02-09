@@ -1,0 +1,11 @@
+{% extends "tgrsite/main.html" %}
+
+
+{% block body %}
+Messaging page
+	{% for x in threads %}
+	<p>{{x}}</p>
+	{% endfor %}
+
+{% endblock %}
+

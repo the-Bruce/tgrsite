@@ -6,3 +6,8 @@ from .models import Message, MessageThread
 # helper function to send messages
 def send_message(member, thread, message):
 	return Message.objects.create(sender=member, thread=thread, content=message)
+
+def index(request):
+	threads = MessageThread.objects.filter(participants=request.user.member)
+	context = {'threads': threads}
+	return render(request, 'messaging/index.html', context)

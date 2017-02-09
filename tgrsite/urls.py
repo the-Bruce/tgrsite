@@ -10,6 +10,7 @@ urlpatterns = [
 	url(r'^rpg/', include('rpgs.urls')),
 	url(r'^exec/', include('exec.urls')),
 	url(r'^user/', include('users.urls')),
+	url(r'^messages/', include('messaging.urls')),
 
 	# these are part of the users app
 	# but I wanted the URLs to be eg /login rather than /user/login
