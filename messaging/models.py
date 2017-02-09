@@ -3,9 +3,11 @@ from django.db import models
 from users.models import Member
 
 class MessageThread(models.Model):
+	# todo: allow renaming of group chats? :P
+	# seems simple enough
 	def __str__(self):
 		l = list(self.participants.all())
-		return str([str(x) for x in l])
+		return str(', '.join([str(x) for x in l]))
 
 	participants = models.ManyToManyField(Member)
 

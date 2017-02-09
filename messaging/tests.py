@@ -47,21 +47,35 @@ class Messaging(TestCase):
 
 		alice, bob, eve = get_member('Alice', 'Bob', 'Eve')
 
-		print("test_get_threads(alice, bob)")
-		print(MessageThread.get_thread(alice, bob))
+		#print("test_get_threads(alice, bob)")
+		#print(MessageThread.get_thread(alice, bob))
 
 
 	def test_get_threads_create(self):
 		alice, bob, eve = get_member('Alice', 'Bob', 'Eve')
-		print("test_get_threads(bob, eve)")
-		print(MessageThread.get_thread(bob, eve))
+		#print("test_get_threads(bob, eve)")
+		#print(MessageThread.get_thread(bob, eve))
 
 
 	def test_send_message(self):
-		# TODO! Broken!
 		alice, bob = get_member('Alice', 'Bob')
 		thread = MessageThread.get_thread(alice, bob)
+		# make sure there is only one message in thread so that get doesn't fail
+		thread.message_set.all().delete()
+
 		m = send_message(alice, thread, 'Hi Bob')
-		print('test_send_message(alice: Hi Bob)')
-		print(m)
-		print(thread.message_set)
+
+		# makes sure that the thread contains exactly the message
+		self.assertEqual(str(thread.message_set.get()), str(m))
+
+	def test_messagethread_str(self):
+		print("test_messagethread_str")
+		alice, bob = get_member('Alice', 'Bob')
+		thread = MessageThread.get_thread(alice, bob)
+		
+		# make sure it's clear :P
+		thread.message_set.all().delete()
+
+		send_message(alice, thread, 'Hi Bob')
+		send_message(bob, thread, 'Hi Alice')
+		self.assertEqual(str(thread), 'Alice, Bob')
