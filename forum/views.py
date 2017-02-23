@@ -92,10 +92,13 @@ def delete_thread(request, pk):
 @login_required
 def edit_thread_view(request, pk):
 	thread = Thread.objects.get(id=pk)
+	if thread.author.equiv_user.id != request.user.id:
+		return HttpResponseForbidden()
 	form = ThreadForm(instance=thread)
 	context = {'form': form}
 	return render(request, 'forum/edit_thread.html', context)
 
 def edit_thread_process(request):
-	# TODO
+	# TODO: Implement thread edit process!
+	# Not too hard.
 	pass

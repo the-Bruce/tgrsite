@@ -4,7 +4,7 @@ from django.urls import reverse, reverse_lazy
 import os
 
 # testing
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 
 from users.models import Member
@@ -46,6 +46,7 @@ def create_done(request):
 	# create a new RPG from all the form's fields
 	# except the middleware token
 	# and am_i_gm which is used here instead
+	# Probably not required? Pretty sure fields not in the model are ignored...
 	args = {i : request.POST.get(i, None) for i in request.POST if i!='csrfmiddlewaretoken' and i!='am_i_gm'}
 
 	args['creator_id'] = request.user.member.id
@@ -54,6 +55,7 @@ def create_done(request):
 	fargs = RpgForm(args)
 
 	if not fargs.is_valid():
+		# TODO: Better error!
 		return HttpResponse('Unknown error, contact webmonkey quoting rv57')
 	me = Member.objects.get(id=request.user.member.id)
 
@@ -62,20 +64,22 @@ def create_done(request):
 	if(request.POST.get('am_i_gm', None)):
 		ins.game_masters.add(me)
 
-	# redirect to RPG
+	# send them to the page that was created
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk': ins.id}) + '?status=created')
 
 @login_required
-# TODO: make sure they have the required permission
 def edit(request, pk):
 	rpg = get_object_or_404(Rpg, id=pk)
+	# TODO: Test permission code
+	if rpg.creator.equiv_user.id != request.user.id:
+		return HttpResponseForbidden()
 	form = RpgForm(instance=rpg)
 	context = {'form': form, 'id': pk}
 	return render(request, 'rpgs/edit.html', context)
 
-
 @login_required
 def edit_process(request, pk):
+	# TODO: Permissions in the same vein as delete()
 	form = RpgForm(
 		request.POST,
 		instance=
@@ -85,13 +89,16 @@ def edit_process(request, pk):
 	if(form.is_valid):
 		form.save()
 		return HttpResponseRedirect(reverse('rpg', kwargs={'pk':pk}))
-	# TODO: be less damn lazy
 	else:
+		# TODO: Proper errors
 		return HttpResponseBadRequest()
 
 @login_required
 def delete(request, pk):
-	# TODO: DEFINITELY REQUIRE PROPER ACCESS PERMISSION
+	# TODO: Work out the best way of doing permissions
+	# who can delete a given Rpg? The GMs???
 	# TODO: ask user for confirmation !
-	Rpg.objects.filter(id=pk).delete()
+	rpg = get_object_or_404(Rpg, id=pk)
+	# TODO: Test that this works still what with get_or_404
+	rpg.delete()
 	return HttpResponseRedirect(reverse('rpgs'))

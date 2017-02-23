@@ -117,15 +117,18 @@ def signup_process(request):
 			login(request, auth)
 			return HttpResponseRedirect(reverse('me'))
 		else:
+			# TODO: Proper error
 			return HttpResponse('Unknown error, contact webmonkey quoting uv108')
 	else:
 		# TODO: Proper error lol
 		return HttpResponse('Unknown error, contact webmonkey, quoting uv101')
 
+#TODO: @login_required
 def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect('/')
 
+# not a view
 def spawn_user(username, email, password):
 	u = User.objects.create_user(username, email, password)
 	m = Member.objects.create(equiv_user=u)
