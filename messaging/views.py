@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
+from users.models import Member
 from .models import Message, MessageThread
 
 
@@ -18,14 +19,14 @@ def send_to(sender, message, *pals_usernames):
 
 @login_required
 def dm(request):
-	# TODO: validate
-	#  ^ how??? ^
+	# TODO: Protect against empty form!
 	targets = request.POST.get('target').split(',')
+	targets += [request.user.username]
 	targets = tuple(set(targets))
 	print(targets)
-	return HttpResponseRedirect('/')
 	thread = MessageThread.get_thread_from_str(*targets)
-	send_message(request.user.member, thread, request.POST.get('message'))
+	m = send_message(request.user.member, thread, request.POST.get('message'))
+	print(m)
 	return HttpResponseRedirect(reverse('message_list'))
 
 @login_required
