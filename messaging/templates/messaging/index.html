@@ -2,6 +2,18 @@
 
 
 {% block body %}
+<h1>Messages</h1>
+{% comment forms.py %}
+I mean I _should_ do a proper Django Form but i cba
+{% endcomment %}
+Quick DM
+<form method="POST" action="{% url 'message_dm' %}" id="quickdm">
+	{% csrf_token %}
+	<div class="form-group">
+	<input class="form-control" name="target" placeholder="to">
+	<textarea class="form-control" placeholder="message" name="message" form="quickdm"></textarea>
+	<input type="submit" class="form-control" value="Send">
+</form>
 <ul>
 	{% for x in threads %}
 	<li>

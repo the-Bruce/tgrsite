@@ -2,6 +2,7 @@ from django.db import models
 
 from users.models import Member
 
+
 class MessageThread(models.Model):
 	# todo: allow renaming of group chats? :P
 	# seems simple enough
@@ -10,6 +11,10 @@ class MessageThread(models.Model):
 		return str(', '.join([str(x) for x in l]))
 
 	participants = models.ManyToManyField(Member)
+
+	def get_thread_from_str(*pals_str):
+		members = (Member.objects.get(equiv_user__username=x) for x in pals_str)
+		return MessageThread.get_thread(*members)
 
 	# retrieve the single MessageThread containing exactly this set of users
 	# function can take list of Members as arguments, or as an iterable collection
@@ -35,6 +40,7 @@ class MessageThread(models.Model):
 		return self.message_set.order_by('timestamp')
 	def get_latest(self):
 		return self.message_set.latest(field_name='timestamp')
+
 
 class Message(models.Model):
 	def __str__(self):
