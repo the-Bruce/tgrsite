@@ -6,20 +6,15 @@ class ExecRole(models.Model):
 	def __str__(self):
 		return "{0} ({1})".format(self.role_title, str(self.incumbent))
 
-	# numerical value to use for sorting
-	# sorted ascending
-	# eg if you wanted president to go first
-	# give them 0
+	# sorting priority - lower number means presented further up on the list
 	sort_order = models.IntegerField(default=0)
 	sort_order.help_text = 'Lower values are earlier in the list'
 
-	# name of the exec role eg "president"
+	# position name
 	role_title = models.CharField(max_length=32)
-
-	# long description of the role for the site
+	
 	bio = models.TextField(blank=True)
 	bio.help_text = 'Description of the role and what it entails, as well as a short personal bio.'
 
-	# current member who is filling the role
 	incumbent = models.ForeignKey(Member, null=True, blank=True)
 	incumbent.help_text = 'Member who is currently in this role'

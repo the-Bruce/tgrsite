@@ -1,7 +1,7 @@
 from django.forms import ModelForm, Textarea, TextInput
-
 from .models import Thread, Response
 
+# CSS class to add to every form widget to make bootstrap nice
 BOOSTRAP_FORM_WIDGET_attrs = {
 	'class': 'form-control'
 }
@@ -15,6 +15,8 @@ class ThreadForm(ModelForm):
 			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
 		}
 
+# form that goes under a post for users to reply to
+# presented as a "comment" style thing
 class ResponseForm(ModelForm):
 	class Meta:
 		model = Response
@@ -23,7 +25,6 @@ class ResponseForm(ModelForm):
 			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
 		}
 
-		# no labels :0
 		labels = {
-			'body': ''
+			'body': '',
 		}
