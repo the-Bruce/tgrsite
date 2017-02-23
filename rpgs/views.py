@@ -77,14 +77,18 @@ def edit(request, pk):
 	context = {'form': form, 'id': pk}
 	return render(request, 'rpgs/edit.html', context)
 
+
+from .templatetags.rpg_tags import can_manage
+
+
 @login_required
 def edit_process(request, pk):
-	# TODO: Permissions in the same vein as delete()
+	rpg=get_object_or_404(Rpg, id=pk)
+	if not can_manage(request.user.member, rpg):
+		return HttpResponseForbidden()
 	form = RpgForm(
 		request.POST,
-		instance=
-		get_object_or_404(
-			Rpg, id=pk)
+		instance=rpg
 		)
 	if(form.is_valid):
 		form.save()
@@ -95,10 +99,12 @@ def edit_process(request, pk):
 
 @login_required
 def delete(request, pk):
-	# TODO: Work out the best way of doing permissions
-	# who can delete a given Rpg? The GMs???
+
 	# TODO: ask user for confirmation !
 	rpg = get_object_or_404(Rpg, id=pk)
-	# TODO: Test that this works still what with get_or_404
+
+	if not can_manage(request.user.member, rpg):
+		return HttpResponseForbidden()
+
 	rpg.delete()
 	return HttpResponseRedirect(reverse('rpgs'))

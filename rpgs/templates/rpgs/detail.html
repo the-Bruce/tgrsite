@@ -1,3 +1,5 @@
+{% load rpg_tags %}
+
 {%if request.GET.status == 'created' %}
 <div class="alert alert-success alert-dismissible" role="alert">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -12,8 +14,18 @@
 		<h2>
 			<a href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
 			<span class="pull-right">
+				{% comment TODO %}
+				TODO: Find a way to incorporate can_manage?
+				{% can_manage user.member rpg %}
+
+				For now just copied the code into the tempate tag and it works fine...
+				When this is changed be sure to update rpg_tags!
+				{% endcomment %}
+
+				{% if rpg.creator == user.member or user.member in rpg.game_masters.all %}
 				<a href="{% url 'rpg_edit' rpg.id %}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
 				<a href="{% url 'rpg_delete' rpg.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+				{% endif %}
 			</span>
 		</h2>
 		
