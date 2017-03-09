@@ -20,7 +20,7 @@ Future Features:
 
 Bonus Features:
 * [ ] Gravatar
-* [ ] (re-)name group chats
+* [ ] \(re-\)name group chats
 * [ ] Polls
 * [ ] Pizza/food orders
 * [ ] Online character sheets for LARP
