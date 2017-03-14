@@ -10,8 +10,8 @@ MVP Features:
   * [ ] Send to individual threads (as opposed to "quick dm")
   * [ ] Create thread (see above)
 * [ ] RPGs
-  * [ ] Manage RPGs (delete/kick/edit)
-  * [ ] Signing up and member management
+  * [x] Manage RPGs (delete/edit)
+  * [ ] Signing up and member management (kick, add)
 * [x] Exec
 * [ ] Proper error messages all around!
 * [ ] REMOVE SQLITE3
