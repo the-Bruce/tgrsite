@@ -21,7 +21,7 @@ Future Features:
 * [ ] Notifications & Email system!
 
 Bonus Features:
-* [ ] Gravatar
+* [x] Gravatar
 * [ ] \(re-\)name group chats
 * [ ] Polls
 * [ ] Pizza/food orders
