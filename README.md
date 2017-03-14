@@ -3,7 +3,8 @@ tabletop games and roleplaying society's website
 
 MVP Features:
 * [ ] Forum
-  * [ ] Edit threads!
+  * [x] Edit threads!
+  * [ ] Edit responses
 * [ ] Messaging
   * [ ] Space-stripping from targets field
   * [ ] Send to individual threads (as opposed to "quick dm")
