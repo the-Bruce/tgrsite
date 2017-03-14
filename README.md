@@ -11,7 +11,8 @@ MVP Features:
   * [ ] Create thread (see above)
 * [ ] RPGs
   * [x] Manage RPGs (delete/edit)
-  * [ ] Signing up and member management (kick, add)
+  * [x] Sign-up and leave as player
+  * [ ] Member management (kick, add)
 * [x] Exec
 * [ ] Proper error messages all around!
 * [ ] REMOVE SQLITE3
