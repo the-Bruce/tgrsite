@@ -2,14 +2,14 @@
 {% block body %}
 
 <div class="jumbotron">
-	<img src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {{member.equiv_user.username}}" class="avatar">
+	<img src="{{member.gravatar}}" alt="Avatar for {{member.equiv_user.username}}" class="avatar">
 
 	<h1>{{ member.equiv_user.username }}</h1>
 		{% if execroles %}
 		<h2>
 		{% for x in execroles %}
 			{% if x != execroles|first %} / {% endif %}
-			{{x.role_title}}
+			<a href="{% url 'exec' %}#{{x.role_title}}">{{x.role_title}}</a>
 		{%endfor%}
 		</h2>
 		{% endif %}
@@ -44,7 +44,7 @@
 	</ul>
 	{% endif %}
 
-	{%if me%}
+	{%if me or request.user.member.id == member.id %}
 	<a href="{% url 'edit' %}">Edit profile</a>
 	{% endif %}
 </div>

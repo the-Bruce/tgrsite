@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from users.models import Member
 
 from .models import Rpg
-from .forms import RpgForm
+from .forms import RpgForm, RpgManageForm
 
 class Index(generic.ListView):
 	template_name = 'rpgs/index.html'
@@ -22,20 +22,17 @@ class Detail(generic.DetailView):
 	model = Rpg
 	context_object_name = 'rpg'
 
-class Join(View):
-	def get(self, request):
-		# TODO: redirect
-		res = HttpResponseBadRequest('You shouldn\'t visit this URL in your browser - use the <a href=' + reverse('rpgs') + '>RPG page</a> instead.')
-		return res
+@login_required
+def join(request):
+	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
+	rpg.members.add(request.user.member)
+	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
 
-	@login_required
-	def post(self, request):
-		# if user is signed in:
-		if request.user.is_authenticated:
-			return HttpResponse('watch this space')
-		else:
-			res = HttpResponse('You need to be logged in.', status=302)
-			return res
+@login_required
+def leave(request):
+	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
+	rpg.members.remove(request.user.member)
+	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
 
 @login_required
 def create(request):
@@ -108,3 +105,14 @@ def delete(request, pk):
 
 	rpg.delete()
 	return HttpResponseRedirect(reverse('rpgs'))
+
+# this is REALLY not scalable!
+# TODO
+def manage(request, pk):
+	rpg = get_object_or_404(Rpg, id=pk)
+	form = RpgManageForm(instance=rpg)
+	context = {'rpg': rpg, 'form': form}
+	return render(request, 'rpgs/manage.html', context)
+
+def manage_process(request, pk):
+	return HttpResponse()

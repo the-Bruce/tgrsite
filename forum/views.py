@@ -20,7 +20,7 @@ def index(request):
 # subforum view
 def forum(request, pk):
 	current_forum = Forum.objects.get(id=pk)
-	
+
 	# put pinned/stickied threads first
 	threads = Thread.objects.filter(forum=pk).extra(order_by=['-is_pinned', '-pub_date'])
 	context = {
@@ -36,7 +36,7 @@ def thread(request, pk, response_id=False):
 	context = {
 		'thread': get_object_or_404(Thread, id=pk),
 		'responses': Response.objects.filter(thread=pk),
-		
+
 		# this currently does not do anything
 		# but may be used later to like,
 		# anchor to the response
@@ -95,15 +95,28 @@ def delete_thread(request, pk):
 
 @login_required
 def edit_thread_view(request, pk):
-	# TODO: access permissions!
 	thread = Thread.objects.get(id=pk)
 	if thread.author.equiv_user.id != request.user.id:
 		return HttpResponseForbidden()
 	form = ThreadForm(instance=thread)
-	context = {'form': form}
+	context = {'form': form, 'id':pk}
 	return render(request, 'forum/edit_thread.html', context)
 
+@login_required
 def edit_thread_process(request):
-	# TODO: Implement thread edit process!
-	# Not too hard.
-	raise NotImplementedError()
+	id = request.POST.get('id')
+	if(request.method != 'POST'):
+		return HttpResponse('no')
+	# first, standard permissions junk
+	thread = Thread.objects.get(id=id)
+	if thread.author.equiv_user.id != request.user.id:
+		return HttpResponseForbidden()
+
+	form = ThreadForm(request.POST, instance=thread)
+	if(form.is_valid()):
+		form.save()
+		res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk':id}))
+	else:
+		res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk':id}) + '?result=invalid')
+	return res
+

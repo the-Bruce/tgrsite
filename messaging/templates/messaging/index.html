@@ -8,7 +8,7 @@
 I mean I _should_ do a proper Django Form but i cba
 {% endcomment %}
 Quick DM
-<form method="POST" action="{% url 'message_dm' %}" id="quickdm">
+<form method="POST" action="{% url 'message_dm' %}?next={{request.path}}" id="quickdm">
 	{% csrf_token %}
 	<div class="form-group">
 	<input class="form-control" name="target" placeholder="to (comma separated for group)">
@@ -18,13 +18,11 @@ Quick DM
 <ul>
 	{% for thread in threads %}
 	<li>
+		<a href="{% url 'message_thread' thread.id %}">
 		<strong>{% get_participants_excluding_self thread user %}
-		({{thread.get_latest.timestamp}})</strong>
-		<ul>
-		{% for message in thread.get_messages %}
-			<li><a href="{% url 'user' message.sender.id %}">{{message.sender}}</a>: {{message.content}}</li>
-		{% endfor %}
-		</ul>
+		({{thread.get_latest.timestamp}})</strong></a>
+
+		{% include 'messaging/messages.html' %}
 	</li>
 	<br>
 	{% endfor %}

@@ -14,22 +14,14 @@ TODO: make this do something
 
 {% block body %}
 
-<h2>
-{% if thread.author == user.member %}
-<a href="{% url 'thread_delete' thread.id %}"><i class="fa fa-trash"></i></a>
-<a href="{% url 'thread_edit' thread.id %}"><i class="fa fa-pencil"></i></a>
-{% endif %}
+<h2>{{ thread.title }}</h2>
 
-{{ thread.title }}
-</h2>
-
-
-<h3>
+<h4>
 	in
 	<a href="{% url 'subforum' thread.forum.id %}">{{ thread.forum }}</a>
-</h3>
+</h4>
 
-{% include 'forum/response.html' with response=thread %}
+{% include 'forum/response.html' with response=thread is_thread=True %}
 {% for response in responses %}
 	{% include 'forum/response.html' %}
 {% endfor %}
@@ -51,7 +43,7 @@ TODO: make this do something
 <a href="{% url 'signup' %}next={{request.path}}">Sign up</a>
 or
 <a href="{% url 'login' %}next={{request.path}}">log in</a>
-to respond. 
+to respond.
 
 {% endif %}
 

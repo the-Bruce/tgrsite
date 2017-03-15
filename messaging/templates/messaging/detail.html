@@ -1,0 +1,20 @@
+{% extends "tgrsite/main.html" %}
+{% load messaging_tags %}
+{% block body %}
+<h1>{% get_participants_excluding_self thread user %}</h1>
+
+{% comment TODO %}
+TODO: format timestamps nicer using some sort of library
+{% endcomment %}
+{% include 'messaging/messages.html' with timestamps=1 %}
+
+<form action="{%url 'message_dm' %}?next={{request.path}}" method="POST" class="form-inline">
+	{% csrf_token %}
+	<input type="text" name="message" placeholder="message" class="form-control">
+	<input type="hidden" name="threadid" value="{{thread.id}}">
+	<input type="submit" class="form-control" value="Send">
+</form>
+
+<a href="{% url 'message_list' %}">Back to list</a>
+
+{% endblock %}

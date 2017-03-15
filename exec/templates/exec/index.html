@@ -6,9 +6,9 @@
 {% for role in execs %}
 	<div class="media">
 		<div class="media-left">
-			<img class="media-object" src="https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg" alt="Avatar for {{ role.incumbent }}">
+			<img class="media-object" src="{{role.incumbent.gravatar}}" alt="Avatar for {{ role.incumbent }}">
 		</div>
-		<div class="media-body">
+		<div class="media-body" id="role.role_title">
 			<h5 class="media-heading">
 			{% if role.incumbent %}
 			<a href="{% url 'user' role.incumbent.id %}">
