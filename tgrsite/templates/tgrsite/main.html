@@ -121,6 +121,7 @@ pre {
 				<div class="panel-heading">
 					Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
 				</div>
+				{% block leftbar %}{% endblock %}
 				<div class="panel-body">
 					<ul>
 						{%if request.user.is_authenticated %}
@@ -135,12 +136,19 @@ pre {
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-9">
+
+		<div class="col-sm-6">
 			{% block body %}
 				{% comment %}
 				This is the part that gets overridden by templates that extend this one.
 				{% endcomment %}
 			{% endblock %}
+		</div>
+
+		<div class="col-sm-3">
+			<div class="panel panel-default">
+				{% block rightbar %}{% endblock %}
+			</div>
 		</div>
 	</div>
 </div>

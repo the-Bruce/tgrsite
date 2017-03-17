@@ -1,7 +1,7 @@
 <ul>
-{% for message in thread.get_messages %}
+{% for message in messages %}
 	<li>
-		{% if timestamps %}
+		{% if full %}
 			{{message.timestamp}}
 		{% endif %}
 		<a href="{% url 'user' message.sender.id %}">

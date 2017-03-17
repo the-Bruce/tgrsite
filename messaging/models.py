@@ -12,6 +12,11 @@ class MessageThread(models.Model):
 
 	participants = models.ManyToManyField(Member)
 
+	# latest five messages
+	def five(self):
+		# for some reason reverse() doesn't do what we want
+		return self.get_messages().reverse()[:5][::-1]
+
 	def get_thread_from_str(*pals_str):
 		members = (Member.objects.get(equiv_user__username=x) for x in pals_str)
 		return MessageThread.get_thread(*members)
@@ -33,7 +38,7 @@ class MessageThread(models.Model):
 		if created:
 			for x in participants_exactly:
 				thread.participants.add(x)
-			
+
 		return thread
 
 	def get_messages(self):

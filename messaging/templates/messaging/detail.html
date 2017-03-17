@@ -6,7 +6,7 @@
 {% comment TODO %}
 TODO: format timestamps nicer using some sort of library
 {% endcomment %}
-{% include 'messaging/messages.html' with timestamps=1 %}
+{% include 'messaging/messages.html' with full=1 messages=thread.get_messages %}
 
 <form action="{%url 'message_dm' %}?next={{request.path}}" method="POST" class="form-inline">
 	{% csrf_token %}
