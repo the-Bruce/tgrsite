@@ -7,7 +7,7 @@ Included by thread.html which is responsible for rendering a whole thread
 <div class="panel panel-default"><div class="panel-body">
 	<div class="media">
 		<div class="media-left">
-			<a href="{% url 'user' thread.author.id %}">
+			<a href="{% url 'user' response.author.id %}">
 				<img class="media-object avatar" src="{{response.author.gravatar}}" alt="Avatar for {{ response.author }}">
 				{{response.author}}
 			</a>
