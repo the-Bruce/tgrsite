@@ -12,7 +12,7 @@ MVP Features:
 * [ ] RPGs
   * [x] Manage RPGs (delete/edit)
   * [x] Sign-up and leave as player
-  * [ ] View RPG members
+  * [x] View RPG members
   * [ ] Member management (kick, add)
 * [x] Exec
 * [ ] Proper error messages all around!
