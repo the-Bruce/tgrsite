@@ -94,6 +94,16 @@ def delete_thread(request, pk):
 	return HttpResponseRedirect(url)
 
 @login_required
+def delete_response(request, pk):
+	response = Response.objects.get(id=pk)
+	if response.author.equiv_user.id != request.user.id:
+		# TODO: placeholder error
+		return HttpResponseForbidden()
+	url = reverse('viewthread', kwargs={'pk': response.thread.id})
+	response.delete()
+	return HttpResponseRedirect(url)
+
+@login_required
 def edit_thread_view(request, pk):
 	thread = Thread.objects.get(id=pk)
 	if thread.author.equiv_user.id != request.user.id:
@@ -101,6 +111,15 @@ def edit_thread_view(request, pk):
 	form = ThreadForm(instance=thread)
 	context = {'form': form, 'id':pk}
 	return render(request, 'forum/edit_thread.html', context)
+
+@login_required
+def edit_response_view(request, pk):
+	response = Response.objects.get(id=pk)
+	if response.author.equiv_user.id != request.user.id:
+		return HttpResponseForbidden()
+	form = ResponseForm(instance=response)
+	context = {'form': form, 'id':pk}
+	return render(request, 'forum/edit_response.html', context)
 
 @login_required
 def edit_thread_process(request):
@@ -118,5 +137,23 @@ def edit_thread_process(request):
 		res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk':id}))
 	else:
 		res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk':id}) + '?result=invalid')
+	return res
+
+@login_required
+def edit_response_process(request):
+	id = request.POST.get('id')
+	if(request.method != 'POST'):
+		return HttpResponse('no')
+	# first, standard permissions junk
+	response = Response.objects.get(id=id)
+	if response.author.equiv_user.id != request.user.id:
+		return HttpResponseForbidden()
+
+	form = ResponseForm(request.POST, instance=response)
+	if(form.is_valid()):
+		form.save()
+		res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk':response.thread.id}))
+	else:
+		res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk':response.thread.id}) + '?result=invalid')
 	return res
 

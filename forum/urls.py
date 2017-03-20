@@ -29,7 +29,7 @@ urlpatterns = [
 		views.delete_thread,
 		name='thread_delete'
 	),
-	
+
 	url(
 		r'^thread/(?P<pk>[0-9]+)/edit$',
 		views.edit_thread_view,
@@ -40,6 +40,24 @@ urlpatterns = [
 		r'^thread/edit/done$',
 		views.edit_thread_process,
 		name='thread_edit_done'
+	),
+
+	url(
+		r'^response/(?P<pk>[0-9]+)/delete$',
+		views.delete_response,
+		name='response_delete'
+	),
+
+	url(
+		r'^response/(?P<pk>[0-9]+)/edit$',
+		views.edit_response_view,
+		name='response_edit'
+	),
+
+	url(
+		r'^response/edit/done$',
+		views.edit_response_process,
+		name='response_edit_done'
 	),
 
 

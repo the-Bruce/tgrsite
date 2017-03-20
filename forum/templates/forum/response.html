@@ -26,7 +26,8 @@ Included by thread.html which is responsible for rendering a whole thread
 			<a href="{% url 'thread_delete' thread.id %}"><i class="fa fa-trash"></i></a>
 			<a href="{% url 'thread_edit' thread.id %}"><i class="fa fa-pencil"></i></a>
 			{% else %}
-				T O D O
+			<a href="{% url 'response_delete' response.id %}"><i class="fa fa-trash"></i></a>
+			<a href="{% url 'response_edit' response.id %}"><i class="fa fa-pencil"></i></a>
 			{% endif %}
 		{% endif %}
 
