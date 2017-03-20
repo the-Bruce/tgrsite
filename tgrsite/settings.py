@@ -16,15 +16,16 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # TODO: Once the mail server is set up change this to be the internal webmonkey address
-ADMINS=  [('Webmonkey', 'garenarterius1@gmail.com')]
-MANAGERS=[('Webmonkey', 'garenarterius1@gmail.com')]
+ADMINS=  [('Webadmin', 'ash@sent.com')]
+MANAGERS=[('Webadmin', 'ash@sent.com')]
 LOGIN_URL='/login/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-(*i&$im0f4h&fyn!8%h%ada0=fupv^g+2(y21)(vi1a1k^+!5'
+from .keys import secret
+SECRET_KEY = secret()
+#'-(*i&$im0f4h&fyn!8%h%ada0=fupv^g+2(y21)(vi1a1k^+!5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -129,3 +130,5 @@ USE_TZ = True
 # TODO: Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static_resources'),)
+
+FIRST_DAY_OF_WEEK=1
