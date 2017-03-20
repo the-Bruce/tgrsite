@@ -12,7 +12,8 @@ MVP Features:
 * [ ] RPGs
   * [x] Manage RPGs (delete/edit)
   * [x] Sign-up and leave as player
-  * [ ] Member management (kick, add, _VIEW_)
+  * [ ] View RPG members
+  * [ ] Member management (kick, add)
 * [x] Exec
 * [ ] Proper error messages all around!
 * [ ] REMOVE SQLITE3
