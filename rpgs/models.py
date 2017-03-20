@@ -54,14 +54,6 @@ class Rpg(models.Model):
 		return self.TIMESLOT_CHOICES[self.timeslot][1]
 		# TODO TODO TODO TODO TODO
 
-	# can't remember actually why this is a thing
-	# for a template I think
-	def contains_player(self, player_key):
-		for x in self.members.all():
-			if x.id == player_key:
-				return True
-		return False
-
 	THURSDAY = 0
 	SATURDAY_A = 1
 	SATURDAY_B = 2
