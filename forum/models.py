@@ -4,7 +4,7 @@ from users.models import Member
 class Forum(models.Model):
 	def __str__(self):
 		return self.title
-	
+
 	parent = models.ForeignKey(
 		'self',
 		on_delete=models.CASCADE,
@@ -17,15 +17,15 @@ class Forum(models.Model):
 	def get_parent_tree(self):
 		# root forums don't display this on the site, so this line only affects the admin page
 		if self.parent is None: return '-'
-		
+
 		tree = ''
-		
+
 		# walk up through tree to root
 		x = self.parent
 		while True:
 			tree = ' / ' + str(x) + tree
 			if x.parent is not None:
-				# 
+				#
 				x = x.parent
 			else:
 				# reached root
@@ -53,7 +53,7 @@ class Forum(models.Model):
 
 	# mostly for the sake of the admin widget
 	def get_threads_count(self):
-		return Thread.objects.filter(forum=self.id).count()	
+		return Thread.objects.filter(forum=self.id).count()
 	get_threads_count.short_description='threads'
 
 class Thread(models.Model):
@@ -91,7 +91,6 @@ class Response(models.Model):
 	# when a thread is deleted its responses are deleted
 	thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
 	body = models.CharField(max_length=8192)
-	
-	# TODO: auto_now_add
-	pub_date = models.DateTimeField('date posted')
+
+	pub_date = models.DateTimeField('date posted', auto_now_add=True)
 	author = models.ForeignKey(Member, on_delete=models.PROTECT)

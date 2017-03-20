@@ -35,7 +35,7 @@ class Rpg(models.Model):
 
 	# who's listed as _running_ the game - may change
 	game_masters = models.ManyToManyField(Member, related_name='rpgs_running', blank=True)
-	
+
 	# a catchy title
 	title = models.CharField(max_length=64)
 	title.verbose_name = 'Name'
@@ -52,11 +52,15 @@ class Rpg(models.Model):
 	# get string name of timeslot
 	def timeslot_str(self):
 		return self.TIMESLOT_CHOICES[self.timeslot][1]
-
 		# TODO TODO TODO TODO TODO
+
+	# can't remember actually why this is a thing
+	# for a template I think
 	def contains_player(self, player_key):
-		#whatever = Rpg.objects.filter()
-		pass
+		for x in self.members.all():
+			if x.id == player_key:
+				return True
+		return False
 
 	THURSDAY = 0
 	SATURDAY_A = 1

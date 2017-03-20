@@ -36,6 +36,7 @@ def dm(request):
 @login_required
 def index(request):
 	# todo: update member's "last access to messages page" variable
+	# in order to enable notifications
 	threads = MessageThread.objects.filter(participants=request.user.member)
 	context = {
 		'threads': threads

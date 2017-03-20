@@ -20,17 +20,19 @@
 
 
 {% block rightbar %}
-<div class="panel-heading">
-	Quick DM
-</div>
-<div class="panel-body">
-	<form method="POST" action="{% url 'message_dm' %}?next={{request.path}}" id="quickdm">
-		{% csrf_token %}
-		<div class="form-group">
-			<input class="form-control" name="target" placeholder="to (comma separated for group)">
-			<textarea class="form-control" placeholder="message" name="message" form="quickdm"></textarea>
-			<input type="submit" class="form-control" value="Send">
-		</div>
-	</form>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Quick DM
+	</div>
+	<div class="panel-body">
+		<form method="POST" action="{% url 'message_dm' %}?next={{request.path}}" id="quickdm">
+			{% csrf_token %}
+			<div class="form-group">
+				<input class="form-control" name="target" placeholder="to (comma separated for group)">
+				<textarea class="form-control" placeholder="message" name="message" form="quickdm"></textarea>
+				<input type="submit" class="form-control" value="Send">
+			</div>
+		</form>
+	</div>
 </div>
 {% endblock %}
