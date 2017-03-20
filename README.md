@@ -2,17 +2,17 @@
 tabletop games and roleplaying society's website
 
 MVP Features:
-* [ ] Forum
+* [x] Forum
   * [x] Edit threads!
   * [x] Edit responses
 * [ ] Messaging
   * [ ] Space-stripping from targets field
-  * [ ] Send to individual threads (as opposed to "quick dm")
-  * [ ] Create thread (see above)
+  * [x] Send to individual threads (as opposed to "quick dm")
   * [x] Thread detail page
 * [ ] RPGs
   * [x] Manage RPGs (delete/edit)
   * [x] Sign-up and leave as player
+  * [ ] View RPG members
   * [ ] Member management (kick, add)
 * [x] Exec
 * [ ] Proper error messages all around!
@@ -20,6 +20,7 @@ MVP Features:
 
 Future Features:
 * [ ] Notifications & Email system!
+* [ ] Create message thread without quick DM?
 
 Bonus Features:
 * [x] Gravatar
