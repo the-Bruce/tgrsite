@@ -2,6 +2,7 @@
 tabletop games and roleplaying society's website
 
 MVP Features:
+* [x] stuff that was completeted before this list existed
 * [ ] Forum
   * [x] Edit threads!
   * [x] Edit responses
