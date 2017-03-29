@@ -21,6 +21,7 @@ MVP Features:
 * [x] Exec
 * [ ] Standardise error messages
 * [ ] REMOVE SQLITE3
+* [ ] Easter eggs
 
 Future Features:
 * [ ] Notifications & Email system!
