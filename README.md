@@ -11,6 +11,7 @@ MVP Features:
   * [ ] Space-stripping from targets field
   * [x] Send to individual threads (as opposed to "quick dm")
   * [x] Thread detail page
+  * [ ] Address admins seeing others' messages (stop that? or disclaim)
 * [ ] RPGs
   * [x] Manage RPGs (delete/edit)
   * [x] Sign-up and leave as player
