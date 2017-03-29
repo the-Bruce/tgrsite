@@ -4,7 +4,7 @@
 Renders a single thread "response" (including the inital post)
 Included by thread.html which is responsible for rendering a whole thread
 {% endcomment %}
-<div class="panel panel-default"><div class="panel-body">
+<div class="panel panel-default post"><div class="panel-body">
 	<div class="media">
 		<div class="media-left">
 			<a href="{% url 'user' response.author.id %}">
@@ -13,10 +13,10 @@ Included by thread.html which is responsible for rendering a whole thread
 			</a>
 		</div>
 		<div class="media-body">
-			<div class="panel panel-default"><div class="panel-body">
+			<div class="panel panel-default"><div class="panel-body post-body">
 				{{ response.body|parse_md }}
 				<br>
-				{{ response.author.signature }}
+				{{ response.author.signature|parse_md }}
 			</div></div>
 		</div>
 		<div class="media-right">

@@ -6,7 +6,13 @@
 {% for role in execs %}
 	<div class="media">
 		<div class="media-left">
-			<img class="media-object" src="{{role.incumbent.gravatar}}" alt="Avatar for {{ role.incumbent }}">
+			<img class="media-object"
+				{% if role.incumbent %}
+					src="{{role.incumbent.gravatar}}"
+				{% else %}
+					src="http://gravatar.com/avatar/?default=mm"
+				{% endif %}
+				alt="Avatar for {{ role.incumbent }}">
 		</div>
 		<div class="media-body" id="role.role_title">
 			<h5 class="media-heading">
@@ -15,7 +21,7 @@
 				{{ role.incumbent }}
 			</a>
 			{% else %}
-				{{ role.incumbent }}
+				{{ role.incumbent|default_if_none:"Unoccupied" }}
 			{% endif %}
 			 - {{ role.role_title }}</h5>
 			{{ role.bio }}

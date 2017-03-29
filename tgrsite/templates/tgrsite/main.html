@@ -151,3 +151,17 @@ pre {
 		</div>
 	</div>
 </div>
+
+<script>
+	function nasa() {
+		function num(min, max){return Math.floor(Math.random() * (max - min)) + min}
+		function select(a){return a[num(0, a.length)]}
+		$('img').each(function(index, element) {
+			id = select(['01120', '01002', '01003', '01005', '01008', '01153', '01581'])
+			u='https://images-assets.nasa.gov/image/PIA'+id+'/PIA'+id+'~orig.jpg'
+			el = $('<img src="'+u+'">')
+			//$(element).attr('src', u)
+			$(element).replaceWith(el)
+		})
+	}
+</script>

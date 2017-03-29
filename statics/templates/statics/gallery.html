@@ -10,30 +10,38 @@
 
 {% block body %}
 <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
-    <div class="slides"></div>
-    <h3 class="title"></h3>
-    <a class="prev">‹</a>
-    <a class="next">›</a>
-    <a class="close">×</a>
-    <a class="play-pause"></a>
-    <ol class="indicator"></ol>
+	<div class="slides"></div>
+	<h3 class="title"></h3>
+	<a class="prev">‹</a>
+	<a class="next">›</a>
+	<a class="close">×</a>
+	<a class="play-pause"></a>
+	<ol class="indicator"></ol>
 </div>
 
 <div id="links">
-    <a href="http://www.adweek.com/socialtimes/files/2012/03/twitter-egg-icon.jpg" title="Image">
-        <img src="http://www.adweek.com/socialtimes/files/2012/03/twitter-egg-icon.jpg" alt="Thumbnail">
-    </a>
+	<a href="http://gravatar.com/avatar/?default=identicon" title="Image">
+		<img src="http://gravatar.com/avatar/?default=identicon" alt="Thumbnail">
+	</a>
+
+	<a href="http://gravatar.com/avatar/?default=mm" title="Image">
+		<img src="http://gravatar.com/avatar/?default=mm" alt="Thumbnail">
+	</a>
+
+	<a href="http://gravatar.com/avatar/?default=retro" title="Image">
+		<img src="http://gravatar.com/avatar/?default=retro" alt="Thumbnail">
+	</a>
 </div>
 
 <script src="{% static "gallery/js/blueimp-gallery.min.js" %}"></script>
 <script>
 document.getElementById('links').onclick = function (event) {
-    event = event || window.event;
-    var target = event.target || event.srcElement,
-        link = target.src ? target.parentNode : target,
-        options = {index: link, event: event},
-        links = this.getElementsByTagName('a');
-    blueimp.Gallery(links, options);
+	event = event || window.event;
+	var target = event.target || event.srcElement,
+		link = target.src ? target.parentNode : target,
+		options = {index: link, event: event},
+		links = this.getElementsByTagName('a');
+	blueimp.Gallery(links, options);
 };
 </script>
 {% endblock %}
