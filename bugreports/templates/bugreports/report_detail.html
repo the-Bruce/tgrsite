@@ -1,0 +1,23 @@
+{% extends 'tgrsite/main.html' %}
+{% block body %}
+{% load markdown_tags %}
+
+<h3>{{object.title}} ({{object.get_feature_display}})
+<small>{{object.datetime}}</small></h3>
+{{object.body|parse_md}}
+<p>Status: {{object.get_status_display}}</p>
+{% if object.duplicate_of %}
+	<p>Duplicate of <a href="{% url 'bug_detail' object.duplicate_of.id %}">{{object.duplicate_of}}</a></p>
+{% endif %}
+
+{% if object.dev_response %}
+<strong>Webadmin response:</strong>
+{{object.dev_response|parse_md}}
+{% endif %}
+
+{% comment user doesn't need to see this %}
+<a href="{% url 'bug_index' %}">Back to the list</a>
+{% endcomment %}
+<br>
+
+{% endblock %}

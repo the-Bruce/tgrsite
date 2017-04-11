@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'exec.apps.ExecConfig',
     'templatetags.apps.TemplatetagsConfig',
     'messaging.apps.MessagingConfig',
+    'bugreports.apps.BugreportsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
