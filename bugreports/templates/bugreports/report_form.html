@@ -1,10 +1,10 @@
 {% extends 'tgrsite/main.html' %}
 {% block body %}
-
+<h1>New bug report</h1>
 <form action="" method="POST">
 	{% csrf_token %}
 	{{form.as_p}}
 	<input type="submit">
 </form>
-<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> tentatively supported here.
+<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> tentatively supported in the body.
 {% endblock %}

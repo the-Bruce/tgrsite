@@ -132,6 +132,7 @@ pre {
 						{% else %}
 							<li><a href="{% url 'login' %}">Log In</a> / <a href="{% url 'signup' %}">Register</a></li>
 						{% endif %}
+						<li><a href="{% url 'bug_create' %}">Report a bug</a></li>
 					</ul>
 				</div>
 			</div>
@@ -147,10 +148,11 @@ pre {
 
 		<div class="col-sm-3">
 			{% block rightbar %}
+			{% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
 			{% endblock %}
 		</div>
-	</div>
-</div>
+	</div><!-- .row -->
+</div><!-- .container -->
 
 <script>
 	function nasa() {
@@ -166,5 +168,3 @@ pre {
 	}
 </script>
 
-<!-- TODO: move -->
-<a href="{% url 'bug_create' %}">Report a bug</a>
