@@ -19,7 +19,7 @@ def index(request):
 
 # subforum view
 def forum(request, pk):
-	current_forum = Forum.objects.get(id=pk)
+	current_forum = get_object_or_404(Forum, id=pk)
 
 	# put pinned/stickied threads first
 	threads = Thread.objects.filter(forum=pk).extra(order_by=['-is_pinned', '-pub_date'])
@@ -105,8 +105,9 @@ def delete_response(request, pk):
 
 @login_required
 def edit_thread_view(request, pk):
-	thread = Thread.objects.get(id=pk)
+	thread = get_object_or_404(Thread, id=pk)
 	if thread.author.equiv_user.id != request.user.id:
+		# TODO: placeholder error
 		return HttpResponseForbidden()
 	form = ThreadForm(instance=thread)
 	context = {'form': form, 'id':pk}
@@ -114,7 +115,7 @@ def edit_thread_view(request, pk):
 
 @login_required
 def edit_response_view(request, pk):
-	response = Response.objects.get(id=pk)
+	response = get_object_or_404(Response, id=pk)
 	if response.author.equiv_user.id != request.user.id:
 		return HttpResponseForbidden()
 	form = ResponseForm(instance=response)
@@ -125,9 +126,11 @@ def edit_response_view(request, pk):
 def edit_thread_process(request):
 	id = request.POST.get('id')
 	if(request.method != 'POST'):
-		return HttpResponse('no')
+		return HttpResponseRedirect("/")
+
+	thread = get_object_or_404(Thread, id=id)
+
 	# first, standard permissions junk
-	thread = Thread.objects.get(id=id)
 	if thread.author.equiv_user.id != request.user.id:
 		return HttpResponseForbidden()
 
@@ -143,9 +146,11 @@ def edit_thread_process(request):
 def edit_response_process(request):
 	id = request.POST.get('id')
 	if(request.method != 'POST'):
-		return HttpResponse('no')
+		return HttpResponseRedirect("/")
+
+	response = get_object_or_404(Response, id=id)
+
 	# first, standard permissions junk
-	response = Response.objects.get(id=id)
 	if response.author.equiv_user.id != request.user.id:
 		return HttpResponseForbidden()
 

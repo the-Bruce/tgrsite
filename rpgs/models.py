@@ -9,19 +9,16 @@ class Rpg(models.Model):
 	def __str__(self):
 		return self.title
 
-	# string list of game masters, comma separated, and with "and"
+	# list of game master names
 	def game_master_list(self):
-
-		# TODO: restructure this so we don't mess with rendering inside a model i.e. using a template tag
+		# TODO: restructure this so we don't mess with rendering inside a model i.e. use a template tag
+		# array comprehension over GM list
 		gmstrings = [
 			# stop from escaping
-			mark_safe(
-				'<a href="{}">{}</a>'.format(reverse('user', args=[x.id]), str(x))
-			)
+			mark_safe('<a href="{}">{}</a>'.format(reverse('user', args=[x.id]), str(x)))
 			for x in self.game_masters.all()
 		]
 		if len(gmstrings) == 0: return 'nobody'
-
 
 		if len(gmstrings) == 1: return gmstrings[0]
 
@@ -36,24 +33,35 @@ class Rpg(models.Model):
 	# who's listed as _running_ the game - may change
 	game_masters = models.ManyToManyField(Member, related_name='rpgs_running', blank=True)
 
-	# a catchy title
+	# the game/campaign/oneshot's name, eg My Cool 5E Newbie Game
 	title = models.CharField(max_length=64)
 	title.verbose_name = 'Name'
 
-	# eg d&d 5e
+	# the system that's being used, eg D&D
 	system = models.CharField(max_length=64, blank=True)
+
+	# longform description
 	description = models.TextField(blank=True)
+
 	players_wanted = models.IntegerField()
 
 	# players
 	members = models.ManyToManyField(Member, blank=True)
+
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	# get string name of timeslot
 	def timeslot_str(self):
 		return self.TIMESLOT_CHOICES[self.timeslot][1]
 		# TODO TODO TODO TODO TODO
+		# ^ ???
 
+	# The timeslot system was imagined based on the Society's current RPG days
+	# (Saturday and Thursday), though this means that
+	# a) if the society changes these again, this will need to be updated; and
+	# b) it's not very helpful for people running at other times.
+	# In the future it might be better to change this to a simple charfield
+	# I think mostly I wanted a chance to use the choices thing
 	THURSDAY = 0
 	SATURDAY_A = 1
 	SATURDAY_B = 2
@@ -66,7 +74,8 @@ class Rpg(models.Model):
 	)
 	timeslot = models.IntegerField(choices=TIMESLOT_CHOICES)
 
-# an individual session of a game
+# an individual session of a game, run on a specific date
+# currently not used by the site frontend
 class Session(models.Model):
 	def __str__(self):
 		date = self.plan_date

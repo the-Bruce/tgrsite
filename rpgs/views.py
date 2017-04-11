@@ -107,6 +107,7 @@ def delete(request, pk):
 	return HttpResponseRedirect(reverse('rpgs'))
 
 # this is REALLY not scalable!
+# ^ clarify?
 # TODO
 def manage(request, pk):
 	rpg = get_object_or_404(Rpg, id=pk)
@@ -114,5 +115,6 @@ def manage(request, pk):
 	context = {'rpg': rpg, 'form': form}
 	return render(request, 'rpgs/manage.html', context)
 
+# ??????
 def manage_process(request, pk):
 	return HttpResponse()
