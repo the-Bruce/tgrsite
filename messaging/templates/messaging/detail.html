@@ -6,7 +6,6 @@
 {% comment TODO %}
 TODO: format timestamps nicer using some sort of library
 {% endcomment %}
-<small>Warning: at present, the admins <strong>can see your messages</strong>!</small>
 {% include 'messaging/messages.html' with full=1 messages=thread.get_messages %}
 
 <form action="{%url 'message_dm' %}?next={{request.path}}" method="POST" class="form-inline">
