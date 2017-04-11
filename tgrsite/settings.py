@@ -16,21 +16,17 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # TODO: Once the mail server is set up change this to be the internal webmonkey address
-ADMINS=  [('Webadmin', 'ash@sent.com')]
-MANAGERS=[('Webadmin', 'ash@sent.com')]
+ADMINS=  [('Webadmin', 'ashbc@users.noreply.github.com')]
+MANAGERS=[('Webadmin', 'ashbc@users.noreply.github.com')]
 LOGIN_URL='/login/'
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 from .keys import secret
 SECRET_KEY = secret()
-#'-(*i&$im0f4h&fyn!8%h%ada0=fupv^g+2(y21)(vi1a1k^+!5'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# This must be set in deployment!
+ALLOWED_HOSTS = ['localhost']
 
 # Application definition
 
@@ -128,8 +124,34 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-# TODO: Static files
+# site URL that static files are served from
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static_resources'),)
+# directories to collect static files from
+STATICFILES_DIRS = (
+    # this is where all our actual static files are gonna be put.
+    os.path.join(BASE_DIR, 'static_resources'),
+ )
+# the folder to store the static files...
+# where to put these such that it has permission to write there?
+# in place? for now haha
+# in order to serve these we need to wsgi a server
+STATIC_ROOT=os.path.join(BASE_DIR, 'STATIC')
 
+# Monday
 FIRST_DAY_OF_WEEK=1
+
+# as advised by python manage.py check --deploy
+# prevent browsers from MIME type sniffing. doesn't play nice
+# SECURE_CONTENT_TYPE_NOSNIFF=True
+
+# enable browsers' XSS filters
+SECURE_BROWSER_XSS_FILTER=True
+
+# ensure all traffic is SSL (https)
+# SECURE_SSL_REDIRECT=True
+# session cookies secure-only
+SESSION_COOKIE_SECURE=True
+# same for CSRF cookie
+CSRF_COOKIE_SECURE=True
+CSRF_COOKIE_HTTPONLY=True
+X_FRAME_OPTIONS='DENY'

@@ -2,3 +2,4 @@ tgrsite/keys.py
 db.sqlite3
 */migrations
 *__pycache__
+STATIC/

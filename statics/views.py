@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+# "Static" pages
 def schedule(request):
 	return render(request, 'statics/schedule.html')
 

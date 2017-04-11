@@ -4,7 +4,7 @@
 
 {% block head %}
 
-	<link rel="stylesheet" href="{% static "gallery/css/blueimp-gallery.min.css" %}">
+	<link type="text/css" rel="stylesheet" href="{% static "gallery/css/blueimp-gallery.min.css" %}">
 
 {% endblock %}
 
@@ -33,7 +33,7 @@
 	</a>
 </div>
 
-<script src="{% static "gallery/js/blueimp-gallery.min.js" %}"></script>
+<script type="text/javascript" src="{% static "gallery/js/blueimp-gallery.min.js" %}"></script>
 <script>
 document.getElementById('links').onclick = function (event) {
 	event = event || window.event;
