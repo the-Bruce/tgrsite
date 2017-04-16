@@ -26,7 +26,7 @@ SECRET_KEY = secret()
 DEBUG = False
 
 # This must be set in deployment!
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['aesc.pythonanywhere.com']
 
 # Application definition
 
