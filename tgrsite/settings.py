@@ -23,10 +23,11 @@ LOGIN_URL='/login/'
 from .keys import secret
 SECRET_KEY = secret()
 
-DEBUG = False
+DEBUG = True
 
 # This must be set in deployment!
-ALLOWED_HOSTS = ['aesc.pythonanywhere.com']
+<<<<<<< HEAD
+ALLOWED_HOSTS = ['aesc.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -149,8 +150,8 @@ SECURE_BROWSER_XSS_FILTER=True
 # ensure all traffic is SSL (https)
 # SECURE_SSL_REDIRECT=True
 # session cookies secure-only
-SESSION_COOKIE_SECURE=True
+# SESSION_COOKIE_SECURE=True
 # same for CSRF cookie
-CSRF_COOKIE_SECURE=True
-CSRF_COOKIE_HTTPONLY=True
+# CSRF_COOKIE_SECURE=True
+# CSRF_COOKIE_HTTPONLY=True
 X_FRAME_OPTIONS='DENY'
