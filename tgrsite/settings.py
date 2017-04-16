@@ -23,10 +23,10 @@ LOGIN_URL='/login/'
 from .keys import secret
 SECRET_KEY = secret()
 
-DEBUG = False
+DEBUG = True
 
 # This must be set in deployment!
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
