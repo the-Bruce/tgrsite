@@ -20,8 +20,16 @@ ADMINS=  [('Webadmin', 'ashbc@users.noreply.github.com')]
 MANAGERS=[('Webadmin', 'ashbc@users.noreply.github.com')]
 LOGIN_URL='/login/'
 
-from .keys import secret
-SECRET_KEY = secret()
+s = ''
+try:
+    from .keys import secret
+    s = secret()
+except ModuleNotFoundError:
+    # this will throw a KeyError and crash if neither are specified.
+    # good.
+    s = os.environ['SECRET_KEY']
+SECRET_KEY = s
+
 
 DEBUG = True
 
