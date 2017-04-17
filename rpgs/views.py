@@ -48,6 +48,14 @@ def kick(request):
 
 @login_required
 def add_to(request):
+	""" adds a player to an RPG using the `username` and `id` fields of form"""
+	# Notes: could do this through a URLconf instead?
+	# /rpg/<id>/add/<username>? userid instead of username?
+
+	# TODO: This 404 doesn't fire, it just fails silently.
+	# Might work to instead try/except and redirect back with error?
+	# Also worth noting that this kind of form is exactly the kind of thing
+	# that could be enhanced with AJAX, and that could shape the response structure.
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
 	if request.user.member == rpg.creator:
 		users = User.objects.filter(username=request.POST.get('username'))
