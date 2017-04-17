@@ -6,6 +6,7 @@ import os
 # testing
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from users.models import Member
 
@@ -43,6 +44,16 @@ def kick(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
 	if request.user.member == rpg.creator:
 		rpg.members.remove(request.POST.get('user-to-remove'))
+	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}) + '?nousername=1')
+
+@login_required
+def add_to(request):
+	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
+	if request.user.member == rpg.creator:
+		users = User.objects.filter(username=request.POST.get('username'))
+		if users.count() == 0:
+			return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
+		rpg.members.add(users[0].id)
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
 
 @login_required
