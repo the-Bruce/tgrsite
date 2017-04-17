@@ -11,4 +11,6 @@ urlpatterns = [
 
 	url(r'^update/$', views.update, name='update'),
 
+	url(r'^allmembers/$', views.allmembers, name='allmembers'),
+
 ]

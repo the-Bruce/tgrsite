@@ -47,6 +47,11 @@ def viewmember(request, pk):
 	}
 	return render(request, 'users/view.html', context)
 
+@login_required
+def allmembers(request):
+	usernames = [ x.username for x in User.objects.all() ]
+	return HttpResponse(json.dumps(usernames))
+
 # edit page
 @login_required
 def edit(request):
