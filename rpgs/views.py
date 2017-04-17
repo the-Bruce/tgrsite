@@ -39,6 +39,13 @@ def create(request):
 	return render(request, 'rpgs/create.html', {'form': RpgForm})
 
 @login_required
+def kick(request):
+	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
+	if request.user.member == rpg.creator:
+		rpg.members.remove(request.POST.get('user-to-remove'))
+	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
+
+@login_required
 def create_done(request):
 	# create a new RPG from all the form's fields
 	# except the middleware token
