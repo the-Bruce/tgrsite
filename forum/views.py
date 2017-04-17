@@ -1,5 +1,4 @@
-import datetime
-
+from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.views import generic, View
@@ -58,7 +57,7 @@ def create_thread(request):
 			title=form.cleaned_data['title'],
 			body=form.cleaned_data['body'],
 			author=request.user.member,
-			pub_date=datetime.datetime.now(),
+			pub_date=timezone.now(),
 			forum=Forum.objects.get(id=request.POST.get('forum')),
 		)
 		thread.save()
@@ -74,7 +73,7 @@ def create_response(request):
 		res = Response(
 			body=form.cleaned_data['body'],
 			author=request.user.member,
-			pub_date=datetime.datetime.now(),
+			pub_date=timezone.now(),
 			thread=Thread.objects.get(id=request.POST.get('thread')),
 		)
 		res.save()
