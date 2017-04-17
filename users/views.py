@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
@@ -46,6 +47,8 @@ def viewmember(request, pk):
 	}
 	return render(request, 'users/view.html', context)
 
+# edit page
+@login_required
 def edit(request):
 	context = {
 		'member': request.user.member,
@@ -55,6 +58,8 @@ def edit(request):
 	}
 	return render(request, 'users/edit.html', context)
 
+# the actual logic for editing the user once the form's sent
+@login_required
 def update(request):
 	if(request.method == 'POST'):
 		# generate a filled form from the post request
@@ -125,12 +130,13 @@ def signup_process(request):
 		# Definitely needs to be sorted!
 		return HttpResponse('Unknown error, contact webmonkey, quoting uv101')
 
-#TODO: @login_required
+@login_required
 def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect('/')
 
 # not a view
+# properly sets up a user and member
 def spawn_user(username, email, password):
 	u = User.objects.create_user(username, email, password)
 	m = Member.objects.create(equiv_user=u)
