@@ -76,7 +76,7 @@ def login_view(request):
 	# if they try and view the login page, and are logged in, redirect
 	if(request.user.is_authenticated):
 		return HttpResponseRedirect(request.GET.get('next') or reverse('me'))
-	
+
 	form = LoginForm()
 	context = {'form': form, 'result': request.GET.get('result'), 'next': request.GET.get('next')}
 	return render(request, 'users/login.html', context)
@@ -121,6 +121,8 @@ def signup_process(request):
 			return HttpResponse('Unknown error, contact webmonkey quoting uv108')
 	else:
 		# TODO: Proper error lol
+		# Note: This branch occurs when, for instance, user signs up with existing username
+		# Definitely needs to be sorted!
 		return HttpResponse('Unknown error, contact webmonkey, quoting uv101')
 
 #TODO: @login_required
