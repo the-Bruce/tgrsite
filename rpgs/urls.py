@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'^kick/$', views.kick, name='rpg_kick'),
 
 	url(r'^create/$', views.create, name='rpg_create'),
+	url(r'^add_to/$', views.add_to, name='rpg_add_to'),
 	url(r'^(?P<pk>[0-9]+)/edit$', views.edit, name='rpg_edit'),
 	url(r'^(?P<pk>[0-9]+)/edit/done$', views.edit_process, name='rpg_edit_done'),
 

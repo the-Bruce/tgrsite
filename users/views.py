@@ -46,6 +46,10 @@ def viewmember(request, pk):
 	}
 	return render(request, 'users/view.html', context)
 
+def allmembers(request):
+	usernames = [ x.username for x in User.objects.all() ]
+	return HttpResponse(json.dumps(usernames))
+
 def edit(request):
 	context = {
 		'member': request.user.member,
@@ -76,7 +80,7 @@ def login_view(request):
 	# if they try and view the login page, and are logged in, redirect
 	if(request.user.is_authenticated):
 		return HttpResponseRedirect(request.GET.get('next') or reverse('me'))
-	
+
 	form = LoginForm()
 	context = {'form': form, 'result': request.GET.get('result'), 'next': request.GET.get('next')}
 	return render(request, 'users/login.html', context)

@@ -72,6 +72,15 @@
 			{% endfor%}
 		</ul>
 
+		{%if rpg.creator == user.member %}
+			<form action="{% url 'rpg_add_to' %}" method="POST" id="add-member">
+				{% csrf_token %}
+				<input type="hidden" name="id" value="{{rpg.id}}">
+				<input type="text" name="username" autocomplete="off" data-provide="typeahead" id="add-member-input">
+				<input class="btn btn-default" type="submit" value="Add">
+			</form>
+		{% endif%}
+
 		{% comment todo %}
 		TODO: If user is in the current game, replace this with a 'leave' link
 		TODO: create 'manage' widget for people who own/are GMs of a game
@@ -94,6 +103,12 @@
 				</form>
 			{% endif %}
 		{% endif %}
+
+		<script type="text/javascript">
+			$.get("{% url 'allmembers' %}", function(data) {
+				$("#add-member-input").typeahead({source: data})
+			}, 'json');
+		</script>
 	</div>
 </div>
 {% if not embed %}
