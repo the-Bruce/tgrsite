@@ -8,6 +8,7 @@ urlpatterns = [
 	url(r'^join/$', views.join, name='rpg_join'),
 
 	url(r'^leave/$', views.leave, name='rpg_leave'),
+	url(r'^kick/$', views.kick, name='rpg_kick'),
 
 	url(r'^create/$', views.create, name='rpg_create'),
 	url(r'^(?P<pk>[0-9]+)/edit$', views.edit, name='rpg_edit'),
