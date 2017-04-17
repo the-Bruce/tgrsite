@@ -50,11 +50,12 @@ class Rpg(models.Model):
 
 	created_at = models.DateTimeField(auto_now_add=True)
 
-	# get string name of timeslot
+	# TODO! This is obsolete!
+	# Turns out that Django has me covered.
+	# Rpg:get_timeslot_display() does just this
 	def timeslot_str(self):
-		return self.TIMESLOT_CHOICES[self.timeslot][1]
-		# TODO TODO TODO TODO TODO
-		# ^ ???
+		"""get string name of timeslot"""
+		return self.get_timeslot_display()
 
 	# The timeslot system was imagined based on the Society's current RPG days
 	# (Saturday and Thursday), though this means that
