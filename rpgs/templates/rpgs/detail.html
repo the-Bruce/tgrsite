@@ -51,11 +51,27 @@
 		<script>/* enable popovers */$(function(){$('[data-toggle="popover"]').popover({trigger:'hover', html:true})})</script>
 
 		<strong>
-		<span data-toggle="popover" data-placement="bottom" title="player list" data-content="{% for member in rpg.members.all %}{{member}}<br>{% endfor%}">
-		{{ rpg.members.count }} / {{ rpg.players_wanted }} players<span class="sr-only">:
-			{% for member in rpg.members.all %}{{member}},{% endfor%}</span>
-		</span>
-		</a>
+
+		Players <span class="badge">{{ rpg.members.count }} / {{ rpg.players_wanted }}</span><span class="sr-only">:
+		{% for member in rpg.members.all %}{{member}},{% endfor%}</span>
+		</strong>
+
+		<ul>
+			{% for member in rpg.members.all %}
+			<li>
+				{{member}}
+				{%if rpg.creator != member and rpg.creator == user.member %}
+					<a href="javascript:{}" onclick="document.getElementById('kick{{member}}').submit();" data-toggle="popover" data-placement="right" data-content="Remove this user from this RPG"><span class="glyphicon glyphicon-remove"></span></a>
+					<form action="{% url 'rpg_kick' %}" method="POST" id="kick{{member}}">
+						{% csrf_token %}
+						<input type="hidden" name="id" value="{{rpg.id}}">
+						<input type="hidden" name="user-to-remove" value="{{member.id}}">
+					</form>
+				{% endif%}
+			</li>
+			{% endfor%}
+		</ul>
+
 		{% comment todo %}
 		TODO: If user is in the current game, replace this with a 'leave' link
 		TODO: create 'manage' widget for people who own/are GMs of a game
