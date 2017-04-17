@@ -117,14 +117,36 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'en-gb'
 
 USE_I18N = True
 
 USE_L10N = True
 
+# https://docs.djangoproject.com/en/1.10/topics/i18n/timezones/
+# Notable excerpts:
+"""Even if your website is available in only one time zone, it’s still good
+practice to store data in UTC in your database. The main reason is Daylight
+Saving Time (DST). Many countries have a system of DST, where clocks are moved
+forward in spring and backward in autumn. If you’re working in local time,
+you’re likely to encounter errors twice a year, when the transitions happen. (
+The pytz documentation discusses these issues in greater detail.) This
+probably doesn’t matter for your blog, but it’s a problem if you over-bill or
+under-bill your customers by one hour, twice a year, every year. The solution
+to this problem is to use UTC in the code and use local time only when
+interacting with end users."""
+
+"""When time zone support is enabled (USE_TZ=True), Django uses
+time-zone-aware datetime objects. If your code creates datetime objects, they
+should be aware too. In this mode, the example above becomes:
+
+from django.utils import timezone
+
+now = timezone.now()
+"""
+
+# Europe/London means GMT+0 with a DST offset of +1:00 i.e. England time
+TIME_ZONE = 'Europe/London'
 USE_TZ = True
 
 
