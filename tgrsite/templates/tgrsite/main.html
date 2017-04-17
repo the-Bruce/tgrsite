@@ -1,15 +1,16 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-3.1.1.min.js""></script>
 
-{% comment %}Alternate versions of Boostrap with the BOOSTRA.386 theme{% endcomment %}
-{%if True %}
-	<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-{% else %}
+
+<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+{% comment %}Alternate versions of Boostrap with the BOOSTRA.386 theme
 	<link type="text/css" rel="stylesheet" href="/static/386/css/bootstrap.min.css">
 	<script type="text/javascript" src="/static/386/js/bootstrap.min.js"></script>
-{% endif %}
+{% endcomment %}
 
+{% comment font icons library %}{% endcomment %}
 <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 {% block head %}
@@ -43,14 +44,15 @@ ul {
 whereas in our case we will use it to preserve formatting on text boxes
 at least until Markdown is implemented or something B)
 */
-pre {
+/* ^^^ @ past me: markdown is implemented. what are you talking about */
+/*pre {
 	font-family: inherit;
 	background-color: inherit;
 	border: inherit;
 	font-size: inherit;
 	padding: 0;
 	margin:inherit;
-}
+}*/
 
 </style>
 
@@ -64,14 +66,15 @@ pre {
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-			<span class="sr-only">Toggle navigation</span>
-			<!-- hamburger menu -->
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
+				<span class="sr-only">Toggle navigation</span>
+				<!-- hamburger menu -->
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="/">
-				<img src="https://scifi.uwcs.co.uk/static_img/web_logo_small.png" class="brand-img" alt="Home">
+				<!-- "This is where I'd put my icon... IF I HAD ONE!" -->
+				<img src="http://gravatar.com/avatar/?default=identicon" class="brand-img" alt="Home">
 			</a>
 		</div>
 		<div class="collapse navbar-collapse" id="nav-collapse">
@@ -79,26 +82,30 @@ pre {
 				<li><a href="{% url 'exec' %}">
 					<i class="fa fa-fw fa-users"></i> Exec
 				</a></li>
+
 				<li><a href="{% url 'schedule' %}">
 					<i class="fa fa-fw fa-calendar"></i> Schedule
 				</a></li>
+
 				<li><a href="{% url 'gallery' %}">
 					<i class="fa fa-fw fa-picture-o"></i> Photo gallery
 				</a></li>
+
 				<li><a href="{% url 'forum' %}">
 					<i class="fa fa-fw fa-quote-left"></i> Forum
 				</a></li>
+
 				<li><a href="{% url 'rpgs' %}">
 					<i class="fa fa-fw fa-magic"></i> RPGs
 				</a></li>
+
 				<li><a href="{% url 'message_list' %}">
 					<i class="fa fa-fw fa-comment-o"></i> Messages
 				</a></li>
-				<li><a href="//www.warwicksu.com/societies/sff/">
-					SU Page
-					<i class="glyphicon glyphicon-new-window">&nbsp;</i>
-				</a></li>
 
+				<li><a href="//www.warwicksu.com/societies/sff/">
+					<i class="fa fa-fw fa-external-link"></i> SU Page
+				</a></li>
 
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
@@ -113,6 +120,7 @@ pre {
 
 	</div>
 </nav>
+
 <!-- page -->
 <div class="container">
 	<div class="row">
@@ -156,15 +164,11 @@ pre {
 
 <script>
 	function nasa() {
-		function num(min, max){return Math.floor(Math.random() * (max - min)) + min}
-		function select(a){return a[num(0, a.length)]}
 		$('img').each(function(index, element) {
-			id = select(['01120', '01002', '01003', '01005', '01008', '01153', '01581'])
+			id = ['01120', '01002', '01003', '01005', '01008', '01153', '01581'][Math.floor(Math.random()*7)]
 			u='https://images-assets.nasa.gov/image/PIA'+id+'/PIA'+id+'~orig.jpg'
-			el = $('<img src="'+u+'">')
 			//$(element).attr('src', u)
-			$(element).replaceWith(el)
+			$(element).replaceWith($('<img src="'+u+'">'))
 		})
 	}
 </script>
-
