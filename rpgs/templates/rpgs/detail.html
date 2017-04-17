@@ -62,7 +62,7 @@
 				{{member}}
 				{%if rpg.creator != member and rpg.creator == user.member %}
 					<a href="javascript:{}" onclick="document.getElementById('kick{{member}}').submit();" data-toggle="popover" data-placement="right" data-content="Remove this user from this RPG"><span class="glyphicon glyphicon-remove"></span></a>
-					<form action="{% url 'rpg_kick' %}" method="POST" id="kick{{member}}">
+					<form action="{% url 'rpg_kick' %}" method="POST" id="kick{{member}}" hidden>
 						{% csrf_token %}
 						<input type="hidden" name="id" value="{{rpg.id}}">
 						<input type="hidden" name="user-to-remove" value="{{member.id}}">
