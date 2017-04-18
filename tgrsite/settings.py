@@ -20,6 +20,10 @@ ADMINS=  [('Webadmin', 'ashbc@users.noreply.github.com')]
 MANAGERS=[('Webadmin', 'ashbc@users.noreply.github.com')]
 LOGIN_URL='/login/'
 
+# For now
+EMAIL_BACKEND='django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH=os.path.join(BASE_DIR, 'EMAILS')
+
 s = ''
 try:
     from .keys import secret
