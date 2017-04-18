@@ -17,11 +17,7 @@ class Member(models.Model):
 			's':str(size),
 		})
 
-		url = f'https://www.gravatar.com/avatar/{h}?{q}'
-
-		print(url)
-
-		return url
+		return 'https://www.gravatar.com/avatar/{}?{}'.format(h, q)
 
 	equiv_user = models.OneToOneField(User, on_delete=models.PROTECT)
 	def __str__(self):
