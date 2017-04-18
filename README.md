@@ -3,7 +3,6 @@ tabletop games and roleplaying society's website
 For "feature list", see [#2](https://github.com/ashbc/tgrsite/issues/2)
 
 ## Notes for running, mainly so Finnbar doesn't forget
-* If it's complaining about ```f'string'``` not being a thing, that's because that's only supported by Python 3.6+. Use pyenv!
 * To set up, run. This is needed if you change the models also:
 ```
 python manage.py makemigrations bugreports forum exec messaging rpgs users
