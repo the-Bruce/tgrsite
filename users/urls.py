@@ -13,4 +13,7 @@ urlpatterns = [
 
 	url(r'^allmembers/$', views.allmembers, name='allmembers'),
 
+	# TODO: Reimplement auth stuff using Django built-in auth views
+	# https://docs.djangoproject.com/en/1.11/topics/auth/default/#built-in-auth-views
+
 ]
