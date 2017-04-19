@@ -8,7 +8,7 @@ For "feature list", see [#2](https://github.com/ashbc/tgrsite/issues/2)
 python manage.py makemigrations bugreports forum exec messaging rpgs users
 python manage.py migrate
 ```
-* To run the actual server: ```python manage.py runserver```. This watches changes!
+* To run the actual server: ```python manage.py runserver```. This watches changes (but **is not** aware of new files!)!
 * If debug = False, set to true. You possibly need to add an allowed host, but that's trivial. (tgrsite/settings.py)
 * To do fab admin stuff:
     * ```python manage.py createsuperuser```
