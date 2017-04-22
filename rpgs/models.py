@@ -50,30 +50,9 @@ class Rpg(models.Model):
 
 	created_at = models.DateTimeField(auto_now_add=True)
 
-	# TODO! This is obsolete!
-	# Turns out that Django has me covered.
-	# Rpg:get_timeslot_display() does just this
-	def timeslot_str(self):
-		"""get string name of timeslot"""
-		return self.get_timeslot_display()
-
-	# The timeslot system was imagined based on the Society's current RPG days
-	# (Saturday and Thursday), though this means that
-	# a) if the society changes these again, this will need to be updated; and
-	# b) it's not very helpful for people running at other times.
-	# In the future it might be better to change this to a simple charfield
-	# I think mostly I wanted a chance to use the choices thing
-	THURSDAY = 0
-	SATURDAY_A = 1
-	SATURDAY_B = 2
-	OTHER_TIME = -1
-	TIMESLOT_CHOICES = (
-		(THURSDAY, 'Thursday evening'),
-		(SATURDAY_A, 'Saturday afternoon'),
-		(SATURDAY_B, 'Saturday evening'),
-		(OTHER_TIME, 'See description'),
-	)
-	timeslot = models.IntegerField(choices=TIMESLOT_CHOICES)
+	# It was kind of sad killing off the IntegerField because Ash said
+	# they used it because they wanted to try it out, for fun. Oh well.
+	timeslot = models.CharField(max_length=64, blank=True)
 
 # an individual session of a game, run on a specific date
 # currently not used by the site frontend
