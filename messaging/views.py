@@ -20,7 +20,7 @@ def send_to(sender, message, *pals_usernames):
 
 @login_required
 def dm(request):
-	if re.match(request.POST.get('message'),r'^\s*$'):
+	if re.match(r'^\s*$',request.POST.get('message')):
 		return HttpResponseRedirect(request.GET.get('next'))
 
 	# if we are messaging a known thread

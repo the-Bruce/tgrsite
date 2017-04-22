@@ -4,6 +4,8 @@ from django.urls import reverse
 
 from users.models import Member
 
+import re
+
 # Create your models here.
 class Rpg(models.Model):
 	def __str__(self):
@@ -53,6 +55,12 @@ class Rpg(models.Model):
 	# It was kind of sad killing off the IntegerField because Ash said
 	# they used it because they wanted to try it out, for fun. Oh well.
 	timeslot = models.CharField(max_length=64, blank=True)
+
+	def get_timeslot_or_unspecified(self):
+		if re.match(r'^\s*$', self.timeslot):
+			return "Unspecified, see description."
+		else:
+			return self.timeslot
 
 # an individual session of a game, run on a specific date
 # currently not used by the site frontend

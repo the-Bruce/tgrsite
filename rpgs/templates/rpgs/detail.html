@@ -39,12 +39,7 @@
 		<em>{{ rpg.system }}</em>
 		<p>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</p>
 		<br>
-		<p>Ran by {{ rpg.game_master_list }}
-			{% if rpg.timeslot != "" %}
-				(<strong>Timeslot:</strong> {{rpg.timeslot}})
-			{% else %}
-				(<strong>Timeslot:</strong> Unspecified, see description.)
-			{% endif %}
+		<p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{rpg.get_timeslot_or_unspecified}})
 		</p>
 
 		<script>/* enable popovers */$(function(){$('[data-toggle="popover"]').popover({trigger:'hover', html:true})})</script>
