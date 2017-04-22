@@ -6,6 +6,7 @@ from django.urls import reverse
 from users.models import Member
 from .models import Message, MessageThread
 
+import re
 
 # not a view
 # helper function to send messages
@@ -19,7 +20,8 @@ def send_to(sender, message, *pals_usernames):
 
 @login_required
 def dm(request):
-	# TODO: Protect against empty form!
+	if re.match(request.POST.get('message'),r'^\s*$'):
+		return HttpResponseRedirect(request.GET.get('next'))
 
 	# if we are messaging a known thread
 	if request.POST.get('threadid'):
