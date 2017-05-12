@@ -8,6 +8,7 @@ class SessionsInline(admin.StackedInline):
 
 class RpgAdmin(admin.ModelAdmin):
 	inlines = [SessionsInline]
+	list_display=('title', 'creator', 'tags_list')
 
 admin.site.register(Rpg, RpgAdmin)
 admin.site.register(Session)
