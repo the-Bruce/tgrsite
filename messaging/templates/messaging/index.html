@@ -14,6 +14,8 @@
 		{% include 'messaging/messages.html' with messages=thread.five %}
 	</li>
 	<br>
+	{% empty %}
+		You haven't received any messages yet.
 	{% endfor %}
 </ul>
 {% endblock %}

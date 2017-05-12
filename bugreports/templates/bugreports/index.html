@@ -1,12 +1,11 @@
 {% extends 'tgrsite/main.html' %}
 {% block body %}
 
-
-This is a placeholder page for report list.<br>
 {%for x in object_list%}
 	<a href="{% url 'bug_detail' x.id %}">{{x}}</a>
 	<br>
+{% empty %}
+	Nothing to report!
 {% endfor %}
 
 {% endblock %}
-

@@ -27,7 +27,8 @@
 			{{ role.bio }}
 		</div>
 	</div>
-
+{% empty %}
+	there doesn't seem to be anyone here
 {% endfor %}
 
 <style type="text/css">
@@ -38,4 +39,3 @@ img {
 </style>
 
 {% endblock %}
-
