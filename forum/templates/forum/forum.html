@@ -36,7 +36,7 @@ SUBFORUMS
 {% else %}
 	{% if not threads and current == 'Forum' %}
 		Looks like the forum doesn't exist!<br>
-		Contact the <a href="{% url 'exec' %}">webmonkey</a>.
+		Contact the <a href="{% url 'exec' %}">Web Admin</a>.
 	{% endif %}
 {% endif %}
 
@@ -85,4 +85,3 @@ This will be escaped!
 {{ '<a href="">This is how you parse Markdown ;)</a>'|parse_md }}
 {% endcomment %}
 {% endblock %}
-

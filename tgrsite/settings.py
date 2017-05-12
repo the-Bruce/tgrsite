@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# TODO: Once the mail server is set up change this to be the internal webmonkey address
+# TODO: Once the mail server is set up change this to be the internal webadmin address
 ADMINS=  [('Webadmin', 'ashbc@users.noreply.github.com')]
 MANAGERS=[('Webadmin', 'ashbc@users.noreply.github.com')]
 LOGIN_URL='/login/'

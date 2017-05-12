@@ -79,7 +79,7 @@ def create_done(request):
 
 	if not fargs.is_valid():
 		# TODO: Better error!
-		return HttpResponse('Unknown error, contact webmonkey quoting rv57')
+		return HttpResponse('Unknown error: RpgForm is not valid')
 	me = Member.objects.get(id=request.user.member.id)
 
 	ins = Rpg(**args)
