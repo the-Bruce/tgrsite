@@ -3,9 +3,9 @@ from django.shortcuts import render
 from . import views
 
 urlpatterns = [
-	url(r'^$', views.Index.as_view(), name='rpgs'),
+	url(r'^list/$', views.Index.as_view(), name='rpgs'),
 	# todo: the above could be merged into this
-	url(r'^tagged/(?P<tags>.+)/$', views.Filter.as_view(), name='rpgs_filter'),
+	url(r'^list/(?P<tags>.+)/$', views.Filter.as_view(), name='rpgs_filter'),
 	url(r'^(?P<pk>[0-9]+)/$', views.Detail.as_view(), name='rpg'),
 	url(r'^join/$', views.join, name='rpg_join'),
 
