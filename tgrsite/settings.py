@@ -15,14 +15,13 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# TODO: Once the mail server is set up change this to be the internal webadmin address
+# TODO: find a way to keep this up to date with webadmin address.
+# some sort of admin page?
 ADMINS=  [('Webadmin', 'ashbc@users.noreply.github.com')]
 MANAGERS=[('Webadmin', 'ashbc@users.noreply.github.com')]
 LOGIN_URL='/login/'
 
-# For now
-EMAIL_BACKEND='django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH=os.path.join(BASE_DIR, 'EMAILS')
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
 s = ''
 try:
@@ -34,9 +33,10 @@ except ModuleNotFoundError:
     s = os.environ['SECRET_KEY']
 SECRET_KEY = s
 
-
+# DEPLOY: TURN THIS OFF
 DEBUG = True
 
+# DEPLOY: Probably remove localhost?
 ALLOWED_HOSTS = ['aesc.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 # Application definition
@@ -178,6 +178,8 @@ FIRST_DAY_OF_WEEK=1
 
 # enable browsers' XSS filters
 SECURE_BROWSER_XSS_FILTER=True
+
+# DEPLOY: Maybe turn some of these on, notably SECURE_SSL_REDIRECT
 
 # ensure all traffic is SSL (https)
 # SECURE_SSL_REDIRECT=True
