@@ -1,7 +1,5 @@
 from django.conf.urls import url
 from . import views
-
-# todo: apply this everywhere
 from django.views.generic import TemplateView
 
 urlpatterns = [
