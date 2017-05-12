@@ -1,9 +1,13 @@
 {% extends "tgrsite/main.html" %}
-
+{% load rpg_tags %}
 
 {% block body %}
 
 <h1><a href="{% url 'rpgs' %}">Games signups</a></h1>
+{% comment taglist %}
+    It'd be good to have little Xs to let us remove filters but I cba to work out where to put the html and escaping and such
+{% endcomment %}
+Filters: {% tags_list request.path %}<br>
 {% for rpg in rpgs %}
 {% include "rpgs/detail.html" with embed="true" %}
 {% empty %}

@@ -97,8 +97,26 @@ at least until Markdown is implemented or something B)
 				</a></li>
 
 				<li><a href="{% url 'rpgs' %}">
-					<i class="fa fa-fw fa-magic"></i> RPGs
+					<i class="fa fa-fw fa-magic"></i> Games
 				</a></li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"
+					role="button" aria-haspopup="true" aria=expanded="false">
+						<i class="fa fa-fw fa-magic"></i>RPGs <span class="caret"></span>
+					</a>
+
+					<ul class="dropdown-menu">
+						<li><a href="{% url 'rpg_landing' %}">
+							<i class="fa fa-fw fa-info-circle"></i> Home page
+						</a></li>
+						<li><a href="{% url 'rpgs_filter' 'rpg' %}">
+							<i class="fa fa-fw fa-magic"></i> Signups
+						</a></li>
+					</ul>
+				</li>
+
+
 
 				<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown"

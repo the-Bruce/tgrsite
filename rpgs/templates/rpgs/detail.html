@@ -40,7 +40,7 @@
 		<p>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</p>
 		<p>
 			{% for tag in rpg.tags_list %}
-				<a href="{{request.path}}{{tag}}"><span class="label label-primary">{{tag}}</span></a>
+				<a href="/{% add_tags request.path tag %}"><span class="label label-primary">{{tag}}</span></a>
 			{% endfor %}
 		</p>
 		<p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{rpg.get_timeslot_or_unspecified}})
