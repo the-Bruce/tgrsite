@@ -128,12 +128,12 @@ def signup_process(request):
 			return HttpResponseRedirect(reverse('me'))
 		else:
 			# TODO: Proper error
-			return HttpResponse('Unknown error, contact webmonkey quoting uv108')
+			return HttpResponse('Unknown error')
 	else:
 		# TODO: Proper error lol
 		# Note: This branch occurs when, for instance, user signs up with existing username
 		# Definitely needs to be sorted!
-		return HttpResponse('Unknown error, contact webmonkey, quoting uv101')
+		return HttpResponse('Error. User probably already exists.')
 
 @login_required
 def logout_view(request):
