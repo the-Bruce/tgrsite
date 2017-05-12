@@ -6,7 +6,6 @@ from users.models import Member
 
 import re
 
-# Create your models here.
 class Rpg(models.Model):
 	def __str__(self):
 		return self.title
@@ -55,6 +54,16 @@ class Rpg(models.Model):
 	# It was kind of sad killing off the IntegerField because Ash said
 	# they used it because they wanted to try it out, for fun. Oh well.
 	timeslot = models.CharField(max_length=64, blank=True)
+
+	# For now, tags are a comma-delimited string.
+	# I mean this might be common and conventient but it _is_ a hack.
+	# Violates first normal form.
+	tags = models.CharField(max_length=128, blank=True)
+
+	# tags as Python list, with whitespace stripped
+	def tags_list(self):
+		return list(set([x.strip() for x in self.tags.split(',')]))
+	tags_list.short_description='tags'
 
 	def get_timeslot_or_unspecified(self):
 		if re.match(r'^\s*$', self.timeslot):

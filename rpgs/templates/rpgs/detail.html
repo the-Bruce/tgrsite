@@ -38,7 +38,11 @@
 	<div class="panel-body">
 		<em>{{ rpg.system }}</em>
 		<p>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</p>
-		<br>
+		<p>
+			{% for tag in rpg.tags_list %}
+				<span class="label label-primary">{{tag}}</span>
+			{% endfor %}
+		</p>
 		<p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{rpg.get_timeslot_or_unspecified}})
 		</p>
 
