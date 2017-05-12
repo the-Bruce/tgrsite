@@ -2,6 +2,5 @@ db.sqlite3
 */migrations
 *__pycache__
 STATIC/
-EMAILS/
 tgrsite/keys.py
 *.pyc
