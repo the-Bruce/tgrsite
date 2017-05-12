@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-	
+
 	url(r'^user/edit/', views.edit, name='edit'),
 
 	url(r'^user/(?P<pk>[0-9]+)/$', views.viewmember, name='user'),
@@ -26,7 +26,7 @@ urlpatterns = [
 
 	#url(r'^', include('django.contrib.auth.urls')),
 
-	# TODO: Create our own views/forms for these.
+	# TODO: Create our own so that they're prettier?
 	url(r'^change-password/$',
 		auth_views.PasswordChangeView.as_view(),
 		name='password_change'),
