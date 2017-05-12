@@ -17,7 +17,7 @@ class RpgForm(forms.ModelForm):
 	am_i_gm.label = 'Add self to GMs?'
 	class Meta:
 		model = Rpg
-		fields = ['title', 'system', 'description', 'players_wanted', 'timeslot',]
+		fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'tags']
 
 class RpgManageForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
