@@ -23,6 +23,23 @@ class Detail(generic.DetailView):
 	model = Rpg
 	context_object_name = 'rpg'
 
+# Filter by tags
+class Filter(Index):
+	def get_queryset(self):
+		tags = self.kwargs['tags'].split('/')
+
+		matches = []
+		for rpg in Rpg.objects.all():
+			include = True
+			for x in tags:
+				if x not in rpg.tags_list():
+					include = False
+					break
+			if include:
+				matches.append(rpg)
+
+		return matches
+
 @login_required
 def join(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
