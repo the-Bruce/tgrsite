@@ -36,6 +36,10 @@
 	</div>
 
 	<div class="panel-body">
+		{% for tag in rpg.tags.all %}
+			<span class="label label-primary">{{ tag }}</span>
+		{% endfor %}
+		{% if rpg.tags.all %}<br>{% endif %}
 		<em>{{ rpg.system }}</em>
 		<p>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</p>
 		<br>
@@ -46,8 +50,10 @@
 
 		<strong>
 
-		Players <span class="badge">{{ rpg.members.count }} / {{ rpg.players_wanted }}</span><span class="sr-only">:
-		{% for member in rpg.members.all %}{{member}},{% endfor%}</span>
+		Players <span class="badge">{{ rpg.members.count }} / {{ rpg.players_wanted }}</span>
+		<span class="sr-only">:
+		{% for member in rpg.members.all %}{{member}},{% endfor%}
+		</span>
 		</strong>
 
 		<ul>

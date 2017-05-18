@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
 	url(r'^$', views.Index.as_view(), name='rpgs'),
 	url(r'^(?P<pk>[0-9]+)/$', views.Detail.as_view(), name='rpg'),
+	url(r'^tagged/(?P<tag>[^/]+)/$', views.Filter.as_view(), name='rpg_tag'),
 	url(r'^join/$', views.join, name='rpg_join'),
 
 	url(r'^leave/$', views.leave, name='rpg_leave'),
