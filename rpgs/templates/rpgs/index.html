@@ -3,7 +3,17 @@
 
 {% block body %}
 
+{% if request.path == '/rpg/tagged/rpg/' %}
 <h1>RPGs</h1>
+{% else %}
+<h1>Games</h1>
+{% endif %}
+
+{% if request.path == '/rpg/' %}
+<a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
+{% else %}
+<a href="{%url 'rpgs' %}">Clear tag filter</a>
+{% endif %}
 {% for rpg in rpgs %}
 {% include "rpgs/detail.html" with embed="true" %}
 {% endfor %}
