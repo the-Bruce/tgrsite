@@ -91,19 +91,29 @@ def create_done(request):
 	ins = Rpg(**args)
 	ins.save()
 
-	newtags = []
+	"""newtags = []
 	for tag in request.POST.get('tags', '').split(','):
 		# determine new tag
-		newtags.append(Tag.objects.get_or_create(name=tag)[0])
+		newtags.append(Tag.objects.get_or_create(name=tag)[0])"""
 
 	# add tags
-	ins.tags = newtags
+	ins.tags = tags_from_str(request.POST.get('tags', ''))
 
 	if(request.POST.get('am_i_gm', None)):
 		ins.game_masters.add(me)
 
 	# send them to the page that was created
+
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk': ins.id}) + '?status=created')
+
+# not a view
+def tags_from_str(str):
+	tags = []
+	for tag in str.split(','):
+		if tag == '':
+			continue
+		tags.append(Tag.objects.get_or_create(name=tag.strip())[0])
+	return tags
 
 @login_required
 def edit(request, pk):
@@ -129,13 +139,13 @@ def edit_process(request, pk):
 		instance=rpg
 		)
 	if(form.is_valid):
-		newtags = []
+		"""newtags = []
 		for tag in form.data['tags'].split(','):
 			# determine new tag
-			newtags.append(Tag.objects.get_or_create(name=tag)[0])
+			newtags.append(Tag.objects.get_or_create(name=tag)[0])"""
 
 		# change tags
-		rpg.tags = newtags
+		rpg.tags = tags_from_str(form.data['tags'])
 
 		# cleanup?
 		# remove tags that have no uses
