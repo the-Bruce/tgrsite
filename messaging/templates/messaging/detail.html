@@ -1,5 +1,8 @@
 {% extends "tgrsite/main.html" %}
 {% load messaging_tags %}
+{% block title %}
+{% get_participants_excluding_self thread user %}
+{% endblock %}
 {% block body %}
 <h1>{% get_participants_excluding_self thread user %}</h1>
 

@@ -122,7 +122,7 @@ def edit(request, pk):
 	if rpg.creator.equiv_user.id != request.user.id:
 		return HttpResponseForbidden()
 	form = RpgForm(instance=rpg, initial={'tags': rpg.tags_str()})
-	context = {'form': form, 'id': pk}
+	context = {'form': form, 'id': pk, 'rpg': rpg}
 	return render(request, 'rpgs/edit.html', context)
 
 
