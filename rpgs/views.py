@@ -112,7 +112,7 @@ def tags_from_str(str):
 	for tag in str.split(','):
 		if tag == '':
 			continue
-		tags.append(Tag.objects.get_or_create(name=tag.strip())[0])
+		tags.append(Tag.objects.get_or_create(name=tag.strip().lower())[0])
 	return tags
 
 @login_required
