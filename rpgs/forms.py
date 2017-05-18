@@ -3,10 +3,6 @@ from django.contrib.auth.models import User
 
 from .models import Rpg
 
-BOOSTRAP_FORM_WIDGET_attrs = {
-	'class': 'form-control'
-}
-
 class RpgForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(RpgForm, self).__init__(*args, **kwargs)
@@ -18,7 +14,9 @@ class RpgForm(forms.ModelForm):
 	class Meta:
 		model = Rpg
 		fields = ['title', 'system', 'description', 'players_wanted', 'timeslot',]
+	tags = forms.CharField(required=False)
 
+# Unused so far
 class RpgManageForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(RpgManageForm, self).__init__(*args, **kwargs)
