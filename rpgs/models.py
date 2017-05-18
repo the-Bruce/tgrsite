@@ -63,7 +63,9 @@ class Rpg(models.Model):
 			return self.timeslot
 
 
-	tags = models.ManyToManyField('Tag')
+	tags = models.ManyToManyField('Tag', null=True, blank=True)
+	def tags_str(self):
+		return ','.join([str(x) for x in self.tags.all()])
 
 # an individual session of a game, run on a specific date
 # currently not used by the site frontend
