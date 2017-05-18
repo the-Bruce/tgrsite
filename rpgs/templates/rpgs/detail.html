@@ -37,7 +37,7 @@
 
 	<div class="panel-body">
 		{% for tag in rpg.tags.all %}
-			<span class="label label-primary">{{ tag }}</span>
+			<a href="{% url 'rpg_tag' tag %}"><span class="label label-primary">{{ tag }}</span></a>
 		{% endfor %}
 		{% if rpg.tags.all %}<br>{% endif %}
 		<em>{{ rpg.system }}</em>
