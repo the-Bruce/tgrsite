@@ -63,7 +63,7 @@ class Rpg(models.Model):
 			return self.timeslot
 
 
-	tags = models.ManyToManyField('Tag', null=True, blank=True)
+	tags = models.ManyToManyField('Tag')
 	def tags_str(self):
 		return ','.join([str(x) for x in self.tags.all()])
 
