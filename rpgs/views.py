@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 
 from users.models import Member
 
-from .models import Rpg
+from .models import Rpg, Tag
 from .forms import RpgForm, RpgManageForm
 
 class Index(generic.ListView):
@@ -22,6 +22,10 @@ class Detail(generic.DetailView):
 	template_name = 'rpgs/rpg.html'
 	model = Rpg
 	context_object_name = 'rpg'
+
+class Filter(Index):
+	def get_queryset(self):
+		return Rpg.objects.filter(tags__name=self.kwargs['tag'])
 
 @login_required
 def join(request):
@@ -70,7 +74,7 @@ def create_done(request):
 	# except the middleware token
 	# and am_i_gm which is used here instead
 	# Probably not required? Pretty sure fields not in the model are ignored...
-	args = {i : request.POST.get(i, None) for i in request.POST if i!='csrfmiddlewaretoken' and i!='am_i_gm'}
+	args = {i : request.POST.get(i, None) for i in request.POST if i!='am_i_gm' and i!='tags' and i!='csrfmiddlewaretoken'}
 
 	args['creator_id'] = request.user.member.id
 
@@ -80,10 +84,21 @@ def create_done(request):
 	if not fargs.is_valid():
 		# TODO: Better error!
 		return HttpResponse('Unknown error: RpgForm is not valid')
+
+
 	me = Member.objects.get(id=request.user.member.id)
 
 	ins = Rpg(**args)
 	ins.save()
+
+	newtags = []
+	for tag in request.POST.get('tags', '').split(','):
+		# determine new tag
+		newtags.append(Tag.objects.get_or_create(name=tag)[0])
+
+	# add tags
+	ins.tags = newtags
+
 	if(request.POST.get('am_i_gm', None)):
 		ins.game_masters.add(me)
 
@@ -96,7 +111,7 @@ def edit(request, pk):
 	# TODO: Test permission code
 	if rpg.creator.equiv_user.id != request.user.id:
 		return HttpResponseForbidden()
-	form = RpgForm(instance=rpg)
+	form = RpgForm(instance=rpg, initial={'tags': rpg.tags_str()})
 	context = {'form': form, 'id': pk}
 	return render(request, 'rpgs/edit.html', context)
 
@@ -114,6 +129,20 @@ def edit_process(request, pk):
 		instance=rpg
 		)
 	if(form.is_valid):
+		newtags = []
+		for tag in form.data['tags'].split(','):
+			# determine new tag
+			newtags.append(Tag.objects.get_or_create(name=tag)[0])
+
+		# change tags
+		rpg.tags = newtags
+
+		# cleanup?
+		# remove tags that have no uses
+		for tag in Tag.objects.all():
+			if(tag.rpg_set.count() == 0):
+				tag.delete()
+
 		form.save()
 		return HttpResponseRedirect(reverse('rpg', kwargs={'pk':pk}))
 	else:
@@ -137,7 +166,7 @@ def delete(request, pk):
 # TODO
 def manage(request, pk):
 	rpg = get_object_or_404(Rpg, id=pk)
-	form = RpgManageForm(instance=rpg)
+	form = RpgManageForm(instance=rpg, initial={'tags': rpg.tags_str})
 	context = {'rpg': rpg, 'form': form}
 	return render(request, 'rpgs/manage.html', context)
 

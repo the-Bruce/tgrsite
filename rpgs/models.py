@@ -62,6 +62,11 @@ class Rpg(models.Model):
 		else:
 			return self.timeslot
 
+
+	tags = models.ManyToManyField('Tag', null=True, blank=True)
+	def tags_str(self):
+		return ','.join([str(x) for x in self.tags.all()])
+
 # an individual session of a game, run on a specific date
 # currently not used by the site frontend
 class Session(models.Model):
@@ -75,3 +80,12 @@ class Session(models.Model):
 
 	# optional set of notes for the GMs to scribble in
 	gm_notes = models.TextField(blank=True)
+
+# tags are a way of categorising games signups
+# the previous implementation stored them on the Rpg model using a delimited string!
+# which is horrible in all sorts of ways, not least that it violated 1NF :P
+# rather than that mess, this solution creates a simple model with a ManyToMany relation
+class Tag(models.Model):
+	name = models.CharField(max_length=32)
+	def __str__(self):
+		return self.name
