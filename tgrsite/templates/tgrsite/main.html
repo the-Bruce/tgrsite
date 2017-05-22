@@ -134,9 +134,13 @@ at least until Markdown is implemented or something B)
 
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
+				{% comment Is this where it should go? what about that neat sidebar? %}
+
 				{% if request.user.is_staff %}
 					<li><a href="/admin">Admin site</a></li>
 				{% endif %}
+
+				{% endcomment %}
 				{% if request.user.is_authenticated %}
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				{% else %}
@@ -160,6 +164,9 @@ at least until Markdown is implemented or something B)
 				{% block leftbar %}{% endblock %}
 				<div class="panel-body">
 					<ul>
+						{% if request.user.is_staff %}
+							<li><a href="/admin">Admin site</a></li>
+						{% endif %}
 						{%if request.user.is_authenticated %}
 							<li><a href="{% url 'me' %}">
 								My profile
@@ -168,6 +175,7 @@ at least until Markdown is implemented or something B)
 						{% else %}
 							<li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>
 						{% endif %}
+
 						<li><a href="{% url 'bug_create' %}">Report a bug</a></li>
 					</ul>
 				</div>
