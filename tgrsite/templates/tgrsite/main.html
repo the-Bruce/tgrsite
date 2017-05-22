@@ -134,6 +134,9 @@ at least until Markdown is implemented or something B)
 
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
+				{% if request.user.is_staff %}
+					<li><a href="/admin">Admin site</a></li>
+				{% endif %}
 				{% if request.user.is_authenticated %}
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				{% else %}
