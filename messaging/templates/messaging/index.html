@@ -10,7 +10,7 @@ Messages
 	{% for thread in threads %}
 	<li>
 		<a href="{% url 'message_thread' thread.id %}">
-		<strong>{% get_participants_excluding_self thread user %}
+		<strong>{% get_conversation_name thread request.user.username %}
 		({{thread.get_latest.timestamp}})</strong></a>
 
 		{% include 'messaging/messages.html' with messages=thread.five %}
@@ -29,10 +29,10 @@ Messages
 		Quick DM
 	</div>
 	<div class="panel-body">
-		<form method="POST" action="{% url 'message_dm' %}?next={{request.path}}" id="quickdm">
+		<form method="POST" action="{% url 'message_direct' %}?next={{request.path}}" id="quickdm">
 			{% csrf_token %}
 			<div class="form-group">
-				<input class="form-control" name="target" placeholder="to (comma separated for group)">
+				<input class="form-control" name="target" placeholder="recipient">
 				<textarea class="form-control" placeholder="message" name="message" form="quickdm"></textarea>
 				<input type="submit" class="form-control" value="Send">
 			</div>

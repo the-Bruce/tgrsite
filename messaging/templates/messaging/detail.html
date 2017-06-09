@@ -11,13 +11,11 @@ TODO: format timestamps nicer using some sort of library
 {% endcomment %}
 {% include 'messaging/messages.html' with full=1 messages=thread.get_messages %}
 
-<form action="{%url 'message_dm' %}?next={{request.path}}" method="POST" class="form-inline">
+<form action="{% url 'message_group' thread.id %}" method="POST" class="form-inline">
 	{% csrf_token %}
 	<input type="text" name="message" placeholder="message" class="form-control" autofocus>
-	<input type="hidden" name="threadid" value="{{thread.id}}">
 	<input type="submit" class="form-control" value="Send">
 </form>
-
 <a href="{% url 'message_list' %}">Back to list</a>
 
 {% endblock %}

@@ -1,12 +1,20 @@
 from django.db import models
-
+from django.db.models import Count
 from users.models import Member
+
 class MessageThread(models.Model):
 	def __str__(self):
 		l = list(self.participants.all())
 		return str(', '.join([str(x) for x in l]))
 
 	participants = models.ManyToManyField(Member)
+
+	title = models.CharField(max_length=64, blank=True)
+	def __str__(self):
+		if self.title != '':
+			return self.title
+		else:
+			return ', '.join([str(x) for x in self.participants.all()])
 
 	# latest five messages
 	def five(self):
@@ -17,6 +25,7 @@ class MessageThread(models.Model):
 		# and as always Python handles negatives nicely
 		return self.get_messages().reverse()[:5][::-1]
 
+		"""The following code was too beautiful to delete.
 	# @param *pals_str list of usernames (strings) of involved members
 	# @return the messagethread containing exactly these users (created if none exists)
 	def get_thread_from_str(*pals_str):
@@ -46,7 +55,7 @@ class MessageThread(models.Model):
 			for x in participants_exactly:
 				thread.participants.add(x)
 
-		return thread
+		return thread"""
 
 	def get_messages(self):
 		return self.message_set.order_by('timestamp')
