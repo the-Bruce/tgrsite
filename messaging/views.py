@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseNotFound,HttpResponse
 from django.urls import reverse
-
+from django.db.models import Count
 from users.models import Member
 from .models import Message, MessageThread
 
@@ -18,6 +18,51 @@ def send_to(sender, message, *pals_usernames):
 	thread = MessageThread.get_thread(pals)
 	return send_message(sender, thread, message)
 
+# specific message between two users
+# expected form: 'message': message body, 'target': recipient username
+@login_required
+def direct_message(request):
+	# if it's all spaces then send them away
+	if re.match(r'^\s*$',request.POST.get('message')):
+		return HttpResponseRedirect(request.GET.get('next'))
+
+	target = get_object_or_404(Member, equiv_user__username=request.POST.get('target'))
+
+	query = MessageThread.objects.annotate(num_participants=Count('participants'))
+	query = query.filter(participants=target)
+	if target.id == request.user.member.id:
+		query = query.filter(num_participants=1)
+	else:
+		query = query.filter(num_participants=2)
+		query = query.filter(participants=request.user.member)
+
+	t, c = query.get_or_create()
+
+	if c:
+		t.participants.add(request.user.member)
+		t.participants.add(target)
+
+	m = send_message(request.user.member, t, request.POST.get('message'))
+	# not sure if this works just yet :0
+	return HttpResponseRedirect(request.GET.get('next'))
+
+# for messaging a groupchat.
+# expected form: 'message': message body.
+@login_required
+def group_message(request, threadid):
+	# if it's all spaces then send them away
+	if re.match(r'^\s*$',request.POST.get('message')):
+		return HttpResponseRedirect(request.GET.get('next'))
+
+	thread = get_object_or_404(MessageThread, id=threadid)
+
+	t = get_object_or_404(MessageThread, id=threadid)
+	print("Sending message from {} to thread {} with body {}".format(request.user.member, thread, request.POST.get('message')))
+	m = send_message(request.user.member, thread, request.POST.get('message'))
+	return HttpResponseRedirect(reverse('message_thread', args=[threadid]))
+
+# DEPRECATED
+"""
 @login_required
 def dm(request):
 	if re.match(r'^\s*$',request.POST.get('message')):
@@ -42,7 +87,7 @@ def dm(request):
 	m = send_message(request.user.member, thread, request.POST.get('message'))
 	# not sure if this works just yet :0
 	return HttpResponseRedirect(request.GET.get('next'))
-
+"""
 @login_required
 def index(request):
 	# todo: if we keep track on a Member their last time they visited the messages page,
