@@ -37,7 +37,7 @@
 	{% endif %}
 
 	{% if rpgs %}
-	<h4>RPGs running</h4>
+	<h4>Games running</h4>
 	<ul>
 	{% for rpg in rpgs %}
 		<li><a href="{% url 'rpg' rpg.id %}">{{rpg.title}}</a></li>
