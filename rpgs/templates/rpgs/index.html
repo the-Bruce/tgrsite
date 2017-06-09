@@ -1,16 +1,21 @@
 {% extends "tgrsite/main.html" %}
+
+{% load rpg_tags %}
+
 {% block title %}
 Games signups
 {% endblock %}
 {% block body %}
 
-{% if request.path == '/rpg/tagged/rpg/' %}
+{% rpg_url as r %}
+{% if request.path == r %}
 <h1>RPGs</h1>
 {% else %}
 <h1>Games</h1>
 {% endif %}
 
-{% if request.path == '/rpg/' %}
+{% rpgs_root as o %}
+{% if request.path == o %}
 <a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
 {% else %}
 <a href="{%url 'rpgs' %}">Clear tag filter</a>
