@@ -7,7 +7,7 @@ urlpatterns = [
 	url(r'^$', TemplateView.as_view(template_name='tgrsite/index.html'), name='homepage'),
 	url(r'^admin/', admin.site.urls),
 	url(r'^forum/', include('forum.urls')),
-	url(r'^rpg/', include('rpgs.urls')),
+	url(r'^signups/', include('rpgs.urls')),
 	url(r'^exec/', include('exec.urls')),
 	url(r'^', include('users.urls')),
 	url(r'^messages/', include('messaging.urls')),
