@@ -14,7 +14,7 @@ class MessageThread(models.Model):
 		if self.title != '':
 			return self.title
 		else:
-			return 'Message Thread TODO NAME'
+			return ', '.join([str(x) for x in self.participants.all()])
 
 	# latest five messages
 	def five(self):
