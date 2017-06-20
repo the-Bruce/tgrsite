@@ -2,6 +2,8 @@
 {% block title %}{{member.equiv_user.username}}{% endblock %}
 {% block body %}
 
+{% load markdown_tags %}
+
 <div class="jumbotron">
 	<img src="{{member.gravatar}}" alt="Avatar for {{member.equiv_user.username}}" class="avatar">
 
@@ -15,13 +17,13 @@
 		</h2>
 		{% endif %}
 
-	<p>{{ member.bio }}</p>
+	<p>{{ member.bio|parse_md }}</p>
 
 	{% if recent_threads %}
 	<h4>Recent threads</h4>
 	<ul>
 	{% for thread in recent_threads %}
-		<li><a href="{% url 'viewthread' thread.id %}">{{thread.title|truncatewords:5}}</a></li>
+		<li><a href="{% url 'viewthread' thread.id %}">{{thread.title|truncatechars:32}}</a></li>
 	{% endfor %}
 	</ul>
 	{% endif %}
@@ -31,7 +33,7 @@
 	<ul>
 
 	{% for response in recent_responses %}
-		<li><a href="{% url 'viewresponse' pk=response.thread.id response_id=response.id %}">{{response.body|truncatewords:5}}</a></li>
+		<li><a href="{% url 'viewresponse' pk=response.thread.id response_id=response.id %}">{{response.body|parse_md|striptags|truncatechars:32}}</a></li>
 	{% endfor %}
 	</ul>
 	{% endif %}

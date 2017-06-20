@@ -4,7 +4,7 @@ Exec page
 {% endblock %}
 {% block body %}
 
-<h2>Society Execs</h2>
+<h1>Society Execs</h1>
 
 {% for role in execs %}
 	<div class="media">
@@ -26,7 +26,7 @@ Exec page
 			{% else %}
 				{{ role.incumbent|default_if_none:"Unoccupied" }}
 			{% endif %}
-				{{ role.role_title }}</h5>
+				- {{ role.role_title }}</h5>
 			{{ role.bio }}
 		</div>
 	</div>

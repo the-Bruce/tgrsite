@@ -13,6 +13,8 @@ from users.models import Member
 from .models import Rpg, Tag
 from .forms import RpgForm, RpgManageForm
 
+# list view
+# TODO: paginate
 class Index(generic.ListView):
 	template_name = 'rpgs/index.html'
 	model = Rpg
@@ -23,9 +25,17 @@ class Detail(generic.DetailView):
 	model = Rpg
 	context_object_name = 'rpg'
 
+# list view filtered by tag
 class Filter(Index):
 	def get_queryset(self):
 		return Rpg.objects.filter(tags__name=self.kwargs['tag'])
+
+# takes a POST form and redirects to the Filter view
+def tag_form(request):
+	tag = request.POST.get('tag')
+	if tag == '' or tag == None:
+		return HttpResponseRedirect(reverse('rpgs'))
+	return HttpResponseRedirect(reverse('rpg_tag', kwargs={'tag': tag}))
 
 @login_required
 def join(request):
@@ -170,16 +180,3 @@ def delete(request, pk):
 
 	rpg.delete()
 	return HttpResponseRedirect(reverse('rpgs'))
-
-# this is REALLY not scalable!
-# ^ clarify?
-# TODO
-def manage(request, pk):
-	rpg = get_object_or_404(Rpg, id=pk)
-	form = RpgManageForm(instance=rpg, initial={'tags': rpg.tags_str})
-	context = {'rpg': rpg, 'form': form}
-	return render(request, 'rpgs/manage.html', context)
-
-# ??????
-def manage_process(request, pk):
-	return HttpResponse()

@@ -4,7 +4,7 @@
 {% endblock %}
 {% block body %}
 
-<h2>{{ current }}</h2>
+<h1>{{current}}</h1>
 
 {% if current.parent.id %}
 	in
@@ -25,15 +25,25 @@ FORUMS
 {% else %}
 SUBFORUMS
 {% endif %}
-<ul>
+<div class="list-group">
 {% for forum in forums %}
-	<li>
-		<a href="{% url 'subforum' forum.id %}">{{ forum }}</a>
-		<small><em>&middot; {{forum.description|default:"no description"}}</em>
-		&middot; {{ forum.get_threads_count }} thread{{forum.get_threads_count|pluralize}}</small>
-	</li>
+	<a href="{% url 'subforum' forum.id %}" class="list-group-item" style="">
+		<strong>{{ forum }}</strong>
+		<small><em>{{forum.description|default:"no description"}}</em>
+		</small>
+
+		<br>{{ forum.get_threads_count }} thread{{forum.get_threads_count|pluralize}}
+
+		{% if forum.get_latest_post %}
+		<span class="pull-right">
+		<em>Latest Post:</em>
+		{{forum.get_latest_post|truncatechars:24}}
+		</span>
+		{% endif %}
+
+	</a>
 {% endfor %}
-</ul>
+</div>
 {% else %}
 	{% if not threads and current == 'Forum' %}
 		Looks like the forum doesn't exist!<br>
@@ -41,11 +51,32 @@ SUBFORUMS
 	{% endif %}
 {% endif %}
 
+
 {% if threads %}
 THREADS: {{current.get_threads_count}}
-<ul>
+<div class="list-group">
 	{% for thread in threads %}
-		<li><a href="{% url 'viewthread' thread.id %}">
+		<a href="{% url 'viewthread' thread.id %}" class="list-group-item">
+
+			{% if thread.is_pinned %}
+				<i class="fa fa-sticky-note-o"> </i>
+			{% endif %}
+			{{thread.title}}
+
+			<span class="pull-right">
+			{{thread.pub_date|timesince}} ago
+			</span>
+			<br>
+			<small>{{thread.author}}</small>
+			<span class="pull-right">
+				{{thread.get_response_count}} response{{thread.get_response_count|pluralize}}
+			</span>
+
+			{% comment old %}
+
+
+			{{thread.pub_date|date:"D d M Y H:i"}}
+
 			{% if thread.is_pinned %}
 				<i class="fa fa-sticky-note-o"> </i>
 			{% endif %}
@@ -57,9 +88,11 @@ THREADS: {{current.get_threads_count}}
 			{{thread.get_response_count}}
 			response{{thread.get_response_count|pluralize}}
 			</small>
-		</a></li>
+
+			{% endcomment %}
+		</a>
 	{% endfor %}
-</ul>
+</div>
 {% endif %}
 {% if request.user.is_authenticated and current != 'Forum' %}
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#createThreadCollapse" aria-expanded="false" aria-controls="createThreadCollapse">Create Thread</button>
