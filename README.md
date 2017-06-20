@@ -3,6 +3,9 @@ Current website for Warwick Univeristy's Tabletop, Games and Roleplaying Society
 
 ## Setup guide
 * Install requirements (`pip install -r requirements.txt`)
+* Set up a secret key in one of two ways:
+ * add a keys.py file in settings with a `secret` method that returns a string key
+ * set the `SECRET_KEY` environment variable
 * Note the `DEBUG` option in tgrsite/settings.py - this must be `False` in production!
 * Before running, make sure that the database migrations are present by running: ` python manage.py makemigrations bugreports rpgs users forum messaging` (i.e. all directories that have models in), followed by `python manage.py migrate`
  * When you change any models make sure to do this to the changed app!
