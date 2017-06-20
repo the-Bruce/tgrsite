@@ -17,8 +17,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # TODO: find a way to keep this up to date with webadmin address.
 # some sort of admin page?
-ADMINS=  [('Webadmin', 'ashbc@users.noreply.github.com')]
-MANAGERS=[('Webadmin', 'ashbc@users.noreply.github.com')]
+ADMINS=  [('Webadmin', 'ash@sent.com')]
+MANAGERS=[('Webadmin', 'ash@sent.com')]
 LOGIN_URL='/login/'
 
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
