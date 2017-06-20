@@ -13,6 +13,8 @@ Context's "response_id" the second number in the url, which is the response ID f
 {{thread.title}}
 {% endblock %}
 
+
+
 {% block body %}
 
 <h2>{{ thread.title }}</h2>
@@ -22,7 +24,9 @@ Context's "response_id" the second number in the url, which is the response ID f
 	<a href="{% url 'subforum' thread.forum.id %}">{{ thread.forum }}</a>
 </h4>
 
+{% comment %} Even the OP uses the "response" template {% endcomment %}
 {% include 'forum/response.html' with response=thread is_thread=True %}
+
 {% for response in responses %}
 	{% include 'forum/response.html' %}
 {% endfor %}

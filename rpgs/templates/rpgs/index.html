@@ -5,6 +5,7 @@
 {% block title %}
 Games signups
 {% endblock %}
+
 {% block body %}
 
 {% rpg_url as r %}
@@ -14,20 +15,40 @@ Games signups
 <h1>Games</h1>
 {% endif %}
 
-{% rpgs_root as o %}
-{% if request.path == o %}
-<a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
-{% else %}
-<a href="{%url 'rpgs' %}">Clear tag filter</a>
-{% endif %}
 {% for rpg in rpgs %}
 {% include "rpgs/detail.html" with embed="true" %}
 {% endfor %}
 
 {% if request.user.is_authenticated %}
-<a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create RPG</button></a>
+<p><a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create game</button></a></p>
 {% else %}
 <!-- this is where the "signup" button goes if you are logged in -->
 {% endif %}
 
+{% endblock %}
+{% block rightbar %}
+
+<div class="panel panel-default">
+				<div class="panel-heading">
+					Filter by tag
+				</div>
+				<div class="panel-body">
+
+					{% rpgs_root as o %}
+					{% if request.path == o %}
+					<a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
+					{% else %}
+					<a href="{%url 'rpgs' %}">Clear filter</a>
+					{% endif %}
+					<form class="form-inline" method="POST" action="{% url 'rpg_tag_form' %}">
+						{% csrf_token %}
+						<div class="form-group input-group">
+							<input class="form-control" type="text" name="tag" placeholder="tag name">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="submit">Filter</button>
+							</span>
+						</div>
+					</form>
+				</div>
+			</div>
 {% endblock %}

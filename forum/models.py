@@ -58,6 +58,14 @@ class Forum(models.Model):
 		return Thread.objects.filter(forum=self.id).count()
 	get_threads_count.short_description='threads'
 
+	def get_latest_post(self):
+		s = self.thread_set.order_by('pub_date')
+		if len(s) > 0:
+			return s[len(s)-1]
+		else:
+			return None
+		#return self.thread_set.order_by('pub_date').reverse()[:1][::-1]
+
 class Thread(models.Model):
 	def __str__(self):
 		return self.title
@@ -89,6 +97,7 @@ class Thread(models.Model):
 # but the decision was made early to put the latter as part of the Thread class...
 class Response(models.Model):
 	def __str__(self):
+		# TODO: probably strip markdown
 		return self.body
 
 	def get_author(self):

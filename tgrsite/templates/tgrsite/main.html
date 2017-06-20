@@ -155,6 +155,18 @@ at least until Markdown is implemented or something B)
 
 <!-- page -->
 <div class="container">
+{% comment %}
+<!--this was here in case people preferred page headings to be
+above all content including sidebars. the people I surveyed preferred the old way.
+Might do an A/B test on the entire site at some point-->
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+			<h1>{% block heading %}{% endblock %}</h1>
+		</div>
+		<div class="col-sm-3"></div>
+	</div>
+{% endcomment %}
 	<div class="row">
 		<div class="col-sm-3">
 			<div class="panel panel-default">

@@ -11,7 +11,7 @@
 <div class="panel panel-default">
 
 	<div class="panel-heading">
-		<h2>
+		<h4>
 			<a href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
 			<span class="pull-right">
 				{% comment TODO %}
@@ -31,7 +31,7 @@
 				<a href="{% url 'rpg_delete' rpg.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 				{% endif %}
 			</span>
-		</h2>
+		</h4>
 
 	</div>
 
@@ -73,11 +73,15 @@
 		</ul>
 
 		{%if rpg.creator == user.member %}
-			<form action="{% url 'rpg_add_to' %}" method="POST" id="add-member">
+			<form class="form-inline" action="{% url 'rpg_add_to' %}" method="POST" id="add-member">
 				{% csrf_token %}
 				<input type="hidden" name="id" value="{{rpg.id}}">
-				<input type="text" name="username" autocomplete="off" data-provide="typeahead" id="add-member-input">
-				<input class="btn btn-default" type="submit" value="Add">
+				<div class="input-group">
+					<input class="form-control" type="text" name="username" autocomplete="off" data-provide="typeahead" id="add-member-input">
+					<span class="input-group-btn">
+						<input class="btn btn-default" type="submit" value="Add">
+					</span>
+				</div>
 			</form>
 		{% endif%}
 
