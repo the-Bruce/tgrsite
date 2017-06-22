@@ -11,7 +11,7 @@ from .forms import ExecBioForm
 
 def index(request):
 	context = {
-		'execs': ExecRole.objects.all().order_by('sort_order')
+		'execs': ExecRole.objects.all().order_by('sort_index')
 	}
 	return render(request, 'exec/index.html', context)
 

@@ -11,6 +11,9 @@ class Forum(models.Model):
 		blank=True, null=True,
 		related_name='subforums')
 
+	sort_index = models.IntegerField(default=0)
+	sort_index.help_text = 'Index for sorting. Lower value = earlier in list.'
+
 	# string that represents the forum's location
 	# eg "Roleplaying / LARP / Character Sheets"
 	# might be useful to generalise this for Threads
