@@ -8,14 +8,17 @@
 	<img src="{{member.gravatar}}" alt="Avatar for {{member.equiv_user.username}}" class="avatar">
 
 	<h1>{{ member.equiv_user.username }}</h1>
-		{% if execroles %}
-		<h2>
+	{% if member.equiv_user.first_name or member.equiv_user.last_name %}
+		<h2>{{member.equiv_user.first_name}} {{member.equiv_user.last_name}}</h2>
+	{% endif %}
+	{% if execroles %}
+		<h3>
 		{% for x in execroles %}
 			{% if x != execroles|first %} / {% endif %}
 			<a href="{% url 'exec' %}#{{x.role_title}}">{{x.role_title}}</a>
 		{%endfor%}
-		</h2>
-		{% endif %}
+		</h3>
+	{% endif %}
 
 	<p>{{ member.bio|parse_md }}</p>
 
