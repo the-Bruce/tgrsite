@@ -15,6 +15,17 @@ class ThreadForm(ModelForm):
 			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
 		}
 
+# Like the thread edit form but also has a field for location
+# to allow users to move their threads
+class ThreadEditForm(ModelForm):
+	class Meta:
+		model = Thread
+		fields = ['title', 'body', 'forum']
+		widgets = {
+			'title': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+		}
+
 # form that goes under a post for users to reply to
 # presented as a "comment" style thing
 class ResponseForm(ModelForm):

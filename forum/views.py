@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from .models import Thread, Response, Forum
-from .forms import ThreadForm, ResponseForm
+from .forms import ThreadForm, ResponseForm, ThreadEditForm
 
 # landing page: "root forum"
 def index(request):
@@ -26,6 +26,8 @@ def forum(request, pk):
 		'current': current_forum,
 		'forums': current_forum.get_subforums().order_by('sort_index'),
 		'threads': threads,
+
+		# prepare a thread form just in case they want to make one
 		'form': ThreadForm(),
 	}
 	return render(request, 'forum/forum.html', context)
@@ -108,7 +110,7 @@ def edit_thread_view(request, pk):
 	if thread.author.equiv_user.id != request.user.id:
 		# TODO: placeholder error
 		return HttpResponseForbidden()
-	form = ThreadForm(instance=thread)
+	form = ThreadEditForm(instance=thread)
 	context = {'form': form, 'id':pk}
 	return render(request, 'forum/edit_thread.html', context)
 
@@ -133,7 +135,7 @@ def edit_thread_process(request):
 	if thread.author.equiv_user.id != request.user.id:
 		return HttpResponseForbidden()
 
-	form = ThreadForm(request.POST, instance=thread)
+	form = ThreadEditForm(request.POST, instance=thread)
 	if(form.is_valid()):
 		form.save()
 		res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk':id}))
