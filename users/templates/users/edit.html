@@ -8,6 +8,8 @@
 	There were problems with the form.
 	{% endif %}
 
+	(Note: to change your profile image, use <a href="https://en.gravatar.com/support/what-is-gravatar/">Gravatar.</a>)
+
 	<form action="{% url 'update' %}" method="POST">
 		{% csrf_token %}
 
