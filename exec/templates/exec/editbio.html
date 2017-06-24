@@ -1,0 +1,16 @@
+{% extends 'tgrsite/main.html' %}
+{% block title %}
+Edit exec bio
+{% endblock %}
+{% block body %}
+
+<h1>Edit bio for {{rolename}}</h1>
+<form method="POST" action="{% url 'exec_editbio_done' pk %}">
+{% csrf_token %}
+
+	{{form}}
+	<input type="submit">
+</form>
+
+
+{% endblock %}

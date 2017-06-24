@@ -160,15 +160,15 @@ at least until Markdown is implemented or something B)
 above all content including sidebars. the people I surveyed preferred the old way.
 Might do an A/B test on the entire site at some point-->
 	<div class="row">
-		<div class="col-sm-3"></div>
-		<div class="col-sm-6">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
 			<h1>{% block heading %}{% endblock %}</h1>
 		</div>
-		<div class="col-sm-3"></div>
+		<div class="col-md-3"></div>
 	</div>
 {% endcomment %}
 	<div class="row">
-		<div class="col-sm-3">
+		<div class="col-md-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
@@ -194,7 +194,7 @@ Might do an A/B test on the entire site at some point-->
 			</div>
 		</div>
 
-		<div class="col-sm-6">
+		<div class="col-md-6">
 			{% block body %}
 				{% comment %}
 				This is the part that gets overridden by templates that extend this one.
@@ -202,7 +202,7 @@ Might do an A/B test on the entire site at some point-->
 			{% endblock %}
 		</div>
 
-		<div class="col-sm-3">
+		<div class="col-md-3">
 			{% block rightbar %}
 			{% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
 			{% endblock %}

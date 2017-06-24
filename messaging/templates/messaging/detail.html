@@ -13,7 +13,7 @@ TODO: format timestamps nicer using some sort of library
 
 <form action="{% url 'message_group' thread.id %}" method="POST" class="form-inline">
 	{% csrf_token %}
-	<input type="text" name="message" placeholder="message" class="form-control" autofocus>
+	<input type="text" name="message" placeholder="message" class="form-control" autofocus autocomplete="off">
 	<input type="submit" class="form-control" value="Send">
 </form>
 <a href="{% url 'message_list' %}">Back to list</a>

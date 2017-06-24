@@ -11,7 +11,7 @@ from .forms import ThreadForm, ResponseForm
 # landing page: "root forum"
 def index(request):
 	context = {
-		'forums': Forum.get_parentless_forums(),
+		'forums': Forum.get_parentless_forums().order_by('sort_index'),
 		'current': 'Forum',
 	}
 	return render(request, 'forum/forum.html', context)
@@ -24,7 +24,7 @@ def forum(request, pk):
 	threads = Thread.objects.filter(forum=pk).extra(order_by=['-is_pinned', '-pub_date'])
 	context = {
 		'current': current_forum,
-		'forums': current_forum.get_subforums(),
+		'forums': current_forum.get_subforums().order_by('sort_index'),
 		'threads': threads,
 		'form': ThreadForm(),
 	}
