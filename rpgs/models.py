@@ -52,6 +52,10 @@ class Rpg(models.Model):
 
 	created_at = models.DateTimeField(auto_now_add=True)
 
+	# if the event is in the past, this should be marked
+	is_in_the_past = models.BooleanField(default=False)
+	is_in_the_past.help_text='Has the event already happened?'
+
 	# It was kind of sad killing off the IntegerField because Ash said
 	# they used it because they wanted to try it out, for fun. Oh well.
 	timeslot = models.CharField(max_length=64, blank=True)

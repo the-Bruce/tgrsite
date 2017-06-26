@@ -7,13 +7,15 @@ class RpgForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(RpgForm, self).__init__(*args, **kwargs)
 		for f in self.fields:
-			if f != 'am_i_gm':
+			if f != 'am_i_gm' and f != 'is_in_the_past':
 				self.fields[f].widget.attrs['class'] = 'form-control'
+			if f == 'is_in_the_past':
+				self.fields[f].label = 'Has this finished?'
 	am_i_gm = forms.BooleanField(required=False)
-	am_i_gm.label = 'Add self to GMs?'
+	am_i_gm.label = 'Are you running this?'
 	class Meta:
 		model = Rpg
-		fields = ['title', 'system', 'description', 'players_wanted', 'timeslot',]
+		fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'is_in_the_past',]
 	tags = forms.CharField(required=False)
 
 # Unused so far

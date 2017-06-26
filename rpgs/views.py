@@ -88,13 +88,18 @@ def create_done(request):
 
 	args['creator_id'] = request.user.member.id
 
+	# weird shit
+	if args['is_in_the_past'] == 'on':
+		args['is_in_the_past'] = True
+	else:
+		args['is_in_the_past'] = False
+
 	# Make a form in order to validate the data
 	fargs = RpgForm(args)
 
 	if not fargs.is_valid():
 		# TODO: Better error!
 		return HttpResponse('Unknown error: RpgForm is not valid')
-
 
 	me = Member.objects.get(id=request.user.member.id)
 
