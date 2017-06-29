@@ -96,7 +96,7 @@ def create_done(request):
 			args['is_in_the_past'] = False
 	# if the box is unchecked I think it's just omitted so bleh
 	except KeyError:
-		args['is_in_the_past'] == False
+		args['is_in_the_past'] = False
 
 	# Make a form in order to validate the data
 	fargs = RpgForm(args)
