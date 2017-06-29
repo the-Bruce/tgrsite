@@ -14,10 +14,18 @@ Games signups
 {% else %}
 <h1>Games</h1>
 {% endif %}
-
+{{request.GET.virus}}
 {% for rpg in rpgs %}
-{% include "rpgs/detail.html" with embed="true" %}
+	{% if request.GET.showfinished == "true" or not rpg.is_in_the_past %}
+		{% include "rpgs/detail.html" with embed="true" %}
+	{% endif %}
 {% endfor %}
+
+{% if request.GET.showfinished == "true" %}
+	<a href=".">Stop showing past games</a>
+{% else %}
+	<a href=".?showfinished=true">Show past games</a>
+{% endif %}
 
 {% if request.user.is_authenticated %}
 <p><a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create game</button></a></p>
