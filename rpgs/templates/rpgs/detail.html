@@ -1,4 +1,5 @@
 {% load rpg_tags %}
+{% load markdown_tags %}
 
 {%if request.GET.status == 'created' %}
 <div class="alert alert-success alert-dismissible" role="alert">
@@ -41,7 +42,7 @@
 		{% endfor %}
 		{% if rpg.tags.all %}<br>{% endif %}
 		<em>{{ rpg.system }}</em>
-		<p>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</p>
+		<p>{% if rpg.description %}{{ rpg.description|parse_md }}{% else %}No description{% endif %}</p>
 		<br>
 		<p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{rpg.get_timeslot_or_unspecified}})
 		{% if rpg.is_in_the_past %}<strong>[finished]</strong>{% endif %}
