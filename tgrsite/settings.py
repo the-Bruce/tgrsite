@@ -28,13 +28,16 @@ try:
     from .keys import secret
     s = secret()
 except:
-    # this will throw a KeyError and crash if neither are specified.
-    # good.
+    # this will throw a KeyError and crash if neither are specified
+    # which is a decent enough way of enforcing it
     s = os.environ['SECRET_KEY']
 SECRET_KEY = s
 
-# DEPLOY: TURN THIS OFF
-DEBUG = False
+# Defaults off unless explicitly stated in environment variable
+if os.environ['DEBUG'] == 'True':
+    DEBUG = True
+else:
+    DEBUG = False
 
 # DEPLOY: Probably remove localhost?
 ALLOWED_HOSTS = ['www.warwicktabletop.co.uk', 'warwicktabletop.co.uk']
