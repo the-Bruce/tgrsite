@@ -34,13 +34,16 @@ except:
 SECRET_KEY = s
 
 # Defaults off unless explicitly stated in environment variable
-if os.environ['DEBUG'] == 'True':
-    DEBUG = True
-else:
+try:
+    if os.environ['DEBUG'] == 'True':
+        DEBUG = True
+    else:
+        DEBUG = False
+except KeyError:
     DEBUG = False
 
 # DEPLOY: Probably remove localhost?
-ALLOWED_HOSTS = ['www.warwicktabletop.co.uk', 'warwicktabletop.co.uk']
+ALLOWED_HOSTS = ['www.warwicktabletop.co.uk', 'warwicktabletop.co.uk', 'localhost']
 
 # Application definition
 
