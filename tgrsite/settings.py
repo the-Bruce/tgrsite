@@ -36,6 +36,7 @@ EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
 # SMTP server hosted on same host as web server for now
 EMAIL_HOST=arg_email_host
+EMAIL_PORT = 25
 
 s = ''
 try:
@@ -56,7 +57,7 @@ try:
 except KeyError:
     DEBUG = False
 
-ALLOWED_HOSTS = ['www.warwicktabletop.co.uk', 'warwicktabletop.co.uk', arg_host]
+ALLOWED_HOSTS = [arg_host]
 
 # Application definition
 
