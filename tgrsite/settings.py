@@ -21,7 +21,16 @@ ADMINS=  [('Webadmin', 'ash@sent.com')]
 MANAGERS=[('Webadmin', 'ash@sent.com')]
 LOGIN_URL='/login/'
 
+# Hostname to be configured from environment
+try:
+    arg_host = os.environ['HOST']
+except:
+    arg_host = 'localhost'
+
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+
+# SMTP server hosted on same host as web server for now
+EMAIL_HOST=arg_host
 
 s = ''
 try:
@@ -42,8 +51,7 @@ try:
 except KeyError:
     DEBUG = False
 
-# DEPLOY: Probably remove localhost?
-ALLOWED_HOSTS = ['www.warwicktabletop.co.uk', 'warwicktabletop.co.uk', 'localhost']
+ALLOWED_HOSTS = ['www.warwicktabletop.co.uk', 'warwicktabletop.co.uk', arg_host]
 
 # Application definition
 
