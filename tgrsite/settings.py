@@ -27,10 +27,15 @@ try:
 except KeyError:
     arg_host = 'localhost'
 
+try:
+    arg_email_host = os.environ['EMAIL_HOST']
+except KeyError:
+    arg_email_host = 'localhost'
+
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
 # SMTP server hosted on same host as web server for now
-EMAIL_HOST=arg_host
+EMAIL_HOST=arg_email_host
 
 s = ''
 try:
