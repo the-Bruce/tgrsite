@@ -24,7 +24,7 @@ LOGIN_URL='/login/'
 # Hostname to be configured from environment
 try:
     arg_host = os.environ['HOST']
-except:
+except KeyError:
     arg_host = 'localhost'
 
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
