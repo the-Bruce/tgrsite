@@ -36,7 +36,7 @@ EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
 # SMTP server hosted on same host as web server for now
 EMAIL_HOST=arg_email_host
-EMAIL_PORT = 25
+EMAIL_PORT = 587
 
 s = ''
 try:
