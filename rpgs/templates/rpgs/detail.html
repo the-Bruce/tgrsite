@@ -41,9 +41,19 @@
 			<a href="{% url 'rpg_tag' tag %}"><span class="label label-primary wordwrap">{{ tag }}</span></a>
 		{% endfor %}
 		{% if rpg.tags.all %}<br>{% endif %}
+
+		{% if rpg.system %}
 		<em>{{ rpg.system }}</em><br><br>
-		<div class="wordwrap">{% if rpg.description %}{{ rpg.description|parse_md }}{% else %}No description{% endif %}</div>
-		<br>
+		{% endif %}
+		<div class="wordwrap">{% if rpg.description %}
+			{% if embed %}
+				{{ rpg.description|parse_md|truncatechars_html:128 }}
+			{% else %}
+				{{ rpg.description|parse_md }}
+			{% endif %}
+		{% else %}
+			No description
+		{% endif %}</div>
 		<p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{rpg.get_timeslot_or_unspecified}})
 		{% if rpg.is_in_the_past %}<strong>[finished]</strong>{% endif %}
 		</p>
