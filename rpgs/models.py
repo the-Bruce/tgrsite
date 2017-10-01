@@ -43,7 +43,7 @@ class Rpg(models.Model):
 	system = models.CharField(max_length=64, blank=True)
 
 	# longform description
-	description = models.TextField(blank=True)
+	description = models.TextField(max_length=8192, blank=True)
 
 	players_wanted = models.IntegerField()
 

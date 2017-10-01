@@ -46,6 +46,17 @@ ul {
 	list-style-type: none;
 }
 
+.wordwrap{
+	white-space: -moz-pre-wrap !important;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	white-space: -webkit-pre-wrap;
+	word-break: break-all;
+	white-space: normal;
+}
+
 /* override browser's/Bootstrap's default which presumes <pre> is used for code
 whereas in our case we will use it to preserve formatting on text boxes
 at least until Markdown is implemented or something B)

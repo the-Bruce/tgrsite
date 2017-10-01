@@ -13,7 +13,7 @@
 
 	<div class="panel-heading">
 		<h4>
-			<a href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
+			<a class="wordwrap" href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
 			<span class="pull-right">
 				{% comment TODO %}
 				TODO: Find a way to incorporate can_manage?
@@ -38,12 +38,22 @@
 
 	<div class="panel-body">
 		{% for tag in rpg.tags.all %}
-			<a href="{% url 'rpg_tag' tag %}"><span class="label label-primary">{{ tag }}</span></a>
+			<a href="{% url 'rpg_tag' tag %}"><span class="label label-primary wordwrap">{{ tag }}</span></a>
 		{% endfor %}
 		{% if rpg.tags.all %}<br>{% endif %}
-		<em>{{ rpg.system }}</em>
-		<p>{% if rpg.description %}{{ rpg.description|parse_md }}{% else %}No description{% endif %}</p>
-		<br>
+
+		{% if rpg.system %}
+		<em>{{ rpg.system }}</em><br><br>
+		{% endif %}
+		<div class="wordwrap">{% if rpg.description %}
+			{% if embed %}
+				{{ rpg.description|parse_md|truncatechars_html:128 }}
+			{% else %}
+				{{ rpg.description|parse_md }}
+			{% endif %}
+		{% else %}
+			No description
+		{% endif %}</div>
 		<p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{rpg.get_timeslot_or_unspecified}})
 		{% if rpg.is_in_the_past %}<strong>[finished]</strong>{% endif %}
 		</p>
