@@ -7,9 +7,9 @@
 <div class="jumbotron">
 	<img src="{{member.gravatar}}" alt="Avatar for {{member.equiv_user.username}}" class="avatar">
 
-	<h1>{{ member.equiv_user.username }}</h1>
+	<h1 class="wordwrap">{{ member.equiv_user.username }}</h1>
 	{% if member.equiv_user.first_name or member.equiv_user.last_name %}
-		<h2>{{member.equiv_user.first_name}} {{member.equiv_user.last_name}}</h2>
+		<h2 class="wordwrap">{{member.equiv_user.get_full_name}}</h2>
 	{% endif %}
 	{% if execroles %}
 		<h3>
@@ -20,7 +20,7 @@
 		</h3>
 	{% endif %}
 
-	<p>{{ member.bio|parse_md }}</p>
+	<div class="wordwrap">{{ member.bio|parse_md }}</div>
 
 	{% if recent_threads %}
 	<h4>Recent threads</h4>

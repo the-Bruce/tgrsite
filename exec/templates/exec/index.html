@@ -17,16 +17,15 @@ Exec page
 				{% endif %}
 				alt="Avatar for {{ role.incumbent }}">
 		</div>
-		<div class="media-body" id="role.role_title">
+		<div class="media-body wordwrap" id="role.role_title">
 			<h5 class="media-heading">
 			{% if role.incumbent %}
 				<a href="{% url 'user' role.incumbent.id %}">
 					{{ role.incumbent }}
 				</a>
-				{% if role.incumbent.equiv_user.first_name or role.incumbent.equiv_user.last_name %}
+				{% if role.incumbent.equiv_user.get_full_name %}
 				-
-					{{role.incumbent.equiv_user.first_name}}
-					{{role.incumbent.equiv_user.last_name}}
+					{{role.incumbent.equiv_user.get_full_name}}
 
 				{% endif %}
 			{% else %}

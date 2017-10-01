@@ -67,29 +67,11 @@ THREADS: {{current.get_threads_count}}
 			{{thread.pub_date|timesince}} ago
 			</span>
 			<br>
-			<small>{{thread.author}}</small>
+			<small>{{thread.author|truncatechars:32}}</small>
 			<span class="pull-right">
 				{{thread.get_response_count}} response{{thread.get_response_count|pluralize}}
 			</span>
 
-			{% comment old %}
-
-
-			{{thread.pub_date|date:"D d M Y H:i"}}
-
-			{% if thread.is_pinned %}
-				<i class="fa fa-sticky-note-o"> </i>
-			{% endif %}
-			[{{ thread.pub_date }}] {{ thread.title }}
-			&middot;
-			<small>
-			{{thread.author.equiv_user.username}}
-			&middot;
-			{{thread.get_response_count}}
-			response{{thread.get_response_count|pluralize}}
-			</small>
-
-			{% endcomment %}
 		</a>
 	{% endfor %}
 </div>

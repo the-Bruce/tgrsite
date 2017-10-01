@@ -6,13 +6,13 @@ Included by thread.html which is responsible for rendering the enclosing thread
 <div class="panel panel-default post"><div class="panel-body">
 	<div class="media">
 		<div class="media-left">
-			<a href="{% url 'user' response.author.id %}">
+			<a class="wordwrap" href="{% url 'user' response.author.id %}">
 				<img class="media-object avatar" src="{{response.author.gravatar}}" alt="Avatar for {{ response.author }}">
 				{{response.author}}
 			</a>
 		</div>
 		<div class="media-body">
-			<div class="panel panel-default"><div class="panel-body post-body">
+			<div class="panel panel-default"><div class="panel-body post-body wordwrap">
 				{{ response.body|parse_md }}
 				{% if response.author.signature %}
 					<br>
