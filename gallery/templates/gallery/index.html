@@ -1,6 +1,6 @@
 {% extends 'tgrsite/main.html' %}
-
 {% load staticfiles %}
+
 {% block title %}
 Gallery
 {% endblock %}
@@ -12,6 +12,8 @@ Gallery
 {% endblock %}
 
 {% block body %}
+
+
 <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
 	<div class="slides"></div>
 	<h3 class="title"></h3>
@@ -21,6 +23,38 @@ Gallery
 	<a class="play-pause"></a>
 	<ol class="indicator"></ol>
 </div>
+
+<div id="links">
+	{% for x in images %}
+		<a href="{% static x.galleryurl %}" title="{{x.caption}}">
+			<img class="gallerythumb" src="{% static x.galleryurl %}" alt="{{x.caption}}">
+		</a>
+	{% endfor %}
+</div>
+
+<script type="text/javascript" src="{% static "gallery/js/blueimp-gallery.min.js" %}"></script>
+<script>
+document.getElementById('links').onclick = function (event) {
+	event = event || window.event;
+	var target = event.target || event.srcElement,
+		link = target.src ? target.parentNode : target,
+		options = {index: link, event: event},
+		links = this.getElementsByTagName('a');
+	blueimp.Gallery(links, options);
+};
+</script>
+
+<style>
+.gallerythumb {
+	height: 100px;
+	width: auto;
+}
+
+{% endblock %}
+
+
+{% comment %}
+
 
 <div id="links">
 	<a href="http://gravatar.com/avatar/?default=identicon" title="Image">
@@ -36,15 +70,6 @@ Gallery
 	</a>
 </div>
 
-<script type="text/javascript" src="{% static "gallery/js/blueimp-gallery.min.js" %}"></script>
-<script>
-document.getElementById('links').onclick = function (event) {
-	event = event || window.event;
-	var target = event.target || event.srcElement,
-		link = target.src ? target.parentNode : target,
-		options = {index: link, event: event},
-		links = this.getElementsByTagName('a');
-	blueimp.Gallery(links, options);
-};
-</script>
-{% endblock %}
+
+
+{% endcomment %}
