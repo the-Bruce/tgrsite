@@ -4,3 +4,5 @@ db.sqlite3
 STATIC/
 tgrsite/keys.py
 *.pyc
+static_resources/gallery_photos/*
+
