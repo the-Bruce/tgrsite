@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.views.generic import TemplateView, RedirectView
-from . import views
+from django.views.generic import TemplateView#, RedirectView
 
 urlpatterns = [
 	url(r'^$', TemplateView.as_view(template_name='tgrsite/index.html'), name='homepage'),
@@ -25,4 +24,5 @@ urlpatterns = [
 	# e.g. the larp intro page
 	url(r'^', include('statics.urls')),
 
+	url(r'^gallery/', include('gallery.urls')),
 ]

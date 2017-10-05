@@ -116,6 +116,10 @@ def signup_process(request):
 	form = SignupForm(request.POST)
 	if(form.is_valid()):
 
+		# CHECK CASE!
+		if User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
+			return HttpResponseRedirect(reverse('signup') + '?error=exists')
+
 		#u = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
 		#m = Member.objects.create(equiv_user=u)
 		#u.save()
@@ -128,12 +132,34 @@ def signup_process(request):
 			return HttpResponseRedirect(reverse('me'))
 		else:
 			# TODO: Proper error
-			return HttpResponse('Unknown error')
+			mail_managers(
+				'Unknown signup error',
+				'Unknown signup error with valid form. Auth is None. Find below form data:\nraw username: {}\nraw email: {}, cleaned username: {}, cleaned email: {}, user id: {}'.format(form.data['username'], form.data['email'], form.cleaned_data['username'], form.cleaned_data['email'], u.id),
+				fail_silently=True
+			)
+			return HttpResponseRedirect(reverse('signup') + '?error=unknown')
 	else:
-		# TODO: Proper error lol
-		# Note: This branch occurs when, for instance, user signs up with existing username
-		# Definitely needs to be sorted!
-		return HttpResponse('Error. User probably already exists.')
+		# known reasons this can occur:
+		# - user exists already
+		# - invalid username (eg forbidden characters)
+
+		if User.objects.filter(username__iexact=form.data['username']).exists():
+			return HttpResponseRedirect(reverse('signup') + '?error=exists')
+
+		# there's probably a better way to do this...
+		import re
+		if(re.search(r'[^A-Za-z0-9@.+-_]', form.data['username'])
+			or len(form.data['username']) > 150):
+			return HttpResponseRedirect(reverse('signup') + '?error=invalid')
+
+		from django.core.mail import mail_managers
+		mail_managers(
+			'Unknown signup error',
+			'Unknown signup error with invalid form. Find below form data:\nusername: {}\nemail: {}'.format(form.data['username'], form.data['email']),
+			fail_silently=True
+		)
+
+		return HttpResponseRedirect(reverse('signup') + '?error=unknown')
 
 @login_required
 def logout_view(request):

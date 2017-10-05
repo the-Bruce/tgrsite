@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'templatetags.apps.TemplatetagsConfig',
     'messaging.apps.MessagingConfig',
     'bugreports.apps.BugreportsConfig',
+    'gallery.apps.GalleryConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -94,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'tgrsite.context_processors.latestposts',
             ],
         },
     },
@@ -129,6 +131,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'users.backends.CaseInsensitiveModelBackend',
+)
 
 
 # Internationalization
@@ -171,15 +177,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 # site URL that static files are served from
 STATIC_URL = '/static/'
+
 # directories to collect static files from
 STATICFILES_DIRS = (
-    # this is where all our actual static files are gonna be put.
+    # where the static files are stored in the repo and collected from
     os.path.join(BASE_DIR, 'static_resources'),
  )
-# the folder to store the static files...
-# where to put these such that it has permission to write there?
-# in place? for now haha
-# in order to serve these we need to wsgi a server
+
+# directory the static files are served from
 STATIC_ROOT=os.path.join(BASE_DIR, 'STATIC')
 
 # Monday

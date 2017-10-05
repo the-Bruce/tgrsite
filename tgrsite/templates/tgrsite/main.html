@@ -1,4 +1,5 @@
 {% load static %}
+{% load markdown_tags %}
 
 <title>{% block title %}{% endblock %} - warwicktabletop.co.uk</title>
 
@@ -26,6 +27,10 @@
 {% endblock %}
 
 <style>
+
+.latest {
+	margin-bottom: 10px;
+}
 img.avatar {
 	width: 128px;
 	height: 128px;
@@ -90,7 +95,7 @@ at least until Markdown is implemented or something B)
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="/">
-				<img src="/static/logo.png" class="brand-img" alt="Home">
+				<img src="{% static 'logo_purple.png'%}" class="brand-img" alt="Home">
 			</a>
 		</div>
 		<div class="collapse navbar-collapse" id="nav-collapse">
@@ -184,7 +189,7 @@ Might do an A/B test on the entire site at some point-->
 				<div class="panel-heading">
 					Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
 				</div>
-				{% block leftbar %}{% endblock %}
+
 				<div class="panel-body">
 					<ul>
 						{% if request.user.is_staff %}
@@ -203,6 +208,50 @@ Might do an A/B test on the entire site at some point-->
 					</ul>
 				</div>
 			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Recent threads
+				</div>
+				<div class="panel-body">
+				<ul>
+					{% for x in latestthreads %}
+						<li class="latest">
+							<a href="{% url 'viewthread' x.id %}">{{x}}</a>
+							<br>
+
+							<small>
+							by <a href="{% url 'user' x.author.id %}">{{x.author}}</a>
+							in <a href="{% url 'subforum' x.forum.id %}">{{x.forum}}</a>
+							{{x.pub_date|timesince}} ago
+							</small>
+						</li>
+					{% endfor %}
+				</ul>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Recent replies
+				</div>
+				<div class="panel-body">
+				<ul>
+					{% for x in latestresponses %}
+						<li class="latest">
+							<a href="{% url 'viewthread' x.id %}">{{x.body|parse_md|striptags|truncatechars:32}}</a>
+							<br>
+
+							<small>
+							by <a href="{% url 'user' x.author.id %}">{{x.author}}</a>
+							{{x.pub_date|timesince}} ago
+							</small>
+						</li>
+					{% endfor %}
+				</ul>
+				</div>
+			</div>
+			{% block leftbar %}{% endblock %}
+
 		</div>
 
 		<div class="col-md-6">

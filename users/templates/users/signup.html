@@ -2,12 +2,28 @@
 {% block title %}Signup{% endblock %}
 {% block body %}
 
+{% comment %} I have no idea what this is {% endcomment %}
 {%if result == 'invalid' %}
 <div class="alert alert-danger alert-dismissible" role="alert">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		<span aria-hidden="true">&times;</span>
 	</button>
 	Invalid user for spooky reasons.
+</div>
+{% endif %}
+
+{% if request.GET.error %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	{% if request.GET.error == 'exists' %}
+		A user with that username already exists.
+	{% elif request.GET.error == 'invalid' %}
+		Invalid username.
+	{% else %}
+		Unknown error - please contact the webadmin with details.
+	{% endif %}
 </div>
 {% endif %}
 
