@@ -238,7 +238,7 @@ Might do an A/B test on the entire site at some point-->
 				<ul>
 					{% for x in latestresponses %}
 						<li class="latest">
-							<a href="{% url 'viewthread' x.id %}">{{x.body|parse_md|striptags|truncatechars:32}}</a>
+							<a href="{% url 'viewthread' x.thread.id %}">{{x.body|parse_md|striptags|truncatechars:32}}</a>
 							<br>
 
 							<small>
