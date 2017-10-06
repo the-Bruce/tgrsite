@@ -8,6 +8,9 @@
 	<img src="{{member.gravatar}}" alt="Avatar for {{member.equiv_user.username}}" class="avatar">
 
 	<h1 class="wordwrap">{{ member.equiv_user.username }}</h1>
+	{% if member != request.user.member %}
+		<a href="{% url 'get_dm_thread' member.id %}">Message</a>
+	{% endif %}
 	{% if member.equiv_user.first_name or member.equiv_user.last_name %}
 		<h2 class="wordwrap">{{member.equiv_user.get_full_name}}</h2>
 	{% endif %}

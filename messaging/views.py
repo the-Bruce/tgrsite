@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.db.models import Count
 from users.models import Member
 from .models import Message, MessageThread
+from django.contrib.auth.models import User
 
 import re
 
@@ -107,3 +108,30 @@ def thread(request, pk):
 		return HttpResponseNotFound()
 
 	return render(request, 'messaging/detail.html', {'thread':thread})
+
+# redirects to the thread containing messages between logged-in user and recipient
+@login_required
+def get_dm_thread(request, recipient):
+
+	# recipient member
+	rec = Member.objects.get(id=recipient)
+	q = MessageThread.objects.annotate(num_participants=Count('participants'))
+
+	q = q.filter(participants=rec)
+
+	print(rec)
+
+	if rec == request.user.member:
+		q = q.filter(num_participants=1)
+	else:
+		q = q.filter(num_participants=2)
+		q = q.filter(participants=request.user.member)
+	q, c = q.get_or_create()
+
+	if c:
+		q.participants.add(request.user.member)
+		q.participants.add(rec)
+
+	print(q)
+
+	return HttpResponseRedirect(reverse('message_thread', kwargs={'pk': q.id}))
