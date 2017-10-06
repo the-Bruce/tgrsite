@@ -1,10 +1,10 @@
 {% extends "tgrsite/main.html" %}
 {% block title %}
-Create game
+Create event
 {% endblock %}
 {% block body %}
 
-<h1>Create game</h1>
+<h1>Create event</h1>
 <form action="{% url 'create_done' %}" method="POST">
 	{% csrf_token %}
 	{{ form.non_field.errors }}
