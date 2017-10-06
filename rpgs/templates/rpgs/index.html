@@ -14,7 +14,6 @@ Events
 {% else %}
 <h1>Games</h1>
 {% endif %}
-{{request.GET.virus}}
 {% for rpg in rpgs %}
 	{% if request.GET.showfinished == "true" or not rpg.is_in_the_past %}
 		{% include "rpgs/detail.html" with embed="true" %}
@@ -28,15 +27,15 @@ Events
 {% endif %}
 
 {% if request.user.is_authenticated %}
-<p><a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create game</button></a></p>
-{% else %}
-<!-- this is where the "signup" button goes if you are logged in -->
+<p><a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create event</button></a></p>
 {% endif %}
 
 {% endblock %}
 {% block rightbar %}
 
-<div class="panel panel-default">
+
+
+<div class="panel panel-default accordion">
 				<div class="panel-heading">
 					Filter by tag
 				</div>
@@ -59,4 +58,22 @@ Events
 					</form>
 				</div>
 			</div>
+
+<div class="panel panel-default accordion">
+	<div class="panel-heading">Events guide</div>
+	<div class="panel-body">
+		<h4>To start an event:</h4>
+		<ol>
+			<li>Click the "Create event" button</li>
+			<li>Give your event a name, description, etc.</li>
+			<li>Tags can help quickly describe your event - eg if you are running an RPG, the "rpg" tag will help people find it.</li>
+		</ol>
+
+		<h4>To chat with your participants:</h4>
+		<ol>
+			<li>On the event's page, click a user's name to visit their profile.</li>
+			<li>Message them by hitting the "Message" button</li>
+		</ol>
+	</div>
+</div>
 {% endblock %}

@@ -12,4 +12,6 @@ urlpatterns = [
 	url(r'^group_message/(?P<threadid>[0-9]+)/$', views.group_message, name='message_group'),
 
 	url(r'^thread/(?P<pk>[0-9]+)/$', views.thread, name='message_thread'),
+
+	url(r'^dm_thread/(?P<recipient>[0-9]+)/$', views.get_dm_thread, name='get_dm_thread'),
 ]
