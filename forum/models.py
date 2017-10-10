@@ -61,6 +61,14 @@ class Forum(models.Model):
 		return Thread.objects.filter(forum=self.id).count()
 	get_threads_count.short_description='threads'
 
+	# recursively get thread count
+	# i.e. number of threads here and in all subforums
+	def get_threads_count_r(self):
+		count = 0
+		for subforum in self.get_subforums():
+			count += subforum.get_threads_count_r()
+		return count + self.get_threads_count()
+
 	def get_latest_post(self):
 		s = self.thread_set.order_by('pub_date')
 		if len(s) > 0:

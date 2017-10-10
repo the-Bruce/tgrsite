@@ -32,7 +32,7 @@ SUBFORUMS
 		<small><em>{{forum.description|default:"no description"}}</em>
 		</small>
 
-		<br>{{ forum.get_threads_count }} thread{{forum.get_threads_count|pluralize}}
+		<br>{{ forum.get_threads_count_r }} thread{{forum.get_threads_count_r|pluralize}}
 
 		{% if forum.get_latest_post %}
 		<span class="pull-right">
