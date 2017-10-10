@@ -3,7 +3,10 @@ from django.contrib import admin
 from django.views.generic import TemplateView#, RedirectView
 
 urlpatterns = [
-	url(r'^$', TemplateView.as_view(template_name='tgrsite/index.html'), name='homepage'),
+	# the homepage is now a model and is located in pages.urls
+	# to use it, create a Page model with the name "index"
+	# url(r'^$', TemplateView.as_view(template_name='tgrsite/index.html'), name='homepage'),
+
 	url(r'^admin/', admin.site.urls),
 	url(r'^forum/', include('forum.urls')),
 
@@ -25,4 +28,7 @@ urlpatterns = [
 	url(r'^', include('statics.urls')),
 
 	url(r'^gallery/', include('gallery.urls')),
+
+	# model-based pages, to supersede the statics module
+	url(r'^', include('pages.urls')),
 ]
