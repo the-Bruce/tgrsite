@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Textarea, TextInput, EmailInput, PasswordInput
+from django.forms import ModelForm, Textarea, TextInput, EmailInput, PasswordInput, ValidationError
 from django.contrib.auth.models import User
 
 from .models import Member
@@ -26,8 +26,16 @@ class UserForm(ModelForm):
 			i: TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs) for i in fields
 		}
 
-		# email needs to be an email field though
+		# ...except this one
 		widgets['email'] = EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs)
+
+	def clean(self):
+		data = self.cleaned_data
+		if 'username' not in data:
+			raise ValidationError('')
+
+		if len(data['username']) > 32:
+			self.add_error('username', ValidationError('Username must be 32 characters or fewer.'))
 
 class SignupForm(ModelForm):
 	class Meta:
@@ -39,6 +47,18 @@ class SignupForm(ModelForm):
 			'email': EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
 			'password': PasswordInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
 		}
+
+		help_texts = {
+			'username' : 'Required. 32 characters or fewer. Letters, digits and @/./+/-/_ only.'
+		}
+
+	def clean(self):
+		data = self.cleaned_data
+		if 'username' not in data:
+			raise ValidationError('')
+
+		if len(data['username']) > 32:
+			self.add_error('username', ValidationError('Username must be 32 characters or fewer.'))
 
 
 class MemberForm(ModelForm):
