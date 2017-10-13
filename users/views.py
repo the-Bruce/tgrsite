@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.forms import ValidationError
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
@@ -118,12 +119,10 @@ def signup_process(request):
 
 		# CHECK CASE!
 		if User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
-			return HttpResponseRedirect(reverse('signup') + '?error=exists')
+			form.add_error('username', ValidationError('A user with that name already exists.'))
+			return render(request, 'users/signup.html', {'form': form})
 
-		#u = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
-		#m = Member.objects.create(equiv_user=u)
-		#u.save()
-
+		# now that we're here, the form is DEFINITELY valid.
 		u = spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
 
 		auth = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
@@ -131,35 +130,21 @@ def signup_process(request):
 			login(request, auth)
 			return HttpResponseRedirect(reverse('me'))
 		else:
-			# TODO: Proper error
 			mail_managers(
 				'Unknown signup error',
 				'Unknown signup error with valid form. Auth is None. Find below form data:\nraw username: {}\nraw email: {}, cleaned username: {}, cleaned email: {}, user id: {}'.format(form.data['username'], form.data['email'], form.cleaned_data['username'], form.cleaned_data['email'], u.id),
 				fail_silently=True
 			)
-			return HttpResponseRedirect(reverse('signup') + '?error=unknown')
+			form.add_error(None, ValidationError('Unknown error. The webadmin has been notified.'))
+			return render(request, 'users/signup.html', {'form': form})
 	else:
-		# known reasons this can occur:
-		# - user exists already
-		# - invalid username (eg forbidden characters)
+		# This should only be true if the username is invalid yet also already exists
+		# i.e. never?
+		if 'username' in form.data and User.objects.filter(username__iexact=form.data['username']).exists():
+			form.add_error('username', ValidationError('A user with that name already exists.'))
 
-		if User.objects.filter(username__iexact=form.data['username']).exists():
-			return HttpResponseRedirect(reverse('signup') + '?error=exists')
-
-		# there's probably a better way to do this...
-		import re
-		if(re.search(r'[^A-Za-z0-9@.+-_]', form.data['username'])
-			or len(form.data['username']) > 150):
-			return HttpResponseRedirect(reverse('signup') + '?error=invalid')
-
-		from django.core.mail import mail_managers
-		mail_managers(
-			'Unknown signup error',
-			'Unknown signup error with invalid form. Find below form data:\nusername: {}\nemail: {}'.format(form.data['username'], form.data['email']),
-			fail_silently=True
-		)
-
-		return HttpResponseRedirect(reverse('signup') + '?error=unknown')
+		# display the errors from the default validators
+		return render(request, 'users/signup.html', {'form': form})
 
 @login_required
 def logout_view(request):

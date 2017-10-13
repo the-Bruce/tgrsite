@@ -9,6 +9,15 @@
 	Game successfully created.
 </div>
 {% endif %}
+
+{% if request.GET.error == 'full' %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	Game is full
+</div>
+{% endif %}
 <div class="panel panel-default">
 
 	<div class="panel-heading">
@@ -71,7 +80,7 @@
 		<ul>
 			{% for member in rpg.members.all %}
 			<li>
-				{{member}}
+				<a href="{% url 'user' member.id %}">{{member}}</a>
 				{%if rpg.creator == user.member %}
 					<a href="javascript:{}" onclick="document.getElementById('kick{{member}}').submit();" data-toggle="popover" data-placement="right" data-content="Remove this user from this game"><span class="glyphicon glyphicon-remove"></span></a>
 					<form action="{% url 'rpg_kick' %}" method="POST" id="kick{{member}}" hidden>
@@ -111,7 +120,7 @@
 					<input type="hidden" name="id" value="{{rpg.id}}">
 					<input class="btn btn-default" type="submit" value="Leave">
 				</form>
-			{% else %}
+			{% elif rpg.members.count < rpg.players_wanted %}
 				<form action="{% url 'rpg_join'%}" method="POST">
 					{% csrf_token %}
 					<input type="hidden" name="id" value="{{rpg.id}}">

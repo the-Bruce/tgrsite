@@ -21,6 +21,8 @@
 		A user with that username already exists.
 	{% elif request.GET.error == 'invalid' %}
 		Invalid username.
+	{% elif request.GET.error == 'length' %}
+		Username must be 32 characters or fewer.
 	{% else %}
 		Unknown error - please contact the webadmin with details.
 	{% endif %}

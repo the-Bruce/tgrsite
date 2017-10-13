@@ -40,8 +40,10 @@ def tag_form(request):
 @login_required
 def join(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
-	rpg.members.add(request.user.member)
-	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
+	if rpg.members.count() < rpg.players_wanted:
+		rpg.members.add(request.user.member)
+		return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
+	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}) + '?error=full')
 
 @login_required
 def leave(request):

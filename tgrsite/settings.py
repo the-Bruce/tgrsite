@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'messaging.apps.MessagingConfig',
     'bugreports.apps.BugreportsConfig',
     'gallery.apps.GalleryConfig',
+    'pages.apps.PagesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
