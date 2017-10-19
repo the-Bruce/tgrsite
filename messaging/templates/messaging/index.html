@@ -6,7 +6,7 @@ Messages
 {% endblock %}
 {% block body %}
 <h1>Messages</h1>
-<ul>
+<ul class="nobullet">
 	{% for thread in threads %}
 	<li>
 		<a href="{% url 'message_thread' thread.id %}">
