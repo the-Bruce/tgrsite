@@ -56,7 +56,7 @@
 	.jumbotron {
 		text-align: center;
 	}
-	ul {
+	.nobullet {
 		padding: 0;
 		list-style-type: none;
 	}
@@ -241,7 +241,7 @@ Might do an A/B test on the entire site at some point-->
 					Recent threads
 				</div>
 				<div class="panel-body">
-				<ul>
+				<ul class="nobullet">
 					{% for x in latestthreads %}
 						<li class="latest">
 							<a href="{% url 'viewthread' x.id %}">{{x.title|truncatechars:32}}</a>
@@ -263,7 +263,7 @@ Might do an A/B test on the entire site at some point-->
 					Recent replies
 				</div>
 				<div class="panel-body">
-				<ul>
+				<ul class="nobullet">
 					{% for x in latestresponses %}
 						<li class="latest">
 							<a href="{% url 'viewthread' x.thread.id %}">{{x.body|parse_md|striptags|truncatechars:32}}</a>
