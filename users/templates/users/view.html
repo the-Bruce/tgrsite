@@ -27,7 +27,7 @@
 
 	{% if recent_threads %}
 	<h4>Recent threads</h4>
-	<ul>
+	<ul class="nobullet">
 	{% for thread in recent_threads %}
 		<li><a href="{% url 'viewthread' thread.id %}">{{thread.title|truncatechars:32}}</a></li>
 	{% endfor %}
@@ -36,7 +36,7 @@
 
 	{% if recent_responses %}
 	<h4>Recent repsonses</h4>
-	<ul>
+	<ul class="nobullet">
 
 	{% for response in recent_responses %}
 		<li><a href="{% url 'viewresponse' pk=response.thread.id response_id=response.id %}">{{response.body|parse_md|striptags|truncatechars:32}}</a></li>
@@ -46,7 +46,7 @@
 
 	{% if rpgs %}
 	<h4>Games running</h4>
-	<ul>
+	<ul class="nobullet">
 	{% for rpg in rpgs %}
 		<li><a href="{% url 'rpg' rpg.id %}">{{rpg.title}}</a></li>
 	{% endfor %}
