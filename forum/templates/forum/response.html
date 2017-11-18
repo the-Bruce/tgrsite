@@ -3,37 +3,42 @@
 Renders a single thread "response" (including the inital post)
 Included by thread.html which is responsible for rendering the enclosing thread
 {% endcomment %}
-<div class="panel panel-default post"><div class="panel-body">
-	<div class="media">
-		<div class="media-left">
-			<a class="wordwrap" href="{% url 'user' response.author.id %}">
-				<img class="media-object avatar" src="{{response.author.gravatar}}" alt="Avatar for {{ response.author }}">
-				{{response.author}}
-			</a>
-		</div>
-		<div class="media-body">
-			<div class="panel panel-default"><div class="panel-body post-body wordwrap">
-				{{ response.body|parse_md }}
-				{% if response.author.signature %}
-					<br>
-					{{ response.author.signature|parse_md }}
+<div class="panel panel-default">
+
+	{% if not is_thread %}<a name="response-{{response.id}}"></a>{% endif %}
+
+	<div class="panel-body">
+		<div class="media">
+			<div class="media-left">
+				<a class="wordwrap" href="{% url 'user' response.author.id %}">
+					<img class="media-object avatar" src="{{response.author.gravatar}}" alt="Avatar for {{ response.author }}">
+					{{response.author}}
+				</a>
+			</div>
+			<div class="media-body">
+				<div class="panel panel-default"><div class="panel-body post-body wordwrap">
+					{{ response.body|parse_md }}
+					{% if response.author.signature %}
+						<br>
+						{{ response.author.signature|parse_md }}
+					{% endif %}
+				</div>
+				</div>
+				<span class="text-muted pull-right">{{response.pub_date}}</span>
+			</div>
+			<div class="media-right">
+
+			{% if response.author == user.member %}
+				{% if is_thread %}
+				<a href="{% url 'thread_delete' thread.id %}"><i class="fa fa-trash"></i></a>
+				<a href="{% url 'thread_edit' thread.id %}"><i class="fa fa-pencil"></i></a>
+				{% else %}
+				<a href="{% url 'response_delete' response.id %}"><i class="fa fa-trash"></i></a>
+				<a href="{% url 'response_edit' response.id %}"><i class="fa fa-pencil"></i></a>
 				{% endif %}
-			</div>
-			</div>
-			<span class="text-muted pull-right">{{response.pub_date}}</span>
-		</div>
-		<div class="media-right">
-
-		{% if response.author == user.member %}
-			{% if is_thread %}
-			<a href="{% url 'thread_delete' thread.id %}"><i class="fa fa-trash"></i></a>
-			<a href="{% url 'thread_edit' thread.id %}"><i class="fa fa-pencil"></i></a>
-			{% else %}
-			<a href="{% url 'response_delete' response.id %}"><i class="fa fa-trash"></i></a>
-			<a href="{% url 'response_edit' response.id %}"><i class="fa fa-pencil"></i></a>
 			{% endif %}
-		{% endif %}
 
+			</div>
 		</div>
 	</div>
-</div></div>
+</div>
