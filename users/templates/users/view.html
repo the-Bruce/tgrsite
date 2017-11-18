@@ -39,7 +39,7 @@
 	<ul class="nobullet">
 
 	{% for response in recent_responses %}
-		<li><a href="{% url 'viewresponse' pk=response.thread.id response_id=response.id %}">{{response.body|parse_md|striptags|truncatechars:32}}</a></li>
+		<li><a href="{% url 'viewthread' pk=response.thread.id %}#response-{{response.id}}">{{response.body|parse_md|striptags|truncatechars:32}}</a></li>
 	{% endfor %}
 	</ul>
 	{% endif %}
