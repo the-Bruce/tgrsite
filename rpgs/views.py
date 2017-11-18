@@ -20,6 +20,9 @@ class Index(generic.ListView):
 	model = Rpg
 	context_object_name = 'rpgs'
 
+	def get_queryset(self):
+		return Rpg.objects.order_by('-created_at')
+
 class Detail(generic.DetailView):
 	template_name = 'rpgs/rpg.html'
 	model = Rpg
