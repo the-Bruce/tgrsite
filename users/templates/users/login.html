@@ -1,5 +1,6 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}Login{% endblock %}
+
 {% block body %}
 
 {%if result == 'invalid' %}
@@ -16,8 +17,10 @@
 	<div class="form-group">
 		{{form.as_p}}
 	</div>
+
 	<input type="submit" value="Log In" class="form-control">
 </form>
 
 <a href="{% url 'signup' %}">Sign up</a> &middot; <a href="{% url 'password_reset' %}">Reset password</a>
+
 {% endblock %}
