@@ -1,5 +1,10 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}Signup{% endblock %}
+
+{% block head %}
+<script src="https://www.google.com/recaptcha/api.js"></script>
+{% endblock %}
+
 {% block body %}
 
 {% comment %} I have no idea what this is {% endcomment %}
@@ -34,6 +39,7 @@
 	<div class="form-group">
 		{{form.as_p}}
 	</div>
+	<div class="g-recaptcha" data-sitekey="6LetzT8UAAAAANIQgQpcagRL5vD9MyvHTHqMTuVi"></div>
 	<input type="submit" value="Sign Me Up" class="form-control">
 </form>
 
