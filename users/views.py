@@ -117,9 +117,27 @@ def signup_process(request):
 	form = SignupForm(request.POST)
 	if(form.is_valid()):
 
+		data_valid = True
+
+		# Validate captcha
+		import requests
+		import os
+		data = {
+			'secret': os.environ['GCAPTCHA_SECRET'],
+			'response': request.POST['g-recaptcha-response'],
+		}
+		r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+
+		if not r.json()['success']:
+			form.add_error('g-recaptcha-response', ValidationError('Captcha failed.'))
+			data_valid = False
+
 		# CHECK CASE!
 		if User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
 			form.add_error('username', ValidationError('A user with that name already exists.'))
+			data_valid = False
+		
+		if not data_valid:
 			return render(request, 'users/signup.html', {'form': form})
 
 		# now that we're here, the form is DEFINITELY valid.
