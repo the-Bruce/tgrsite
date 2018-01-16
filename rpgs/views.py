@@ -121,7 +121,7 @@ def create_done(request):
 		newtags.append(Tag.objects.get_or_create(name=tag)[0])"""
 
 	# add tags
-	ins.tags = tags_from_str(request.POST.get('tags', ''))
+	ins.tags.set(tags_from_str(request.POST.get('tags', '')))
 
 	if(request.POST.get('am_i_gm', None)):
 		ins.game_masters.add(me)

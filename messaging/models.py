@@ -65,7 +65,7 @@ class MessageThread(models.Model):
 class Message(models.Model):
 	def __str__(self):
 		return str(self.sender) + ': ' + str(self.content)
-	thread = models.ForeignKey(MessageThread)
-	sender = models.ForeignKey(Member)
+	thread = models.ForeignKey(MessageThread, on_delete=models.CASCADE)
+	sender = models.ForeignKey(Member, on_delete=models.CASCADE)
 	content = models.CharField(blank=False, max_length=4096)
 	timestamp = models.DateTimeField(auto_now_add=True)

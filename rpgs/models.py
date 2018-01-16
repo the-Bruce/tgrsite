@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.safestring import mark_safe, mark_for_escaping
+from django.utils.safestring import mark_safe
 from django.urls import reverse
 
 from users.models import Member
@@ -77,7 +77,7 @@ class Session(models.Model):
 	def __str__(self):
 		date = self.plan_date
 		return self.game.title + ' ' + date.strftime('%d %b')
-	game = models.ForeignKey(Rpg)
+	game = models.ForeignKey(Rpg, on_delete=models.PROTECT)
 
 	# when it's planned to run
 	plan_date = models.DateField()
