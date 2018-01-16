@@ -88,7 +88,7 @@ class Thread(models.Model):
 	# cascade because we need to be able to delete forums maybe?
 	# in which case forumless threads will either die,
 	# or need to be moved -before- the forum is deleted
-	forum = models.ForeignKey(Forum, on_delete = models.CASCADE)
+	forum = models.ForeignKey(Forum, on_delete=models.CASCADE)
 
 	title = models.CharField(max_length=64)
 	body = models.CharField(max_length=8192)
@@ -97,8 +97,8 @@ class Thread(models.Model):
 	# pinned/stickied/whatever threads will show up before all others in their forums
 	is_pinned = models.BooleanField(default=False)
 
-	# we should not be "hard" deleting users so
-	author = models.ForeignKey(Member, on_delete=models.PROTECT)
+	# until we implement proper banning/deactivation, just cascade
+	author = models.ForeignKey(Member, on_delete=models.CASCADE)
 
 	def get_response_count(self):
 		return Response.objects.filter(thread=self.id).count()
@@ -120,4 +120,4 @@ class Response(models.Model):
 	body = models.CharField(max_length=8192)
 
 	pub_date = models.DateTimeField('date posted', auto_now_add=True)
-	author = models.ForeignKey(Member, on_delete=models.PROTECT)
+	author = models.ForeignKey(Member, on_delete=models.CASCADE)
