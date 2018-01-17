@@ -169,7 +169,7 @@ def edit_process(request, pk):
 			newtags.append(Tag.objects.get_or_create(name=tag)[0])"""
 
 		# change tags
-		rpg.tags = tags_from_str(form.data['tags'])
+		rpg.tags.set(tags_from_str(form.data['tags']))
 
 		# cleanup?
 		# remove tags that have no uses
