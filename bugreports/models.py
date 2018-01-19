@@ -8,7 +8,7 @@ class Report(models.Model):
 	body = models.TextField(max_length=8192)
 
 	# currently broken - would need to customise form shit to do this zzz
-	reporter = models.ForeignKey(Member, null=True, blank=True)
+	reporter = models.ForeignKey(Member, null=True, blank=True, on_delete=models.SET_NULL)
 
 	NEEDSREVIEW=None
 	CLOSED=-1

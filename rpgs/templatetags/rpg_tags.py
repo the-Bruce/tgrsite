@@ -11,7 +11,7 @@ def can_manage(member, rpg):
 	return (member == rpg.creator) or (member in list(rpg.game_masters.all()))
 
 # todo: assignment tag is deprecated
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def is_player(context, rpg):
 	return rpg.members.filter(id=context.request.user.member.id)
 
