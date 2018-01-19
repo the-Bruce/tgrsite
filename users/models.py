@@ -19,7 +19,7 @@ class Member(models.Model):
 
 		return 'https://www.gravatar.com/avatar/{}?{}'.format(h, q)
 
-	equiv_user = models.OneToOneField(User, on_delete=models.PROTECT)
+	equiv_user = models.OneToOneField(User, on_delete=models.CASCADE)
 	def __str__(self):
 		return self.equiv_user.username
 	bio = models.CharField(max_length=4096, blank=True)

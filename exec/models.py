@@ -16,5 +16,5 @@ class ExecRole(models.Model):
 	bio = models.TextField(blank=True)
 	bio.help_text = 'Description of the role and what it entails, as well as a short personal bio.'
 
-	incumbent = models.ForeignKey(Member, null=True, blank=True)
+	incumbent = models.ForeignKey(Member, null=True, blank=True, on_delete=models.SET_NULL)
 	incumbent.help_text = 'Member who is currently in this role'
