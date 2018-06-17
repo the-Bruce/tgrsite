@@ -316,11 +316,16 @@ Might do an A/B test on the entire site at some point-->
 
 <script>
 $(document).ready(function() {
-	$(".markdown-input").first().each(function(i,e) {
-		window.simplemde = new SimpleMDE({element: e,
-			placeholder: "Write Markdown (or just regular text) here...",
-			forceSync: true,
-		});
+	console.log("Getting ready.");
+	window.simplemde = [];
+	$(".markdown-input").each(function(i,e) {
+		console.log("Element "+e);
+		window.simplemde.push(
+			new SimpleMDE({element: e,
+				placeholder: "Write Markdown (or just regular text) here...",
+				forceSync: true,
+			})
+		);
 	});
 });
 </script>
