@@ -4,10 +4,11 @@
 <title>{% block title %}{% endblock %} - warwicktabletop.co.uk</title>
 
 
-<script type="text/javascript" src="//code.jquery.com/jquery-3.1.1.min.js""></script>
-<script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js""></script>
+{%comment%}<script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
 <link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.min.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.structure.min.css' %}">
+{%endcomment%}
 
 <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -20,7 +21,7 @@
 {% comment font icons library %}{% endcomment %}
 <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
+<script type="text/javascript" src="{% static 'bootstrap3-typeahead.js' %}"></script>
 
 <script>
 	$(function(){
@@ -30,6 +31,10 @@
 		});
 	});
 </script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
 {% block head %}
 	{% comment %}
 		Custom per-page includes such as the gallery plugin on the Gallery page.
@@ -308,3 +313,23 @@ Might do an A/B test on the entire site at some point-->
 		})
 	}
 </script>
+
+<script>
+$(document).ready(function() {
+	$(".markdown-input").first().each(function(i,e) {
+		window.simplemde = new SimpleMDE({element: e, placeholder: "Write Markdown (or just regular text) here..."});
+	});
+	$(".markdown-input").prop("required", null);
+	$("form").submit(function(e) {
+		if (window.simplemde.value() == "") return false;
+		$(".markdown-input").first().val(window.simplemde.value());
+		return true;
+	});
+});
+</script>
+
+<style>
+.CodeMirror {
+	height: 200px;
+}
+</style>

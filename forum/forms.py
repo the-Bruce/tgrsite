@@ -6,13 +6,17 @@ BOOSTRAP_FORM_WIDGET_attrs = {
 	'class': 'form-control'
 }
 
+BOOSTRAP_FORM_WIDGET_attrs_md = {
+	'class': 'form-control markdown-input'
+}
+
 class ThreadForm(ModelForm):
 	class Meta:
 		model = Thread
 		fields = ['title', 'body']
 		widgets = {
 			'title': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs_md),
 		}
 
 # Like the thread edit form but also has a field for location
@@ -23,7 +27,7 @@ class ThreadEditForm(ModelForm):
 		fields = ['title', 'body', 'forum']
 		widgets = {
 			'title': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs_md),
 		}
 
 # form that goes under a post for users to reply to
@@ -33,7 +37,7 @@ class ResponseForm(ModelForm):
 		model = Response
 		fields = ['body']
 		widgets = {
-			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs_md),
 		}
 
 		labels = {

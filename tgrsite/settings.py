@@ -50,7 +50,8 @@ try:
 except KeyError:
     DEBUG = False
 
-ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost')]
+ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'), '127.0.0.1']
+# needs 127 to work on my machine...
 
 # Application definition
 
