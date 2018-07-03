@@ -3,19 +3,19 @@ Warwick Tabletop Games and Roleplaying Society website
 
 ## Environment configuration
 The following environment varaibles are mandatory:
-* `SECRET_KEY`: Site's own secret key, for encryption. See ![https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-SECRET_KEY](Django's documentation of the `SECRET_KEY` setting).
+* `SECRET_KEY`: Site's own secret key, for encryption. See [Django's documentation of the `SECRET_KEY` setting](https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-SECRET_KEY).
 * `GCAPTCHA_SECRET`: Google reCaptcha secret key. Used for current captcha system.
 
 The following fields are optional:
-* `DEBUG`: Determines whether to run the server in debug mode. See ![https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-DEBUG](Django's documentation of the `DEBUG` setting). DO NOT RUN A PRODUCTION SERVER WITH THIS ENABLED.
+* `DEBUG`: Determines whether to run the server in debug mode. See [Django's documentation of the `DEBUG` setting](https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-DEBUG). DO NOT RUN A PRODUCTION SERVER WITH THIS ENABLED.
 * `EMAIL_HOST`: Hostname of email API server. We use SendGrid. Email settings are required in order to properly send pasword reset emails.
 * `EMAIL_HOST_USER`: Username to use to login to mail API.
 * `EMAIL_HOST_PASSWORD`: Ditto, for password.
 * `FROM_EMAIL`: Address to send emails from (eg "noreply@somesite.xyz").
-* `HOST`: Hostname to add to allowed hosts. See ![https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-ALLOWED_HOSTS](Django's documentation of the `ALLOWED_HOSTS` setting).
+* `HOST`: Hostname to add to allowed hosts. See [Django's documentation of the `ALLOWED_HOSTS` setting](https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-ALLOWED_HOSTS).
 
 ## Setup guide
-* This app requires Python 3.6. Make sure you run these commands using the right version of Python. It is recommended that you ![https://docs.djangoproject.com/en/2.0/topics/install/#installing-an-official-release-with-pip](create a virtual environment) for the app.
+* This app requires Python 3.6. Make sure you run these commands using the right version of Python. It is recommended that you [create a virtual environment](https://docs.djangoproject.com/en/2.0/topics/install/#installing-an-official-release-with-pip) for the app.
 * Install required Python packages (eg `pip install -r requirements.txt`)
 * Configure environment variables (see above).
 * Ensure migrations are present: `python manage.py makemigrations bugreports exec forum gallery messaging pages rpgs users`
