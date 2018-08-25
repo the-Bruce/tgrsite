@@ -1,0 +1,12 @@
+{% extends 'tgrsite/main.html' %}
+{% block title %}Newsletters{% endblock %}
+{% block body %}
+
+{%for x in object_list%}
+	{{x}}
+	<br />
+{% empty %}
+	There are no newsletters yet! Sadness.
+{% endfor %}
+
+{% endblock %}

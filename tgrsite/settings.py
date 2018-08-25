@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'bugreports.apps.BugreportsConfig',
     'gallery.apps.GalleryConfig',
     'pages.apps.PagesConfig',
+    'newsletters.apps.NewslettersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -134,7 +135,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'users.backends.CaseInsensitiveModelBackend',
+    #'users.backends.CaseInsensitiveModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 

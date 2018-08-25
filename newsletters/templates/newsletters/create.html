@@ -1,0 +1,13 @@
+{% extends 'tgrsite/main.html' %}
+{% block title %}
+New Newsletter
+{% endblock %}
+{% block body %}
+<h1>New Newsletter</h1>
+<form action="" method="POST">
+	{% csrf_token %}
+	{{form.as_p}}
+	<input type="submit">
+</form>
+<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> tentatively supported in the body.
+{% endblock %}

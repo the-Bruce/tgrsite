@@ -1,0 +1,16 @@
+{% extends 'tgrsite/noleftbar.html' %}
+{% load markdown_tags %}
+{% load static %}
+
+{% block title %}{{object.title}}{% endblock %}
+{% block body %}
+
+<img src={% static 'newsletter-banner.png' %} width='100%' />
+<h1>{{object.title}}
+    <small>by <a href='{% url 'user' object.author.id %}'>{{object.author}}</a> <small>({{object.pub_date}})</small></small></h1>
+<p></p>
+{{object.body|parse_md}}
+
+<br>
+
+{% endblock %}
