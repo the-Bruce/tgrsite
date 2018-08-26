@@ -3,11 +3,23 @@
 New Newsletter
 {% endblock %}
 {% block body %}
+
 <h1>New Newsletter</h1>
 <form action="" method="POST">
 	{% csrf_token %}
-	{{form.as_p}}
-	<input type="submit">
+	{{ form.non_field.errors }}
+	{% for field in form %}
+		<div>
+			<div>
+				{% if field.field.required %} * {% endif %}
+				{{field.label_tag}}
+			</div>
+			<div>
+				{{ field }}
+			</div>
+		</div><br>
+	{% endfor %}
+	<input type="submit" class="form-control">
 </form>
 <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> tentatively supported in the body.
 {% endblock %}

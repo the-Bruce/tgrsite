@@ -3,14 +3,19 @@
 {% load static %}
 
 {% block title %}{{object.title}}{% endblock %}
+{% block leftcontents %}
+{% if object.author == user.member %}
+	<p><a href="{% url 'newsletters_update' object.id %}">Edit Newsletter</a></p>
+	<p><a href="{% url 'newsletters_delete' object.id %}">Delete Newsletter</a></p>
+{% endif %}
+{% endblock %}
+
 {% block body %}
 
 <img src={% static 'newsletter-banner.png' %} width='100%' />
 <h1>{{object.title}}
-    <small>by <a href='{% url 'user' object.author.id %}'>{{object.author}}</a> <small>({{object.pub_date}})</small></small></h1>
+	<small>by <a href='{% url 'user' object.author.id %}'>{{object.author}}</a> <small>({{object.pub_date}})</small></small></h1>
 <p></p>
 {{object.body|parse_md}}
-
-<br>
 
 {% endblock %}

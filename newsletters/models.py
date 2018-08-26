@@ -10,6 +10,7 @@ class Newsletter(models.Model):
     body = models.TextField()
     author = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
     pub_date = models.DateTimeField('Date Posted', auto_now_add=True)
+    desc = models.CharField(max_length=256)
 
     # Important! If this changes, change the URL too!
     def get_absolute_url(self):
