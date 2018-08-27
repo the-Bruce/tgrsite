@@ -10,15 +10,17 @@
 <br />
 <div class="list-group">
 {%for newsletter in object_list%}
-	<a href="{% url 'newsletters_detail' newsletter.id %}" class="list-group-item" style="">
-		<strong>{{newsletter.title}}</strong>
-		<span class="pull-right">
-			posted {{newsletter.pub_date|timesince}} ago
-		</span>
-		<small>(by {{newsletter.author|truncatechars:32}})</small>
-		<br>
-		{{newsletter.desc}}
-	</a>
+	{% if perms.newsletters.newsletters_edit or newsletter.ispublished %}
+		<a href="{% url 'newsletters_detail' newsletter.id %}" class="list-group-item" style="">
+			<strong>{% if not newsletter.ispublished %}[UNPUBLISHED] {% endif %}{{newsletter.title}}</strong>
+			<span class="pull-right">
+				posted {{newsletter.pub_date|timesince}} ago
+			</span>
+			<small>(by {{newsletter.author|truncatechars:32}})</small>
+			<br>
+			{{newsletter.desc}}
+		</a>
+	{% endif %}
 {% empty %}
 	There are no newsletters yet! Sadness.
 {% endfor %}

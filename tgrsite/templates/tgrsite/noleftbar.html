@@ -30,6 +30,10 @@
 		});
 	});
 </script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
 {% block head %}
 	{% comment %}
 		Custom per-page includes such as the gallery plugin on the Gallery page.
@@ -246,3 +250,28 @@ Might do an A/B test on the entire site at some point-->
 		})
 	}
 </script>
+
+<script>
+$(document).ready(function() {
+	console.log("Getting ready.");
+	window.simplemde = [];
+	$(".markdown-input").each(function(i,e) {
+		console.log("Element "+e);
+		window.simplemde.push(
+			new SimpleMDE({element: e,
+				placeholder: "Write Markdown (or just regular text) here...",
+				forceSync: true,
+			})
+		);
+	});
+});
+</script>
+
+<style>
+.CodeMirror {
+	height: 200px;
+}
+.CodeMirror-scroll {
+	min-height: 0px;
+}
+</style>
