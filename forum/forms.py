@@ -2,8 +2,12 @@ from django.forms import ModelForm, Textarea, TextInput
 from .models import Thread, Response
 
 # CSS class to add to every form widget to make bootstrap nice
-BOOSTRAP_FORM_WIDGET_attrs = {
+BOOTSTRAP_FORM_WIDGET_attrs = {
 	'class': 'form-control'
+}
+
+MD_INPUT = {
+	'class': 'markdown-input'
 }
 
 class ThreadForm(ModelForm):
@@ -11,8 +15,8 @@ class ThreadForm(ModelForm):
 		model = Thread
 		fields = ['title', 'body']
 		widgets = {
-			'title': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'title': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+			'body': Textarea(attrs=MD_INPUT),
 		}
 
 # Like the thread edit form but also has a field for location
@@ -22,8 +26,8 @@ class ThreadEditForm(ModelForm):
 		model = Thread
 		fields = ['title', 'body', 'forum']
 		widgets = {
-			'title': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'title': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+			'body': Textarea(attrs=MD_INPUT),
 		}
 
 # form that goes under a post for users to reply to
@@ -33,7 +37,7 @@ class ResponseForm(ModelForm):
 		model = Response
 		fields = ['body']
 		widgets = {
-			'body': Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'body': Textarea(attrs=MD_INPUT),
 		}
 
 		labels = {

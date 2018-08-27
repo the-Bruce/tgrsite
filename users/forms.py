@@ -3,8 +3,12 @@ from django.contrib.auth.models import User
 
 from .models import Member
 
-BOOSTRAP_FORM_WIDGET_attrs = {
+BOOTSTRAP_FORM_WIDGET_attrs = {
 	'class': 'form-control'
+}
+
+MD_INPUT = {
+	'class': 'markdown-input'
 }
 
 class LoginForm(ModelForm):
@@ -12,8 +16,8 @@ class LoginForm(ModelForm):
 		model = User
 		fields = ['username', 'password']
 		widgets = {
-			'username': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-			'password': PasswordInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'username': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+			'password': PasswordInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
 		}
 
 class UserForm(ModelForm):
@@ -23,11 +27,11 @@ class UserForm(ModelForm):
 
 		# they all have the same format (TextInputs)
 		widgets = {
-			i: TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs) for i in fields
+			i: TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs) for i in fields
 		}
 
 		# ...except this one
-		widgets['email'] = EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs)
+		widgets['email'] = EmailInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs)
 
 	def clean(self):
 		data = self.cleaned_data
@@ -43,9 +47,9 @@ class SignupForm(ModelForm):
 		fields = ['username', 'email', 'password']
 
 		widgets = {
-			'username': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-			'email': EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-			'password': PasswordInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
+			'username': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+			'email': EmailInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+			'password': PasswordInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
 		}
 
 		help_texts = {
@@ -68,5 +72,5 @@ class MemberForm(ModelForm):
 
 		# neater than explicitly specifying each key as the same value
 		widgets = {
-			i: Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs) for i in fields
+			i: Textarea(attrs=MD_INPUT) for i in fields
 		}
