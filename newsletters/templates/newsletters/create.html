@@ -5,9 +5,9 @@ New Newsletter
 {% block body %}
 
 <h1>New Newsletter</h1>
-<form action="" method="POST">
+<form method="POST">
 	{% csrf_token %}
-	{{ form.non_field.errors }}
+	{{ form.non_field_errors }}
 	{% for field in form %}
 		<div>
 			<div>
@@ -21,5 +21,4 @@ New Newsletter
 	{% endfor %}
 	<input type="submit" class="form-control">
 </form>
-<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> tentatively supported in the body.
 {% endblock %}

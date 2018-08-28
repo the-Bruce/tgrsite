@@ -20,7 +20,7 @@
 {% block body %}
 
 <p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a href="{% url 'newsletters_detail' object.id %}">here</a>!</p>
-<img src={% static 'newsletter-banner.png' %} width='100%' />
+<img src="{% static 'newsletter-banner.png' %}" style="width: 100%;" />
 <h1>{{object.title}}
 	<small>{% if object.author %} by <a href='{% url 'user' object.author.id %}'>{{object.author}}</a> {% endif %}<small>({{object.pub_date}})</small></small></h1>
 <p></p>
