@@ -27,6 +27,11 @@ class Create(PermissionRequiredMixin, generic.edit.CreateView):
 
 	permission_required = 'newsletters_create'
 
+	def form_valid(self, form):
+		form.instance.author = self.request.user.member
+		form.instance.pub_date = timezone.now()
+		return super(Create, self).form_valid(form)
+
 class Update(PermissionRequiredMixin, generic.edit.UpdateView):
 	model = Newsletter
 	form_class = NewsletterForm
