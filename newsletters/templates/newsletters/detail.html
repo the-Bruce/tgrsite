@@ -7,7 +7,7 @@
 {% if object.author == user.member or not object.author %}
 	<p><a href="{% url 'newsletters_update' object.id %}">Edit Newsletter</a></p>
 	<p><a href="{% url 'newsletters_delete' object.id %}">Delete Newsletter</a></p>
-	{% if object.ispublished %}<p><a href="{% url 'newsletters_email' object.id %}">Email Version (go to this page and hit Ctrl-S to save a version to distribute as an email!)</a></p>{% endif %}
+	{% if object.ispublished %}<p><a href="{% url 'newsletters_email' object.id %}" download="email_{{object.id}}.html">Email Version</a></p>{% endif %}
 {% endif %}
 {% endblock %}
 
