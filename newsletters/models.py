@@ -9,7 +9,7 @@ class Newsletter(models.Model):
 	title = models.CharField(max_length=256)
 	body = models.TextField()
 	author = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
-	pub_date = models.DateTimeField('Date Posted', auto_now_add=True, null=True)
+	pub_date = models.DateTimeField('Date Posted', auto_now_add=True)
 	desc = models.CharField('Description', max_length=256)
 	ispublished = models.BooleanField('Is Published?')
 
