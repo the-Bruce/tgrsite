@@ -1,0 +1,29 @@
+{% extends 'tgrsite/basecontent.html' %}
+{% load markdown_tags %}
+{% load static %}
+
+{% block title %}{{object.title}}{% endblock %}
+{% block leftcontents %}
+{% endblock %}
+
+{% block css %}
+<style>
+#incorrect-newsletter {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	margin-top: 10px;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a href="{% url 'newsletters_detail' object.id %}">here</a>!</p>
+<img src="{% fullstatic 'newsletter-banner.png' %}" style="width: 100%;" />
+<h1>{{object.title}}
+	<small>{% if object.author %} by <a href="{% url 'user' object.author.id %}">{{object.author}}</a> {% endif %}<small>({{object.pub_date}})</small></small></h1>
+<p></p>
+{{object.body|parse_md}}
+
+{% endblock %}
