@@ -50,7 +50,7 @@ class Update(PermissionRequiredMixin, generic.edit.UpdateView):
 			raise Http404
 		return obj
 
-def Latest(req):
+def latest(req):
 	letter = Newsletter.objects.order_by('-pub_date').filter(ispublished=True)[0]
 	return redirect(letter)
 
