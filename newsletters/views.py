@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.utils import timezone
 from django.urls import reverse_lazy
@@ -49,6 +49,10 @@ class Update(PermissionRequiredMixin, generic.edit.UpdateView):
 		if obj.author and obj.author != self.request.user.member:
 			raise Http404
 		return obj
+
+def Latest(req):
+	letter = Newsletter.objects.order_by('-pub_date').filter(ispublished=True)[0]
+	return redirect(letter)
 
 class Delete(PermissionRequiredMixin, generic.edit.DeleteView):
 	model = Newsletter
