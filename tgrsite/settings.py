@@ -201,13 +201,11 @@ FIRST_DAY_OF_WEEK=1
 # enable browsers' XSS filters
 SECURE_BROWSER_XSS_FILTER=True
 
-# DEPLOY: Maybe turn some of these on, notably SECURE_SSL_REDIRECT
-
 # ensure all traffic is SSL (https)
-SECURE_SSL_REDIRECT=True
+SECURE_SSL_REDIRECT=not DEBUG
 # session cookies secure-only
-SESSION_COOKIE_SECURE=True
+SESSION_COOKIE_SECURE=not DEBUG
 # same for CSRF cookie
-CSRF_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=not DEBUG
 # CSRF_COOKIE_HTTPONLY=True
 X_FRAME_OPTIONS='DENY'
