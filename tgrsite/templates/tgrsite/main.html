@@ -1,310 +1,72 @@
+{% extends 'tgrsite/addnavbar.html' %}
 {% load static %}
 {% load markdown_tags %}
 
-<title>{% block title %}{% endblock %} - warwicktabletop.co.uk</title>
-
-
-<script type="text/javascript" src="//code.jquery.com/jquery-3.1.1.min.js""></script>
-<script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
-<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.min.css' %}">
-<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.structure.min.css' %}">
-
-<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-{% comment %}Alternate versions of Boostrap with the BOOSTRA.386 theme
-	<link type="text/css" rel="stylesheet" href="/static/386/css/bootstrap.min.css">
-	<script type="text/javascript" src="/static/386/js/bootstrap.min.js"></script>
-{% endcomment %}
-
-{% comment font icons library %}{% endcomment %}
-<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
-
-<script>
-	$(function(){
-		$('.accordion').filter('.panel').accordion({
-			collapsible:true,
-			header: ".panel-heading",
-		});
-	});
-</script>
-{% block head %}
-	{% comment %}
-		Custom per-page includes such as the gallery plugin on the Gallery page.
-	{% endcomment %}
-{% endblock %}
-
-<style>
-
-	.latest {
-		margin-bottom: 10px;
-	}
-	img.avatar {
-		width: 128px;
-		height: 128px;
-	}
-	img.brand-img {
-		width: 32px;
-		height: 32px;
-		margin-top: -5px;
-	}
-	.navbar {
-		border-radius: 0;
-	}
-	.jumbotron {
-		text-align: center;
-	}
-	.nobullet {
-		padding: 0;
-		list-style-type: none;
-	}
-
-	.wordwrap {
-		white-space: -moz-pre-wrap !important;
-		white-space: -pre-wrap;
-		white-space: -o-pre-wrap;
-		white-space: pre-wrap;
-		word-wrap: break-word;
-		white-space: -webkit-pre-wrap;
-		word-break: break-word;
-		white-space: normal;
-	}
-
-	/* override browser's/Bootstrap's default which presumes <pre> is used for code
-	whereas in our case we will use it to preserve formatting on text boxes
-	at least until Markdown is implemented or something B)
-	*/
-	/* ^^^ @ past me: markdown is implemented. what are you talking about */
-	/*pre {
-		font-family: inherit;
-		background-color: inherit;
-		border: inherit;
-		font-size: inherit;
-		padding: 0;
-		margin:inherit;
-	}*/
-
-	.errorlist {
-		color: #a94442;
-	}
-
-
-</style>
-
-{% block css %}
-	{% comment %}
-		This is where a page's custom CSS will go, or a link to the relevant stylesheet I guess.
-	{% endcomment %}
-{% endblock %}
-
-<nav class="navbar navbar-inverse">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<!-- hamburger menu -->
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="/">
-				<img src="{% static 'logo_purple.png'%}" class="brand-img" alt="Home">
-			</a>
+{% block leftcontents %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
 		</div>
-		<div class="collapse navbar-collapse" id="nav-collapse">
-			<ul class="nav navbar-nav">
-				<li><a href="{% url 'exec' %}">
-					<i class="fa fa-fw fa-users"></i> Exec
-				</a></li>
-
-				<li><a href="{% url 'schedule' %}">
-					<i class="fa fa-fw fa-calendar"></i> Schedule
-				</a></li>
-
-				<li><a href="{% url 'gallery' %}">
-					<i class="fa fa-fw fa-picture-o"></i> Photo Gallery
-				</a></li>
-
-				<li><a href="{% url 'forum' %}">
-					<i class="fa fa-fw fa-quote-left"></i> Forum
-				</a></li>
-
-				<li><a href="{% url 'rpgs' %}">
-					<i class="fa fa-fw fa-magic"></i> Events
-				</a></li>
-
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"
-					role="button" aria-haspopup="true" aria-expanded="false">
-						<i class="fa fa-fw fa-shield"></i> LARP <span class="caret"></span>
-					</a>
-
-					<ul class="dropdown-menu">
-						<li><a href="{% url 'larp_info' %}">
-							<i class="fa fa-fw fa-info-circle"></i> Introduction
-						</a></li>
-
-						<li><a href="{% static 'Unity-5.3-Rulebook.pdf' %}">
-							<i class="fa fa-fw fa-book"></i> Rulebook
-						</a></li>
-						<li><a href="{% static 'Locations-In-Unity.pdf' %}">
-							<i class="fa fa-fw fa-key"></i> Lorebook
-						</a></li>
-					</ul>
-				</li>
-
-				<li><a href="{% url 'message_list' %}">
-					<i class="fa fa-fw fa-comment-o"></i> Messages
-				</a></li>
-
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"
-					role="button" aria-haspopup="true" aria-expanded="false">
-						<i class="fa fa-fw fa-external-link"></i> Links <span class="caret"></span>
-					</a>
-
-					<ul class="dropdown-menu">
-						<li><a href="//www.facebook.com/TAGAROPLE/">
-							<i class="fa fa-fw fa-facebook-official"></i> Facebook Page
-						</a></li>
-						<li><a href="//www.warwicksu.com/societies/sff/">
-							<i class="fa fa-fw fa-external-link-square"></i> SU Page
-						</a></li>
-					</ul>
-
-				</li>
-
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				{% comment Is this where it should go? what about that neat sidebar? %}
-
+		<div class="panel-body">
+			<ul>
 				{% if request.user.is_staff %}
 					<li><a href="/admin">Admin site</a></li>
 				{% endif %}
-
-				{% endcomment %}
-				{% if request.user.is_authenticated %}
-					<li><a href="{% url 'logout' %}">Logout</a></li>
+				{%if request.user.is_authenticated %}
+					<li><a href="{% url 'me' %}">
+						My profile
+					</a></li>
+					<li><a href="{% url 'logout' %}">Log out</a></li>
 				{% else %}
-					<li><a href="{% url 'login' %}">Login</a></li>
-					<li><a href="{% url 'signup' %}">Register</a></li>
+					<li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>
 				{% endif %}
+
+				<li><a href="{% url 'bug_create' %}">Report a bug</a></li>
 			</ul>
 		</div>
-
 	</div>
-</nav>
-
-<!-- page -->
-<div class="container-fluid">
-{% comment %}
-<!--this was here in case people preferred page headings to be
-above all content including sidebars. the people I surveyed preferred the old way.
-Might do an A/B test on the entire site at some point-->
-	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-			<h1>{% block heading %}{% endblock %}</h1>
+	<div class="panel panel-default accordion">
+		<div class="panel-heading">
+			Recent threads
 		</div>
-		<div class="col-md-3"></div>
+		<div class="panel-body">
+		<ul class="nobullet">
+			{% for x in latestthreads %}
+				<li class="latest">
+					<a href="{% url 'viewthread' x.id %}">{{x.title|truncatechars:32}}</a>
+					<br>
+
+					<small>
+					by <a href="{% url 'user' x.author.id %}">{{x.author.equiv_user.username|truncatechars:32}}</a>
+					in <a href="{% url 'subforum' x.forum.id %}">{{x.forum}}</a>
+					{{x.pub_date|timesince}} ago
+					</small>
+				</li>
+			{% endfor %}
+		</ul>
+		</div>
 	</div>
-{% endcomment %}
-	<div class="row">
-		<div class="col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
-				</div>
 
-				<div class="panel-body">
-					<ul>
-						{% if request.user.is_staff %}
-							<li><a href="/admin">Admin site</a></li>
-						{% endif %}
-						{%if request.user.is_authenticated %}
-							<li><a href="{% url 'me' %}">
-								My profile
-							</a></li>
-							<li><a href="{% url 'logout' %}">Log out</a></li>
-						{% else %}
-							<li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>
-						{% endif %}
-
-						<li><a href="{% url 'bug_create' %}">Report a bug</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="panel panel-default accordion">
-				<div class="panel-heading">
-					Recent threads
-				</div>
-				<div class="panel-body">
-				<ul class="nobullet">
-					{% for x in latestthreads %}
-						<li class="latest">
-							<a href="{% url 'viewthread' x.id %}">{{x.title|truncatechars:32}}</a>
-							<br>
-
-							<small>
-							by <a href="{% url 'user' x.author.id %}">{{x.author.equiv_user.username|truncatechars:32}}</a>
-							in <a href="{% url 'subforum' x.forum.id %}">{{x.forum}}</a>
-							{{x.pub_date|timesince}} ago
-							</small>
-						</li>
-					{% endfor %}
-				</ul>
-				</div>
-			</div>
-
-			<div class="panel panel-default accordion">
-				<div class="panel-heading">
-					Recent replies
-				</div>
-				<div class="panel-body">
-				<ul class="nobullet">
-					{% for x in latestresponses %}
-						<li class="latest">
-							<a href="{% url 'viewthread' x.thread.id %}#response-{{x.id}}">{{x.body|parse_md|striptags|truncatechars:32}}</a>
-							<br>
-
-							<small>
-							by <a href="{% url 'user' x.author.id %}">{{x.author.equiv_user.username|truncatechars:32}}</a>
-							{{x.pub_date|timesince}} ago
-							</small>
-						</li>
-					{% endfor %}
-				</ul>
-				</div>
-			</div>
-			{% block leftbar %}{% endblock %}
-
+	<div class="panel panel-default accordion">
+		<div class="panel-heading">
+			Recent replies
 		</div>
+		<div class="panel-body">
+		<ul class="nobullet">
+			{% for x in latestresponses %}
+				<li class="latest">
+					<a href="{% url 'viewthread' x.thread.id %}#response-{{x.id}}">{{x.body|parse_md|striptags|truncatechars:32}}</a>
+					<br>
 
-		<div class="col-md-6">
-			{% block body %}
-				{% comment %}
-				This is the part that gets overridden by templates that extend this one.
-				{% endcomment %}
-			{% endblock %}
+					<small>
+					by <a href="{% url 'user' x.author.id %}">{{x.author.equiv_user.username|truncatechars:32}}</a>
+					{{x.pub_date|timesince}} ago
+					</small>
+				</li>
+			{% endfor %}
+		</ul>
 		</div>
+	</div>
+	{% block leftbar %}{% endblock %}
+{% endblock %}
 
-		<div class="col-md-3">
-			{% block rightbar %}
-			{% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
-			{% endblock %}
-		</div>
-	</div><!-- .row -->
-</div><!-- .container -->
-
-<script>
-	function nasa() {
-		$('img').each(function(index, element) {
-			id = ['01120', '01002', '01003', '01005', '01008', '01153', '01581'][Math.floor(Math.random()*7)]
-			u='https://images-assets.nasa.gov/image/PIA'+id+'/PIA'+id+'~orig.jpg'
-			//$(element).attr('src', u)
-			$(element).replaceWith($('<img src="'+u+'">'))
-		})
-	}
-</script>
