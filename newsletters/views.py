@@ -17,7 +17,7 @@ class Detail(generic.DetailView):
 
 	def get_object(self, queryset=None):
 		obj = super(Detail, self).get_object()
-		if not obj.ispublished and not self.request.user.has_perm('newsletters.newsletters_edit'):
+		if not obj.ispublished and not self.request.user.has_perm('newsletters.change_newsletter'):
 			raise Http404
 		return obj
 
@@ -25,7 +25,7 @@ class Create(PermissionRequiredMixin, generic.edit.CreateView):
 	model = Newsletter
 	form_class = NewsletterForm
 
-	permission_required = 'newsletters_create'
+	permission_required = 'newsletters.add_newsletter'
 
 	def form_valid(self, form):
 		form.instance.author = self.request.user.member
@@ -36,7 +36,7 @@ class Update(PermissionRequiredMixin, generic.edit.UpdateView):
 	model = Newsletter
 	form_class = NewsletterForm
 
-	permission_required = 'newsletters_edit'
+	permission_required = 'newsletters.change_newsletter'
 	raise_exception = True
 
 	def form_valid(self, form):
@@ -57,7 +57,7 @@ def latest(req):
 class Delete(PermissionRequiredMixin, generic.edit.DeleteView):
 	model = Newsletter
 
-	permission_required = 'newsletters_delete'
+	permission_required = 'newsletters.delete_newsletter'
 	raise_exception = True
 	success_url = reverse_lazy('newsletters_index')
 
