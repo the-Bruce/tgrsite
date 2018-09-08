@@ -136,8 +136,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    #'users.backends.CaseInsensitiveModelBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'users.backends.CaseInsensitiveModelBackend',
+    #'django.contrib.auth.backends.ModelBackend',
 )
 
 
