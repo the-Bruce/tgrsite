@@ -201,10 +201,10 @@ SECURE_BROWSER_XSS_FILTER=True
 # DEPLOY: Maybe turn some of these on, notably SECURE_SSL_REDIRECT
 
 # ensure all traffic is SSL (https)
-# SECURE_SSL_REDIRECT=True
+SECURE_SSL_REDIRECT=True
 # session cookies secure-only
-# SESSION_COOKIE_SECURE=True
+SESSION_COOKIE_SECURE=True
 # same for CSRF cookie
-# CSRF_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
 # CSRF_COOKIE_HTTPONLY=True
 X_FRAME_OPTIONS='DENY'
