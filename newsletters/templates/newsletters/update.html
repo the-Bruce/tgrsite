@@ -6,7 +6,18 @@ Update Newsletter
 <h1>Update Newsletter</h1>
 <form method="POST">
 	{% csrf_token %}
-	{{form.as_p}}
-	<input type="submit">
+	{{ form.non_field_errors }}
+	{% for field in form %}
+		<div>
+			<div>
+				{% if field.field.required %} * {% endif %}
+				{{field.label_tag}}
+			</div>
+			<div>
+				{{ field }}
+			</div>
+		</div><br>
+	{% endfor %}
+	<input type="submit" class="form-control">
 </form>
 {% endblock %}

@@ -13,10 +13,10 @@ MD_INPUT = {
 class NewsletterForm(ModelForm):
 	class Meta:
 		model = Newsletter
-		fields = ['title', 'body', 'desc', 'ispublished']
+		fields = ['title', 'body', 'summary', 'ispublished']
 		widgets = {
 				'title': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
 				'body': Textarea(attrs=MD_INPUT),
-				'desc': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+				'summary': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
 				'ispublished': CheckboxInput(),
 				}
