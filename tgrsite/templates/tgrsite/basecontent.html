@@ -1,38 +1,20 @@
 {% load static %}
 {% load markdown_tags %}
 
-<title>{% block title %}{% endblock %} - warwicktabletop.co.uk</title>
-
-
-<script type="text/javascript" src="//code.jquery.com/jquery-3.1.1.min.js""></script>
-<script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
-<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.min.css' %}">
-<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.structure.min.css' %}">
-
-<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-{% comment %}Alternate versions of Boostrap with the BOOSTRA.386 theme
-	<link type="text/css" rel="stylesheet" href="/static/386/css/bootstrap.min.css">
-	<script type="text/javascript" src="/static/386/js/bootstrap.min.js"></script>
+{% comment %}
+THIS IS USED BY THE EMAIL VERSION OF THE NEWSLETTER ONLY.
+So all scripts should instead be added in addnavbar, the next template up,
+using the topscripts and bottomscripts blocks.
+This defines the global grid format - a col3 sidebar, a col6 body and a col3 sidebar.
 {% endcomment %}
 
-{% comment font icons library %}{% endcomment %}
-<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>{% block title %}{% endblock %} - warwicktabletop.co.uk</title>
 
-<script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
+<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<script>
-	$(function(){
-		$('.accordion').filter('.panel').accordion({
-			collapsible:true,
-			header: ".panel-heading",
-		});
-	});
-</script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+{% comment %} For scripts we don't want at the top of the email. {% endcomment %}
+{% block topscripts %}
+{% endblock %}
 
 {% block head %}
 	{% comment %}
@@ -78,26 +60,20 @@
 
 	article img {
 		max-width: 100%; /* Don't overflow. */
+		margin-bottom: 5px;
+		margin-top: 5px;
 	}
-
-	/* override browser's/Bootstrap's default which presumes <pre> is used for code
-	whereas in our case we will use it to preserve formatting on text boxes
-	at least until Markdown is implemented or something B)
-	*/
-	/* ^^^ @ past me: markdown is implemented. what are you talking about */
-	/*pre {
-		font-family: inherit;
-		background-color: inherit;
-		border: inherit;
-		font-size: inherit;
-		padding: 0;
-		margin:inherit;
-	}*/
 
 	.errorlist {
 		color: #a94442;
 	}
 
+	.CodeMirror {
+		height: 200px;
+	}
+	.CodeMirror-scroll {
+		min-height: 0px;
+	}
 
 </style>
 
@@ -145,38 +121,6 @@ Might do an A/B test on the entire site at some point-->
 	</div><!-- .row -->
 </div><!-- .container -->
 
-<script>
-	function nasa() {
-		$('img').each(function(index, element) {
-			id = ['01120', '01002', '01003', '01005', '01008', '01153', '01581'][Math.floor(Math.random()*7)]
-			u='https://images-assets.nasa.gov/image/PIA'+id+'/PIA'+id+'~orig.jpg'
-			//$(element).attr('src', u)
-			$(element).replaceWith($('<img src="'+u+'">'))
-		})
-	}
-</script>
-
-<script>
-$(document).ready(function() {
-	console.log("Getting ready.");
-	window.simplemde = [];
-	$(".markdown-input").each(function(i,e) {
-		console.log("Element "+e);
-		window.simplemde.push(
-			new SimpleMDE({element: e,
-				placeholder: "Write Markdown (or just regular text) here...",
-				forceSync: true,
-			})
-		);
-	});
-});
-</script>
-
-<style>
-.CodeMirror {
-	height: 200px;
-}
-.CodeMirror-scroll {
-	min-height: 0px;
-}
-</style>
+{% comment %} For scripts at the bottom of the page. {% endcomment %}
+{% block bottomscripts %}
+{% endblock %}
