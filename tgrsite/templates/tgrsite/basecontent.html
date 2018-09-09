@@ -51,7 +51,7 @@ This defines the global grid format - a col3 sidebar, a col6 body and a col3 sid
 		white-space: -moz-pre-wrap !important;
 		white-space: -pre-wrap;
 		white-space: -o-pre-wrap;
-		white-space: pre-wrap;
+	white-space: pre-wrap;
 		word-wrap: break-word;
 		white-space: -webkit-pre-wrap;
 		word-break: break-word;
@@ -83,43 +83,49 @@ This defines the global grid format - a col3 sidebar, a col6 body and a col3 sid
 	{% endcomment %}
 {% endblock %}
 
-{% block navbar %}{% endblock %}
+<div id="not-footer">
+	{% block navbar %}{% endblock %}
 
-<!-- page -->
-<div class="container-fluid">
-{% comment %}
-<!--this was here in case people preferred page headings to be
-above all content including sidebars. the people I surveyed preferred the old way.
-Might do an A/B test on the entire site at some point-->
-	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-			<h1>{% block heading %}{% endblock %}</h1>
+	<!-- page -->
+	<div class="container-fluid">
+	{% comment %}
+	<!--this was here in case people preferred page headings to be
+	above all content including sidebars. the people I surveyed preferred the old way.
+	Might do an A/B test on the entire site at some point-->
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<h1>{% block heading %}{% endblock %}</h1>
+			</div>
+			<div class="col-md-3"></div>
 		</div>
-		<div class="col-md-3"></div>
-	</div>
-{% endcomment %}
-	<div class="row">
-		<div class="col-md-3">
-			{% block leftcontents %}
-			{% endblock %}
-		</div>
+	{% endcomment %}
+		<div class="row">
+			<div class="col-md-3">
+				{% block leftcontents %}
+				{% endblock %}
+			</div>
 
-		<div class="col-md-6">
-			{% block body %}
-				{% comment %}
-				This is the part that gets overridden by templates that extend this one.
-				{% endcomment %}
-			{% endblock %}
-		</div>
+			<div class="col-md-6">
+				{% block body %}
+					{% comment %}
+					This is the part that gets overridden by templates that extend this one.
+					{% endcomment %}
+				{% endblock %}
+			</div>
 
-		<div class="col-md-3">
-			{% block rightbar %}
-			{% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
-			{% endblock %}
-		</div>
-	</div><!-- .row -->
-</div><!-- .container -->
+			<div class="col-md-3">
+				{% block rightbar %}
+				{% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
+				{% endblock %}
+			</div>
+		</div><!-- .row -->
+	</div><!-- .container -->
+</div>
+
+<footer id="footer">
+	{% block footer %}{% endblock %}
+</footer>
 
 {% comment %} For scripts at the bottom of the page. {% endcomment %}
 {% block bottomscripts %}
