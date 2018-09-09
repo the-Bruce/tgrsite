@@ -96,7 +96,7 @@ def login_view(request):
 def login_process(request):
 	username = request.POST.get('username')
 	password = request.POST.get('password')
-	user = authenticate(username=username, password=password)
+	user = authenticate(request, username=username, password=password)
 	if user is not None:
 		login(request, user)
 		return HttpResponseRedirect(request.GET.get('next') or '/')
@@ -119,31 +119,18 @@ def signup_process(request):
 
 		data_valid = True
 
-		# Validate captcha
-		import requests
-		import os
-		data = {
-			'secret': os.environ['GCAPTCHA_SECRET'],
-			'response': request.POST['g-recaptcha-response'],
-		}
-		r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-
-		if not r.json()['success']:
-			form.add_error('g-recaptcha-response', ValidationError('Captcha failed.'))
-			data_valid = False
-
 		# CHECK CASE!
 		if User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
 			form.add_error('username', ValidationError('A user with that name already exists.'))
 			data_valid = False
-		
+
 		if not data_valid:
 			return render(request, 'users/signup.html', {'form': form})
 
 		# now that we're here, the form is DEFINITELY valid.
 		u = spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
 
-		auth = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+		auth = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 		if auth is not None:
 			login(request, auth)
 			return HttpResponseRedirect(reverse('me'))
