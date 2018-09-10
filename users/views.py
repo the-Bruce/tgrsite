@@ -15,6 +15,10 @@ from forum.models import Thread, Response
 
 from .models import Member
 from .forms import MemberForm, UserForm, LoginForm, SignupForm
+from .captcha import makeCaptcha
+
+import re
+from hashlib import sha256
 
 #temp
 import json
@@ -110,22 +114,39 @@ def login_process(request):
 
 def signup_view(request):
 	form = SignupForm()
-	context = {'form': form, 'result': request.GET.get('result')}
+	context = generate_signup_form(form)
+	context['result'] = request.GET.get('result')
 	return render(request, 'users/signup.html', context)
+
+def generate_signup_form(form):
+	(question, answer, chelp) = makeCaptcha()
+	return {'form': form, 'captcha': question, 'token': hash2(answer), 'captcha_help': chelp}
+
+def hash2(inp):
+	return sha256(str(inp).encode()).hexdigest()
 
 def signup_process(request):
 	form = SignupForm(request.POST)
 	if(form.is_valid()):
 
 		data_valid = True
+		captcha_input = re.sub(r'\s','',request.POST['captcha'])
+		captcha_target = re.sub(r'\s','',request.POST['captcha-token'])
 
+		#print(hash2(captcha_input), captcha_input, captcha_target)
+
+		# CHECK CAPTCHA!
+		if hash2(captcha_input) != captcha_target:
+			# Should be attached to captcha, but this is the closest thing.
+			form.add_error('username', ValidationError('You didn\'t answer the captcha correctly!'))
+			data_valid = False
 		# CHECK CASE!
-		if User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
+		elif User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
 			form.add_error('username', ValidationError('A user with that name already exists.'))
 			data_valid = False
 
 		if not data_valid:
-			return render(request, 'users/signup.html', {'form': form})
+			return render(request, 'users/signup.html', generate_signup_form(form))
 
 		# now that we're here, the form is DEFINITELY valid.
 		u = spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
@@ -141,7 +162,7 @@ def signup_process(request):
 				fail_silently=True
 			)
 			form.add_error(None, ValidationError('Unknown error. The webadmin has been notified.'))
-			return render(request, 'users/signup.html', {'form': form})
+			return render(request, 'users/signup.html', generate_signup_form(form))
 	else:
 		# This should only be true if the username is invalid yet also already exists
 		# i.e. never?
@@ -149,7 +170,7 @@ def signup_process(request):
 			form.add_error('username', ValidationError('A user with that name already exists.'))
 
 		# display the errors from the default validators
-		return render(request, 'users/signup.html', {'form': form})
+		return render(request, 'users/signup.html', generate_signup_form(form))
 
 @login_required
 def logout_view(request):
