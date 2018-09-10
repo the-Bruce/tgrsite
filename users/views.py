@@ -3,6 +3,7 @@ from django.views import generic
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
+from django.core.mail import mail_managers
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
