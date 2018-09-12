@@ -16,7 +16,7 @@ from forum.models import Thread, Response
 
 from .models import Member
 from .forms import MemberForm, UserForm, LoginForm, SignupForm
-from .captcha import makeCaptcha
+from .captcha import make_captcha
 
 import re
 from hashlib import sha256
@@ -115,13 +115,13 @@ def login_process(request):
 
 def signup_view(request):
 	form = SignupForm()
-	context = generate_signup_form(form)
+	context = add_captcha_to_form(form)
 	context['result'] = request.GET.get('result')
 	return render(request, 'users/signup.html', context)
 
-def generate_signup_form(form):
-	(question, answer, chelp) = makeCaptcha()
-	return {'form': form, 'captcha': question, 'token': hash2(answer), 'captcha_help': chelp}
+def add_captcha_to_form(form):
+	(question, answer, captcha_help) = make_captcha()
+	return {'form': form, 'captcha': question, 'token': hash2(answer), 'captcha_help': captcha_help}
 
 def hash2(inp):
 	return sha256(str(inp).encode()).hexdigest()
@@ -134,12 +134,10 @@ def signup_process(request):
 		captcha_input = re.sub(r'\s','',request.POST['captcha'])
 		captcha_target = re.sub(r'\s','',request.POST['captcha-token'])
 
-		#print(hash2(captcha_input), captcha_input, captcha_target)
-
 		# CHECK CAPTCHA!
 		if hash2(captcha_input) != captcha_target:
 			# Should be attached to captcha, but this is the closest thing.
-			form.add_error('username', ValidationError('You didn\'t answer the captcha correctly!'))
+			form.add_error(None, ValidationError('You didn\'t answer the captcha correctly!'))
 			data_valid = False
 		# CHECK CASE!
 		elif User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
@@ -147,7 +145,7 @@ def signup_process(request):
 			data_valid = False
 
 		if not data_valid:
-			return render(request, 'users/signup.html', generate_signup_form(form))
+			return render(request, 'users/signup.html', add_captcha_to_form(form))
 
 		# now that we're here, the form is DEFINITELY valid.
 		u = spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
@@ -163,7 +161,7 @@ def signup_process(request):
 				fail_silently=True
 			)
 			form.add_error(None, ValidationError('Unknown error. The webadmin has been notified.'))
-			return render(request, 'users/signup.html', generate_signup_form(form))
+			return render(request, 'users/signup.html', add_captcha_to_form(form))
 	else:
 		# This should only be true if the username is invalid yet also already exists
 		# i.e. never?
@@ -171,7 +169,7 @@ def signup_process(request):
 			form.add_error('username', ValidationError('A user with that name already exists.'))
 
 		# display the errors from the default validators
-		return render(request, 'users/signup.html', generate_signup_form(form))
+		return render(request, 'users/signup.html', add_captcha_to_form(form))
 
 @login_required
 def logout_view(request):
