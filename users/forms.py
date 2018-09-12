@@ -68,9 +68,14 @@ class SignupForm(ModelForm):
 class MemberForm(ModelForm):
 	class Meta:
 		model = Member
-		fields = ['bio', 'signature']
+		fields = ['bio', 'signature', 'official_photo_url']
 
-		# neater than explicitly specifying each key as the same value
 		widgets = {
-			i: Textarea(attrs=MD_INPUT) for i in fields
+			'bio': Textarea(attrs=MD_INPUT),
+			'signature': Textarea(attrs=MD_INPUT),
+			'official_photo_url': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs)
+		}
+
+		help_texts = {
+			'official_photo_url': 'Provide a URL for a real photo of you. This is only shown on the exec page and only if you are a member of exec! To change your profile picture in the rest of the site, go to Gravatar.'
 		}
