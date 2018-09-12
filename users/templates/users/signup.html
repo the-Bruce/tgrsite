@@ -2,7 +2,6 @@
 {% block title %}Signup{% endblock %}
 
 {% block head %}
-<script src="https://www.google.com/recaptcha/api.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -36,12 +35,18 @@
 
 <form action="{% url 'signup-done' %}" method="POST">
 	{% csrf_token %}
+	<input name="captcha-token" value="{{token}}" data-_extension-text-contrast="bg" type="hidden">
 	<div class="form-group">
 		{{form.as_p}}
+		<p>
+			<label for="captcha">Captcha question: {{captcha}}</label>
+			<input id="captcha" class="form-control" name="captcha" data-_extension-text-contrast="" type="text">
+			<span class="helptext">{{captcha_help}}</span>
+		</p>
 	</div>
-	<div class="g-recaptcha" data-sitekey="6LetzT8UAAAAANIQgQpcagRL5vD9MyvHTHqMTuVi"></div>
 	<input type="submit" value="Sign Me Up" class="form-control">
 </form>
+<p>By signing up to this website you agree to the <a href="/page/privacy">Privacy Policy</a> and <a href="/page/content-policy">Content Policy</a>.</p>
 
-<a href="{% url 'login' %}">Log In</a>
+<p><a href="{% url 'login' %}">Log in instead.</a></p>
 {% endblock %}

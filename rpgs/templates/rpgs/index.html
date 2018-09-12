@@ -14,21 +14,16 @@ Events
 {% else %}
 <h1>Games</h1>
 {% endif %}
+
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create event</button></a></p>
+{% endif %}
+
 {% for rpg in rpgs %}
 	{% if request.GET.showfinished == "true" or not rpg.is_in_the_past %}
 		{% include "rpgs/detail.html" with embed="true" %}
 	{% endif %}
 {% endfor %}
-
-{% if request.GET.showfinished == "true" %}
-	<a href=".">Stop showing past games</a>
-{% else %}
-	<a href=".?showfinished=true">Show past games</a>
-{% endif %}
-
-{% if request.user.is_authenticated %}
-<p><a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create event</button></a></p>
-{% endif %}
 
 {% endblock %}
 {% block rightbar %}
@@ -37,20 +32,34 @@ Events
 
 <div class="panel panel-default accordion">
 				<div class="panel-heading">
-					Filter by tag
+					Filters
 				</div>
 				<div class="panel-body">
 
 					{% rpgs_root as o %}
+					<p>
 					{% if request.path == o %}
-					<a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
+						<a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
 					{% else %}
-					<a href="{%url 'rpgs' %}">Clear filter</a>
+						<a href="{%url 'rpgs' %}">Show all games (not just RPGs)</a>
 					{% endif %}
+					</p>
+
+					</p>
+					{% if request.GET.showfinished == "true" %}
+						<a href=".">Stop showing past games</a>
+					{% else %}
+						<a href=".?showfinished=true">Show past games</a>
+					{% endif %}
+					</p>
+
+
 					<form class="form-inline" method="POST" action="{% url 'rpg_tag_form' %}">
 						{% csrf_token %}
+						<br />
+						<p><strong>Filter by tags:</strong></p>
 						<div class="form-group input-group">
-							<input class="form-control" type="text" name="tag" placeholder="tag name">
+							<input class="form-control" type="text" name="tag" placeholder="Tag name">
 							<span class="input-group-btn">
 								<button class="btn btn-default" type="submit">Filter</button>
 							</span>

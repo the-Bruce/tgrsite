@@ -3,6 +3,7 @@ from django.views import generic
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
+from django.core.mail import mail_managers
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
@@ -15,6 +16,10 @@ from forum.models import Thread, Response
 
 from .models import Member
 from .forms import MemberForm, UserForm, LoginForm, SignupForm
+from .captcha import make_captcha
+
+import re
+from hashlib import sha256
 
 #temp
 import json
@@ -96,7 +101,7 @@ def login_view(request):
 def login_process(request):
 	username = request.POST.get('username')
 	password = request.POST.get('password')
-	user = authenticate(username=username, password=password)
+	user = authenticate(request, username=username, password=password)
 	if user is not None:
 		login(request, user)
 		return HttpResponseRedirect(request.GET.get('next') or '/')
@@ -110,40 +115,42 @@ def login_process(request):
 
 def signup_view(request):
 	form = SignupForm()
-	context = {'form': form, 'result': request.GET.get('result')}
+	context = add_captcha_to_form(form)
+	context['result'] = request.GET.get('result')
 	return render(request, 'users/signup.html', context)
+
+def add_captcha_to_form(form):
+	(question, answer, captcha_help) = make_captcha()
+	return {'form': form, 'captcha': question, 'token': hash2(answer), 'captcha_help': captcha_help}
+
+def hash2(inp):
+	return sha256(str(inp).encode()).hexdigest()
 
 def signup_process(request):
 	form = SignupForm(request.POST)
 	if(form.is_valid()):
 
 		data_valid = True
+		captcha_input = re.sub(r'\s','',request.POST['captcha'])
+		captcha_target = re.sub(r'\s','',request.POST['captcha-token'])
 
-		# Validate captcha
-		import requests
-		import os
-		data = {
-			'secret': os.environ['GCAPTCHA_SECRET'],
-			'response': request.POST['g-recaptcha-response'],
-		}
-		r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-
-		if not r.json()['success']:
-			form.add_error('g-recaptcha-response', ValidationError('Captcha failed.'))
+		# CHECK CAPTCHA!
+		if hash2(captcha_input) != captcha_target:
+			# Should be attached to captcha, but this is the closest thing.
+			form.add_error(None, ValidationError('You didn\'t answer the captcha correctly!'))
 			data_valid = False
-
 		# CHECK CASE!
-		if User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
+		elif User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
 			form.add_error('username', ValidationError('A user with that name already exists.'))
 			data_valid = False
-		
+
 		if not data_valid:
-			return render(request, 'users/signup.html', {'form': form})
+			return render(request, 'users/signup.html', add_captcha_to_form(form))
 
 		# now that we're here, the form is DEFINITELY valid.
 		u = spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
 
-		auth = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+		auth = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 		if auth is not None:
 			login(request, auth)
 			return HttpResponseRedirect(reverse('me'))
@@ -154,7 +161,7 @@ def signup_process(request):
 				fail_silently=True
 			)
 			form.add_error(None, ValidationError('Unknown error. The webadmin has been notified.'))
-			return render(request, 'users/signup.html', {'form': form})
+			return render(request, 'users/signup.html', add_captcha_to_form(form))
 	else:
 		# This should only be true if the username is invalid yet also already exists
 		# i.e. never?
@@ -162,7 +169,7 @@ def signup_process(request):
 			form.add_error('username', ValidationError('A user with that name already exists.'))
 
 		# display the errors from the default validators
-		return render(request, 'users/signup.html', {'form': form})
+		return render(request, 'users/signup.html', add_captcha_to_form(form))
 
 @login_required
 def logout_view(request):

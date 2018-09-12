@@ -4,7 +4,6 @@ Warwick Tabletop Games and Roleplaying Society website
 ## Environment configuration
 The following environment varaibles are mandatory:
 * `SECRET_KEY`: Site's own secret key, for encryption. See [Django's documentation of the `SECRET_KEY` setting](https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-SECRET_KEY).
-* `GCAPTCHA_SECRET`: Google reCaptcha secret key. Used for current captcha system.
 
 The following fields are optional:
 * `DEBUG`: Determines whether to run the server in debug mode. See [Django's documentation of the `DEBUG` setting](https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-DEBUG). DO NOT RUN A PRODUCTION SERVER WITH THIS ENABLED.
@@ -25,7 +24,7 @@ The following fields are optional:
  * The server will be running on `localhost:8000`.
  * You should create a `Member` for your super user, since this is currently not automatically done.
   * Go to the admin site at `/admin`, log in, and add a Member object with `equiv_user` set to your superuser. IF you do not do this then your superuser will cause errors when viewing the site.
-  
+
 ## Contributing
 Contributions welcome, in the form of issue submissions, pull requests, and comments.
 If you want to add a feature, fork and branch the repo, and create a pull request into `master`.
