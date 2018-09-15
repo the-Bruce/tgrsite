@@ -77,5 +77,5 @@ class MemberForm(ModelForm):
 		}
 
 		help_texts = {
-			'official_photo_url': 'Provide a URL for a real photo of you. This is only shown on the exec page and only if you are a member of exec! To change your profile picture in the rest of the site, go to Gravatar.'
+			'official_photo_url': 'Provide a URL for a real photo of you. This is only shown on the exec page and only if you are a member of exec! Gravatar is used by the rest of the site for profile pictures - for more information see this <a href="https://github.com/ashbc/tgrsite/wiki/Gravatar">guide</a>.'
 		}
