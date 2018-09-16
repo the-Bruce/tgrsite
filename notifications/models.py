@@ -3,6 +3,9 @@ from django.db import models
 from users.models import Member
 from django.utils import timezone
 
+# TODO:
+# Consider merging notifications of the same type. How do we do this???
+
 # Create your models here.
 class Notification(models.Model):
 	member = models.ForeignKey(Member, related_name='notifications_owned', on_delete=models.CASCADE)
@@ -12,9 +15,16 @@ class Notification(models.Model):
 	unread = models.BooleanField()
 	time = models.DateTimeField()
 
-	icons = {'newsletter': 'fa-newspaper-o', 'message': 'fa-commenting-o'}
-	default_icon = 'fa-circle'
 	def notify_icon(self):
+		icons = {
+			'newsletter': 'fa-newspaper-o',
+			'message': 'fa-commenting-o',
+			'rpg_join': 'fa-sign-in',
+			'rpg_leave': 'fa-sign-out',
+			'rpg_kick': 'fa-times',
+			'rpg_added': 'fa-magic'
+		}
+		default_icon = 'fa-circle'
 		if self.notify_type in icons:
 			return icons[self.notify_type]
 		else:

@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from users.models import Member
+from notifications.models import notify
 
 from .models import Rpg, Tag
 from .forms import RpgForm, RpgManageForm
@@ -45,14 +46,18 @@ def join(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
 	if rpg.members.count() < rpg.players_wanted:
 		rpg.members.add(request.user.member)
-		return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
+		url = reverse('rpg', kwargs={'pk':request.POST.get('id')})
+		notify(rpg.creator, 'rpg_join', 'User '+request.user.username+' joined your game "'+rpg.title+'"!', url)
+		return HttpResponseRedirect(url)
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}) + '?error=full')
 
 @login_required
 def leave(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
 	rpg.members.remove(request.user.member)
-	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
+	url = reverse('rpg', kwargs={'pk':request.POST.get('id')})
+	notify(rpg.creator, 'rpg_leave', 'User '+request.user.username+' left your game "'+rpg.title+'".', url)
+	return HttpResponseRedirect(url)
 
 @login_required
 def create(request):
@@ -63,6 +68,7 @@ def kick(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
 	if request.user.member == rpg.creator:
 		rpg.members.remove(request.POST.get('user-to-remove'))
+		notify(User.objects.get(id=request.POST.get('user-to-remove')).member, 'rpg_kick', 'You were kicked from "'+rpg.title+'".', '')
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}) + '?nousername=1')
 
 @login_required
@@ -76,12 +82,14 @@ def add_to(request):
 	# Also worth noting that this kind of form is exactly the kind of thing
 	# that could be enhanced with AJAX, and that could shape the response structure.
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
+	url = reverse('rpg', kwargs={'pk':request.POST.get('id')})
 	if request.user.member == rpg.creator:
 		users = User.objects.filter(username=request.POST.get('username'))
 		if users.count() == 0:
 			return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
 		rpg.members.add(users[0].id)
-	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
+		notify(users[0].member, 'rpg_added', 'You were added to "'+rpg.title+'".', url)
+	return HttpResponseRedirect(url)
 
 @login_required
 def create_done(request):

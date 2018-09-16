@@ -9,6 +9,7 @@
 	<strong>
 	{% endif %}
 	<a href="{% url 'read_notification' notif.id %}" class="list-group-item" style="">
+		<i class="fa {{notif.notify_icon}}" aria-hidden="true"></i>
 		{{notif.content}}
 		<span class="pull-right">
 			{{notif.time|timesince}} ago
