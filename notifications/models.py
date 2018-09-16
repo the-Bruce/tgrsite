@@ -18,7 +18,7 @@ class Notification(models.Model):
 	def notify_icon(self):
 		icons = {
 			'newsletter': 'fa-newspaper-o',
-			'message': 'fa-commenting-o',
+			'message_received': 'fa-commenting-o',
 			'rpg_join': 'fa-sign-in',
 			'rpg_leave': 'fa-sign-out',
 			'rpg_kick': 'fa-times',

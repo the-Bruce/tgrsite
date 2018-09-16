@@ -6,12 +6,18 @@ from django.db.models import Count
 from users.models import Member
 from .models import Message, MessageThread
 from django.contrib.auth.models import User
+from notifications.models import notify
 
 import re
 
 # not a view
 # helper function to send messages
 def send_message(member, thread, message):
+	# Send the notification to everyone in the thread except the sender.
+	url = reverse('message_thread', args=[thread.id])
+	for receiver in thread.participants.all():
+		if member != receiver:
+			notify(receiver, 'message_received', 'You got a message from '+str(member.equiv_user.username)+': '+message, url)
 	return Message.objects.create(sender=member, thread=thread, content=message)
 
 def send_to(sender, message, *pals_usernames):
