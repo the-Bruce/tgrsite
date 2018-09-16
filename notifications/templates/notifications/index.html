@@ -1,0 +1,25 @@
+{% extends 'tgrsite/main.html' %}
+{% block title %}Notifications{% endblock %}
+{% block body %}
+
+<h1>Your Notifications</h1>
+<div class="list-group">
+{% for notif in notifs %}
+	{% if notif.unread %}
+	<strong>
+	{% endif %}
+	<a href="{% url 'read_notification' notif.id %}" class="list-group-item" style="">
+		{{notif.content}}
+		<span class="pull-right">
+			{{notif.time|timesince}} ago
+		</span>
+	</a>
+	{% if notif.unread %}
+	</strong>
+	{% endif %}
+{% empty %}
+Wow, you're all caught up! Enjoy the silence.
+{% endfor %}
+</div>
+
+{% endblock %}

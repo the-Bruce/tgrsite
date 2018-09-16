@@ -8,6 +8,9 @@ from .forms import NewsletterForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import Http404
 
+from notifications.models import notify_all
+from users.models import Member
+
 class Index(generic.ListView):
 	model = Newsletter
 	ordering = ['ispublished','-pub_date']
@@ -30,7 +33,10 @@ class Create(PermissionRequiredMixin, generic.edit.CreateView):
 	def form_valid(self, form):
 		form.instance.author = self.request.user.member
 		form.instance.pub_date = timezone.now()
-		return super(Create, self).form_valid(form)
+		s = super(Create, self).form_valid(form)
+		if form.instance.ispublished:
+			notify_all('newsletter', 'The newsletter "'+form.instance.title+'" has been published! ', form.instance.get_absolute_url())
+		return s
 
 class Update(PermissionRequiredMixin, generic.edit.UpdateView):
 	model = Newsletter
@@ -40,7 +46,9 @@ class Update(PermissionRequiredMixin, generic.edit.UpdateView):
 	raise_exception = True
 
 	def form_valid(self, form):
-		if form.instance.ispublished: form.instance.pub_date = timezone.now()
+		if form.instance.ispublished and not Newsletter.objects.get(id=form.instance.id).ispublished:
+			form.instance.pub_date = timezone.now()
+			notify_all('newsletter', 'The newsletter "'+form.instance.title+'" has been published! ', form.instance.get_absolute_url())
 		return super(Update, self).form_valid(form)
 
 	def get_object(self, queryset=None):

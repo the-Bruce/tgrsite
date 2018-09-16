@@ -156,6 +156,7 @@ body {
 				{% endif %}
 
 				{% endcomment %}
+				<li><a href="{% url 'all_notifications' %}"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
 				{% if request.user.is_authenticated %}
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				{% else %}
