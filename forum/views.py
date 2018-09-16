@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Thread, Response, Forum
 from .forms import ThreadForm, ResponseForm, ThreadEditForm
+from notifications.models import notify
 
 # landing page: "root forum"
 def index(request):
@@ -72,14 +73,19 @@ def create_thread(request):
 def create_response(request):
 	form = ResponseForm(request.POST)
 	if(form.is_valid()):
+		thread = Thread.objects.get(id=request.POST.get('thread'))
 		res = Response(
 			body=form.cleaned_data['body'],
 			author=request.user.member,
 			pub_date=timezone.now(),
-			thread=Thread.objects.get(id=request.POST.get('thread')),
+			thread=thread,
 		)
+		url = reverse('viewthread', kwargs={'pk': request.POST.get('thread')})
+		for author in thread.get_all_authors():
+			if author != request.user.member:
+				notify(author, 'forum_reply', str(request.user.username)+' replied to a thread you\'ve commented in!', url)
 		res.save()
-		return HttpResponseRedirect(reverse('viewthread', kwargs={'pk': request.POST.get('thread')}))
+		return HttpResponseRedirect(url)
 	else:
 		# TODO: placeholder error
 		return HttpResponse(repr(form.errors))

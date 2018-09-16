@@ -22,7 +22,8 @@ class Notification(models.Model):
 			'rpg_join': 'fa-sign-in',
 			'rpg_leave': 'fa-sign-out',
 			'rpg_kick': 'fa-times',
-			'rpg_added': 'fa-magic'
+			'rpg_added': 'fa-magic',
+			'forum_reply': 'fa-quote-right'
 		}
 		default_icon = 'fa-circle'
 		if self.notify_type in icons:
