@@ -3,27 +3,27 @@
 {% block body %}
 
 <h1>Your Notifications</h1>
+<p>Notifications are in beta! Please note that old notifications will be deleted after a week.</p>
 <p><a href="{% url 'clear_notifications' %}"><button class="btn btn-primary">Mark all as read</button></a></p>
 <div class="list-group">
-{% for notif in notifs %}
-	{% if notif.unread %}
+{% for notification in notifications %}
+	{% if notification.is_unread %}
 	<strong>
 	{% endif %}
-	<a href="{% url 'read_notification' notif.id %}" class="list-group-item" style="">
-		<i class="fa {{notif.notify_icon}}" aria-hidden="true"></i>
-		{{notif.content | truncatechars_html:256}}
+	<a href="{% url 'read_notification' notification.id %}" class="list-group-item" style="">
+		<i class="fa {{notification.notify_icon}}" aria-hidden="true"></i>
+		{{notification.content | truncatechars_html:220}}
 		<span class="pull-right">
-			{{notif.time|timesince}} ago
+			{{notification.time|timesince}} ago
 		</span>
 	</a>
-	{% if notif.unread %}
+	{% if notification.is_unread %}
 	</strong>
 	{% endif %}
 {% empty %}
-Wow, you're all caught up! Enjoy the silence.
+	Wow, you're all caught up! Enjoy the silence.
 {% endfor %}
 <br />
-<p>(Old read notifications are deleted after a week.)</p>
 </div>
 
 {% endblock %}

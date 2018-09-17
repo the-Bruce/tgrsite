@@ -8,13 +8,12 @@ from datetime import timedelta
 # Consider merging notifications of the same type. How do we do this???
 # COULD MERGE BY URL
 
-# Create your models here.
 class Notification(models.Model):
 	member = models.ForeignKey(Member, related_name='notifications_owned', on_delete=models.CASCADE)
-	notify_type = models.CharField(max_length=32)
+	notif_type = models.CharField(max_length=32)
 	url = models.CharField(max_length=512)
 	content = models.TextField(max_length=8192)
-	unread = models.BooleanField()
+	is_unread = models.BooleanField()
 	time = models.DateTimeField()
 
 	def notify_icon(self):
@@ -28,19 +27,19 @@ class Notification(models.Model):
 			'forum_reply': 'fa-quote-right'
 		}
 		default_icon = 'fa-circle'
-		if self.notify_type in icons:
-			return icons[self.notify_type]
+		if self.notif_type in icons:
+			return icons[self.notif_type]
 		else:
 			return default_icon
 
-def notify(member, notify_type, content, url):
-	n = Notification.objects.create(member=member, notify_type=notify_type, content=content, url=url, unread=True, time=timezone.now())
+def notify(member, notif_type, content, url):
+	n = Notification.objects.create(member=member, notif_type=notif_type, content=content, url=url, is_unread=True, time=timezone.now())
 	n.save()
-	clear_old(member)
+	delete_old(member)
 
-def clear_old(member):
+def delete_old(member):
 	week_ago = timezone.now() - timedelta(days=7)
-	Notification.objects.filter(member=member, unread=False, time__lt=week_ago).delete()
+	Notification.objects.filter(member=member, is_unread=False, time__lt=week_ago).delete()
 
-def notify_all(notify_type, content, url):
-	for m in Member.objects.all(): notify(m, notify_type, content, url)
+def notify_everybody(notif_type, content, url):
+	for m in Member.objects.all(): notify(m, notif_type, content, url)

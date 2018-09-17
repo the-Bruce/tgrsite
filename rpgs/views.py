@@ -47,7 +47,7 @@ def join(request):
 	if rpg.members.count() < rpg.players_wanted:
 		rpg.members.add(request.user.member)
 		url = reverse('rpg', kwargs={'pk':request.POST.get('id')})
-		notify(rpg.creator, 'rpg_join', 'User '+request.user.username+' joined your game "'+rpg.title+'"!', url)
+		notify(rpg.creator, 'rpg_join', 'User {} joined your game "{}"!'.format(request.user.username, rpg.title), url)
 		return HttpResponseRedirect(url)
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}) + '?error=full')
 
@@ -56,7 +56,7 @@ def leave(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
 	rpg.members.remove(request.user.member)
 	url = reverse('rpg', kwargs={'pk':request.POST.get('id')})
-	notify(rpg.creator, 'rpg_leave', 'User '+request.user.username+' left your game "'+rpg.title+'".', url)
+	notify(rpg.creator, 'rpg_leave', 'User {} left your game "{}".'.format(request.user.username, rpg.title), url)
 	return HttpResponseRedirect(url)
 
 @login_required
@@ -68,7 +68,7 @@ def kick(request):
 	rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
 	if request.user.member == rpg.creator:
 		rpg.members.remove(request.POST.get('user-to-remove'))
-		notify(User.objects.get(id=request.POST.get('user-to-remove')).member, 'rpg_kick', 'You were kicked from "'+rpg.title+'".', '')
+		notify(User.objects.get(id=request.POST.get('user-to-remove')).member, 'rpg_kick', 'You were kicked from the game "{}".'.format(rpg.title), '')
 	return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}) + '?nousername=1')
 
 @login_required
@@ -88,7 +88,7 @@ def add_to(request):
 		if users.count() == 0:
 			return HttpResponseRedirect(reverse('rpg', kwargs={'pk':request.POST.get('id')}))
 		rpg.members.add(users[0].id)
-		notify(users[0].member, 'rpg_added', 'You were added to "'+rpg.title+'".', url)
+		notify(users[0].member, 'rpg_added', 'You were added to the game "{}".'.format(rpg.title), url)
 	return HttpResponseRedirect(url)
 
 @login_required

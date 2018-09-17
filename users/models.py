@@ -26,7 +26,7 @@ class Member(models.Model):
 	signature = models.CharField(max_length = 1024, blank=True)
 
 	def notification_count(self):
-		return len(self.notifications_owned.filter(unread=True))
+		return len(self.notifications_owned.filter(is_unread=True))
 
 	# todo: keep track of the last time the user viewed messages page
 	# so that any "new" messages will give notifications

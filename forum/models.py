@@ -104,9 +104,7 @@ class Thread(models.Model):
 		return Response.objects.filter(thread=self.id).count()
 
 	def get_all_authors(self):
-		authors = []
-		for r in self.response_set.all():
-			authors.append(r.author)
+		authors = [x.author for x in self.response_set.all()]
 		return list(set(authors))
 
 # a reply in a forum thread
