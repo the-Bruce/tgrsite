@@ -2,9 +2,11 @@ from django.db import models
 
 from users.models import Member
 from django.utils import timezone
+from datetime import timedelta
 
 # TODO:
 # Consider merging notifications of the same type. How do we do this???
+# COULD MERGE BY URL
 
 # Create your models here.
 class Notification(models.Model):
@@ -33,9 +35,12 @@ class Notification(models.Model):
 
 def notify(member, notify_type, content, url):
 	n = Notification.objects.create(member=member, notify_type=notify_type, content=content, url=url, unread=True, time=timezone.now())
-	# TODO: Needs to limit number of notifications stored.
-	# Likely here just check if >50, if so delete the last.
 	n.save()
+	clear_old(member)
+
+def clear_old(member):
+	week_ago = timezone.now() - timedelta(days=7)
+	Notification.objects.filter(member=member, unread=False, time__lt=week_ago).delete()
 
 def notify_all(notify_type, content, url):
 	for m in Member.objects.all(): notify(m, notify_type, content, url)
