@@ -9,33 +9,33 @@ Exec page
 {% for role in execs %}
 	<div class="media">
 		<div class="media-left">
-			<img class="media-object"
+			<img class="media-object photo"
 				{% if role.incumbent %}
-					src="{{role.incumbent.gravatar}}"
+					src="{{role.incumbent.official_photo_url | default:role.incumbent.gravatar}}"
 				{% else %}
 					src="http://gravatar.com/avatar/?default=mm"
 				{% endif %}
-				alt="Avatar for {{ role.incumbent }}">
+				alt="Photo for {{ role.incumbent }}">
 		</div>
 		<div class="media-body wordwrap" id="role.role_title">
-			<h5 class="media-heading">
+			<h3 class="media-heading title">
+			{{ role.role_title }} -
 			{% if role.incumbent %}
-				<a href="{% url 'user' role.incumbent.id %}">
-					{{ role.incumbent }}
-				</a>
 				{% if role.incumbent.equiv_user.get_full_name %}
-				-
-					{{role.incumbent.equiv_user.get_full_name}}
-
+					{{ role.incumbent.equiv_user.get_full_name }} (<a href="{% url 'user' role.incumbent.id %}">{{ role.incumbent }}</a>
+					<img class="inline-gravatar" src="{{role.incumbent.gravatar}}" alt="Avatar for {{role.incumbent}}">)
+				{% else %}
+					<a href="{% url 'user' role.incumbent.id %}">
+						{{ role.incumbent }}
+					</a>
 				{% endif %}
 			{% else %}
 				Unoccupied
-			{% endif %}
-				- {{ role.role_title }}</h5>
-			{{ role.bio }}
+			{% endif %}</h3>
+			<p>{{ role.bio }}
 			{% if request.user.member == role.incumbent %}
 				<a href="{% url 'exec_editbio' role.id %}"><i class="fa fa-pencil"></i></a>
-			{% endif %}
+			{% endif %}</p>
 		</div>
 	</div>
 {% empty %}
@@ -43,10 +43,20 @@ Exec page
 {% endfor %}
 
 <style type="text/css">
-img {
-	width: 72px;
-	height: 72px;
+.photo {
+	width: 144px;
+	height: 144px;
 }
+
+.title {
+	display: inline-block;
+}
+
+.inline-gravatar {
+	display: inline-block;
+	height: 1em;
+}
+
 </style>
 
 {% endblock %}

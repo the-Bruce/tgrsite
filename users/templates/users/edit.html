@@ -8,14 +8,27 @@
 	There were problems with the form.
 	{% endif %}
 
-	(Note: to change your profile image, use <a href="https://en.gravatar.com/support/what-is-gravatar/">Gravatar.</a>)
+	(Note: to change your profile image, see <a href="https://github.com/ashbc/tgrsite/wiki/Gravatar">this guide.</a>)
 
 	<form action="{% url 'update' %}" method="POST">
 		{% csrf_token %}
 
 		<div class="form-group">
 			{{ userform.as_p }}
-			{{ memberform.as_p }}
+			{% for field in memberform %}
+				{% if field.name != 'official_photo_url' or request.user.member.is_exec %}
+					<div>
+						<div>
+							{% if field.field.required %} * {% endif %}
+							{{field.label_tag}}
+						</div>
+						<div>
+							{{ field }}
+						</div>
+						<p>{{ field.help_text | safe }}</p>
+					</div><br>
+				{% endif %}
+			{% endfor %}
 		</div>
 
 	<input type="submit" class="form-control">
