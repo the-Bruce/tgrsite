@@ -6,7 +6,7 @@ from django.db.models import Count
 from users.models import Member
 from .models import Message, MessageThread
 from django.contrib.auth.models import User
-from notifications.models import notify
+from notifications.models import notify, NotifType
 
 import re
 
@@ -17,7 +17,7 @@ def send_message(member, thread, message):
 	url = reverse('message_thread', args=[thread.id])
 	for receiver in thread.participants.all():
 		if member != receiver:
-			notify(receiver, 'message_received', 'You got a message from '+str(member.equiv_user.username)+': '+message, url)
+			notify(receiver, NotifType.MESSAGE, 'You got a message from '+str(member.equiv_user.username)+': '+message, url)
 	return Message.objects.create(sender=member, thread=thread, content=message)
 
 def send_to(sender, message, *pals_usernames):

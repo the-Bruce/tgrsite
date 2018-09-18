@@ -8,7 +8,7 @@ from .forms import NewsletterForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import Http404
 
-from notifications.models import notify_everybody
+from notifications.models import notify_everybody, NotifType
 from users.models import Member
 
 class Index(generic.ListView):
@@ -35,7 +35,7 @@ class Create(PermissionRequiredMixin, generic.edit.CreateView):
 		form.instance.pub_date = timezone.now()
 		s = super(Create, self).form_valid(form)
 		if form.instance.ispublished:
-			notify_everybody('newsletter', 'The newsletter "{}" has been published!'.format(form.instance.title), form.instance.get_absolute_url())
+			notify_everybody(NotifType.NEWSLETTER, 'The newsletter "{}" has been published!'.format(form.instance.title), form.instance.get_absolute_url())
 		return s
 
 class Update(PermissionRequiredMixin, generic.edit.UpdateView):
@@ -49,7 +49,7 @@ class Update(PermissionRequiredMixin, generic.edit.UpdateView):
 		# If newsletter goes from unpublished to published.
 		if form.instance.ispublished and not Newsletter.objects.get(id=form.instance.id).ispublished:
 			form.instance.pub_date = timezone.now()
-			notify_everybody('newsletter', 'The newsletter "{}" has been published!'.format(form.instance.title), form.instance.get_absolute_url())
+			notify_everybody(NotifType.NEWSLETTER, 'The newsletter "{}" has been published!'.format(form.instance.title), form.instance.get_absolute_url())
 		return super(Update, self).form_valid(form)
 
 	def get_object(self, queryset=None):
