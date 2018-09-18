@@ -3,7 +3,6 @@ from django.db import models
 from users.models import Member
 from django.utils import timezone
 from datetime import timedelta
-from enum import Enum
 
 # TODO:
 # Consider merging notifications of the same type. How do we do this???
