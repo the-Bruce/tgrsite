@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'gallery.apps.GalleryConfig',
     'pages.apps.PagesConfig',
     'newsletters.apps.NewslettersConfig',
+    'notifications.apps.NotificationsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

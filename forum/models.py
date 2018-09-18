@@ -103,6 +103,10 @@ class Thread(models.Model):
 	def get_response_count(self):
 		return Response.objects.filter(thread=self.id).count()
 
+	def get_all_authors(self):
+		authors = [x.author for x in self.response_set.all()]
+		return list(set(authors))
+
 # a reply in a forum thread
 # there are fundamental similarities between thread OPs and responses;
 # but the decision was made early to put the latter as part of the Thread class...

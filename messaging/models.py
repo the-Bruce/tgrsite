@@ -25,37 +25,8 @@ class MessageThread(models.Model):
 		# and as always Python handles negatives nicely
 		return self.get_messages().reverse()[:5][::-1]
 
-		"""The following code was too beautiful to delete.
-	# @param *pals_str list of usernames (strings) of involved members
-	# @return the messagethread containing exactly these users (created if none exists)
-	def get_thread_from_str(*pals_str):
-		members = (Member.objects.get(equiv_user__username=x) for x in pals_str)
-		return MessageThread.get_thread(*members)
-
-	# retrieve the single MessageThread containing exactly this set of users
-	# function can take list of Members as arguments, or as an iterable collection, because Python
-	def get_thread(*participants_exactly):
-		from django.db.models import Count
-
-		# Selects the threads with the correct number of participants
-		query = MessageThread.objects.annotate(num_participants=Count('participants')).filter(num_participants=len(participants_exactly))
-
-		# make sure each participant is in the set
-		for x in participants_exactly:
-			query = query.filter(participants=x)
-
-		# we now have a strong enough condition:
-		# if we have exactly the right number of people,
-		# and no person looked for is absent,
-		# then therefore the list of present is exactly the list of people looked for!
-
-		thread, created = query.get_or_create()
-		# so if after all that, no thread exists, we need to make it and add people in
-		if created:
-			for x in participants_exactly:
-				thread.participants.add(x)
-
-		return thread"""
+	# There was some nice code written by Ash that was "too beautiful to delete".
+	# Don't worry Ash, Git will always remember it, even now I've deleted it.
 
 	def get_messages(self):
 		return self.message_set.order_by('timestamp')
