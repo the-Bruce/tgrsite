@@ -27,6 +27,7 @@ Exec page
 				{% else %}
 					<a href="{% url 'user' role.incumbent.id %}">
 						{{ role.incumbent }}
+					<img class="inline-gravatar" src="{{role.incumbent.gravatar}}" alt="Avatar for {{role.incumbent}}">
 					</a>
 				{% endif %}
 			{% else %}
