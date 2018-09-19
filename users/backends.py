@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 
 class CaseInsensitiveModelBackend(ModelBackend):
-	def authenticate(self, username=None, password=None):
+	def authenticate(self, request, username=None, password=None):
 		try:
 			user = User.objects.get(username__iexact=username)
 			if user.check_password(password):

@@ -23,6 +23,7 @@ urlpatterns = [
 	url(r'^messages/', include('messaging.urls')),
 	url(r'^bugs/', include('bugreports.urls')),
 	url(r'^newsletters/', include('newsletters.urls')),
+	url(r'^notifications/', include('notifications.urls')),
 
 	# Pseudo "Static" pages - those with no models or fancy behaviour.
 	# e.g. the larp intro page

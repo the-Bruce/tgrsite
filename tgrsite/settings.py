@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'gallery.apps.GalleryConfig',
     'pages.apps.PagesConfig',
     'newsletters.apps.NewslettersConfig',
+    'notifications.apps.NotificationsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -135,10 +136,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
     'users.backends.CaseInsensitiveModelBackend',
     #'django.contrib.auth.backends.ModelBackend',
-)
+]
 
 
 # Internationalization

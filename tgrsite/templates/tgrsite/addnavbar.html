@@ -2,6 +2,86 @@
 {% load static %}
 {% load markdown_tags %}
 
+{% comment %}
+THIS IS USED BY THE NEWSLETTER DETAIL VIEW ONLY.
+This allows for scripts to be imported. Note that this forms the base of the main view,
+which the rest of the site uses.
+This defines the navbar and the extra scripts.
+{% endcomment %}
+
+{% block topscripts %}
+<script type="text/javascript" src="//code.jquery.com/jquery-3.1.1.min.js""></script>
+<script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
+<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.min.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.structure.min.css' %}">
+
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
+
+<script>
+	$(function(){
+		$('.accordion').filter('.panel').accordion({
+			collapsible:true,
+			header: ".panel-heading",
+		});
+	});
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+{% comment font icons library %}{% endcomment %}
+<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- For the footer: -->
+<style>
+html {
+	height: 100%;
+}
+
+body {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+#not-footer {
+	flex: 1;
+}
+
+#footer {
+	/*background-color: #333;
+	color: #9d9d9d;*/
+	background-color: #eee;
+}
+
+#footer-content {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.footer-link {
+	display: inline;
+	padding-left: 3%;
+	padding-right: 3%;
+	white-space: nowrap;
+}
+
+.footer-link a:link,
+.footer-link a:hover,
+.footer-link a:active,
+.footer-link a:visited {
+	color: #444;
+}
+
+</style>
+
+{% endblock %}
+
 {% block navbar %}
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
@@ -66,22 +146,6 @@
 				<li><a href="{% url 'newsletters_index' %}">
 					<i class="fa fa-fw fa-newspaper-o"></i> Newsletters
 				</a></li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"
-					role="button" aria-haspopup="true" aria-expanded="false">
-						<i class="fa fa-fw fa-external-link"></i> Links <span class="caret"></span>
-					</a>
-
-					<ul class="dropdown-menu">
-						<li><a href="//www.facebook.com/TAGAROPLE/">
-							<i class="fa fa-fw fa-facebook-official"></i> Facebook Page
-						</a></li>
-						<li><a href="//www.warwicksu.com/societies/sff/">
-							<i class="fa fa-fw fa-external-link-square"></i> SU Page
-						</a></li>
-					</ul>
-
-				</li>
 
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
@@ -93,6 +157,7 @@
 
 				{% endcomment %}
 				{% if request.user.is_authenticated %}
+					<li><a href="{% url 'all_notifications' %}"><i class="fa fa-bell" aria-label="Notifications"></i> {{request.user.member.notification_count}}</a></li>
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				{% else %}
 					<li><a href="{% url 'login' %}">Login</a></li>
@@ -103,4 +168,42 @@
 
 	</div>
 </nav>
+{% endblock %}
+
+{% block footer %}
+<div id="footer-content">
+	<div class="footer-link"><i class="fa fa-facebook-official" aria-hidden="true"></i>&nbsp;<a href="//www.facebook.com/TAGAROPLE/">Facebook</a></div>
+	<div class="footer-link"><i class="fa fa-external-link-square" aria-hidden="true"></i>&nbsp;<a href="//www.warwicksu.com/societies/sff/">Warwick SU Page</a></div>
+	<div class="footer-link"><i class="fa fa-user-secret" aria-hidden="true"></i>&nbsp;<a href="/page/privacy">Privacy Policy</a></div>
+	<div class="footer-link"><i class="fa fa-commenting" aria-hidden="true"></i>&nbsp;<a href="/page/content-policy">Content Policy</a></div>
+</div>
+{% endblock %}
+
+{% block bottomscripts %}
+<script>
+	function nasa() {
+		$('img').each(function(index, element) {
+			id = ['01120', '01002', '01003', '01005', '01008', '01153', '01581'][Math.floor(Math.random()*7)]
+			u='https://images-assets.nasa.gov/image/PIA'+id+'/PIA'+id+'~orig.jpg'
+			//$(element).attr('src', u)
+			$(element).replaceWith($('<img src="'+u+'">'))
+		})
+	}
+</script>
+
+<script>
+$(document).ready(function() {
+	console.log("Getting ready.");
+	window.simplemde = [];
+	$(".markdown-input").each(function(i,e) {
+		console.log("Element "+e);
+		window.simplemde.push(
+			new SimpleMDE({element: e,
+				placeholder: "Write Markdown (or just regular text) here...",
+				forceSync: true,
+			})
+		);
+	});
+});
+</script>
 {% endblock %}
