@@ -54,13 +54,22 @@ class Notification(models.Model):
 			return default_icon
 
 def notify(member, notif_type, content, url):
-	n = Notification.objects.create(member=member, notif_type=notif_type, content=content, url=url, is_unread=True, time=timezone.now())
+	n = create_notification(member, notif_type, content, url)
 	n.save()
 	delete_old(member)
+
+def create_notification(member, notif_type, content, url):
+	return Notification(member=member, notif_type=notif_type, content=content, url=url, is_unread=True, time=timezone.now())
 
 def delete_old(member):
 	week_ago = timezone.now() - timedelta(days=7)
 	Notification.objects.filter(member=member, is_unread=False, time__lt=week_ago).delete()
 
+def delete_all_old():
+	week_ago = timezone.now() - timedelta(days=7)
+	Notification.objects.filter(is_unread=False, time__lt=week_ago).delete()
+
 def notify_everybody(notif_type, content, url):
-	for m in Member.objects.all(): notify(m, notif_type, content, url)
+	notifications = [create_notification(m, notif_type, content, url) for m in Member.objects.all()]
+	Notification.objects.bulk_create(notifications)
+	delete_all_old()
