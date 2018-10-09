@@ -142,7 +142,7 @@ def create_done(request):
 def tags_from_str(str):
 	tags = []
 	for tag in str.split(','):
-		if tag == '':
+		if tag.replace(' ','') == '':
 			continue
 		tags.append(Tag.objects.get_or_create(name=tag.strip().lower())[0])
 	return tags
