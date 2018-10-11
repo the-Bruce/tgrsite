@@ -30,7 +30,7 @@ This introduces a generic left bar containing recent threads etc.
 			</ul>
 		</div>
 	</div>
-	<div class="panel panel-default accordion">
+	<div class="panel panel-default accordion" id="recentThreads">
 		<div class="panel-heading">
 			Recent threads
 		</div>
@@ -52,7 +52,7 @@ This introduces a generic left bar containing recent threads etc.
 		</div>
 	</div>
 
-	<div class="panel panel-default accordion">
+	<div class="panel panel-default accordion" id="recentReplies">
 		<div class="panel-heading">
 			Recent replies
 		</div>
@@ -75,3 +75,56 @@ This introduces a generic left bar containing recent threads etc.
 	{% block leftbar %}{% endblock %}
 {% endblock %}
 
+{% block bottomscripts %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    console.log("Sticking sidebars.");
+    loadStates();
+    let threads=$('#recentThreads');
+    let replies=$('#recentReplies');
+    threads.bind(replies.accordion("option","event"), function (event) {saveState('recentThreads')});
+    replies.bind(replies.accordion("option","event"), function (event) {saveState('recentReplies')});
+});
+
+function loadStates() {
+    let rt=getCookie('recentThreads');
+    let rr=getCookie('recentReplies');
+    let threads=$('#recentThreads');
+    let replies=$('#recentReplies');
+    if (rt!=="") {
+        threads.accordion("option","animate",false).accordion("option","active",parseInt(rt)).accordion("option","animate",true);
+    }
+    if (rr!=="") {
+        replies.accordion("option", "animate", false).accordion("option", "active", parseInt(rr)).accordion("option", "animate", true);
+    }
+}
+function saveState(key) {
+    setCookie(key,$('#'+key).accordion("option","active"),365)
+}
+
+//Retreived from https://www.w3schools.com/js/js_cookies.asp 2018-10-11 by Thomas Bruce
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+//end retreived
+</script>
+{% endblock %}
