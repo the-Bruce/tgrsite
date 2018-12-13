@@ -159,7 +159,8 @@ body {
 
 				{% endcomment %}
 				{% if request.user.is_authenticated %}
-					<li><a href="{% url 'all_notifications' %}"><i class="fa fa-bell" aria-label="Notifications"></i> {{request.user.member.notification_count}}</a></li>
+				{% comment I know it's bad to do inline CSS but for some reason it wouldn't work otherwise. Please forgive me, web development gods. %}{% endcomment %}
+				<li><a href="{% url 'all_notifications' %}" {% if request.user.member.notification_count > 0 %}style="color: #f04747;"{% endif %}><i class="fa fa-bell" aria-label="Notifications"></i> {{request.user.member.notification_count}}</a></li>
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				{% else %}
 					<li><a href="{% url 'login' %}">Login</a></li>
