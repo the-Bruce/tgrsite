@@ -3,9 +3,10 @@
 {% load markdown_tags %}
 
 {% comment %}
-THIS IS USED BY THE NEWSLETTER DETAIL VIEW ONLY.
-This allows for scripts to be imported. Note that this forms the base of the main view,
-which the rest of the site uses.
+THIS IS DIRECTLY USED BY THE NEWSLETTER DETAIL VIEW ONLY.
+This allows for scripts to be imported.
+Note that this forms the base of the main view,
+which the rest of the site extends.
 This defines the navbar and the extra scripts.
 {% endcomment %}
 
@@ -149,17 +150,18 @@ body {
 					<i class="fa fa-fw fa-newspaper-o"></i> Newsletters
 				</a></li>
 
+				<li><a href="{% url 'sponsorships' %}">
+					<i class="fa fa-fw fa-handshake-o"></i> Our Sponsors
+				</a></li>
+
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				{% comment Is this where it should go? what about that neat sidebar? %}
-
-				{% if request.user.is_staff %}
-					<li><a href="/admin">Admin site</a></li>
-				{% endif %}
-
-				{% endcomment %}
 				{% if request.user.is_authenticated %}
-					<li><a href="{% url 'all_notifications' %}"><i class="fa fa-bell" aria-label="Notifications"></i> {{request.user.member.notification_count}}</a></li>
+					{% comment %}
+						I know it's bad to do inline CSS but for some reason it wouldn't work otherwise.
+						Please forgive me, web development gods.
+					{% endcomment %}
+					<li><a href="{% url 'all_notifications' %}" {% if request.user.member.notification_count > 0 %}style="color: #f04747;"{% endif %}><i class="fa fa-bell" aria-label="Notifications"></i> {{request.user.member.notification_count}}</a></li>
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				{% else %}
 					<li><a href="{% url 'login' %}">Login</a></li>
@@ -167,7 +169,6 @@ body {
 				{% endif %}
 			</ul>
 		</div>
-
 	</div>
 </nav>
 {% endblock %}
@@ -189,7 +190,7 @@ body {
 			u='https://images-assets.nasa.gov/image/PIA'+id+'/PIA'+id+'~orig.jpg'
 			//$(element).attr('src', u)
 			$(element).replaceWith($('<img src="'+u+'">'))
-		})
+		});
 	}
 </script>
 
