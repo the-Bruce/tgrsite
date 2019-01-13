@@ -19,7 +19,7 @@
 	<small>{% if object.author %} by <a href="{% url 'user' object.author.id %}">{{object.author}}</a> {% endif %}<small>({{object.pub_date}})</small></small></h1>
 <p></p>
 <article>
-{{object.body|parse_md}}
+{{object.body|parse_md_safe}}
 <article>
 
 {% endblock %}
