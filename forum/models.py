@@ -1,6 +1,8 @@
 from django.db import models
 from users.models import Member
 
+body_size = 32768
+
 class Forum(models.Model):
 	def __str__(self):
 		return self.title
@@ -91,7 +93,7 @@ class Thread(models.Model):
 	forum = models.ForeignKey(Forum, on_delete=models.CASCADE)
 
 	title = models.CharField(max_length=64)
-	body = models.CharField(max_length=8192)
+	body = models.TextField(max_length=body_size)
 	pub_date = models.DateTimeField('date posted')
 
 	# pinned/stickied/whatever threads will show up before all others in their forums
@@ -122,7 +124,7 @@ class Response(models.Model):
 
 	# when a thread is deleted its responses are deleted
 	thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
-	body = models.CharField(max_length=8192)
+	body = models.TextField(max_length=body_size)
 
 	pub_date = models.DateTimeField('date posted', auto_now_add=True)
 	author = models.ForeignKey(Member, on_delete=models.CASCADE)
