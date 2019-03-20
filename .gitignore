@@ -5,3 +5,4 @@ STATIC/
 tgrsite/keys.py
 *.pyc
 static_resources/
+local_config.py
