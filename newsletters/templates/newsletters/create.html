@@ -1,24 +1,24 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}
-New Newsletter
+    New Newsletter
 {% endblock %}
 {% block body %}
 
-<h1>New Newsletter</h1>
-<form method="POST">
-	{% csrf_token %}
-	{{ form.non_field_errors }}
-	{% for field in form %}
-		<div>
-			<div>
-				{% if field.field.required %} * {% endif %}
-				{{field.label_tag}}
-			</div>
-			<div>
-				{{ field }}
-			</div>
-		</div><br>
-	{% endfor %}
-	<input type="submit" class="form-control">
-</form>
+    <h1>New Newsletter</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div>
+                <div>
+                    {% if field.field.required %} * {% endif %}
+                    {{ field.label_tag }}
+                </div>
+                <div>
+                    {{ field }}
+                </div>
+            </div><br>
+        {% endfor %}
+        <input type="submit" class="form-control">
+    </form>
 {% endblock %}

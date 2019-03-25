@@ -2,24 +2,29 @@
 {% load markdown_tags %}
 {% load static %}
 
-{% block title %}{{object.title}}{% endblock %}
+{% block title %}{{ object.title }}{% endblock %}
 {% block leftcontents %}
-{% if object.author == user.member %}
-	<p><a href="{% url 'newsletters_update' object.id %}">Edit Newsletter</a></p>
-	<p><a href="{% url 'newsletters_delete' object.id %}">Delete Newsletter</a></p>
-	{% if object.ispublished %}<p><a href="{% url 'newsletters_email' object.id %}" download="email_{{object.id}}.html">Email Version</a></p>{% endif %}
-{% endif %}
+    {% if object.author == user.member %}
+        <p><a href="{% url 'newsletters_update' object.id %}">Edit Newsletter</a></p>
+        <p><a href="{% url 'newsletters_delete' object.id %}">Delete Newsletter</a></p>
+        {% if object.ispublished %}
+            <p><a href="{% url 'newsletters_email' object.id %}" download="email_{{ object.id }}.html">Email Version</a>
+            </p>{% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
 
-<img src="{% static 'newsletter-banner.png' %}" style="width: 100%;"/>
-{% if not object.ispublished %}<h1><strong>[UNPUBLISHED]</strong></h1>{% endif %}
-<h1>{{object.title}}
-	<small>{% if object.author %} by <a href="{% url 'user' object.author.id %}">{{object.author}}</a> {% endif %}<small>({{object.pub_date}})</small></small></h1>
-<p></p>
-<article>
-{{object.body|parse_md_safe}}
-<article>
+    <img src="{% static 'newsletter-banner.png' %}" style="width: 100%;"/>
+    {% if not object.ispublished %}<h1><strong>[UNPUBLISHED]</strong></h1>{% endif %}
+    <h1>{{ object.title }}
+        <small>{% if object.author %} by <a href="{% url 'user' object.author.id %}">{{ object.author }}</a> {% endif %}
+            <small>({{ object.pub_date }})</small>
+        </small>
+    </h1>
+    <p></p>
+    <article>
+    {{ object.body|parse_md_safe }}
+    </article>
 
 {% endblock %}

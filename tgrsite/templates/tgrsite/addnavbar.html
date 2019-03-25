@@ -11,202 +11,214 @@ This defines the navbar and the extra scripts.
 {% endcomment %}
 
 {% block topscripts %}
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
-<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.min.css' %}">
-<link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.structure.min.css' %}">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
+    <link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.min.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.structure.min.css' %}">
 
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
+    <script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
 
-<script>
-	$(function(){
-		$('.accordion').filter('.panel').accordion({
-			collapsible:true,
-			header: ".panel-heading",
-		});
-	});
-</script>
+    <script>
+        $(function () {
+            $('.accordion').filter('.panel').accordion({
+                collapsible: true,
+                header: ".panel-heading",
+            });
+        });
+    </script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
-{% comment font icons library %}{% endcomment %}
-<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% comment font icons library %}{% endcomment %}
+    <link type="text/css" rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<!-- For the footer: -->
-<style>
-html {
-	height: 100%;
-}
+    <!-- For the footer: -->
+    <style>
+        html {
+            height: 100%;
+        }
 
-body {
-	min-height: 100%;
-	display: flex;
-	flex-direction: column;
-}
+        body {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-#not-footer {
-	flex: 1;
-}
+        #not-footer {
+            flex: 1;
+        }
 
-#footer {
-	/*background-color: #333;
-	color: #9d9d9d;*/
-	background-color: #eee;
-}
+        #footer {
+            /*background-color: #333;
+            color: #9d9d9d;*/
+            background-color: #eee;
+        }
 
-#footer-content {
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
+        #footer-content {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
 
-.footer-link {
-	display: inline;
-	padding-left: 3%;
-	padding-right: 3%;
-	white-space: nowrap;
-}
+        .footer-link {
+            display: inline;
+            padding-left: 3%;
+            padding-right: 3%;
+            white-space: nowrap;
+        }
 
-.footer-link a:link,
-.footer-link a:hover,
-.footer-link a:active,
-.footer-link a:visited {
-	color: #444;
-}
+        .footer-link a:link,
+        .footer-link a:hover,
+        .footer-link a:active,
+        .footer-link a:visited {
+            color: #444;
+        }
 
-</style>
+    </style>
 
 {% endblock %}
 
-{% block bootstrap %}<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">{% endblock %}
+{% block bootstrap %}
+    <link type="text/css" rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-inverse">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<!-- hamburger menu -->
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="/">
-				<img src="{% static 'logo_purple.png'%}" class="brand-img" alt="Home">
-			</a>
-		</div>
-		<div class="collapse navbar-collapse" id="nav-collapse">
-			<ul class="nav navbar-nav">
-				<li><a href="{% url 'exec' %}">
-					<i class="fa fa-fw fa-users"></i> Exec
-				</a></li>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse"
+                        aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <!-- hamburger menu -->
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img src="{% static 'logo_purple.png' %}" class="brand-img" alt="Home">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="nav-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'exec' %}">
+                        <i class="fa fa-fw fa-users"></i> Exec
+                    </a></li>
 
-				<li><a href="{% url 'schedule' %}">
-					<i class="fa fa-fw fa-calendar"></i> Schedule
-				</a></li>
+                    <li><a href="{% url 'schedule' %}">
+                        <i class="fa fa-fw fa-calendar"></i> Schedule
+                    </a></li>
 
-				<li><a href="{% url 'gallery' %}">
-					<i class="fa fa-fw fa-picture-o"></i> Photo Gallery
-				</a></li>
+                    <li><a href="{% url 'gallery' %}">
+                        <i class="fa fa-fw fa-picture-o"></i> Photo Gallery
+                    </a></li>
 
-				<li><a href="{% url 'forum' %}">
-					<i class="fa fa-fw fa-quote-left"></i> Forum
-				</a></li>
+                    <li><a href="{% url 'forum' %}">
+                        <i class="fa fa-fw fa-quote-left"></i> Forum
+                    </a></li>
 
-				<li><a href="{% url 'rpgs' %}">
-					<i class="fa fa-fw fa-magic"></i> Events
-				</a></li>
+                    <li><a href="{% url 'rpgs' %}">
+                        <i class="fa fa-fw fa-magic"></i> Events
+                    </a></li>
 
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"
-					role="button" aria-haspopup="true" aria-expanded="false">
-						<i class="fa fa-fw fa-shield"></i> LARP <span class="caret"></span>
-					</a>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-fw fa-shield"></i> LARP <span class="caret"></span>
+                        </a>
 
-					<ul class="dropdown-menu">
-						<li><a href="{% url 'larp_info' %}">
-							<i class="fa fa-fw fa-info-circle"></i> Introduction
-						</a></li>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'larp_info' %}">
+                                <i class="fa fa-fw fa-info-circle"></i> Introduction
+                            </a></li>
 
-						<li><a href="{% static 'UNITY_6.1.1.pdf' %}">
-							<i class="fa fa-fw fa-book"></i> Rulebook
-						</a></li>
-						<li><a href="{% static 'Locations-In-Unity.pdf' %}">
-							<i class="fa fa-fw fa-key"></i> Lorebook
-						</a></li>
-					</ul>
-				</li>
+                            <li><a href="{% static 'UNITY_6.1.1.pdf' %}">
+                                <i class="fa fa-fw fa-book"></i> Rulebook
+                            </a></li>
+                            <li><a href="{% static 'Locations-In-Unity.pdf' %}">
+                                <i class="fa fa-fw fa-key"></i> Lorebook
+                            </a></li>
+                        </ul>
+                    </li>
 
-				<li><a href="{% url 'message_list' %}">
-					<i class="fa fa-fw fa-comment-o"></i> Messages
-				</a></li>
+                    <li><a href="{% url 'message_list' %}">
+                        <i class="fa fa-fw fa-comment-o"></i> Messages
+                    </a></li>
 
-				<li><a href="{% url 'newsletters_index' %}">
-					<i class="fa fa-fw fa-newspaper-o"></i> Newsletters
-				</a></li>
+                    <li><a href="{% url 'newsletters_index' %}">
+                        <i class="fa fa-fw fa-newspaper-o"></i> Newsletters
+                    </a></li>
 
-				<li><a href="{% url 'sponsorships' %}">
-					<i class="fa fa-fw fa-handshake-o"></i> Our Sponsors
-				</a></li>
+                    <li><a href="{% url 'sponsorships' %}">
+                        <i class="fa fa-fw fa-handshake-o"></i> Our Sponsors
+                    </a></li>
 
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				{% if request.user.is_authenticated %}
-					{% comment %}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if request.user.is_authenticated %}
+                        {% comment %}
 						I know it's bad to do inline CSS but for some reason it wouldn't work otherwise.
 						Please forgive me, web development gods.
 					{% endcomment %}
-					<li><a href="{% url 'all_notifications' %}" {% if request.user.member.notification_count > 0 %}style="color: #f04747;"{% endif %}><i class="fa fa-bell" aria-label="Notifications"></i> {{request.user.member.notification_count}}</a></li>
-					<li><a href="{% url 'logout' %}">Logout</a></li>
-				{% else %}
-					<li><a href="{% url 'login' %}">Login</a></li>
-					<li><a href="{% url 'signup' %}">Register</a></li>
-				{% endif %}
-			</ul>
-		</div>
-	</div>
-</nav>
+                        <li><a href="{% url 'all_notifications' %}"
+                               {% if request.user.member.notification_count > 0 %}style="color: #f04747;"{% endif %}><i
+                                class="fa fa-bell"
+                                aria-label="Notifications"></i> {{ request.user.member.notification_count }}</a></li>
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'signup' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
 {% endblock %}
 
 {% block footer %}
-<div id="footer-content">
-	<div class="footer-link"><i class="fa fa-facebook-official" aria-hidden="true"></i>&nbsp;<a href="//www.facebook.com/TAGAROPLE/">Facebook</a></div>
-	<div class="footer-link"><i class="fa fa-external-link-square" aria-hidden="true"></i>&nbsp;<a href="//www.warwicksu.com/societies/sff/">Warwick SU Page</a></div>
-	<div class="footer-link"><i class="fa fa-user-secret" aria-hidden="true"></i>&nbsp;<a href="/page/privacy">Privacy Policy</a></div>
-	<div class="footer-link"><i class="fa fa-commenting" aria-hidden="true"></i>&nbsp;<a href="/page/content-policy">Content Policy</a></div>
-</div>
+    <div id="footer-content">
+        <div class="footer-link"><i class="fa fa-facebook-official" aria-hidden="true"></i>&nbsp;<a
+                href="//www.facebook.com/TAGAROPLE/">Facebook</a></div>
+        <div class="footer-link"><i class="fa fa-external-link-square" aria-hidden="true"></i>&nbsp;<a
+                href="//www.warwicksu.com/societies/sff/">Warwick SU Page</a></div>
+        <div class="footer-link"><i class="fa fa-user-secret" aria-hidden="true"></i>&nbsp;<a href="/page/privacy">Privacy
+            Policy</a></div>
+        <div class="footer-link"><i class="fa fa-commenting" aria-hidden="true"></i>&nbsp;<a
+                href="/page/content-policy">Content Policy</a></div>
+    </div>
 {% endblock %}
 
 {% block bottomscripts %}
-<script>
-	function nasa() {
-		$('img').each(function(index, element) {
-			id = ['01120', '01002', '01003', '01005', '01008', '01153', '01581'][Math.floor(Math.random()*7)]
-			u='https://images-assets.nasa.gov/image/PIA'+id+'/PIA'+id+'~orig.jpg'
-			//$(element).attr('src', u)
-			$(element).replaceWith($('<img src="'+u+'">'))
-		});
-	}
-</script>
+    <script>
+        function nasa() {
+            $('img').each(function (index, element) {
+                id = ['01120', '01002', '01003', '01005', '01008', '01153', '01581'][Math.floor(Math.random() * 7)]
+                u = 'https://images-assets.nasa.gov/image/PIA' + id + '/PIA' + id + '~orig.jpg'
+                //$(element).attr('src', u)
+                $(element).replaceWith($('<img src="' + u + '">'))
+            });
+        }
+    </script>
 
-<script>
-$(document).ready(function() {
-	console.log("Getting ready.");
-	window.simplemde = [];
-	$(".markdown-input").each(function(i,e) {
-		console.log("Element "+e);
-		window.simplemde.push(
-			new SimpleMDE({element: e,
-				placeholder: "Write Markdown (or just regular text) here...",
-				forceSync: true,
-			})
-		);
-	});
-});
-</script>
+    <script>
+        $(document).ready(function () {
+            console.log("Getting ready.");
+            window.simplemde = [];
+            $(".markdown-input").each(function (i, e) {
+                console.log("Element " + e);
+                window.simplemde.push(
+                    new SimpleMDE({
+                        element: e,
+                        placeholder: "Write Markdown (or just regular text) here...",
+                        forceSync: true,
+                    })
+                );
+            });
+        });
+    </script>
 {% endblock %}

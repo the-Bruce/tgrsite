@@ -10,55 +10,56 @@ Context's "response_id" the second number in the url, which is the response ID f
 	{{ response_id }}
 {% endcomment %}
 {% block title %}
-{{thread.title}}
+    {{ thread.title }}
 {% endblock %}
 
 
 
 {% block body %}
 
-<h2 class="wordwrap">{{ thread.title }}</h2>
+    <h2 class="wordwrap">{{ thread.title }}</h2>
 
-<h4>
-	in
-	<a href="{% url 'subforum' thread.forum.id %}">{{ thread.forum }}</a>
-</h4>
+    <h4>
+        in
+        <a href="{% url 'subforum' thread.forum.id %}">{{ thread.forum }}</a>
+    </h4>
 
-{% comment %} Even the OP uses the "response" template {% endcomment %}
-{% include 'forum/response.html' with response=thread is_thread=True %}
+    {% comment %} Even the OP uses the "response" template {% endcomment %}
+    {% include 'forum/response.html' with response=thread is_thread=True %}
 
-{% for response in responses %}
-	{% include 'forum/response.html' %}
-{% endfor %}
+    {% for response in responses %}
+        {% include 'forum/response.html' %}
+    {% endfor %}
 
-{% if request.user.is_authenticated %}
+    {% if request.user.is_authenticated %}
 
-<form action="{% url 'createresponse' %}" method="POST">
-	{% csrf_token %}
-	<div class="form-group">
-		{{form}}
-		<input type="hidden" name="thread" value="{{thread.id}}">
-	</div>
-	<input type="submit" value="Respond" class="form-control">
-</form>
+        <form action="{% url 'createresponse' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form }}
+                <input type="hidden" name="thread" value="{{ thread.id }}">
+            </div>
+            <input type="submit" value="Respond" class="form-control">
+        </form>
 
-{% else %}
+    {% else %}
 
-<a href="{% url 'signup' %}next={{request.path}}">Sign up</a>
-or
-<a href="{% url 'login' %}next={{request.path}}">log in</a>
-to respond.
+        <a href="{% url 'signup' %}next={{ request.path }}">Sign up</a>
+        or
+        <a href="{% url 'login' %}next={{ request.path }}">log in</a>
+        to respond.
 
-{% endif %}
+    {% endif %}
 
-<style type="text/css">
-img.avatar {
-	width: 64px;
-	height: 64px;
-}
-.post-body img {
-	max-width: 100%;
-}
-</style>
+    <style type="text/css">
+        img.avatar {
+            width: 64px;
+            height: 64px;
+        }
+
+        .post-body img {
+            max-width: 100%;
+        }
+    </style>
 
 {% endblock %}

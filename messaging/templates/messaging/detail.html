@@ -1,21 +1,21 @@
 {% extends "tgrsite/main.html" %}
 {% load messaging_tags %}
 {% block title %}
-{% get_participants_excluding_self thread user %}
+    {% get_participants_excluding_self thread user %}
 {% endblock %}
 {% block body %}
-<h1>{% get_participants_excluding_self thread user %}</h1>
+    <h1>{% get_participants_excluding_self thread user %}</h1>
 
-{% comment TODO %}
-TODO: format timestamps nicer using some sort of library
-{% endcomment %}
-{% include 'messaging/messages.html' with full=1 messages=thread.get_messages %}
+    {% comment TODO %}
+    TODO: format timestamps nicer using some sort of library
+    {% endcomment %}
+    {% include 'messaging/messages.html' with full=1 messages=thread.get_messages %}
 
-<form action="{% url 'message_group' thread.id %}" method="POST" class="form-inline">
-	{% csrf_token %}
-	<input type="text" name="message" placeholder="message" class="form-control" autofocus autocomplete="off">
-	<input type="submit" class="form-control" value="Send">
-</form>
-<a href="{% url 'message_list' %}">Back to list</a>
+    <form action="{% url 'message_group' thread.id %}" method="POST" class="form-inline">
+        {% csrf_token %}
+        <input type="text" name="message" placeholder="message" class="form-control" autofocus autocomplete="off">
+        <input type="submit" class="form-control" value="Send">
+    </form>
+    <a href="{% url 'message_list' %}">Back to list</a>
 
 {% endblock %}

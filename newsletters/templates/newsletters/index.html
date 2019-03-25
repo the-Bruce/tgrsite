@@ -2,28 +2,29 @@
 {% block title %}Newsletters{% endblock %}
 {% block body %}
 
-<h1>Newsletters</h1>
-{% if perms.newsletters.add_newsletter %}
-	<p><a href="{% url 'newsletters_create' %}">Create a new newsletter</a></p>
-{% endif %}
-<p>Please note that only the newest newsletters are here! The older newsletters (before Summer 2018) can be found in the <a href="{% url 'forum' %}">forum</a>.</p>
-<br />
-<div class="list-group">
-{%for newsletter in object_list%}
-	{% if perms.newsletters.change_newsletter or newsletter.ispublished %}
-		<a href="{% url 'newsletters_detail' newsletter.id %}" class="list-group-item" style="">
-			<strong>{% if not newsletter.ispublished %}[UNPUBLISHED] {% endif %}{{newsletter.title}}</strong>
-			<span class="pull-right">
-				posted {{newsletter.pub_date|timesince}} ago
+    <h1>Newsletters</h1>
+    {% if perms.newsletters.add_newsletter %}
+        <p><a href="{% url 'newsletters_create' %}">Create a new newsletter</a></p>
+    {% endif %}
+    <p>Please note that only the newest newsletters are here! The older newsletters (before Summer 2018) can be found in
+        the <a href="{% url 'forum' %}">forum</a>.</p>
+    <br/>
+    <div class="list-group">
+        {% for newsletter in object_list %}
+            {% if perms.newsletters.change_newsletter or newsletter.ispublished %}
+                <a href="{% url 'newsletters_detail' newsletter.id %}" class="list-group-item" style="">
+                    <strong>{% if not newsletter.ispublished %}[UNPUBLISHED] {% endif %}{{ newsletter.title }}</strong>
+                    <span class="pull-right">
+				posted {{ newsletter.pub_date|timesince }} ago
 			</span>
-			<small>(by {{newsletter.author|truncatechars:32}})</small>
-			<br>
-			{{newsletter.summary}}
-		</a>
-	{% endif %}
-{% empty %}
-	There are no newsletters yet! Sadness.
-{% endfor %}
-</div>
+                    <small>(by {{ newsletter.author|truncatechars:32 }})</small>
+                    <br>
+                    {{ newsletter.summary }}
+                </a>
+            {% endif %}
+        {% empty %}
+            There are no newsletters yet! Sadness.
+        {% endfor %}
+    </div>
 
 {% endblock %}
