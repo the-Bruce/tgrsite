@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'statics.apps.StaticsConfig',
     'exec.apps.ExecConfig',
     'templatetags.apps.TemplatetagsConfig',
+    'timetable.apps.TimetableConfig',
     'messaging.apps.MessagingConfig',
     'bugreports.apps.BugreportsConfig',
     'gallery.apps.GalleryConfig',

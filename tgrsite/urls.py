@@ -7,6 +7,7 @@ urlpatterns = [
     # to use it, create a Page model with the name "index"
     # url(r'^$', TemplateView.as_view(template_name='tgrsite/index.html'), name='homepage'),
 
+    path('timetable/', include('timetable.urls')),
     path('admin/', admin.site.urls),
     path('forum/', include('forum.urls')),
 
