@@ -6,7 +6,8 @@ register = template.Library()
 @register.filter
 def for_event(weeks, event):
     result = []
-    oldBookingTxt = bookingTxt = None
+    oldBookingTxt = True
+    bookingTxt = None
     run = 1
     for week in weeks:
         try:

@@ -25,7 +25,7 @@ class Event(models.Model):
     sort_key = models.SmallIntegerField()
 
     def __str__(self):
-        return self.description
+        return str(self.description) + " : " + str(self.date_time_line)
 
     class Meta:
         ordering = ['sort_key']
@@ -40,12 +40,23 @@ class Booking(models.Model):
         return str(self.week) + ": " + str(self.event)
 
 
+class ColourScheme(models.Model):
+    name = models.CharField(max_length=20, help_text="A description to help you identify it")
+    html_code = models.CharField(max_length=7, help_text="Enter hexcode of colour to be used (include #)")
+    light_text = models.BooleanField(default=False,
+                                     help_text="Should the text used be a light colour (for dark colours)")
+
+    def __str__(self):
+        return str(self.name) + " (" + str(self.html_code) + ")"
+
+
 class Timetable(models.Model):
     title = models.CharField(max_length=30)
     events = models.ManyToManyField(Event)
     weeks = models.ManyToManyField(Week)
     notes = models.TextField(blank=True)
     active = models.BooleanField(default=False)
+    colour = models.ForeignKey(ColourScheme, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return str(self.title)

@@ -4,66 +4,61 @@
 {% block css %}
     {{ block.super }}
     <style>
-        .flexed {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 40px; {% comment %} Nasty fixed height. No easy way to fix 'till Bootstrap 4 update {% endcomment %}
-        }
-
-        .flexate {
+        .centerate {
             text-align: center;
+            vertical-align: middle !important;
         }
     </style>
 {% endblock %}
 {% block body %}
     {% spaceless %}
         {% for timetable in timetables %}
-            <h1>{{ timetable.title }}</h1>
-            <table class="table table-bordered table-striped table-responsive">
-                <thead class="bg-primary">
-                <tr>
-                    <td class=""><strong>Week number</strong></td>
-                    {% for week in timetable.weeks.all %}
-                        <td class="text-center"><strong>{{ week.number }}</strong></td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td class=""><strong>Week commencing</strong></td>
-                    {% for week in timetable.weeks.all %}
-                        <td class="text-center"><strong>{{ week.startDate }}</strong></td>
-                    {% endfor %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for event in timetable.events.all %}
+            <div>
+                <h1>{{ timetable.title }}</h1>
+                <table class="table table-bordered table-striped table-responsive">
+                    {% if timetable.colour %}
+                        <thead class="{% if timetable.colour.light_text %}bg-primary{% else %}bg-light{% endif %}"
+                               style="background-color: {{ timetable.colour.html_code }}">
+                    {% else %}
+                        <thead class="bg-primary">
+                    {% endif %}
                     <tr>
-                        <td class="text-center"><strong>{{ event.description }}<br>{{ event.date_time_line }}</strong>
-                        </td>
-                        {% for booking in timetable.weeks.all|for_event:event %}
-
-                            <td colspan="{{ booking.0 }}">
-                                <div class="flexed">
-                                    <div class="flexate">
-                                        {% if booking.1 %}
-                                            {{ booking.1 }}
-                                        {% else %}
-                                            Not running
-                                        {% endif %}
-                                    </div>
-
-                                </div>
-                            </td>
+                        <td class=""><strong>Week number</strong></td>
+                        {% for week in timetable.weeks.all %}
+                            <td class="centerate"><strong>{{ week.number }}</strong></td>
                         {% endfor %}
                     </tr>
-                {% endfor %}
-                </tbody>
+                    <tr>
+                        <td class=""><strong>Week commencing</strong></td>
+                        {% for week in timetable.weeks.all %}
+                            <td class="centerate"><strong>{{ week.startDate }}</strong></td>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in timetable.events.all %}
+                        <tr>
+                            <td class="text-center"><strong>{{ event.description }}<br>{{ event.date_time_line }}
+                            </strong>
+                            </td>
+                            {% for booking in timetable.weeks.all|for_event:event %}
+                                <td class="centerate" colspan="{{ booking.0 }}">
+                                    {% if booking.1 %}
+                                        {{ booking.1 }}
+                                    {% else %}
+                                        Not running
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
 
-            </table>
-            {% for note in timetable.notes.splitlines %}
-                <p>{{ note }}</p>
-            {% endfor %}
+                </table>
+                {% for note in timetable.notes.splitlines %}
+                    <p>{{ note }}</p>
+                {% endfor %}
+            </div>
         {% endfor %}
     {% endspaceless %}
 {% endblock %}
