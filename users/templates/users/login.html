@@ -11,8 +11,11 @@
             Username or password was incorrect.
         </div>
     {% endif %}
-
-    <form action="{% url 'login-done' %}?next={{ next }}" method="POST">
+    {% if next %}
+        <form action="{% url 'login-done' %}?next={{ next }}" method="POST">
+    {% else %}
+        <form action="{% url 'login-done' %}" method="POST">
+    {% endif %}
         {% csrf_token %}
         <div class="form-group">
             {{ form.as_p }}

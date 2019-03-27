@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.Index.as_view(), name='rpgs'),
     path('<int:pk>/', views.Detail.as_view(), name='rpg'),
-    path('tagged/<slug:tag>/', views.Filter.as_view(), name='rpg_tag'),
+    path('tagged/<str:tag>/', views.Filter.as_view(), name='rpg_tag'),
     path('tag_form/', views.tag_form, name='rpg_tag_form'),
     path('join/', views.join, name='rpg_join'),
 
