@@ -1,63 +1,31 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='forum'),
-    url(r'^(?P<pk>[0-9]+)/$', views.forum, name='subforum'),
+    path('', views.index, name='forum'),
+    path('<int:pk>/', views.forum, name='subforum'),
     # url(
     #	r'^thread/(?P<pk>[0-9]+)/#response-(?P<response_id>[0-9]+)/$',
     #	views.thread,
     #	name='viewresponse'
     # ),
-    url(
-        r'^thread/(?P<pk>[0-9]+)/$',
-        views.thread,
-        name='viewthread'
-    ),
+    path('thread/<int:pk>/', views.thread, name='viewthread'),
 
-    url(
-        r'^thread/respond/$',
-        views.create_response,
-        name='createresponse'
-    ),
+    path('thread/respond/', views.create_response, name='createresponse'),
 
-    url(r'^thread/create', views.create_thread, name='createthread'),
+    path('thread/create/', views.create_thread, name='createthread'),
 
-    url(
-        r'^thread/(?P<pk>[0-9]+)/delete$',
-        views.delete_thread,
-        name='thread_delete'
-    ),
+    path('thread/<int:pk>/delete/', views.delete_thread, name='thread_delete'),
 
-    url(
-        r'^thread/(?P<pk>[0-9]+)/edit$',
-        views.edit_thread_view,
-        name='thread_edit'
-    ),
+    path('thread/<int:pk>/edit/', views.edit_thread_view, name='thread_edit'),
 
-    url(
-        r'^thread/edit/done$',
-        views.edit_thread_process,
-        name='thread_edit_done'
-    ),
+    path('thread/edit/done/', views.edit_thread_process, name='thread_edit_done'),
 
-    url(
-        r'^response/(?P<pk>[0-9]+)/delete$',
-        views.delete_response,
-        name='response_delete'
-    ),
+    path('response/<int:pk>/delete/', views.delete_response, name='response_delete'),
 
-    url(
-        r'^response/(?P<pk>[0-9]+)/edit$',
-        views.edit_response_view,
-        name='response_edit'
-    ),
+    path('response/<int:pk>/edit/', views.edit_response_view, name='response_edit'),
 
-    url(
-        r'^response/edit/done$',
-        views.edit_response_process,
-        name='response_edit_done'
-    ),
+    path('response/edit/done/', views.edit_response_process, name='response_edit_done'),
 
 ]
