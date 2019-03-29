@@ -440,7 +440,7 @@ pre code {
     margin-left: -15px
 }
 
-.col-lg-3, .col-lg-6 {
+.col-lg-2, .col-lg-8 {
     position: relative;
     min-height: 1px;
     padding-right: 15px;
@@ -448,15 +448,15 @@ pre code {
 }
 
 @media (min-width: 1200px) {
-    .col-lg-3, .col-lg-6 {
+    .col-lg-2, .col-lg-8 {
         float: left
     }
 
-    .col-lg-6 {
-        width: 83.33333333%
+    .col-lg-8 {
+        width: 66.66666667%
     }
-    .col-lg-3 {
-        width: 8.33333333%
+    .col-lg-2 {
+        width: 16.66666667%
     }
 
 }
