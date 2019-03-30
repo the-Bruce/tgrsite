@@ -96,7 +96,7 @@ class Session(models.Model):
 # which is horrible in all sorts of ways, not least that it violated 1NF :P
 # rather than that mess, this solution creates a simple model with a ManyToMany relation
 class Tag(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=72)
 
     def __str__(self):
         return self.name
