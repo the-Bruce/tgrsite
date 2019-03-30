@@ -15,25 +15,24 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# TODO: find a way to keep this up to date with webadmin address.
-# some sort of admin page?
-ADMINS=  [('Webadmin', 'ash@sent.com')]
-MANAGERS=[('Webadmin', 'ash@sent.com')]
-LOGIN_URL='/login/'
+ADMINS = [('Webadmin', 'webadmin@warwicktabletop.co.uk')]
+MANAGERS = [('Webadmin', 'webadmin@warwicktabletop.co.uk')]
+LOGIN_URL = '/login/'
 
-EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
 EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-EMAIL_USE_TLS=True
+EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL', 'webmaster@localhost')
 
 s = ''
 try:
     from .keys import secret
+
     s = secret()
 except:
     # this will throw a KeyError and crash if neither are specified
@@ -107,7 +106,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tgrsite.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 # TODO: remove sqlite3
@@ -138,9 +136,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     'users.backends.CaseInsensitiveModelBackend',
-    #'django.contrib.auth.backends.ModelBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -177,36 +174,41 @@ now = timezone.now()
 TIME_ZONE = 'Europe/London'
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 # site URL that static files are served from
 STATIC_URL = '/static/'
 
 # directories to collect static files from
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     # where the static files are stored in the repo and collected from
     os.path.join(BASE_DIR, 'static_resources'),
- )
+]
 
 # directory the static files are served from
-STATIC_ROOT=os.path.join(BASE_DIR, 'STATIC')
+STATIC_ROOT = os.path.join(BASE_DIR, 'STATIC')
 
 # Monday
-FIRST_DAY_OF_WEEK=1
+FIRST_DAY_OF_WEEK = 1
 
 # as advised by python manage.py check --deploy
 # prevent browsers from MIME type sniffing. doesn't play nice
 # SECURE_CONTENT_TYPE_NOSNIFF=True
 
 # enable browsers' XSS filters
-SECURE_BROWSER_XSS_FILTER=True
+SECURE_BROWSER_XSS_FILTER = True
 
 # ensure all traffic is SSL (https)
-SECURE_SSL_REDIRECT=not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
 # session cookies secure-only
-SESSION_COOKIE_SECURE=not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 # same for CSRF cookie
-CSRF_COOKIE_SECURE=not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 # CSRF_COOKIE_HTTPONLY=True
-X_FRAME_OPTIONS='DENY'
+X_FRAME_OPTIONS = 'DENY'
+
+# Allow local configuration (change deploy options etc.)
+try:
+    from .local_config import *
+except ImportError:
+    pass

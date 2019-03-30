@@ -1,12 +1,12 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}
-Bug report form
+    Bug report form
 {% endblock %}
 {% block body %}
-<h1>New bug report</h1>
-<form action="" method="POST">
-	{% csrf_token %}
-	{{form.as_p}}
-	<input type="submit">
-</form>
+    <h1>New bug report</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit">
+    </form>
 {% endblock %}

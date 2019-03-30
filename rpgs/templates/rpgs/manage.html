@@ -1,40 +1,39 @@
 {% extends "tgrsite/main.html" %}
 {% block title %}
-{{rpg.title}}
+    {{ rpg.title }}
 {% endblock %}
 {% block body %}
-<div class="panel panel-default">
+    <div class="panel panel-default">
 
-	<div class="panel-heading">
-		<h2>
-			<a href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
-			<span class="pull-right">
-			</span>
-		</h2>
+        <div class="panel-heading">
+            <h2>
+                <a href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
+                <span class="pull-right"></span>
+            </h2>
 
-	</div>
+        </div>
 
-	<div class="panel-body">
-		<em>{{ rpg.system }}</em>
-		<p>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</p>
-		<br>
-		<p>Ran by {{ rpg.game_master_list }}
+        <div class="panel-body">
+            <em>{{ rpg.system }}</em>
+            <p>{% if rpg.description %}{{ rpg.description }}{% else %}No description{% endif %}</p>
+            <br>
+            <p>Ran by {{ rpg.game_master_list }}
 
-			{% if rpg.timeslot == rpg.OTHER_TIME %}
-				({{rpg.timeslot_str}})
-			{% else %}
-				on {{ rpg.timeslot_str}}
-			{% endif %}
-		</p>
+                {% if rpg.timeslot == rpg.OTHER_TIME %}
+                    ({{ rpg.timeslot_str }})
+                {% else %}
+                    on {{ rpg.timeslot_str }}
+                {% endif %}
+            </p>
 
-		<form method="POST" action="{% url 'rpg_manage_done' rpg.id %}">
-		{% csrf_token %}
-		{{form.as_p}}
-		<input type="submit" value="Save" class="form-control">
-		</form>
+            <form method="POST" action="{% url 'rpg_manage_done' rpg.id %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Save" class="form-control">
+            </form>
 
 
-	</div>
-</div>
-<a href="{% url 'rpgs' %}">Back to list</a>
+        </div>
+    </div>
+    <a href="{% url 'rpgs' %}">Back to list</a>
 {% endblock %}

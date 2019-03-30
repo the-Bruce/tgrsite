@@ -2,28 +2,30 @@
 {% block title %}Notifications{% endblock %}
 {% block body %}
 
-<h1>Your Notifications</h1>
-<p>Notifications are in beta! Please note that old notifications will be deleted after a week.</p>
-<p><a href="{% url 'clear_notifications' %}"><button class="btn btn-primary">Mark all as read</button></a></p>
-<div class="list-group">
-{% for notification in notifications %}
-	{% if notification.is_unread %}
-	<strong>
-	{% endif %}
-	<a href="{% url 'read_notification' notification.id %}" class="list-group-item" style="">
-		<i class="fa {{notification.notify_icon}}" aria-hidden="true"></i>
-		{{notification.content | truncatechars_html:220}}
-		<span class="pull-right">
-			{{notification.time|timesince}} ago
+    <h1>Your Notifications</h1>
+    <p>Notifications are in beta! Please note that old notifications will be deleted after a week.</p>
+    <p><a href="{% url 'clear_notifications' %}">
+        <button class="btn btn-primary">Mark all as read</button>
+    </a></p>
+    <div class="list-group">
+        {% for notification in notifications %}
+            {% if notification.is_unread %}
+                <strong>
+            {% endif %}
+        <a href="{% url 'read_notification' notification.id %}" class="list-group-item" style="">
+            <i class="fa {{ notification.notify_icon }}" aria-hidden="true"></i>
+            {{ notification.content | truncatechars_html:220 }}
+            <span class="pull-right">
+			{{ notification.time|timesince }} ago
 		</span>
-	</a>
-	{% if notification.is_unread %}
-	</strong>
-	{% endif %}
-{% empty %}
-	Wow, you're all caught up! Enjoy the silence.
-{% endfor %}
-<br />
-</div>
+        </a>
+        {% if notification.is_unread %}
+            </strong>
+        {% endif %}
+        {% empty %}
+            Wow, you're all caught up! Enjoy the silence.
+        {% endfor %}
+        <br/>
+    </div>
 
 {% endblock %}

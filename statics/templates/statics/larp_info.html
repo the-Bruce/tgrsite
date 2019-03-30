@@ -1,7 +1,13 @@
 {% extends 'tgrsite/main.html' %}
+{% load static %}
 {% block title %}LARP Info{% endblock %}
 {% block body %}
-{% load static %}
-	 LARP stands for Live Action Role-Playing, and is best described as Dungeons and Dragons in real life. The society owns costume and latex weapons, which we use to roleplay events in the world of Unity. On a standard week, some of us will play our characters while everyone else "monsters", a catch all term for playing NPCs and foes alike. Rules to create a character can be found under <a href="{% static 'Unity-5.0-Rulebook.pdf' %}">"rulebook"</a>, while more information about the world of Unity can be found under <a href="{% static 'Locations-In-Unity.pdf' %}">"lorebook"</a>.
-We meet at 12 noon on Sunday in the Oculus building, from weeks 1 to 9 in each term. Everyone is welcome (whether a student or not) and no experience is required! All kit is provided (sensible footwear is encouraged).
+    LARP stands for Live Action Role-Playing, and is best described as Dungeons and Dragons in real life. The society
+    owns costume and latex weapons, which we use to roleplay events in the world of Unity. On a standard week, some of
+    us will play our characters while everyone else "monsters", a catch all term for playing NPCs and foes alike. Rules
+    to create a character can be found under <a href="{% static 'Unity-5.0-Rulebook.pdf' %}">"rulebook"</a>, while more
+    information about the world of Unity can be found under
+    <a href="{% static 'Locations-In-Unity.pdf' %}">"lorebook"</a>.
+    We meet at 12 noon on Sunday in the Oculus building, from weeks 1 to 9 in each term. Everyone is welcome (whether a
+    student or not) and no experience is required! All kit is provided (sensible footwear is encouraged).
 {% endblock %}

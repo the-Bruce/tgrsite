@@ -3,86 +3,90 @@
 {% load rpg_tags %}
 
 {% block title %}
-Events
+    Events
 {% endblock %}
 
 {% block body %}
 
-{% rpg_url as r %}
-{% if request.path == r %}
-<h1>RPGs</h1>
-{% else %}
-<h1>Games</h1>
-{% endif %}
+    {% rpg_url as r %}
+    {% if request.path == r %}
+        <h1>RPGs</h1>
+    {% else %}
+        <h1>Games</h1>
+    {% endif %}
 
-{% if request.user.is_authenticated %}
-<p><a href="{% url 'rpg_create' %}"><button class="btn btn-primary">Create event</button></a></p>
-{% endif %}
+    {% if request.user.is_authenticated %}
+        <p><a href="{% url 'rpg_create' %}">
+            <button class="btn btn-primary">Create event</button>
+        </a></p>
+    {% endif %}
 
-{% for rpg in rpgs %}
-	{% if request.GET.showfinished == "true" or not rpg.is_in_the_past %}
-		{% include "rpgs/detail.html" with embed="true" %}
-	{% endif %}
-{% endfor %}
+    {% for rpg in rpgs %}
+        {% if request.GET.showfinished == "true" or not rpg.is_in_the_past %}
+            {% include "rpgs/detail.html" with embed="true" %}
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}
 {% block rightbar %}
 
 
 
-<div class="panel panel-default accordion">
-				<div class="panel-heading">
-					Filters
-				</div>
-				<div class="panel-body">
+    <div class="panel panel-default accordion">
+        <div class="panel-heading">
+            Filters
+        </div>
+        <div class="panel-body">
 
-					{% rpgs_root as o %}
-					<p>
-					{% if request.path == o %}
-						<a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
-					{% else %}
-						<a href="{%url 'rpgs' %}">Show all games (not just RPGs)</a>
-					{% endif %}
-					</p>
+            {% rpgs_root as o %}
+            <p>
+                {% if request.path == o %}
+                    <a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
+                {% else %}
+                    <a href="{% url 'rpgs' %}">Show all games (not just RPGs)</a>
+                {% endif %}
+            </p>
 
-					</p>
-					{% if request.GET.showfinished == "true" %}
-						<a href=".">Stop showing past games</a>
-					{% else %}
-						<a href=".?showfinished=true">Show past games</a>
-					{% endif %}
-					</p>
+            </p>
+            {% if request.GET.showfinished == "true" %}
+                <a href=".">Stop showing past games</a>
+            {% else %}
+                <a href=".?showfinished=true">Show past games</a>
+            {% endif %}
+            </p>
 
 
-					<form class="form-inline" method="POST" action="{% url 'rpg_tag_form' %}">
-						{% csrf_token %}
-						<br />
-						<p><strong>Filter by tags:</strong></p>
-						<div class="form-group input-group">
-							<input class="form-control" type="text" name="tag" placeholder="Tag name">
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="submit">Filter</button>
-							</span>
-						</div>
-					</form>
-				</div>
-			</div>
+            <form class="form-inline" method="POST" action="{% url 'rpg_tag_form' %}">
+                {% csrf_token %}
+                <br/>
+                <p><strong>Filter by tags:</strong></p>
+                <div class="form-group input-group">
+                    <input class="form-control" type="text" name="tag" placeholder="Tag name">
+                    <span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Filter</button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<div class="panel panel-default accordion">
-	<div class="panel-heading">Events guide</div>
-	<div class="panel-body">
-		<h4>To start an event:</h4>
-		<ol>
-			<li>Click the "Create event" button</li>
-			<li>Give your event a name, description, etc.</li>
-			<li>Tags can help quickly describe your event - eg if you are running an RPG, the "rpg" tag will help people find it.</li>
-		</ol>
+    <div class="panel panel-default accordion">
+        <div class="panel-heading">Events guide</div>
+        <div class="panel-body">
+            <h4>To start an event:</h4>
+            <ol>
+                <li>Click the "Create event" button</li>
+                <li>Give your event a name, description, etc.</li>
+                <li>Tags can help quickly describe your event - eg if you are running an RPG, the "rpg" tag will help
+                    people find it.
+                </li>
+            </ol>
 
-		<h4>To chat with your participants:</h4>
-		<ol>
-			<li>On the event's page, click a user's name to visit their profile.</li>
-			<li>Message them by hitting the "Message" button</li>
-		</ol>
-	</div>
-</div>
+            <h4>To chat with your participants:</h4>
+            <ol>
+                <li>On the event's page, click a user's name to visit their profile.</li>
+                <li>Message them by hitting the "Message" button</li>
+            </ol>
+        </div>
+    </div>
 {% endblock %}

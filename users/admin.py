@@ -2,24 +2,29 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from .models import Member
 from rpgs.models import Rpg
+from .models import Member
+
 
 class MemberInline(admin.StackedInline):
-	model = Member
-	can_delete = False
-	verbose_name_plural = 'member'
+    model = Member
+    can_delete = False
+    verbose_name_plural = 'member'
+
 
 class RpgInline(admin.TabularInline):
-	model = Rpg
-	extra = 0
+    model = Rpg
+    extra = 0
+
 
 class UserAdmin(BaseUserAdmin):
-	inlines = (MemberInline,)
+    inlines = (MemberInline,)
+
 
 class MemberAdmin(admin.ModelAdmin):
-	#inlines = (RpgInline,)
-	pass
+    # inlines = (RpgInline,)
+    pass
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

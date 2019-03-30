@@ -6,47 +6,51 @@
 
 {% block body %}
 
-{% comment %} I have no idea what this is {% endcomment %}
-{%if result == 'invalid' %}
-<div class="alert alert-danger alert-dismissible" role="alert">
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-	Invalid user for spooky reasons.
-</div>
-{% endif %}
+    {% comment %} I have no idea what this is {% endcomment %}
+    {% if result == 'invalid' %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            Invalid user for spooky reasons.
+        </div>
+    {% endif %}
 
-{% if request.GET.error %}
-<div class="alert alert-danger alert-dismissible" role="alert">
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-	{% if request.GET.error == 'exists' %}
-		A user with that username already exists.
-	{% elif request.GET.error == 'invalid' %}
-		Invalid username.
-	{% elif request.GET.error == 'length' %}
-		Username must be 32 characters or fewer.
-	{% else %}
-		Unknown error - please contact the webadmin with details.
-	{% endif %}
-</div>
-{% endif %}
+    {% if request.GET.error %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {% if request.GET.error == 'exists' %}
+                A user with that username already exists.
+            {% elif request.GET.error == 'invalid' %}
+                Invalid username.
+            {% elif request.GET.error == 'length' %}
+                Username must be 32 characters or fewer.
+            {% else %}
+                Unknown error - please contact the webadmin with details.
+            {% endif %}
+        </div>
+    {% endif %}
 
-<form action="{% url 'signup-done' %}" method="POST">
-	{% csrf_token %}
-	<input name="captcha-token" value="{{token}}" data-_extension-text-contrast="bg" type="hidden">
-	<div class="form-group">
-		{{form.as_p}}
-		<p>
-			<label for="captcha">Captcha question: {{captcha}}</label>
-			<input id="captcha" class="form-control" name="captcha" data-_extension-text-contrast="" type="text">
-			<span class="helptext">{{captcha_help}}</span>
-		</p>
-	</div>
-	<input type="submit" value="Sign Me Up" class="form-control">
-</form>
-<p>By signing up to this website you agree to the <a href="/page/privacy">Privacy Policy</a> and <a href="/page/content-policy">Content Policy</a>.</p>
+    <form action="{% url 'signup-done' %}" method="POST">
+        {% csrf_token %}
+        <input name="captcha-token" value="{{ token }}" data-_extension-text-contrast="bg" type="hidden">
+        <div class="form-group">
+            {{ form.as_p }}
+            <p>
+                <label for="captcha">Captcha question: {{ captcha }}</label>
+                <input id="captcha" class="form-control" name="captcha" data-_extension-text-contrast="" type="text">
+                <span class="helptext">{{ captcha_help }}</span>
+            </p>
+        </div>
+        <input type="submit" value="Sign Me Up" class="form-control">
+    </form>
+    <p>By signing up to this website you agree to the <a href="/page/privacy">
+        Privacy Policy
+    </a> and <a href="/page/content-policy">
+        Content Policy
+    </a>.</p>
 
-<p><a href="{% url 'login' %}">Log in instead.</a></p>
+    <p><a href="{% url 'login' %}">Log in instead.</a></p>
 {% endblock %}

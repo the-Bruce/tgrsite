@@ -1,55 +1,53 @@
-from django.conf.urls import url
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
 
-	url(r'^user/edit/', views.edit, name='edit'),
+    path('user/edit/', views.edit, name='edit'),
 
-	url(r'^user/(?P<pk>[0-9]+)/$', views.viewmember, name='user'),
-	url(r'^user/me/$', views.viewmember, {'pk': 'me'}, name='me'),
+    path('user/<int:pk>/', views.viewmember, name='user'),
+    path('user/me/', views.viewmember, {'pk': 'me'}, name='me'),
 
-	url(r'^user/update/$', views.update, name='update'),
+    path('user/update/', views.update, name='update'),
 
-	url(r'^user/allmembers/$', views.allmembers, name='allmembers'),
+    path('user/allmembers/', views.allmembers, name='allmembers'),
 
-	# TODO: Reimplement auth stuff using Django built-in auth views
-	# https://docs.djangoproject.com/en/1.11/topics/auth/default/#built-in-auth-views
-	url(r'^login/done/', views.login_process, name='login-done'),
-	url(r'^login/', views.login_view, name='login'),
+    # TODO: Reimplement auth stuff using Django built-in auth views
+    # https://docs.djangoproject.com/en/1.11/topics/auth/default/#built-in-auth-views
+    path('login/done/', views.login_process, name='login-done'),
+    path('login/', views.login_view, name='login'),
 
-	url(r'^signup/done', views.signup_process, name='signup-done'),
-	url(r'^signup/', views.signup_view, name='signup'),
+    path('signup/done/', views.signup_process, name='signup-done'),
+    path('signup/', views.signup_view, name='signup'),
 
-	url(r'^logout/', views.logout_view, name='logout'),
+    path('logout/', views.logout_view, name='logout'),
 
-	#url(r'^', include('django.contrib.auth.urls')),
+    # url(r'^', include('django.contrib.auth.urls')),
 
-	# TODO: Create our own so that they're prettier?
-	url(r'^change-password/$',
-		auth_views.PasswordChangeView.as_view(),
-		name='password_change'),
+    # TODO: Create our own so that they're prettier?
+    path('change-password/',
+        auth_views.PasswordChangeView.as_view(),
+        name='password_change'),
 
-	url(r'^change-password/done/$',
-		auth_views.PasswordChangeDoneView.as_view(),
-		name='password_change_done'),
+    path('change-password/done/',
+        auth_views.PasswordChangeDoneView.as_view(),
+        name='password_change_done'),
 
-	url(r'^reset-password/$',
-		auth_views.PasswordResetView.as_view(),
-		name='password_reset'),
+    path('reset-password/',
+        auth_views.PasswordResetView.as_view(),
+        name='password_reset'),
 
-	url(r'^reset-password/done/$',
-		auth_views.PasswordResetDoneView.as_view(),
-		name='password_reset_done'),
+    path('reset-password/done/',
+        auth_views.PasswordResetDoneView.as_view(),
+        name='password_reset_done'),
 
-	# I *think* this is how we'd capture base64?
-	# and the site doesn't specify what format the "token" is
-	url(r'^reset-password/(?P<uidb64>[0-9A-Za-z=]+)/(?P<token>[^/]+)/$',
-		auth_views.PasswordResetConfirmView.as_view(),
-		name='password_reset_confirm'),
+    path('reset-password/<slug:uidb64>/<slug:token>',
+        auth_views.PasswordResetConfirmView.as_view(),
+        name='password_reset_confirm'),
 
-	url(r'^reset-password/complete/$',
-		auth_views.PasswordResetCompleteView.as_view(),
-		name='password_reset_complete'),
+    path('reset-password/complete/',
+        auth_views.PasswordResetCompleteView.as_view(),
+        name='password_reset_complete'),
 ]

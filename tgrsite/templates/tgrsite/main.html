@@ -8,70 +8,74 @@ This introduces a generic left bar containing recent threads etc.
 {% endcomment %}
 
 {% block leftcontents %}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
-		</div>
-		<div class="panel-body">
-			<ul>
-				{% if request.user.is_staff %}
-					<li><a href="/admin">Admin site</a></li>
-				{% endif %}
-				{%if request.user.is_authenticated %}
-					<li><a href="{% url 'me' %}">
-						My profile
-					</a></li>
-					<li><a href="{% url 'logout' %}">Log out</a></li>
-				{% else %}
-					<li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>
-				{% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
+        </div>
+        <div class="panel-body">
+            <ul>
+                {% if request.user.is_staff %}
+                    <li><a href="/admin">Admin site</a></li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'me' %}">
+                        My profile
+                    </a></li>
+                    <li><a href="{% url 'logout' %}">Log out</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>
+                {% endif %}
 
-				<li><a href="{% url 'bug_create' %}">Report a bug</a></li>
-			</ul>
-		</div>
-	</div>
-	<div class="panel panel-default accordion">
-		<div class="panel-heading">
-			Recent threads
-		</div>
-		<div class="panel-body">
-		<ul class="nobullet">
-			{% for x in latestthreads %}
-				<li class="latest">
-					<a href="{% url 'viewthread' x.id %}">{{x.title|truncatechars:32}}</a>
-					<br>
+                <li><a href="{% url 'bug_create' %}">Report a bug</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel panel-default accordion">
+        <div class="panel-heading">
+            Recent threads
+        </div>
+        <div class="panel-body">
+            <ul class="nobullet">
+                {% for x in latestthreads %}
+                    <li class="latest">
+                        <a href="{% url 'viewthread' x.id %}">{{ x.title|truncatechars:32 }}</a>
+                        <br>
 
-					<small>
-					by <a href="{% url 'user' x.author.id %}">{{x.author.equiv_user.username|truncatechars:32}}</a>
-					in <a href="{% url 'subforum' x.forum.id %}">{{x.forum}}</a>
-					{{x.pub_date|timesince}} ago
-					</small>
-				</li>
-			{% endfor %}
-		</ul>
-		</div>
-	</div>
+                        <small>
+                            by <a href="{% url 'user' x.author.id %}">
+                                {{ x.author.equiv_user.username|truncatechars:32 }}
+                            </a>
+                            in <a href="{% url 'subforum' x.forum.id %}">{{ x.forum }}</a>
+                            {{ x.pub_date|timesince }} ago
+                        </small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-	<div class="panel panel-default accordion">
-		<div class="panel-heading">
-			Recent replies
-		</div>
-		<div class="panel-body">
-		<ul class="nobullet">
-			{% for x in latestresponses %}
-				<li class="latest">
-					<a href="{% url 'viewthread' x.thread.id %}#response-{{x.id}}">{{x.body|parse_md|striptags|truncatechars:32}}</a>
-					<br>
+    <div class="panel panel-default accordion">
+        <div class="panel-heading">
+            Recent replies
+        </div>
+        <div class="panel-body">
+            <ul class="nobullet">
+                {% for x in latestresponses %}
+                    <li class="latest">
+                        <a href="{% url 'viewthread' x.thread.id %}#response-{{ x.id }}">{{ x.body|parse_md|striptags|truncatechars:32 }}</a>
+                        <br>
 
-					<small>
-					by <a href="{% url 'user' x.author.id %}">{{x.author.equiv_user.username|truncatechars:32}}</a>
-					{{x.pub_date|timesince}} ago
-					</small>
-				</li>
-			{% endfor %}
-		</ul>
-		</div>
-	</div>
-	{% block leftbar %}{% endblock %}
+                        <small>
+                            by <a href="{% url 'user' x.author.id %}">
+                                {{ x.author.equiv_user.username|truncatechars:32 }}
+                            </a>
+                            {{ x.pub_date|timesince }} ago
+                        </small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% block leftbar %}{% endblock %}
 {% endblock %}
 

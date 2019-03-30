@@ -2,11 +2,11 @@
 {% block title %}Bug list{% endblock %}
 {% block body %}
 
-{%for x in object_list%}
-	<a href="{% url 'bug_detail' x.id %}">{{x}}</a>
-	<br>
-{% empty %}
-	Nothing to report!
-{% endfor %}
+    {% for x in object_list %}
+        <a href="{% url 'bug_detail' x.id %}">{{ x }}</a>
+        <br>
+    {% empty %}
+        Nothing to report!
+    {% endfor %}
 
 {% endblock %}

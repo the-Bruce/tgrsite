@@ -1,36 +1,36 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 
-from django.contrib.auth.models import User
-
-from .models import Rpg
-from users.models import Member
-
 from users.views import spawn_user
+from .models import Rpg
+
 
 def get_member(*usernames):
-	members = []
-	for x in usernames:
-		members.append(User.objects.get(username=x).member)
-	return tuple(members)
+    members = []
+    for x in usernames:
+        members.append(User.objects.get(username=x).member)
+    return tuple(members)
+
 
 class Rpgs(TestCase):
-	users = {}
-	rpg = None
-	def setUp(self):
-		alice = spawn_user('alice', 'alice@tagarople.com', 'zstOBwZ9Oe').member
-		spawn_user('bob', 'bob@tagarople.com', 'fkL7HbcP8i')
-		spawn_user('eve', 'eve@tagarople.com', 'XZVrUFm3oy')
-		ash = spawn_user('ash', 'ash@sent.com', 'CSXgzrned3').member
+    users = {}
+    rpg = None
 
-		rpg = Rpg(title='test case RPG', players_wanted=2, timeslot=Rpg.THURSDAY, creator_id=ash.id)
-		rpg.save()
-		rpg.game_masters.add(ash)
-		rpg.members.add(alice)
+    def setUp(self):
+        alice = spawn_user('alice', 'alice@tagarople.com', 'zstOBwZ9Oe').member
+        spawn_user('bob', 'bob@tagarople.com', 'fkL7HbcP8i')
+        spawn_user('eve', 'eve@tagarople.com', 'XZVrUFm3oy')
+        ash = spawn_user('ash', 'ash@sent.com', 'CSXgzrned3').member
 
-	def test_contains_player(self):
-		alice, bob, eve, ash = get_member('alice', 'bob', 'eve', 'ash')
-		rpg = Rpg.objects.get()
-		self.assertTrue(rpg.contains_player(alice.id))
-		self.assertFalse(rpg.contains_player(bob.id))
-		self.assertFalse(rpg.contains_player(eve.id))
-		self.assertFalse(rpg.contains_player(ash.id))
+        rpg = Rpg(title='test case RPG', players_wanted=2, timeslot=Rpg.THURSDAY, creator_id=ash.id)
+        rpg.save()
+        rpg.game_masters.add(ash)
+        rpg.members.add(alice)
+
+    def test_contains_player(self):
+        alice, bob, eve, ash = get_member('alice', 'bob', 'eve', 'ash')
+        rpg = Rpg.objects.get()
+        self.assertTrue(rpg.contains_player(alice.id))
+        self.assertFalse(rpg.contains_player(bob.id))
+        self.assertFalse(rpg.contains_player(eve.id))
+        self.assertFalse(rpg.contains_player(ash.id))

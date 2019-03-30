@@ -1,15 +1,15 @@
 {% extends "tgrsite/main.html" %}
 {% block title %}
-Edit thread
+    Edit thread
 {% endblock %}
 {% block body %}
 
-<h1>Edit post</h1>
-<form action="{% url 'thread_edit_done' %}" method="POST">
-	{% csrf_token %}
-	{{ form.non_field.errors }}
-	<input type="hidden" name="id" value="{{id}}">
-	{{form.as_p}}
-	<input type="submit" class="form-control">
-</form>
+    <h1>Edit post</h1>
+    <form action="{% url 'thread_edit_done' %}" method="POST">
+        {% csrf_token %}
+        {{ form.non_field.errors }}
+        <input type="hidden" name="id" value="{{ id }}">
+        {{ form.as_p }}
+        <input type="submit" class="form-control">
+    </form>
 {% endblock %}
