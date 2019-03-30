@@ -15,10 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# TODO: find a way to keep this up to date with webadmin address.
-# some sort of admin page?
-ADMINS = [('Webadmin', 'ash@sent.com')]
-MANAGERS = [('Webadmin', 'ash@sent.com')]
+ADMINS = [('Webadmin', 'webadmin@warwicktabletop.co.uk')]
+MANAGERS = [('Webadmin', 'webadmin@warwicktabletop.co.uk')]
 LOGIN_URL = '/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
