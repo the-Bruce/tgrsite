@@ -1,4 +1,4 @@
-{% extends 'tgrsite/basecontent.html' %}
+{% extends 'tgrsite/emailcontent.html' %}
 {% load markdown_tags %}
 {% load static %}
 
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block body %}
-
+    <div></div>
     <p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a
             href="http://{{ request.get_host }}{% url 'newsletters_detail' object.id %}">here</a>!</p>
     <img src="{% fullstatic 'newsletter-banner.png' %}" style="width: 100%;"/>
@@ -32,5 +32,5 @@
     <article>
         {{ object.body|parse_md_safe }}
     </article>
-
+    </div>
 {% endblock %}

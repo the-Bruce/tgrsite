@@ -29,12 +29,13 @@ This defines the navbar and the extra scripts.
         });
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-
     {% comment font icons library %}{% endcomment %}
     <link type="text/css" rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
 
     <!-- For the footer: -->
     <style>
@@ -86,7 +87,8 @@ This defines the navbar and the extra scripts.
 
 {% block bootstrap %}
     <link type="text/css" rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">{% endblock %}
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock %}
 
 {% block navbar %}
     <nav class="navbar navbar-inverse">
@@ -110,7 +112,7 @@ This defines the navbar and the extra scripts.
                         <i class="fa fa-fw fa-users"></i> Exec
                     </a></li>
 
-                    <li><a href="{% url 'schedule' %}">
+                    <li><a href="{% url 'timetable' %}">
                         <i class="fa fa-fw fa-calendar"></i> Schedule
                     </a></li>
 
@@ -212,7 +214,7 @@ This defines the navbar and the extra scripts.
             $(".markdown-input").each(function (i, e) {
                 console.log("Element " + e);
                 window.simplemde.push(
-                    new SimpleMDE({
+                    new EasyMDE({
                         element: e,
                         placeholder: "Write Markdown (or just regular text) here...",
                         forceSync: true,

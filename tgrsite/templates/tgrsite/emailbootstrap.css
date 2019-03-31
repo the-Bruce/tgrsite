@@ -120,7 +120,8 @@ figure {
 }
 
 img {
-    vertical-align: middle
+    vertical-align: middle;
+    max-width: 100% !important
 }
 
 .img-rounded {
@@ -440,25 +441,23 @@ pre code {
     margin-left: -15px
 }
 
-.col-md-3, .col-md-6 {
+.col-lg-2, .col-lg-8 {
     position: relative;
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px
 }
 
-
-@media (min-width: 992px) {
-    .col-md-3, .col-md-6 {
+@media (min-width: 1200px) {
+    .col-lg-2, .col-lg-8 {
         float: left
     }
 
-    .col-md-6 {
-        width: 50%
+    .col-lg-8 {
+        width: 66.66666667%
     }
-
-    .col-md-3 {
-        width: 25%
+    .col-lg-2 {
+        width: 16.66666667%
     }
 
 }
