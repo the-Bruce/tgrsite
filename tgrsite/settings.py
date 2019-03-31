@@ -55,6 +55,7 @@ ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'), '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'website_settings',
     'assets',
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
