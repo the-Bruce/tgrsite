@@ -1,0 +1,65 @@
+{% extends "tgrsite/main.html" %}
+{% load timetable_tags %}
+{% block title %}Timetable{% endblock %}
+{% block css %}
+    {{ block.super }}
+    <style>
+        .centerate {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <a class="btn btn-primary" href="https://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">Subscribe to our calendar!</a>
+    {% spaceless %}
+        {% for timetable in timetables %}
+            <div>
+                <h1>{{ timetable.title }}</h1>
+                <table class="table table-bordered table-striped table-responsive">
+                    {% if timetable.colour %}
+                        <thead class="{% if timetable.colour.light_text %}bg-primary{% else %}bg-light{% endif %}"
+                               style="background-color: {{ timetable.colour.html_code }}">
+                    {% else %}
+                        <thead class="bg-primary">
+                    {% endif %}
+                    <tr>
+                        <td class=""><strong>Week number</strong></td>
+                        {% for week in timetable.weeks.all %}
+                            <td class="centerate"><strong>{{ week.number }}</strong></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class=""><strong>Week commencing</strong></td>
+                        {% for week in timetable.weeks.all %}
+                            <td class="centerate"><strong>{{ week.startDate }}</strong></td>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in timetable.events.all %}
+                        <tr>
+                            <td class="text-center"><strong>{{ event.description }}<br>{{ event.date_time_line }}
+                            </strong>
+                            </td>
+                            {% for booking in timetable.weeks.all|for_event:event %}
+                                <td class="centerate" colspan="{{ booking.0 }}">
+                                    {% if booking.1 %}
+                                        {{ booking.1 }}
+                                    {% else %}
+                                        Not running
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+                {% for note in timetable.notes.splitlines %}
+                    <p>{{ note }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
