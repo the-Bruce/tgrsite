@@ -26,8 +26,8 @@ class Member(models.Model):
     def __str__(self):
         return self.equiv_user.username
 
-    bio = models.CharField(max_length=4096, blank=True)
-    signature = models.CharField(max_length=1024, blank=True)
+    bio = models.TextField(max_length=4096, blank=True)
+    signature = models.TextField(max_length=1024, blank=True)
 
     def notification_count(self):
         return len(self.notifications_owned.filter(is_unread=True))
