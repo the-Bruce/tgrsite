@@ -18,9 +18,8 @@ This introduces a generic left bar containing recent threads etc.
                     <li><a href="/admin">Admin site</a></li>
                 {% endif %}
                 {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'me' %}">
-                        My profile
-                    </a></li>
+                    <li><a href="{% url 'me' %}">My profile</a></li>
+                    <li><a href="{% url 'notification_settings' %}">Notification Settings</a></li>
                     <li><a href="{% url 'logout' %}">Log out</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>
@@ -43,8 +42,8 @@ This introduces a generic left bar containing recent threads etc.
 
                         <small>
                             by <a href="{% url 'user' x.author.id %}">
-                                {{ x.author.equiv_user.username|truncatechars:32 }}
-                            </a>
+                            {{ x.author.equiv_user.username|truncatechars:32 }}
+                        </a>
                             in <a href="{% url 'subforum' x.forum.id %}">{{ x.forum }}</a>
                             {{ x.pub_date|timesince }} ago
                         </small>
@@ -67,8 +66,8 @@ This introduces a generic left bar containing recent threads etc.
 
                         <small>
                             by <a href="{% url 'user' x.author.id %}">
-                                {{ x.author.equiv_user.username|truncatechars:32 }}
-                            </a>
+                            {{ x.author.equiv_user.username|truncatechars:32 }}
+                        </a>
                             {{ x.pub_date|timesince }} ago
                         </small>
                     </li>
