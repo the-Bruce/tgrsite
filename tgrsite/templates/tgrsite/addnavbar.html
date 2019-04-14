@@ -1,6 +1,7 @@
 {% extends 'tgrsite/basecontent.html' %}
 {% load static %}
 {% load markdown_tags %}
+{% load property_tags %}
 
 {% comment %}
 THIS IS DIRECTLY USED BY THE NEWSLETTER DETAIL VIEW ONLY.
@@ -18,7 +19,7 @@ This defines the navbar and the extra scripts.
 
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
+    <script type="text/javascript" src="{% static 'bootstrap3-typeahead.js' %}"></script>
 
     <script>
         $(function () {
@@ -139,10 +140,10 @@ This defines the navbar and the extra scripts.
                                 <i class="fa fa-fw fa-info-circle"></i> Introduction
                             </a></li>
 
-                            <li><a href="{% static 'UNITY_6.1.1.pdf' %}">
+                            <li><a href="{% string_setting "larp_rules" %}">
                                 <i class="fa fa-fw fa-book"></i> Rulebook
                             </a></li>
-                            <li><a href="{% static 'Locations-In-Unity.pdf' %}">
+                            <li><a href="{% string_setting "larp_setting" %}">
                                 <i class="fa fa-fw fa-key"></i> Lorebook
                             </a></li>
                         </ul>
