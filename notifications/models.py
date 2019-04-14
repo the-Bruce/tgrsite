@@ -19,6 +19,7 @@ class NotifType:
     RPG_ADDED = 6
     FORUM_REPLY = 7
     OTHER = 8
+    RPG_CREATE = 9
 
 
 class SubType:
@@ -37,6 +38,7 @@ class NotificationSubscriptions(models.Model):
         (NotifType.RPG_KICK, 'Kicked from RPG'),
         (NotifType.RPG_ADDED, 'Added to RPG'),
         (NotifType.FORUM_REPLY, 'Forum Replies'),
+        (NotifType.RPG_CREATE, 'New RPG Available'),
         (NotifType.OTHER, 'Other Notification')
     ]
     subscription_types = [
@@ -61,6 +63,8 @@ class NotificationSubscriptions(models.Model):
     forum_reply = models.IntegerField(verbose_name='Reply to a Forum Post You Participated in',
                                       choices=subscription_types,
                                       default=SubType.WEB)
+    rpg_new = models.IntegerField(verbose_name='A New Event is Created', choices=reduced_subscription_types,
+                                  default=SubType.NONE)
     other = models.IntegerField(verbose_name='Miscellaneous', choices=reduced_subscription_types, default=SubType.NONE)
 
     def get_category_subscription(self, category):
@@ -73,6 +77,7 @@ class NotificationSubscriptions(models.Model):
             NotifType.RPG_KICK: self.rpg_kick,
             NotifType.RPG_ADDED: self.rpg_add,
             NotifType.FORUM_REPLY: self.forum_reply,
+            NotifType.RPG_CREATE: self.rpg_new,
             NotifType.OTHER: self.other
         }
 
@@ -100,6 +105,7 @@ class Notification(models.Model):
         (NotifType.RPG_KICK, 'Kicked from RPG'),
         (NotifType.RPG_ADDED, 'Added to RPG'),
         (NotifType.FORUM_REPLY, 'Replied to Forum'),
+        (NotifType.RPG_CREATE, 'New RPG Available'),
         (NotifType.OTHER, 'Other Notification')
     ]
     member = models.ForeignKey(Member, related_name='notifications_owned', on_delete=models.CASCADE)
@@ -113,15 +119,16 @@ class Notification(models.Model):
     time = models.DateTimeField()
 
     def notify_icon(self):
-        default_icon = 'fa-circle'
+        default_icon = 'fas fa-circle'
         icons = {
-            NotifType.NEWSLETTER: 'fa-newspaper-o',
-            NotifType.MESSAGE: 'fa-commenting-o',
-            NotifType.RPG_JOIN: 'fa-sign-in',
-            NotifType.RPG_LEAVE: 'fa-sign-out',
-            NotifType.RPG_KICK: 'fa-times',
-            NotifType.RPG_ADDED: 'fa-magic',
-            NotifType.FORUM_REPLY: 'fa-quote-right',
+            NotifType.NEWSLETTER: 'far fa-newspaper',
+            NotifType.MESSAGE: 'far fa-comment-dots',
+            NotifType.RPG_JOIN: 'fas fa-sign-in-alt',
+            NotifType.RPG_LEAVE: 'fas fa-sign-out-alt',
+            NotifType.RPG_KICK: 'fas fa-times',
+            NotifType.RPG_ADDED: 'fas fa-magic',
+            NotifType.FORUM_REPLY: 'fas fa-quote-right',
+            NotifType.RPG_CREATE: 'fas fa-hat-wizard',
             NotifType.OTHER: default_icon
         }
         if self.notif_type in icons:

@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views import generic
 
+from notifications import models as notifications
+from users.models import Member
 from .models import Report
 
 
@@ -40,3 +42,11 @@ class Create(LoginRequiredMixin, generic.CreateView):
         # Adds the current logged-in user as the reporter of the bug
         form.instance.reporter = self.request.user.member
         return super(Create, self).form_valid(form)
+
+    def get_success_url(self):
+        admins = Member.users_with_perm('change_report')
+        for admin in admins:
+            notifications.notify(admin, notifications.NotifType.OTHER,
+                                 '{} created a new website issue!'.format(self.request.user.username),
+                                 self.object.get_absolute_url())
+        return super().get_success_url()

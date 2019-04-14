@@ -13,7 +13,7 @@
                 <strong>
             {% endif %}
         <a href="{% url 'read_notification' notification.id %}" class="list-group-item" style="">
-            <i class="fa {{ notification.notify_icon }}" aria-hidden="true"></i>
+            <i class="{{ notification.notify_icon }}" aria-hidden="true"></i>
             {{ notification.content | truncatechars_html:220 }}
             <span class="pull-right">
 			    {{ notification.time|timesince }} ago
