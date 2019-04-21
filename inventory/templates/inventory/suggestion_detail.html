@@ -1,0 +1,17 @@
+{% extends 'tgrsite/main.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ inv.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ object.inventory.name }} - {{ object.name }}</h1>
+    {% if object.archived %}<div class="alert-warning">Archived</div>{% endif %}
+    <p>Requested by {{ object.requester }}</p>
+    <h3>Why should we buy this game?</h3>
+    <p>{{ object.justification|linebreaksbr }}</p>
+    <h3>How did you discover it?</h3>
+    <p>{{ object.context|linebreaksbr }}</p>
+    <p>Link: <a href="{{ object.link }}">{{ object.link }}</a></p>
+{% endblock %}

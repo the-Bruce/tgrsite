@@ -1,0 +1,60 @@
+{% extends 'tgrsite/main.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ inv.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ object.inventory.name }} - {{ object.name }}</h1>
+    {% if object.rejected %}
+        <div class="alert-error">Rejected</div>{% endif %}
+    {% if object.authorised %}
+
+        {% if object.returned_who %}
+            <div class="alert-info">Completed</div>
+        {% elif object.taken_who %}
+            <div class="alert-info">On Loan</div>
+        {% else %}
+            {% if object.is_live %}
+                <div class="alert-success">Authorised</div>
+            {% else %}
+                <div class="alert-info">Expired</div>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if object.is_live %}
+        {% else %}
+            <div class="alert-info">Expired</div>
+        {% endif %}
+    {% endif %}
+    <p>Requested by {{ object.requester }}</p>
+    <h3>When?</h3>
+    <p>{{ object.start_date|date }}-{{ object.end_date|date }}-</p>
+    <h3>What?</h3>
+    <div class="list-group">
+        {% for item in object.items %}
+            <a class="list-group" href="{% url "inventory:item_detail" inv=inv.canonical_ pk=item.pk %}">
+                {{ item.name }}
+            </a>
+        {% endfor %}
+    </div>
+    {% if object.authorised %}
+        <h3>Request authorised by:</h3>
+        <p>{{ object.authorised }}</p>
+    {% endif %}
+    {% if object.rejected %}
+        <h3>Request rejected by:</h3>
+        <p>{{ object.rejected }}</p>
+    {% endif %}
+    {% if object.taken_who %}
+        <h3>Objects taken:</h3>
+        <p>{{ object.taken_when|date }}</p>
+        <p>Witnessed by: {{ object.taken_who }}</p>
+    {% endif %}
+    {% if object.returned_who %}
+        <h3>Objects returned:</h3>
+        <p>{{ object.returned_when|date }}</p>
+        <p>Witnessed by: {{ object.returned_who }}</p>
+    {% endif %}
+{% endblock %}

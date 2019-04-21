@@ -1,0 +1,11 @@
+{% extends 'tgrsite/main.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ inv.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ inv.name }} Request Loan of Equipment</h1>
+    {% include "widgets/render_form.html" %}
+{% endblock %}

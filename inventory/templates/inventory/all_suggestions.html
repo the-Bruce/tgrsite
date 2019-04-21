@@ -1,0 +1,18 @@
+{% extends 'tgrsite/main.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ inv.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ inv.name }} Suggestions</h1>
+    <div class="list-group">
+        {% for suggestion in object_list %}
+            <a href="{% url "inventory:suggestion_detail" inv=inv.canonical_ pk=suggestion.id %}"
+               class="list-group-item">
+                {{ suggestion.name }}
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

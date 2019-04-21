@@ -1,0 +1,19 @@
+{% extends 'tgrsite/main.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ inv.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ inv.name }}</h1>
+    <div class="list-group">
+        {% for object in object_list %}
+            <a href="{% url "inventory:item_detail" inv=inv.canonical_ pk=object.id %}"
+               class="list-group-item">
+                {{ object.name }}
+                {% if object.quantity > 1 %}<span class="badge">{{ object.quantity }}</span>{% endif %}
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
