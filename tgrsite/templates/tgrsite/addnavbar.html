@@ -197,6 +197,7 @@ This defines the navbar and the extra scripts.
 {% endblock %}
 
 {% block bottomscripts %}
+    {{ block.super }}
     <script>
         function nasa() {
             $('img').each(function (index, element) {

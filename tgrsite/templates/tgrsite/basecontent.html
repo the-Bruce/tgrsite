@@ -114,26 +114,26 @@
 		</div>
 	{% endcomment %}
         {% block mainbody %}
-        <div class="row">
-            <div class="col-md-3">
-                {% block leftcontents %}
-                {% endblock %}
-            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    {% block leftcontents %}
+                    {% endblock %}
+                </div>
 
-            <div class="col-md-6">
-                {% block body %}
-                    {% comment %}
+                <div class="col-md-3 col-md-push-6">
+                    {% block rightbar %}
+                        {% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
+                    {% endblock %}
+                </div>
+
+                <div class="col-md-6 col-md-pull-3">
+                    {% block body %}
+                        {% comment %}
 					This is the part that gets overridden by templates that extend this one.
 					{% endcomment %}
-                {% endblock %}
-            </div>
-
-            <div class="col-md-3">
-                {% block rightbar %}
-                    {% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
-                {% endblock %}
-            </div>
-        </div><!-- .row -->
+                    {% endblock %}
+                </div>
+            </div><!-- .row -->
         {% endblock %}
     </div><!-- .container -->
 </div>
@@ -144,6 +144,8 @@
 
 {% comment %} For scripts at the bottom of the page. {% endcomment %}
 {% block bottomscripts %}
+{% endblock %}
+{% block bottomerscripts %}
 {% endblock %}
 </body>
 </html>
