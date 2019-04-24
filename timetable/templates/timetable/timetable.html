@@ -11,7 +11,7 @@
     </style>
 {% endblock %}
 {% block body %}
-    <a class="btn btn-primary" href="https://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">Subscribe to our calendar!</a>
+
     {% spaceless %}
         {% for timetable in timetables %}
             <div>
@@ -20,7 +20,7 @@
                     {% if timetable.colour %}
                         <thead class="{% if timetable.colour.light_text %}bg-primary{% else %}bg-light{% endif %}"
                                style="background-color: {{ timetable.colour.html_code }}">
-                    {% else %}
+                        {% else %}
                         <thead class="bg-primary">
                     {% endif %}
                     <tr>
@@ -62,4 +62,17 @@
             </div>
         {% endfor %}
     {% endspaceless %}
+{% endblock %}
+
+{% block rightbar %}
+    <h3>Subscribe to our calender!</h3>
+    <p>To subscribe to the you can either:
+    </p><p>
+    <a class="btn btn-primary"
+       href="webcal://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">Subscribe
+        with your default calender</a></p>
+
+    <p>You can also copy this link into your preferred viewer (such as google calender):<br>
+        <a href="webcal://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">https://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics</a>
+    </p>
 {% endblock %}
