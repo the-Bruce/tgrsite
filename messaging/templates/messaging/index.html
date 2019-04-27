@@ -24,11 +24,11 @@
 
 
 {% block rightbar %}
-    <div class="panel panel-default accordion">
-        <div class="panel-heading">
+    <div class="panel panel-default">
+        <a class="block panel-heading" href="#body_qdm" data-toggle="collapse">
             Quick DM
-        </div>
-        <div class="panel-body">
+        </a>
+        <div id="body_qdm" class="panel-body collapse in">
             <form method="POST" action="{% url 'message_direct' %}?next={{ request.path }}" id="quickdm">
                 {% csrf_token %}
                 <div class="form-group">

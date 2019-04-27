@@ -30,13 +30,11 @@
 {% endblock %}
 {% block rightbar %}
 
-
-
-    <div class="panel panel-default accordion">
-        <div class="panel-heading">
+    <div class="panel panel-default">
+        <a class="block panel-heading" href="#body_rpgfilter" data-toggle="collapse">
             Filters
-        </div>
-        <div class="panel-body">
+        </a>
+        <div id="body_rpgfilter" class="panel-body collapse in">
 
             {% rpgs_root as o %}
             <p>
@@ -70,9 +68,9 @@
         </div>
     </div>
 
-    <div class="panel panel-default accordion">
-        <div class="panel-heading">Events guide</div>
-        <div class="panel-body">
+    <div class="panel panel-default">
+        <a href="#body_rpgstart" data-toggle="collapse" class="block panel-heading">Events guide</a>
+        <div id="body_rpgstart" class="panel-body collapse in">
             <h4>To start an event:</h4>
             <ol>
                 <li>Click the "Create event" button</li>
