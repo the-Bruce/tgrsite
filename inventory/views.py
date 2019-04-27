@@ -48,7 +48,7 @@ class ListAllLoans(LoginRequiredMixin, ListView):
     template_name = "inventory/all_loans.html"
 
     def get_queryset(self):
-        inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
         if self.request.user.has_perm("view_loan"):
             return Loan.objects.filter(inventory=inv)
         else:
@@ -56,7 +56,7 @@ class ListAllLoans(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        ctxt['inv'] = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        ctxt['inv'] = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
         return ctxt
 
 
@@ -65,16 +65,17 @@ class LoanDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     template_name = "inventory/loan_detail.html"
 
     def test_func(self):
-        return (self.object.requester == self.request.user.member or
+        object = get_object_or_404(Loan, pk=self.kwargs['pk'])
+        return ((object.requester == self.request.user.member and not object.authorised) or
                 self.request.user.has_perm('view_loan'))
 
     def get_queryset(self):
-        inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
         return Loan.objects.filter(inventory=inv)
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        ctxt['inv'] = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        ctxt['inv'] = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
         return ctxt
 
 
@@ -84,12 +85,12 @@ class ListAllSuggestions(ListView):
     template_name = "inventory/all_suggestions.html"
 
     def get_queryset(self):
-        inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        inv = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
         return Suggestion.objects.filter(inventory=inv, archived=False)
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        ctxt['inv'] = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        ctxt['inv'] = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
         return ctxt
 
 
@@ -98,12 +99,12 @@ class SuggestionDetail(DetailView):
     template_name = "inventory/suggestion_detail.html"
 
     def get_queryset(self):
-        inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        inv = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
         return Suggestion.objects.filter(inventory=inv)
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        ctxt['inv'] = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        ctxt['inv'] = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
         return ctxt
 
 
@@ -118,12 +119,12 @@ class CreateSuggestion(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        ctxt['inv'] = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        ctxt['inv'] = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
         return ctxt
 
     def form_valid(self, form):
         form.instance.requester = self.request.user.member
-        form.instance.inventory = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        form.instance.inventory = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
         return super().form_valid(form)
 
 
@@ -142,7 +143,7 @@ class UpdateSuggestion(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        ctxt['inv'] = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
+        ctxt['inv'] = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
         return ctxt
 
 
@@ -178,17 +179,26 @@ class CreateRecord(CreateView):
 
 
 class UpdateLoan(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Record
-    form_class = RecordForm
-    template_name = "inventory/edit_suggestion.html"
+    model = Loan
+    form_class = LoanRequestForm
+    template_name = "inventory/edit_loan.html"
 
     def test_func(self):
-        return ((self.object.requester == self.request.user.member and not self.object.authorised) or
+        object = get_object_or_404(Loan, pk=self.kwargs['pk'])
+        return ((object.requester == self.request.user.member and not object.authorised) or
                 self.request.user.has_perm('change_loan'))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['inv_'] = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
+        return kwargs
+
+    def get_form(self, form_class=None):
+        super().get_form(form_class=form_class)
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
-        return Record.objects.filter(inventory=inv)
+        return Loan.objects.filter(inventory=inv)
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
@@ -199,7 +209,12 @@ class UpdateLoan(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class CreateLoan(LoginRequiredMixin, CreateView):
     model = Loan
     form_class = LoanRequestForm
-    template_name = "inventory/edit_suggestion.html"
+    template_name = "inventory/edit_loan.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['inv_'] = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
+        return kwargs
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)

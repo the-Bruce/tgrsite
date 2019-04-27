@@ -46,13 +46,44 @@ class SuggestionForm(ModelForm):
 
 
 class LoanRequestForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        if 'inv_' in kwargs:
+            inv = kwargs['inv_']
+            del kwargs['inv_']
+        else:
+            raise NotImplementedError("Must define inv_ or incorrect results can be returned")
+
+        super().__init__(*args, **kwargs)
+        self.fields['items'].queryset = Record.objects.filter(inventory=inv, owner__isnull=True)
+
     class Meta:
         model = Loan
         fields = ['items', 'start_date', 'end_date']
         widgets = {
             'items': SelectMultiple(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
-            'start_date': SelectDate(years=range(datetime.date.today().year - 9, datetime.date.today().year + 1),
+            'start_date': SelectDate(years=range(datetime.date.today().year, datetime.date.today().year + 10),
                                      attrs=BOOTSTRAP_FORM_WIDGET_attrs),
-            'end_date': SelectDate(years=range(datetime.date.today().year - 9, datetime.date.today().year + 1),
+            'end_date': SelectDate(years=range(datetime.date.today().year, datetime.date.today().year + 10),
                                    attrs=BOOTSTRAP_FORM_WIDGET_attrs),
         }
+        help_texts = {
+            'items': 'Use Ctrl to select multiple items'
+        }
+
+    def full_clean(self):
+        super().full_clean()
+        if not self.is_bound:  # Stop further processing.
+            return
+        unavailable = []
+        for item in self.cleaned_data['items']:
+            assert isinstance(item, Record)
+            if not item.can_be_borrowed(self.cleaned_data['start_date'], self.cleaned_data['end_date']):
+                unavailable.append(item.name)
+        if len(unavailable) > 0:
+            error = (", ".join(unavailable)) + " not available for loan between those dates"
+            self.add_error(self.items, error)
+
+        if self.cleaned_data['start_date'] < datetime.date.today():
+            self.add_error(self.start_date, "Start date must be in the future")
+        if self.cleaned_data['end_date'] < self.cleaned_data['start_date']:
+            self.add_error(self.end_date, "End date must be after start date")

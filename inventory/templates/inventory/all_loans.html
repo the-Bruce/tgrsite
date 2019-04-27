@@ -6,27 +6,6 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ inv.name }} Suggestions</h1>
-    <div class="list-group">
-        {% for loan in object_list %}
-            <a href="{% url "inventory:loan_detail" inv=inv.canonical_ pk=loan.id %}"
-               class="list-group-item">
-                {% if loan.authorised %}
-                    {% if loan.returned_who %}
-                        <i class="fas fa-chevron-circle-left" style="color: purple"></i>
-                    {% elif loan.taken_who %}
-                        <i class="fas fa-chevron-circle-right" style="color: darkblue"></i>
-                    {% else %}
-                        <i class="fas fa-check-circle" style="color: green"></i>
-                    {% endif %}
-                {% elif loan.rejected %}
-                    <i class="fas fa-times-circle" style="color: red"></i>
-                {% else %}
-                    <i class="fas fa-question-circle" style="color: orange"></i>
-                {% endif %}
-                {{ loan.requester }}: {{ loan.start_date|date }}-{{ loan.end_date|date }}
-                <span class="badge">{{ loan.items.count }}</span>
-            </a>
-        {% endfor %}
-    </div>
+    <h1>{{ inv.name }} Loans</h1>
+    {% include "inventory/parts/loanlist.html" with loans=object_list %}
 {% endblock %}

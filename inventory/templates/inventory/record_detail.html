@@ -31,4 +31,9 @@
     </p>
     {% if object.owner %}<p>Graciously lent to the society by {{ object.owner }}</p>{% endif %}
 
+    {% if perms.view_loan and object.inventory.loans and object.get_live_loans|length > 0 %}
+        <h3>Loans</h3>
+        {% include "inventory/parts/loanlist.html" with loans=object.get_live_loans %}
+    {% endif %}
+
 {% endblock %}

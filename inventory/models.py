@@ -44,7 +44,7 @@ class Record(models.Model):
     def can_be_borrowed(self, start_date, end_date):
         # This is not quite correct, but doing it right is complicated and expensive
         # and we probably won't experience the issue enough to cause problems
-        loans = Loan.objects.filter(Q(item=self) & (Q(start_date__lte=start_date, end_date__gte=start_date) | Q(
+        loans = Loan.objects.filter(Q(pk=self.pk) & (Q(start_date__lte=start_date, end_date__gte=start_date) | Q(
             start_date__lte=end_date, end_date__gte=end_date) | Q(start_date__gte=start_date, end_date__lte=end_date)))
         return loans.count() < self.quantity
 
@@ -75,7 +75,7 @@ class Suggestion(models.Model):
 
 class Loan(models.Model):
     requester = models.ForeignKey(users.Member, on_delete=models.PROTECT)
-    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="inventory_requests")
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="inventory_loans")
     items = models.ManyToManyField(Record)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -83,10 +83,10 @@ class Loan(models.Model):
                                    related_name="inventory_loan_authorisations", blank=True, null=True)
     rejected = models.ForeignKey(users.Member, on_delete=models.CASCADE,
                                  related_name="inventory_loan_rejections", blank=True, null=True)
-    taken_when = models.DateTimeField(blank=True)
+    taken_when = models.DateTimeField(blank=True, null=True)
     taken_who = models.ForeignKey(users.Member, on_delete=models.PROTECT,
                                   related_name="inventory_loan_take_witnesses", blank=True, null=True)
-    returned_when = models.DateTimeField(blank=True)
+    returned_when = models.DateTimeField(blank=True, null=True)
     returned_who = models.ForeignKey(users.Member, on_delete=models.PROTECT,
                                      related_name="inventory_loan_return_witnesses", blank=True, null=True)
     notes = models.TextField(blank=True)
@@ -108,11 +108,12 @@ class Loan(models.Model):
                 return True
             else:
                 return False
+        return True
 
     def __str__(self):
         # ThomasB: 20/12/18-25/12/18 (3)
-        return str(self.requester) + ": " + str(self.start_date) + "-" + str(
-            self.end_date) + "(" + self.items.count() + ")"
+        return str(self.requester) + ": " + str(self.start_date) + "-" + str(self.end_date) + "(" + str(
+            self.items.all().count()) + ")"
 
     def contains(self, check_date):
         return self.start_date <= check_date <= self.end_date

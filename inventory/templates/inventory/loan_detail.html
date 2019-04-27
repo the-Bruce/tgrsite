@@ -6,35 +6,34 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ object.inventory.name }} - {{ object.name }}</h1>
+    <h1>{{ object.inventory.name }} - Loan Request</h1>
     {% if object.rejected %}
-        <div class="alert-error">Rejected</div>{% endif %}
-    {% if object.authorised %}
-
+        <div class="alert alert-error">Rejected</div>
+    {% elif object.authorised %}
         {% if object.returned_who %}
-            <div class="alert-info">Completed</div>
+            <div class="alert alert-info">Completed</div>
         {% elif object.taken_who %}
-            <div class="alert-info">On Loan</div>
+            <div class="alert alert-info">On Loan</div>
         {% else %}
             {% if object.is_live %}
-                <div class="alert-success">Authorised</div>
+                <div class="alert alert-success">Authorised</div>
             {% else %}
-                <div class="alert-info">Expired</div>
+                <div class="alert alert-info">Expired</div>
             {% endif %}
         {% endif %}
     {% else %}
         {% if object.is_live %}
         {% else %}
-            <div class="alert-info">Expired</div>
+            <div class="alert alert-info">Expired</div>
         {% endif %}
     {% endif %}
     <p>Requested by {{ object.requester }}</p>
     <h3>When?</h3>
-    <p>{{ object.start_date|date }}-{{ object.end_date|date }}-</p>
+    <p>{{ object.start_date|date }}-{{ object.end_date|date }}</p>
     <h3>What?</h3>
     <div class="list-group">
-        {% for item in object.items %}
-            <a class="list-group" href="{% url "inventory:item_detail" inv=inv.canonical_ pk=item.pk %}">
+        {% for item in object.items.all %}
+            <a class="list-group-item" href="{% url "inventory:item_detail" inv=inv.canonical_ pk=item.pk %}">
                 {{ item.name }}
             </a>
         {% endfor %}
