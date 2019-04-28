@@ -10,7 +10,9 @@ This introduces a generic left bar containing recent threads etc.
 {% block topscripts %}
     {{ block.super }}
     <style>
-    .block {display: block!important;}
+        .block {
+            display: block !important;
+        }
     </style>
 {% endblock %}
 
@@ -41,25 +43,27 @@ This introduces a generic left bar containing recent threads etc.
         <a data-toggle="collapse" class="panel-heading block" href="#body-thread">
             Recent threads
         </a>
-
-        <div id="body-thread" class="panel-body collapse{% if not request.COOKIES.bodyThread or request.COOKIES.bodyThread == "true" %} in{% endif %}"
+        <div id="body-thread"
+             class="panel-collapse collapse{% if not request.COOKIES.bodyThread or request.COOKIES.bodyThread == "true" %} in{% endif %}"
              aria-expanded="{% if not request.COOKIES.bodyThread or request.COOKIES.bodyThread == "true" %}true{% else %}false{% endif %}">
-            <ul class="nobullet">
-                {% for x in latestthreads %}
-                    <li class="latest">
-                        <a href="{% url 'viewthread' x.id %}">{{ x.title|truncatechars:32 }}</a>
-                        <br>
+            <div class="panel-body">
+                <ul class="nobullet">
+                    {% for x in latestthreads %}
+                        <li class="latest">
+                            <a href="{% url 'viewthread' x.id %}">{{ x.title|truncatechars:32 }}</a>
+                            <br>
 
-                        <small>
-                            by <a href="{% url 'user' x.author.id %}">
-                            {{ x.author.equiv_user.username|truncatechars:32 }}
-                        </a>
-                            in <a href="{% url 'subforum' x.forum.id %}">{{ x.forum }}</a>
-                            {{ x.pub_date|timesince }} ago
-                        </small>
-                    </li>
-                {% endfor %}
-            </ul>
+                            <small>
+                                by <a href="{% url 'user' x.author.id %}">
+                                {{ x.author.equiv_user.username|truncatechars:32 }}
+                            </a>
+                                in <a href="{% url 'subforum' x.forum.id %}">{{ x.forum }}</a>
+                                {{ x.pub_date|timesince }} ago
+                            </small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -67,24 +71,29 @@ This introduces a generic left bar containing recent threads etc.
         <a data-toggle="collapse" class="panel-heading block" href="#body-replies">
             Recent replies
         </a>
-        <div id="body-replies" class="panel-body collapse{% if not request.COOKIES.bodyReplies or request.COOKIES.bodyReplies == "true" %} in{% endif %}"
+        <div id="body-replies"
+             class="panel-collapse collapse{% if not request.COOKIES.bodyReplies or request.COOKIES.bodyReplies == "true" %} in{% endif %}"
              aria-expanded="{% if not request.COOKIES.bodyReplies or request.COOKIES.bodyReplies == "true" %}true{% else %}false{% endif %}">
-            <ul class="nobullet">
-                {% for x in latestresponses %}
-                    <li class="latest">
-                        <a href="{% url 'viewthread' x.thread.id %}#response-{{ x.id }}">{{ x.body|parse_md|striptags|truncatechars:32 }}</a>
-                        <br>
+            <div class="panel-body">
 
-                        <small>
-                            by <a href="{% url 'user' x.author.id %}">
-                            {{ x.author.equiv_user.username|truncatechars:32 }}
-                        </a>
-                            {{ x.pub_date|timesince }} ago
-                        </small>
-                    </li>
-                {% endfor %}
-            </ul>
+                <ul class="nobullet">
+                    {% for x in latestresponses %}
+                        <li class="latest">
+                            <a href="{% url 'viewthread' x.thread.id %}#response-{{ x.id }}">{{ x.body|parse_md|striptags|truncatechars:32 }}</a>
+                            <br>
+
+                            <small>
+                                by <a href="{% url 'user' x.author.id %}">
+                                {{ x.author.equiv_user.username|truncatechars:32 }}
+                            </a>
+                                {{ x.pub_date|timesince }} ago
+                            </small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
+
     </div>
     {% block leftbar %}{% endblock %}
 {% endblock %}
@@ -97,16 +106,16 @@ This introduces a generic left bar containing recent threads etc.
             let threads = $('#body-thread');
             let replies = $('#body-replies');
             threads.on("hidden.bs.collapse", function (event) {
-                saveState('bodyThread','#body-thread')
+                saveState('bodyThread', '#body-thread')
             });
             replies.on("hidden.bs.collapse", function (event) {
-                saveState('bodyReplies','#body-replies')
+                saveState('bodyReplies', '#body-replies')
             });
             threads.on("shown.bs.collapse", function (event) {
-                saveState('bodyThread','#body-thread')
+                saveState('bodyThread', '#body-thread')
             });
             replies.on("shown.bs.collapse", function (event) {
-                saveState('bodyReplies','#body-replies')
+                saveState('bodyReplies', '#body-replies')
             });
         });
 
