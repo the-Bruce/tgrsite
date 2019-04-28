@@ -28,16 +28,18 @@
         <a class="block panel-heading" href="#body_qdm" data-toggle="collapse">
             Quick DM
         </a>
-        <div id="body_qdm" class="panel-body collapse in">
-            <form method="POST" action="{% url 'message_direct' %}?next={{ request.path }}" id="quickdm">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input class="form-control" name="target" placeholder="recipient">
-                    <textarea class="form-control" placeholder="message" name="message" form="quickdm"
-                              autocomplete="off"></textarea>
-                    <input type="submit" class="form-control" value="Send">
-                </div>
-            </form>
+        <div id="body_qdm" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <form method="POST" action="{% url 'message_direct' %}?next={{ request.path }}" id="quickdm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" name="target" placeholder="recipient">
+                        <textarea class="form-control" placeholder="message" name="message" form="quickdm"
+                                  autocomplete="off"></textarea>
+                        <input type="submit" class="form-control" value="Send">
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}
