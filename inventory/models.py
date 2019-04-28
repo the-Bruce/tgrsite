@@ -23,7 +23,7 @@ class Inventory(models.Model):
         return str(self.name).lower()
 
     def get_absolute_url(self):
-        reverse("inventory:index", kwargs={"inv": self.canonical_()})
+        return reverse("inventory:index", kwargs={"inv": self.canonical_()})
 
 
 class Record(models.Model):
@@ -44,8 +44,10 @@ class Record(models.Model):
     def can_be_borrowed(self, start_date, end_date):
         # This is not quite correct, but doing it right is complicated and expensive
         # and we probably won't experience the issue enough to cause problems
-        loans = Loan.objects.filter(Q(pk=self.pk) & (Q(start_date__lte=start_date, end_date__gte=start_date) | Q(
-            start_date__lte=end_date, end_date__gte=end_date) | Q(start_date__gte=start_date, end_date__lte=end_date)))
+        loans = Loan.objects.filter(Q(items__in=self) & (
+                Q(start_date__lte=start_date, end_date__gte=start_date) |
+                Q(start_date__lte=end_date, end_date__gte=end_date) |
+                Q(start_date__gte=start_date, end_date__lte=end_date)))
         return loans.count() < self.quantity
 
     def get_live_loans(self):
@@ -109,6 +111,9 @@ class Loan(models.Model):
             else:
                 return False
         return True
+
+    def can_edit(self):
+        return not (self.authorised or self.rejected)
 
     def __str__(self):
         # ThomasB: 20/12/18-25/12/18 (3)

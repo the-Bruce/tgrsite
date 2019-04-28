@@ -7,6 +7,12 @@
 
 {% block body %}
     <h1>{{ inv.name }} Suggestions</h1>
+    <p><a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
+    <div>
+        <a class="btn btn-success"
+           href="{% url "inventory:create_suggestion" inv=inv.canonical_ %}">New Suggestion</a>
+    </div>
+    <br>
     <div class="list-group">
         {% for suggestion in object_list %}
             <a href="{% url "inventory:suggestion_detail" inv=inv.canonical_ pk=suggestion.id %}"

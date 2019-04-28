@@ -70,8 +70,8 @@ class LoanRequestForm(ModelForm):
             'items': 'Use Ctrl to select multiple items'
         }
 
-    def full_clean(self):
-        super().full_clean()
+    def clean(self):
+        super().clean()
         if not self.is_bound:  # Stop further processing.
             return
         unavailable = []
@@ -81,9 +81,9 @@ class LoanRequestForm(ModelForm):
                 unavailable.append(item.name)
         if len(unavailable) > 0:
             error = (", ".join(unavailable)) + " not available for loan between those dates"
-            self.add_error(self.items, error)
+            self.add_error('items', error)
 
         if self.cleaned_data['start_date'] < datetime.date.today():
-            self.add_error(self.start_date, "Start date must be in the future")
+            self.add_error('start_date', "Start date must be in the future")
         if self.cleaned_data['end_date'] < self.cleaned_data['start_date']:
-            self.add_error(self.end_date, "End date must be after start date")
+            self.add_error('end_date', "End date must be after start date")

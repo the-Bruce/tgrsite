@@ -185,16 +185,13 @@ class UpdateLoan(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         object = get_object_or_404(Loan, pk=self.kwargs['pk'])
-        return ((object.requester == self.request.user.member and not object.authorised) or
+        return ((object.requester == self.request.user.member and object.can_edit()) or
                 self.request.user.has_perm('change_loan'))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['inv_'] = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
+        kwargs.update({'inv_': get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])})
         return kwargs
-
-    def get_form(self, form_class=None):
-        super().get_form(form_class=form_class)
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
@@ -226,3 +223,4 @@ class CreateLoan(LoginRequiredMixin, CreateView):
         form.instance.inventory = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
         form.instance.requester = self.request.user.member
         return super().form_valid(form)
+

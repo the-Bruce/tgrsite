@@ -28,5 +28,7 @@
             {{ loan.requester }}: {{ loan.start_date|date }}-{{ loan.end_date|date }}
             <span class="badge">{{ loan.items.count }}</span>
         </a>
+    {% empty %}
+        <div class="alert alert-info">You have no active loans!</div>
     {% endfor %}
 </div>

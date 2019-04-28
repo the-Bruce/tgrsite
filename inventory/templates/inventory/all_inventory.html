@@ -7,6 +7,23 @@
 
 {% block body %}
     <h1>{{ inv.name }}</h1>
+    {% if inv.loans or inv.suggestions %}
+        <p>
+            {% if inv.suggestions %}
+                <a class="btn btn-primary"
+                   href="{% url "inventory:list_suggestions" inv=inv.canonical_ %}">Suggestions</a>
+            {% endif %}
+            {% if inv.loans %}
+                <a class="btn btn-primary" href="{% url "inventory:list_loans" inv=inv.canonical_ %}">Loans</a>
+            {% endif %}
+        </p>
+    {% endif %}
+    {% if perms.inventory.add_record %}
+        <p>
+            <a class="btn btn-success"
+               href="{% url "inventory:create_record" inv=inv.canonical_ %}">Add new</a>
+        </p>
+    {% endif %}
     <div class="list-group">
         {% for object in object_list %}
             <a href="{% url "inventory:item_detail" inv=inv.canonical_ pk=object.id %}"

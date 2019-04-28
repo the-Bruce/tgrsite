@@ -7,6 +7,8 @@
 
 {% block body %}
     <h1>{{ object.inventory.name }} - Loan Request</h1>
+    <p><a href="{% url "inventory:list_loans" inv=inv.canonical_ %}">Loans</a></p>
+    {# State prompt: #}
     {% if object.rejected %}
         <div class="alert alert-error">Rejected</div>
     {% elif object.authorised %}
@@ -27,7 +29,12 @@
             <div class="alert alert-info">Expired</div>
         {% endif %}
     {% endif %}
-    <p>Requested by {{ object.requester }}</p>
+
+    {% if object.can_edit %}
+        <p><a class="btn btn-primary" href="{% url "inventory:edit_loan" inv=inv.canonical_ pk=object.pk %}">Edit</a>
+        </p>
+    {% endif %}
+    <h3>Requested by {{ object.requester }}</h3>
     <h3>When?</h3>
     <p>{{ object.start_date|date }}-{{ object.end_date|date }}</p>
     <h3>What?</h3>
@@ -55,5 +62,36 @@
         <h3>Objects returned:</h3>
         <p>{{ object.returned_when|date }}</p>
         <p>Witnessed by: {{ object.returned_who }}</p>
+    {% endif %}
+
+
+    {% if not object.rejected %}
+        {% if perms.inventory.can_authorise and not object.authorised %}
+            <div class="pb-1">
+                <form action="{% url "inventory:authorise_loan" pk=object.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-success" value="Authorise">
+                </form>
+            </div>
+            <div>
+                <form action="{% url "inventory:reject_loan" pk=object.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger" value="Reject">
+                </form>
+            </div>
+        {% endif %}
+        {% if perms.inventory.can_witness and object.authorised %}
+            {% if not object.taken_who %}
+                <form action="{% url "inventory:taken_loan" pk=object.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-info" value="Mark Taken">
+                </form>
+            {% elif not object.returned_who %}
+                <form action="{% url "inventory:returned_loan" pk=object.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-info" value="Mark Returned">
+                </form>
+            {% endif %}
+        {% endif %}
     {% endif %}
 {% endblock %}

@@ -7,11 +7,20 @@
 
 {% block body %}
     <h1>{{ object.inventory.name }} - {{ object.name }}</h1>
-    {% if object.archived %}<div class="alert-warning">Archived</div>{% endif %}
-    <p>Requested by {{ object.requester }}</p>
+    <p><a href="{% url "inventory:list_suggestions" inv=inv.canonical_ %}">Suggestions</a></p>
+    {% if object.archived %}
+        <div class="alert alert-warning">Archived</div>{% endif %}
+    <h3>Requested by {{ object.requester }}</h3>
     <h3>Why should we buy this game?</h3>
     <p>{{ object.justification|linebreaksbr }}</p>
     <h3>How did you discover it?</h3>
     <p>{{ object.context|linebreaksbr }}</p>
-    <p>Link: <a href="{{ object.link }}">{{ object.link }}</a></p>
+    {% if object.link %}<p>Link: <a href="{{ object.link }}">{{ object.link }}</a></p>{% endif %}
+
+    {% if perms.inventory.change_suggestion %}
+        <form action="{% url "inventory:archive_suggestion" pk=object.pk %}" method="post">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-warning" value="Archive">
+        </form>
+    {% endif %}
 {% endblock %}

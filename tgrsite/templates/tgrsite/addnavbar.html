@@ -98,56 +98,84 @@ This defines the navbar and the extra scripts.
             </div>
             <div class="collapse navbar-collapse" id="nav-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'exec' %}">
-                        <i class="fa fa-fw fa-users"></i> Exec
-                    </a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-fw fa-users"></i> The Society <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'exec' %}">
+                                <i class="fas fa-fw fa-user-tie"></i> Exec
+                            </a></li>
+
+                            <li><a href="{% url 'gallery' %}">
+                                <i class="fas fa-fw fa-image"></i> Photo Gallery
+                            </a></li>
+
+                            <li><a href="{% url 'newsletters_index' %}">
+                                <i class="far fa-fw fa-newspaper"></i> Newsletters
+                            </a></li>
+                        </ul>
+                    </li>
+
 
                     <li><a href="{% url 'timetable' %}">
-                        <i class="fa fa-fw fa-calendar"></i> Schedule
-                    </a></li>
-
-                    <li><a href="{% url 'gallery' %}">
-                        <i class="fa fa-fw fa-picture-o"></i> Photo Gallery
-                    </a></li>
-
-                    <li><a href="{% url 'forum' %}">
-                        <i class="fa fa-fw fa-quote-left"></i> Forum
-                    </a></li>
-
-                    <li><a href="{% url 'rpgs' %}">
-                        <i class="fa fa-fw fa-magic"></i> Events
+                        <i class="fas fa-fw fa-calendar-alt"></i> Schedule
                     </a></li>
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                            role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-fw fa-shield"></i> LARP <span class="caret"></span>
+                            <i class="fas fa-fw fa-comments"></i> Social <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{% url 'forum' %}">
+                                <i class="fas fa-fw fa-quote-left"></i> Forum
+                            </a></li>
+
+                            <li><a href="{% url 'message_list' %}">
+                                <i class="fas fa-fw fa-comment"></i> Messages
+                            </a></li>
+
+                        </ul>
+                    </li>
+
+
+                    <li><a href="{% url 'rpgs' %}">
+                        <i class="fas fa-fw fa-magic"></i> Events
+                    </a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-fw fa-hat-wizard"></i> LARP <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu">
                             <li><a href="/page/larp">
-                                <i class="fa fa-fw fa-info-circle"></i> Introduction
+                                <i class="fas fa-fw fa-info-circle"></i> Introduction
                             </a></li>
-
+                            <li><a href="{% string_setting "inventory_larp" %}">
+                                <i class="fas fa-fw fa-shield-alt"></i> Equiptment
+                            </a></li>
                             <li><a href="{% string_setting "larp_rules" %}">
-                                <i class="fa fa-fw fa-book"></i> Rulebook
+                                <i class="fas fa-fw fa-scroll"></i> Rulebook
                             </a></li>
                             <li><a href="{% string_setting "larp_setting" %}">
-                                <i class="fa fa-fw fa-key"></i> Lorebook
+                                <i class="fas fa-fw fa-atlas"></i> Lorebook
                             </a></li>
                         </ul>
                     </li>
 
-                    <li><a href="{% url 'message_list' %}">
-                        <i class="fa fa-fw fa-comment-o"></i> Messages
-                    </a></li>
-
-                    <li><a href="{% url 'newsletters_index' %}">
-                        <i class="fa fa-fw fa-newspaper-o"></i> Newsletters
+                    <li><a href="{% string_setting "inventory_bg" %}">
+                        <i class="fas fa-chess"></i> Boardgames
                     </a></li>
 
                     <li><a href="{% url 'sponsorships' %}">
-                        <i class="fa fa-fw fa-handshake-o"></i> Our Sponsors
+                        <i class="fas fa-fw fa-handshake"></i> Our Sponsors
                     </a></li>
 
                 </ul>
