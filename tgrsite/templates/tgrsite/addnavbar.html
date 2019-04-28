@@ -1,6 +1,7 @@
 {% extends 'tgrsite/basecontent.html' %}
 {% load static %}
 {% load markdown_tags %}
+{% load property_tags %}
 
 {% comment %}
 THIS IS DIRECTLY USED BY THE NEWSLETTER DETAIL VIEW ONLY.
@@ -12,26 +13,15 @@ This defines the navbar and the extra scripts.
 
 {% block topscripts %}
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="{% static 'jqui/jquery-ui.min.js' %}"></script>
-    <link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.min.css' %}">
-    <link type="text/css" rel="stylesheet" href="{% static 'jquery-ui.structure.min.css' %}">
 
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="/static/bootstrap3-typeahead.js"></script>
-
-    <script>
-        $(function () {
-            $('.accordion').filter('.panel').accordion({
-                collapsible: true,
-                header: ".panel-heading",
-            });
-        });
-    </script>
+    <script type="text/javascript" src="{% static 'bootstrap3-typeahead.js' %}"></script>
 
     {% comment font icons library %}{% endcomment %}
-    <link type="text/css" rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
 
     <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
@@ -135,14 +125,14 @@ This defines the navbar and the extra scripts.
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'larp_info' %}">
+                            <li><a href="/page/larp">
                                 <i class="fa fa-fw fa-info-circle"></i> Introduction
                             </a></li>
 
-                            <li><a href="{% static 'UNITY_6.1.1.pdf' %}">
+                            <li><a href="{% string_setting "larp_rules" %}">
                                 <i class="fa fa-fw fa-book"></i> Rulebook
                             </a></li>
-                            <li><a href="{% static 'Locations-In-Unity.pdf' %}">
+                            <li><a href="{% string_setting "larp_setting" %}">
                                 <i class="fa fa-fw fa-key"></i> Lorebook
                             </a></li>
                         </ul>
@@ -206,6 +196,7 @@ This defines the navbar and the extra scripts.
 {% endblock %}
 
 {% block bottomscripts %}
+    {{ block.super }}
     <script>
         function nasa() {
             $('img').each(function (index, element) {

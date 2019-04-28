@@ -4,7 +4,7 @@
 
 {% block title %}{{ page.title|safe }}{% endblock %}
 {% block head %}{{ page.head|safe }}{% endblock %}
-{% block body %}{{ page.body|parse_md_safe }}{% endblock %}
-{% block css %}{{ page.css|safe }}{% endblock %}
+{% block body %}{{ block.super }}{{ page.body|parse_md_safe }}{% endblock %}
+{% block css %}{{ block.super }}{{ page.css|safe }}{% endblock %}
 {% block leftbar %}{{ page.leftbar|parse_md_safe }}{% endblock %}
 {% block rightbar %}{{ page.rightbar|parse_md_safe }}{% endblock %}

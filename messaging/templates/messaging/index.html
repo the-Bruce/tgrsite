@@ -24,20 +24,22 @@
 
 
 {% block rightbar %}
-    <div class="panel panel-default accordion">
-        <div class="panel-heading">
+    <div class="panel panel-default">
+        <a class="block panel-heading" href="#body_qdm" data-toggle="collapse">
             Quick DM
-        </div>
-        <div class="panel-body">
-            <form method="POST" action="{% url 'message_direct' %}?next={{ request.path }}" id="quickdm">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input class="form-control" name="target" placeholder="recipient">
-                    <textarea class="form-control" placeholder="message" name="message" form="quickdm"
-                              autocomplete="off"></textarea>
-                    <input type="submit" class="form-control" value="Send">
-                </div>
-            </form>
+        </a>
+        <div id="body_qdm" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <form method="POST" action="{% url 'message_direct' %}?next={{ request.path }}" id="quickdm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" name="target" placeholder="recipient">
+                        <textarea class="form-control" placeholder="message" name="message" form="quickdm"
+                                  autocomplete="off"></textarea>
+                        <input type="submit" class="form-control" value="Send">
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}

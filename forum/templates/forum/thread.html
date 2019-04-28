@@ -44,9 +44,9 @@ Context's "response_id" the second number in the url, which is the response ID f
 
     {% else %}
 
-        <a href="{% url 'signup' %}next={{ request.path }}">Sign up</a>
+        <a href="{% url 'signup' %}?next={{ request.path }}">Sign up</a>
         or
-        <a href="{% url 'login' %}next={{ request.path }}">log in</a>
+        <a href="{% url 'login' %}?next={{ request.path }}">log in</a>
         to respond.
 
     {% endif %}

@@ -57,6 +57,8 @@ ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'), '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'website_settings',
+    'assets',
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
     'rpgs.apps.RpgsConfig',
@@ -111,7 +113,6 @@ WSGI_APPLICATION = 'tgrsite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-# TODO: remove sqlite3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -190,6 +191,10 @@ STATICFILES_DIRS = [
 
 # directory the static files are served from
 STATIC_ROOT = os.path.join(BASE_DIR, 'STATIC')
+
+# directories for the uploaded files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
 
 # Monday
 FIRST_DAY_OF_WEEK = 1
