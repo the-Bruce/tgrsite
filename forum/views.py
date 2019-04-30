@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages import add_message, constants
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -89,7 +90,7 @@ def create_response(request):
         for author in thread.get_all_authors():
             if author != request.user.member:
                 notify(author, NotifType.FORUM_REPLY,
-                       '{} replied to a thread you\'ve commented in!'.format(request.user.username), url)
+                       '{} replied to a thread you\'ve commented in!'.format(request.user.username), url, thread.id)
         res.save()
         return HttpResponseRedirect(url)
     else:
@@ -100,11 +101,12 @@ def create_response(request):
 @login_required
 def delete_thread(request, pk):
     thread = Thread.objects.get(id=pk)
-    if thread.author.equiv_user.id != request.user.id:
+    if thread.author.equiv_user.id != request.user.id and not request.user.has_perm(''):
         # TODO: placeholder error
         return HttpResponseForbidden()
     url = reverse('subforum', kwargs={'pk': thread.forum.id})
     thread.delete()
+    add_message(request, constants.SUCCESS, "Thread deleted.")
     return HttpResponseRedirect(url)
 
 
@@ -116,6 +118,7 @@ def delete_response(request, pk):
         return HttpResponseForbidden()
     url = reverse('viewthread', kwargs={'pk': response.thread.id})
     response.delete()
+    add_message(request, constants.SUCCESS, "Response deleted.")
     return HttpResponseRedirect(url)
 
 
@@ -157,7 +160,8 @@ def edit_thread_process(request):
         form.save()
         res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': id}))
     else:
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': id}) + '?result=invalid')
+        add_message(request, constants.ERROR, "Unable to edit post.")
+        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': id}))
     return res
 
 
@@ -178,5 +182,6 @@ def edit_response_process(request):
         form.save()
         res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': response.thread.id}))
     else:
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': response.thread.id}) + '?result=invalid')
+        add_message(request, constants.ERROR, "Unable to edit response.")
+        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': response.thread.id}))
     return res

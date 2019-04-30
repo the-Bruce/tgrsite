@@ -27,9 +27,8 @@ This introduces a generic left bar containing recent threads etc.
                     <li><a href="/admin">Admin site</a></li>
                 {% endif %}
                 {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'me' %}">
-                        My profile
-                    </a></li>
+                    <li><a href="{% url 'me' %}">My profile</a></li>
+                    <li><a href="{% url 'notification_settings' %}">Notification Settings</a></li>
                     <li><a href="{% url 'logout' %}">Log out</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>

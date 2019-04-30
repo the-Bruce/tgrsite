@@ -18,3 +18,8 @@ class Newsletter(models.Model):
     # Important! If this changes, change the URL too!
     def get_absolute_url(self):
         return reverse('newsletters_detail', kwargs={'pk': self.id})
+
+    class Meta:
+        permissions = (
+            ("modify_others", "Can edit other newsletters"),
+        )

@@ -6,6 +6,7 @@ from hashlib import sha256
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.messages import add_message, constants
 from django.core.mail import mail_managers
 from django.forms import ValidationError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -78,10 +79,12 @@ def update(request):
         if (memberform.is_valid() and userform.is_valid()):
             memberform.save()
             userform.save()
-            res = HttpResponseRedirect(reverse('me') + '?result=success')
+            add_message(request, constants.SUCCESS, "Successfully updated.")
+            res = HttpResponseRedirect(reverse('me'))
             return res
         else:
-            return HttpResponseRedirect(reverse('edit') + '?result=invalid')
+            add_message(request, constants.ERROR, "There were problems with the form.")
+            return HttpResponseRedirect(reverse('edit'))
 
     else:
         return HttpResponseRedirect(reverse('me'))
@@ -128,6 +131,7 @@ def add_captcha_to_form(form):
 
 
 def hash2(inp):
+    # FIXME hash substitution allows captcha bypass
     return sha256(str(inp).encode()).hexdigest()
 
 
