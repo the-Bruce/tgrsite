@@ -10,7 +10,7 @@
     <p><a href="{% url "inventory:list_loans" inv=inv.canonical_ %}">Loans</a></p>
     {# State prompt: #}
     {% if object.rejected %}
-        <div class="alert alert-error">Rejected</div>
+        <div class="alert alert-danger">Rejected</div>
     {% elif object.authorised %}
         {% if object.returned_who %}
             <div class="alert alert-info">Completed</div>
