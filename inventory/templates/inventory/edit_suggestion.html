@@ -1,0 +1,16 @@
+{% extends 'tgrsite/main.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ inv.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ inv.name }} Suggestion</h1>
+    <p>{% if object %}
+        <a href="{% url "inventory:loan_detail" inv=inv.canonical_ pk=object.pk %}">Details</a>
+    {% else %}
+        <a href="{% url "inventory:list_loans" inv=inv.canonical_ %}">Suggestions</a>
+    {% endif %}</p>
+    {% include "widgets/render_form.html" %}
+{% endblock %}

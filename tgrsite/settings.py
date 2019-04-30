@@ -59,6 +59,7 @@ ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'), '127.0.0.1']
 INSTALLED_APPS = [
     'website_settings',
     'assets',
+    'inventory',
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
     'rpgs.apps.RpgsConfig',

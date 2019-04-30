@@ -1,0 +1,43 @@
+{% extends 'tgrsite/main.html' %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+        .my-responsive {
+            width: 50%;
+            max-width: 500px;
+            height: auto;
+            float: right;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    {{ inv.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ inv.name }} - {{ object.name }}</h1>
+    <p><a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
+    {% if perms.inventory.change_record or object.owner == user.member %}
+        <a class="btn btn-primary" href="{% url "inventory:edit_record" inv=inv.canonical_ pk=object.pk %}">Edit</a>
+    {% endif %}
+    <h3>Acquired: </h3>
+    <p>{% if object.acquired %}{{ object.acquired|date }}{% else %}Time immemorial{% endif %}</p>
+    <h3>Description</h3>
+    <p>
+        {% if object.image %}
+                <img alt="{{ object.name }} example image" class="my-responsive" src="{{ object.image }}">
+        {% endif %}
+
+        {{ object.description|linebreaksbr }}
+    </p>
+    {% if object.owner %}<p>Graciously lent to the society by {{ object.owner }}</p>{% endif %}
+
+    {% if perms.inventory.view_loan and object.inventory.loans and object.get_live_loans|length > 0 %}
+        <h3>Loans</h3>
+        {% include "inventory/parts/loanlist.html" with loans=object.get_live_loans %}
+    {% endif %}
+
+{% endblock %}
