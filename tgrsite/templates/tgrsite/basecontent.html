@@ -1,97 +1,98 @@
 {% load static %}
 {% load markdown_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% comment %}
-    THIS IS USED BY THE EMAIL VERSION OF THE NEWSLETTER ONLY.
+{% spaceless %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        {% comment %}
+    THIS IS NEVER USED DIRECTLY.
     So all scripts should instead be added in addnavbar, the next template up,
     using the topscripts and bottomscripts blocks.
     This defines the global grid format - a col3 sidebar, a col6 body and a col3 sidebar.
     {% endcomment %}
 
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %} - warwicktabletop.co.uk</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{% endblock %} - warwicktabletop.co.uk</title>
 
-    {% block bootstrap %}
-    {% endblock %}
+        {% block bootstrap %}
+        {% endblock %}
 
-    {% comment %} For scripts we don't want at the top of the email. {% endcomment %}
-    {% block topscripts %}
-    {% endblock %}
+        {% comment %} For scripts we don't want at the top of the email. {% endcomment %}
+        {% block topscripts %}
+        {% endblock %}
 
-    {% block head %}
-        {% comment %}
-		Custom per-page includes such as the gallery plugin on the Gallery page.
-	{% endcomment %}
-    {% endblock %}
+        {% block head %}
+            {% comment %}
+		    Custom per-page includes such as the gallery plugin on the Gallery page.
+	    {% endcomment %}
+        {% endblock %}
+        {% block allcss %}
+            <style>
+                .latest {
+                    margin-bottom: 10px;
+                }
 
-    <style>
+                img.avatar {
+                    width: 128px;
+                    height: 128px;
+                }
 
-        .latest {
-            margin-bottom: 10px;
-        }
+                img.brand-img {
+                    width: 32px;
+                    height: 32px;
+                    margin-top: -5px;
+                }
 
-        img.avatar {
-            width: 128px;
-            height: 128px;
-        }
+                .navbar {
+                    border-radius: 0;
+                }
 
-        img.brand-img {
-            width: 32px;
-            height: 32px;
-            margin-top: -5px;
-        }
+                .jumbotron {
+                    text-align: center;
+                }
 
-        .navbar {
-            border-radius: 0;
-        }
+                .nobullet {
+                    padding: 0;
+                    list-style-type: none;
+                }
 
-        .jumbotron {
-            text-align: center;
-        }
+                .wordwrap {
+                    white-space: -moz-pre-wrap !important;
+                    white-space: -pre-wrap;
+                    white-space: -o-pre-wrap;
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                    white-space: -webkit-pre-wrap;
+                    word-break: break-word;
+                    white-space: normal;
+                }
 
-        .nobullet {
-            padding: 0;
-            list-style-type: none;
-        }
+                article img {
+                    max-width: 100%; /* Don't overflow. */
+                    margin-bottom: 5px;
+                    margin-top: 5px;
+                }
 
-        .wordwrap {
-            white-space: -moz-pre-wrap !important;
-            white-space: -pre-wrap;
-            white-space: -o-pre-wrap;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            white-space: -webkit-pre-wrap;
-            word-break: break-word;
-            white-space: normal;
-        }
+                .errorlist {
+                    color: #a94442;
+                }
 
-        article img {
-            max-width: 100%; /* Don't overflow. */
-            margin-bottom: 5px;
-            margin-top: 5px;
-        }
+                .CodeMirror {
+                    height: 200px;
+                }
 
-        .errorlist {
-            color: #a94442;
-        }
+                .CodeMirror-scroll {
+                    min-height: 0px;
+                }
+            </style>
+        {% endblock %}
 
-        .CodeMirror {
-            height: 200px;
-        }
-
-        .CodeMirror-scroll {
-            min-height: 0px;
-        }
-
-    </style>
-
-    {% block css %}
-        {% comment %}
-		This is where a page's custom CSS will go, or a link to the relevant stylesheet I guess.
-	{% endcomment %}
-    {% endblock %}
+        {% block css %}
+            {% comment %}
+                This is where a page's custom CSS will go, or a link to the relevant stylesheet I guess.
+            {% endcomment %}
+        {% endblock %}
 
 </head>
 
@@ -113,7 +114,7 @@
 			<div class="col-md-3"></div>
 		</div>
 	{% endcomment %}
-        {% block mainbody %}
+       {% block mainbody %}
             <div class="row">
                 <div class="col-md-3">
                     {% block leftcontents %}
@@ -128,6 +129,8 @@
 
                 <div class="col-md-6 col-md-pull-3">
                     {% block body %}
+                        {% block messages %}
+                        {% endblock %}
                         {% comment %}
 					This is the part that gets overridden by templates that extend this one.
 					{% endcomment %}
@@ -138,9 +141,9 @@
     </div><!-- .container -->
 </div>
 
-<footer id="footer">
-    {% block footer %}{% endblock %}
-</footer>
+    <footer id="footer">
+        {% block footer %}{% endblock %}
+    </footer>
 
 {% comment %} For scripts at the bottom of the page. {% endcomment %}
 {% block bottomscripts %}
@@ -149,3 +152,4 @@
 {% endblock %}
 </body>
 </html>
+{% endspaceless %}

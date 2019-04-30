@@ -1,0 +1,29 @@
+{% extends "tgrsite/emailcontent.html" %}
+
+{% block allcss %}
+    {% comment %}
+        Don't need this css here...
+    {% endcomment %}
+{% endblock %}
+{% block body %}
+    <h1>Greetings {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.</h1>
+    <h3>Here is what has happened over at Warwick Tabletop and Role-Playing Society:</h3>
+    <table class="table table-bordered">
+        {% for n in notifications %}
+            <tr>
+                <td>
+                    <a href="https://{{ request.get_host }}{{ n.url }}">
+                        <div>{{ n.content | truncatechars_html:220 }}</div>
+                    </a>
+                </td>
+                <td>
+                    <small>{{ n.time|time }} {{ n.time|date }}</small>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h3>Cheers,<br>The Warwick Tabletop Team</h3>
+    <small>If you don't want to receive these notification emails any more, please visit your
+        <a href="https://{{ request.get_host }}{% url "notification_settings" %}">notification settings</a>.
+    </small>
+{% endblock %}

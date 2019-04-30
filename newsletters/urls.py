@@ -11,4 +11,7 @@ urlpatterns = [
     path('delete/<int:pk>/', views.Delete.as_view(template_name='newsletters/delete.html'), name='newsletters_delete'),
     path('email-version/<int:pk>/', views.Detail.as_view(template_name='newsletters/email-version.html'),
          name='newsletters_email'),
+    path('text-version/<int:pk>/', views.Detail.as_view(template_name='newsletters/plain-email-version.txt',
+                                                        content_type="text/plain"),
+         name='newsletters_plaintext'),
 ]

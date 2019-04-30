@@ -1,5 +1,12 @@
 {% extends 'tgrsite/basecontent.html' %}
 
+{% comment %}
+    THIS IS USED BY THE EMAIL VERSION OF THE NEWSLETTER ONLY.
+    So all scripts should instead be added in addnavbar, the next template up,
+    using the topscripts and bottomscripts blocks.
+    This redefines the global grid format - a col2 sidebar, a col8 body and a col2 sidebar to work well with outlook...
+{% endcomment %}
+
 {% block bootstrap %}
     <style>
         /*!
@@ -12,7 +19,7 @@
             margin-bottom: 5px;
             margin-top: 5px;
         }
-    <\style>
+    </style>
 {% endblock %}
 
 {% block mainbody %}

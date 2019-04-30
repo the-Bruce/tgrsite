@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+import django.contrib.messages.constants as message_constants
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -212,6 +214,14 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 # CSRF_COOKIE_HTTPONLY=True
 X_FRAME_OPTIONS = 'DENY'
+
+MESSAGE_TAGS = {
+    message_constants.DEBUG: 'alert alert-secondary',
+    message_constants.INFO: 'alert alert-primary',
+    message_constants.SUCCESS: 'alert alert-success',
+    message_constants.WARNING: 'alert alert-warning',
+    message_constants.ERROR: 'alert alert-danger',
+}
 
 # Allow local configuration (change deploy options etc.)
 try:

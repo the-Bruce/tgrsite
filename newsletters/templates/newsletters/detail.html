@@ -4,18 +4,23 @@
 
 {% block title %}{{ object.title }}{% endblock %}
 {% block leftcontents %}
-    {% if object.author == user.member %}
+    {% if object.author == user.member or perms.newsletters.modify_others %}
         <p><a href="{% url 'newsletters_update' object.id %}">Edit Newsletter</a></p>
         <p><a href="{% url 'newsletters_delete' object.id %}">Delete Newsletter</a></p>
         {% if object.ispublished %}
-            <p><a href="{% url 'newsletters_email' object.id %}" download="email_{{ object.id }}.html">Email Version</a>
-            </p>{% endif %}
+            <p>
+                <a href="{% url 'newsletters_email' object.id %}" download="email_{{ object.id }}.html">Email Version</a>
+            </p>
+            <p>
+                <a href="{% url 'newsletters_plaintext' object.id %}">Text Version</a>
+            </p>
+        {% endif %}
     {% endif %}
 {% endblock %}
 
 {% block body %}
 
-    <img src="{% static 'newsletter-banner.png' %}" style="width: 100%;"/>
+    <img alt="Warwick Tabletop and Role-Playing Society Banner" src="{% static 'newsletter-banner.png' %}" style="width: 100%;"/>
     {% if not object.ispublished %}<h1><strong>[UNPUBLISHED]</strong></h1>{% endif %}
     <h1>{{ object.title }}
         <small>{% if object.author %} by <a href="{% url 'user' object.author.id %}">{{ object.author }}</a> {% endif %}

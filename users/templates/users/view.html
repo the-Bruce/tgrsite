@@ -37,7 +37,6 @@
         {% if recent_responses %}
             <h4>Recent responses</h4>
             <ul class="nobullet">
-
                 {% for response in recent_responses %}
                     <li>
                         <a href="{% url 'viewthread' pk=response.thread.id %}#response-{{ response.id }}">
