@@ -17,6 +17,10 @@ QUANTITY_attrs = {
     'class': 'form-control'
 }
 
+DATE_attrs = {
+    'value': datetime.date.today().strftime("%d-%m-%Y"),
+    'class': 'form-control'
+}
 
 class RecordForm(ModelForm):
     class Meta:
@@ -55,6 +59,8 @@ class LoanRequestForm(ModelForm):
 
         super().__init__(*args, **kwargs)
         self.fields['items'].queryset = Record.objects.filter(inventory=inv, owner__isnull=True)
+        self.fields['start_date'].initial = datetime.date.today()
+        self.fields['end_date'].initial = datetime.date.today()
 
     class Meta:
         model = Loan
@@ -62,9 +68,9 @@ class LoanRequestForm(ModelForm):
         widgets = {
             'items': SelectMultiple(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'start_date': SelectDate(years=range(datetime.date.today().year, datetime.date.today().year + 10),
-                                     attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+                                     attrs=DATE_attrs),
             'end_date': SelectDate(years=range(datetime.date.today().year, datetime.date.today().year + 10),
-                                   attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+                                   attrs=DATE_attrs),
         }
         help_texts = {
             'items': 'Use Ctrl to select multiple items'
