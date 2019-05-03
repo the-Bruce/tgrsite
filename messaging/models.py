@@ -4,12 +4,7 @@ from users.models import Member
 
 
 class MessageThread(models.Model):
-    def __str__(self):
-        l = list(self.participants.all())
-        return str(', '.join([str(x) for x in l]))
-
     participants = models.ManyToManyField(Member)
-
     title = models.CharField(max_length=64, blank=True)
 
     def __str__(self):
@@ -26,9 +21,6 @@ class MessageThread(models.Model):
         # [start:end] is common but [start:end:step] is possible
         # and as always Python handles negatives nicely
         return self.get_messages().reverse()[:5][::-1]
-
-    # There was some nice code written by Ash that was "too beautiful to delete".
-    # Don't worry Ash, Git will always remember it, even now I've deleted it.
 
     def get_messages(self):
         return self.message_set.order_by('timestamp')

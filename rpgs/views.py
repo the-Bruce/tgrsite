@@ -1,12 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 # testing
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 
-from notifications.models import notify, NotifType
+from notifications.models import NotifType, notify_everybody, notify
 from users.models import Member
 from .forms import RpgForm
 from .models import Rpg, Tag
@@ -133,12 +134,12 @@ def create_done(request):
     me = Member.objects.get(id=request.user.member.id)
 
     ins = Rpg(**args)
+    try:
+        ins.full_clean()
+    except ValidationError:
+        # Unlikely to ever be reached, but assuming that the form validates everything is not always the best plan...
+        return HttpResponse('Unknown error: RpgForm is not valid')
     ins.save()
-
-    """newtags = []
-    for tag in request.POST.get('tags', '').split(','):
-        # determine new tag
-        newtags.append(Tag.objects.get_or_create(name=tag)[0])"""
 
     # add tags
     ins.tags.set(tags_from_str(request.POST.get('tags', '')))
@@ -146,8 +147,9 @@ def create_done(request):
     if (request.POST.get('am_i_gm', None)):
         ins.game_masters.add(me)
 
+    notify_everybody(NotifType.RPG_CREATE, "New Events are available for signup.",
+                     reverse('rpg', kwargs={'pk': ins.id}), merge_key=ins.id)
     # send them to the page that was created
-
     return HttpResponseRedirect(reverse('rpg', kwargs={'pk': ins.id}) + '?status=created')
 
 

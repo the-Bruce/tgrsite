@@ -18,7 +18,7 @@
                             {% endif %}
                          alt="Photo for {{ role.incumbent }}">
                 </div>
-                <div class="media-body wordwrap" id="role.role_title">
+                <div class="media-body wordwrap" id="{{ role.role_title }}">
                     <h3 class="media-heading title">
                         {{ role.role_title }} -
                         {% if role.incumbent %}

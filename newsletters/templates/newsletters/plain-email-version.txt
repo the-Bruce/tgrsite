@@ -1,0 +1,12 @@
+{% load markout_tags %}
+{% autoescape off %}
+{{ object.title|upper }}{% if object.author %} by {{ object.author }}{% endif %}
+{{ object.pub_date }}
+
+{{ object.body|tidy_md }}
+
+View the full version at https://{{ request.get_host }}{% url 'newsletters_detail' object.id %}
+
+If you don't want to receive these notification emails any more, please visit your notification settings here:
+https://{{ request.get_host }}{% url "notification_settings" %}
+{% endautoescape %}

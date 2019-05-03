@@ -60,6 +60,7 @@ class Forum(models.Model):
     get_subforums.short_description = 'Subforums'
     get_subforums_str.short_description = 'Subforums'
 
+    @staticmethod
     def get_parentless_forums():
         return Forum.objects.filter(parent__isnull=True)
 

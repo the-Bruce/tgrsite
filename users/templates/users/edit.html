@@ -2,12 +2,6 @@
 {% block title %}Edit profile{% endblock %}
 {% block body %}
 
-    {% if result == 'success' %}
-        Successfully updated.
-    {% elif result == 'invalid' %}
-        There were problems with the form.
-    {% endif %}
-
     (Note: to change your profile image, see <a href="https://github.com/the-Bruce/tgrsite/wiki/Gravatar">this guide.</a>)
 
     <form action="{% url 'update' %}" method="POST">

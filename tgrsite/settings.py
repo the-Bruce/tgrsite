@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+import django.contrib.messages.constants as message_constants
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -55,6 +57,9 @@ ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'), '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'website_settings',
+    'assets',
+    'inventory',
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
     'rpgs.apps.RpgsConfig',
@@ -109,7 +114,6 @@ WSGI_APPLICATION = 'tgrsite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-# TODO: remove sqlite3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -189,6 +193,10 @@ STATICFILES_DIRS = [
 # directory the static files are served from
 STATIC_ROOT = os.path.join(BASE_DIR, 'STATIC')
 
+# directories for the uploaded files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+
 # Monday
 FIRST_DAY_OF_WEEK = 1
 
@@ -207,6 +215,14 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 # CSRF_COOKIE_HTTPONLY=True
 X_FRAME_OPTIONS = 'DENY'
+
+MESSAGE_TAGS = {
+    message_constants.DEBUG: 'alert alert-secondary',
+    message_constants.INFO: 'alert alert-primary',
+    message_constants.SUCCESS: 'alert alert-success',
+    message_constants.WARNING: 'alert alert-warning',
+    message_constants.ERROR: 'alert alert-danger',
+}
 
 # Allow local configuration (change deploy options etc.)
 try:
