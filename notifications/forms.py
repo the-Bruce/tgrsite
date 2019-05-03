@@ -12,7 +12,8 @@ class SubscriptionForm(ModelForm):
     class Meta:
         model = NotificationSubscriptions
 
-        fields = ['member', 'newsletter', 'message', 'rpg_join', 'rpg_leave', 'rpg_kick', 'rpg_add', 'forum_reply',
+        fields = ['member', 'newsletter', 'message', 'rpg_join', 'rpg_leave', 'rpg_kick', 'rpg_add',
+                  'rpg_new', 'forum_reply',
                   'other']
 
         widgets = {
@@ -23,6 +24,7 @@ class SubscriptionForm(ModelForm):
             'rpg_leave': Select(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'rpg_kick': Select(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'rpg_add': Select(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+            'rpg_new': Select(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'forum_reply': Select(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'other': Select(attrs=BOOTSTRAP_FORM_WIDGET_attrs)
         }
