@@ -61,7 +61,7 @@ class NotificationSubscriptions(models.Model):
                                    default=SubType.WEB)
     rpg_add = models.IntegerField(verbose_name='Addition to an Event', choices=reduced_subscription_types, default=SubType.WEB)
     forum_reply = models.IntegerField(verbose_name='Reply to a Forum Post You Participated in',
-                                      choices=subscription_types,
+                                      choices=reduced_subscription_types,
                                       default=SubType.WEB)
     rpg_new = models.IntegerField(verbose_name='A New Event is Created', choices=reduced_subscription_types,
                                   default=SubType.NONE)
