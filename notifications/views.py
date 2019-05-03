@@ -16,11 +16,12 @@ class UpdateSubscriptions(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("homepage")
 
     def get_queryset(self):
-        data = NotificationSubscriptions.objects.get_or_create(member=self.request.user.member)
+        data, new = NotificationSubscriptions.objects.get_or_create(member=self.request.user.member)
         return data
 
     def get_object(self, queryset=None):
-        return NotificationSubscriptions.objects.get(member=self.request.user.member)
+        data, new = NotificationSubscriptions.objects.get_or_create(member=self.request.user.member)
+        return data
 
     def get_success_message(self, cleaned_data):
         return "Personal Subscription Settings Updated!"
@@ -32,6 +33,7 @@ def email_notifications(request):
         'notifications': Notification.objects.filter(member=request.user.member).order_by('-is_unread', '-time'),
     }
     return render(request, 'notifications/summary-email.html', context)
+
 
 @login_required
 def all_notifications(request):
