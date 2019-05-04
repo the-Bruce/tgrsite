@@ -13,6 +13,9 @@ The following fields are optional:
 * `FROM_EMAIL`: Address to send emails from (eg "noreply@somesite.xyz").
 * `HOST`: Hostname to add to allowed hosts. See [Django's documentation of the `ALLOWED_HOSTS` setting](https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-ALLOWED_HOSTS).
 
+## Advanced configuration
+Create a `local_config.py` in the same directory as the `settings.py` file. This allows you to override any setting locally that you need to.
+
 ## Setup guide
 * This app requires Python 3.6. Make sure you run these commands using the right version of Python. It is recommended that you [create a virtual environment](https://docs.djangoproject.com/en/2.0/topics/install/#installing-an-official-release-with-pip) for the app.
 * Install required Python packages (eg `pip install -r requirements.txt`)
