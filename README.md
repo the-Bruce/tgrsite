@@ -7,7 +7,7 @@ The following environment varaibles are mandatory:
 
 The following fields are optional:
 * `DEBUG`: Determines whether to run the server in debug mode. See [Django's documentation of the `DEBUG` setting](https://docs.djangoproject.com/en/2.0/ref/settings/#std:setting-DEBUG). DO NOT RUN A PRODUCTION SERVER WITH THIS ENABLED.
-* `EMAIL_HOST`: Hostname of email API server. We use SendGrid. Email settings are required in order to properly send pasword reset emails.
+* `EMAIL_HOST`: Hostname of email API server. Email settings are required in order to properly send pasword reset emails and notifications.
 * `EMAIL_HOST_USER`: Username to use to login to mail API.
 * `EMAIL_HOST_PASSWORD`: Ditto, for password.
 * `FROM_EMAIL`: Address to send emails from (eg "noreply@somesite.xyz").
@@ -17,7 +17,7 @@ The following fields are optional:
 * This app requires Python 3.6. Make sure you run these commands using the right version of Python. It is recommended that you [create a virtual environment](https://docs.djangoproject.com/en/2.0/topics/install/#installing-an-official-release-with-pip) for the app.
 * Install required Python packages (eg `pip install -r requirements.txt`)
 * Configure environment variables (see above).
-* Ensure migrations are present: `python manage.py makemigrations bugreports exec forum gallery messaging pages rpgs users`
+* Ensure migrations are present: `python manage.py makemigrations`
 * Run database migrations: `python manage.py migrate`
 * Create a super user: `python manage.py createsuperuser`
 * Run the server using `python manage.py runserver`
