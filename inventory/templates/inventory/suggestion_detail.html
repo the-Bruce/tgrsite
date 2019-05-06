@@ -7,7 +7,7 @@
 
 {% block body %}
     <h1>{{ object.inventory.name }} - {{ object.name }}</h1>
-    <p><a href="{% url "inventory:list_suggestions" inv=inv.canonical_ %}">Suggestions</a></p>
+    <p>in <a href="{% url "inventory:list_suggestions" inv=inv.canonical_ %}">Suggestions</a></p>
     {% if object.archived %}
         <div class="alert alert-warning">Archived</div>{% endif %}
     <h3>Requested by {{ object.requester }}</h3>

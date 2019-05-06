@@ -7,7 +7,7 @@
 
 {% block body %}
     <h1>{{ inv.name }} Suggestions</h1>
-    <p><a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
+    <p>in <a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
     <div>
         <a class="btn btn-success"
            href="{% url "inventory:create_suggestion" inv=inv.canonical_ %}">New Suggestion</a>

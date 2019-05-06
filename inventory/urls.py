@@ -18,6 +18,7 @@ urlpatterns = [
     path('<str:inv>/borrow/', views.ListAllLoans.as_view(), name='list_loans'),
     path('<str:inv>/borrow/<int:pk>/', views.LoanDetail.as_view(), name='loan_detail'),
     path('<str:inv>/borrow/<int:pk>/edit/', views.UpdateLoan.as_view(), name='edit_loan'),
+    path('<str:inv>/borrow/<int:pk>/note/', views.NotateLoan.as_view(), name='notate_loan'),
 
     path('api/archive_request/<int:pk>/', api.archiveSuggestion, name='archive_suggestion'),
     path('api/reject_loan/<int:pk>/', api.rejectLoan, name='reject_loan'),
