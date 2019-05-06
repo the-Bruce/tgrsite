@@ -2,30 +2,26 @@
 {% block title %}Edit profile{% endblock %}
 {% block body %}
 
+    <h1>Your Profile</h1>
+
     (Note: to change your profile image, see <a href="https://github.com/the-Bruce/tgrsite/wiki/Gravatar">this guide.</a>)
 
     <form action="{% url 'update' %}" method="POST">
         {% csrf_token %}
 
         <div class="form-group">
+            {% include "widgets/render_form_content.html" with form=userform %}
+
+            {% comment %}
             {{ userform.as_p }}
+            {% endcomment %}
             {% for field in memberform %}
                 {% if field.name != 'official_photo_url' or request.user.member.is_exec %}
-                    <div>
-                        <div>
-                            {% if field.field.required %} * {% endif %}
-                            {{ field.label_tag }}
-                        </div>
-                        <div>
-                            {{ field }}
-                        </div>
-                        <p>{{ field.help_text | safe }}</p>
-                    </div><br>
+                    {% include "widgets/render_form_widget.html" with field=field %}
                 {% endif %}
             {% endfor %}
         </div>
-
-        <input type="submit" class="form-control">
+        <input type="submit" class="form-control btn-primary" value="Save">
     </form>
 
 {% endblock %}
