@@ -116,18 +116,18 @@
 	{% endcomment %}
        {% block mainbody %}
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-lg-3">
                     {% block leftcontents %}
                     {% endblock %}
                 </div>
 
-                <div class="col-md-3 col-md-push-6">
+                <div class="col-lg-3 col-lg-push-6">
                     {% block rightbar %}
                         {% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
                     {% endblock %}
                 </div>
 
-                <div class="col-md-6 col-md-pull-3">
+                <div class="col-lg-6 col-lg-pull-3">
                     {% block body %}
                         {% block messages %}
                         {% endblock %}

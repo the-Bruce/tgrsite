@@ -1,5 +1,6 @@
 {% extends "tgrsite/main.html" %}
 {% load timetable_tags %}
+{% load property_tags %}
 {% block title %}Timetable{% endblock %}
 {% block css %}
     {{ block.super }}
@@ -11,7 +12,10 @@
     </style>
 {% endblock %}
 {% block body %}
-
+    <div class="wordwrap">
+        <h3>Subscribe to our calender!</h3>
+        <p><a class="btn btn-primary" href="{% string_setting "sub_calender" %}">Subscribe</a></p>
+    </div>
     {% spaceless %}
         {% for timetable in timetables %}
             <div>
@@ -62,17 +66,4 @@
             </div>
         {% endfor %}
     {% endspaceless %}
-{% endblock %}
-
-{% block rightbar %}
-    <h3>Subscribe to our calender!</h3>
-    <p>To subscribe to the you can either:
-    </p><p>
-    <a class="btn btn-primary"
-       href="webcal://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">Subscribe
-        with your default calender</a></p>
-
-    <p>You can also copy this link into your preferred viewer (such as google calender):<br>
-        <a href="webcal://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">https://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics</a>
-    </p>
 {% endblock %}
