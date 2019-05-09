@@ -1,14 +1,11 @@
-import django
-
-django.setup()
 from django.conf import settings
 from django.core import mail
-from django.template import loader
 from django.http.request import HttpRequest
+from django.template import loader
 
-from users.models import Member
-from notifications.models import Notification, SubType, NotificationSubscriptions
 from newsletters.models import Newsletter
+from notifications.models import Notification, SubType, NotificationSubscriptions
+from users.models import Member
 
 
 def doSummaryNotificationMailings():
@@ -79,7 +76,3 @@ def send_mass_html_mail(datatuple, fail_silently=False, auth_user=None,
         for subject, message, html_message, sender, recipient in datatuple
     ]
     return connection.send_messages(messages)
-
-
-if __name__ == '__main__':
-    doSummaryNotificationMailings()
