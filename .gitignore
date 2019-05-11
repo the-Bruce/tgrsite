@@ -2,8 +2,11 @@ db.sqlite3
 */migrations
 *__pycache__
 STATIC/
+static_resources/
 tgrsite/keys.py
 *.pyc
-static_resources/
 local_config.py
 /MEDIA/
+!/static_resources/favicon.ico
+!/static_resources/logosimple.png
+!/static_resources/logosimple_white.png
