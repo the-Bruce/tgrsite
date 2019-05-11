@@ -9,12 +9,25 @@
             text-align: center;
             vertical-align: middle !important;
         }
+
     </style>
+    <noscript>
+        <style>
+            .js_only {
+                display: none;
+            }
+        </style>
+    </noscript>
 {% endblock %}
 {% block body %}
     <div class="wordwrap">
         <h3>Subscribe to our calender!</h3>
-        <p><a class="btn btn-primary" href="{% string_setting "sub_calender" %}">Subscribe</a></p>
+        <noscript>
+            <p><a class="btn btn-primary" href="{% string_setting "sub_calender" %}">Subscribe</a></p>
+        </noscript>
+        <button type="button" class="js_only btn btn-primary" data-toggle="modal" data-target="#webcal_subscribe">
+            Subscribe
+        </button>
     </div>
     {% spaceless %}
         {% for timetable in timetables %}
@@ -66,4 +79,22 @@
             </div>
         {% endfor %}
     {% endspaceless %}
+    <div class="modal fade" id="webcal_subscribe" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">To subscribe to each of the calenders you can either:</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        {% text_setting "webcal_sub" %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
