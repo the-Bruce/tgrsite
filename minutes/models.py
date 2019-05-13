@@ -1,16 +1,47 @@
-import datetime
-
+from django.core.validators import RegexValidator
 from django.db import models
+from django.urls import reverse
+from django.utils.timezone import now
+
+from users import models as users
 
 
 # Create your models here.
 class Folder(models.Model):
-    name = models.CharField(max_length=30)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=30,
+                            validators=[RegexValidator("[a-zA-Z0-9\.][a-zA-Z0-9-_]*")])
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
+
+    class Meta:
+        unique_together = ('name', 'parent')
+
+    def __str__(self):
+        if self.parent is None:
+            return "\\" + self.name + "\\"
+        return str(self.parent) + self.name + "\\"
+
+    def parents(self):
+        if self.parent is None:
+            return [self.name]
+        p = self.parent.parents()
+        p.append(self.name)
+        return p
+
+    def canonical_(self):
+        return ("/".join(self.parents())).lower()
 
 
 class Meeting(models.Model):
+    name = models.CharField(max_length=30,
+                            validators=[RegexValidator("[a-zA-Z0-9][a-zA-Z0-9-_]*")])
     title = models.CharField(max_length=50)
     folder = models.ForeignKey(Folder, on_delete=models.SET_NULL, null=True)
     body = models.TextField()
-    date = models.DateField(default=datetime.date.today())
+    date = models.DateField(default=now)
+    author = models.ForeignKey(users.Member, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse("minutes:meeting_detail", kwargs={'folder': self.folder.canonical_(), 'name': self.name.lower()})

@@ -1,0 +1,9 @@
+{% extends "tgrsite/main.html" %}
+{% load markdown_tags %}
+
+{% block body %}
+    <h3>{{ object.title }} - {{ object.date|date }}</h3>
+    <p>Posted by {{ object.author }}</p>
+    <p>{{ object.body|parse_md }}</p>
+    <p></p>
+{% endblock %}
