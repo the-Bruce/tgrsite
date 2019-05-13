@@ -1,9 +1,8 @@
 {% if field.field.widget.input_type == "checkbox" or field.field.widget.input_type == "radio" %}
     <div class="form-group{% if field.errors %} has-error{% endif %}">
         <div class="{{ field.field.widget.input_type }}">
-            <label>
-                {{ field }}
-                {{ field.label }}
+            <label class="control-label" for="{{ field.id_for_label }}">
+                {{ field }}{{ field.label }}
             </label>
             {% if field.errors %}
                 <p class="help-block">{{ field.errors }}</p>

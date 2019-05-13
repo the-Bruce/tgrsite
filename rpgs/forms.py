@@ -21,7 +21,7 @@ class RpgForm(forms.ModelForm):
         model = Rpg
         fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'is_in_the_past', ]
 
-    tags = forms.CharField(required=False)
+    tags = forms.CharField(required=False, help_text="A list of tags separated by commas")
 
 
 # Unused so far
