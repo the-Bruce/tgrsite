@@ -23,3 +23,14 @@ class StringProperty(models.Model):
 
     def __str__(self):
         return self.key
+
+
+class TextProperty(models.Model):
+    key = models.CharField(max_length=25)
+    value = models.TextField()
+
+    class Meta:
+        verbose_name_plural = "Text Properties"
+
+    def __str__(self):
+        return self.key

@@ -22,7 +22,12 @@ DATE_attrs = {
     'class': 'form-control'
 }
 
+
 class RecordForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['acquired'].initial = datetime.date.today()
+
     class Meta:
         model = Record
         fields = ['name', 'description', 'quantity', 'image', 'acquired', 'owner']
@@ -93,3 +98,12 @@ class LoanRequestForm(ModelForm):
             self.add_error('start_date', "Start date must be in the future")
         if self.cleaned_data['end_date'] < self.cleaned_data['start_date']:
             self.add_error('end_date', "End date must be after start date")
+
+
+class LoanNotesForm(ModelForm):
+    class Meta:
+        model = Loan
+        fields = ['notes']
+        widgets = {
+            'notes': Textarea(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+        }

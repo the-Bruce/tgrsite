@@ -1,5 +1,6 @@
 {% extends "tgrsite/main.html" %}
 {% load timetable_tags %}
+{% load property_tags %}
 {% block title %}Timetable{% endblock %}
 {% block css %}
     {{ block.super }}
@@ -8,10 +9,26 @@
             text-align: center;
             vertical-align: middle !important;
         }
+
     </style>
+    <noscript>
+        <style>
+            .js_only {
+                display: none;
+            }
+        </style>
+    </noscript>
 {% endblock %}
 {% block body %}
-
+    <div class="wordwrap">
+        <h3>Subscribe to our calender!</h3>
+        <noscript>
+            <p><a class="btn btn-primary" href="{% string_setting "sub_calender" %}">Subscribe</a></p>
+        </noscript>
+        <button type="button" class="js_only btn btn-primary" data-toggle="modal" data-target="#webcal_subscribe">
+            Subscribe
+        </button>
+    </div>
     {% spaceless %}
         {% for timetable in timetables %}
             <div>
@@ -62,17 +79,22 @@
             </div>
         {% endfor %}
     {% endspaceless %}
-{% endblock %}
-
-{% block rightbar %}
-    <h3>Subscribe to our calender!</h3>
-    <p>To subscribe to the you can either:
-    </p><p>
-    <a class="btn btn-primary"
-       href="webcal://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">Subscribe
-        with your default calender</a></p>
-
-    <p>You can also copy this link into your preferred viewer (such as google calender):<br>
-        <a href="webcal://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics">https://calendar.google.com/calendar/ical/8bgeqa9ee8tareodvfomp6s8dg%40group.calendar.google.com/public/basic.ics</a>
-    </p>
+    <div class="modal fade" id="webcal_subscribe" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">To subscribe to each of the calenders you can either:</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        {% text_setting "webcal_sub" %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

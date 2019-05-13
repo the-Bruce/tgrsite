@@ -1,8 +1,10 @@
 # temp
+import datetime
+import hmac
 import json
 import re
-from hashlib import sha256
 
+from django.conf import settings
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -127,12 +129,15 @@ def signup_view(request):
 
 def add_captcha_to_form(form):
     (question, answer, captcha_help) = make_captcha()
-    return {'form': form, 'captcha': question, 'token': hash2(answer), 'captcha_help': captcha_help}
+    return {'form': form, 'captcha': question, 'token': hash3(answer), 'captcha_help': captcha_help}
 
+def getSecret():
+    # This means that captcha is invalid over midnight but reduces replay attacks to beyond the
+    # difficulty of actually solving the captcha
+    return settings.SECRET_KEY + str(datetime.date.today())
 
-def hash2(inp):
-    # FIXME hash substitution allows captcha bypass
-    return sha256(str(inp).encode()).hexdigest()
+def hash3(inp):
+    return hmac.new(key=getSecret().encode(), msg=str(inp).encode(), digestmod="sha256").hexdigest()
 
 
 def signup_process(request):
@@ -142,9 +147,8 @@ def signup_process(request):
         data_valid = True
         captcha_input = re.sub(r'\s', '', request.POST['captcha'])
         captcha_target = re.sub(r'\s', '', request.POST['captcha-token'])
-
         # CHECK CAPTCHA!
-        if hash2(captcha_input) != captcha_target:
+        if not hmac.compare_digest(hash3(captcha_input), captcha_target):
             # Should be attached to captcha, but this is the closest thing.
             form.add_error(None, ValidationError('You didn\'t answer the captcha correctly!'))
             data_valid = False
@@ -162,7 +166,7 @@ def signup_process(request):
         auth = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
         if auth is not None:
             login(request, auth)
-            return HttpResponseRedirect(reverse('me'))
+            return HttpResponseRedirect(reverse('edit'))
         else:
             mail_managers(
                 'Unknown signup error',

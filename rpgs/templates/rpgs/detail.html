@@ -1,6 +1,6 @@
 {% load rpg_tags %}
 {% load markdown_tags %}
-
+{# TODO: Make this messages #}
 {% if request.GET.status == 'created' %}
     <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -24,7 +24,7 @@
         <h4>
             <a class="wordwrap" href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
             <span class="pull-right">
-				{% comment TODO %}
+				{% comment %}
 				TODO: Find a way to incorporate can_manage?
 				{% can_manage user.member rpg %}
 
@@ -67,11 +67,6 @@
             {% if rpg.is_in_the_past %}<strong>[finished]</strong>{% endif %}
         </p>
 
-        <script>/* enable popovers */
-        $(function () {
-            $('[data-toggle="popover"]').popover({trigger: 'hover', html: true})
-        })</script>
-
         <strong>
 
             Players <span class="badge">{{ rpg.members.count }} / {{ rpg.players_wanted }}</span>
@@ -104,8 +99,8 @@
                 {% csrf_token %}
                 <input type="hidden" name="id" value="{{ rpg.id }}">
                 <div class="input-group">
-                    <input class="form-control" type="text" name="username" autocomplete="off" data-provide="typeahead"
-                           id="add-member-input">
+                    <input class="form-control add-member-input" type="text" name="username" autocomplete="off" data-provide="typeahead"
+                           id="add-member-input-{{ rpg.id }}">
                     <span class="input-group-btn">
 						<input class="btn btn-default" type="submit" value="Add">
 					</span>
@@ -118,7 +113,7 @@
 		TODO: create 'manage' widget for people who own/are GMs of a game
 		{% endcomment %}
 
-        {% comment TODO: THIS %} {% endcomment %}
+        {# TODO: THIS #}
         {% if request.user.is_authenticated %}
             {% is_player rpg as on %}
             {% if on %}
@@ -135,12 +130,9 @@
                 </form>
             {% endif %}
         {% endif %}
-
-        <script type="text/javascript">
-            $.get("{% url 'allmembers' %}", function (data) {
-                $("#add-member-input").typeahead({source: data})
-            }, 'json');
-        </script>
+        {% if not embed %}
+            {% include "rpgs/widgets/typeaheadjs.html" %}
+        {% endif %}
     </div>
 </div>
 {% if not embed %}

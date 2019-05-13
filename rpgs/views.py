@@ -20,9 +20,13 @@ class Index(generic.ListView):
     template_name = 'rpgs/index.html'
     model = Rpg
     context_object_name = 'rpgs'
+    paginate_by = 10
 
     def get_queryset(self):
-        return Rpg.objects.order_by('-created_at')
+        if self.request.GET.get('showfinished',False):
+            return Rpg.objects.order_by('-created_at')
+        else:
+            return Rpg.objects.filter(is_in_the_past=False).order_by('-created_at')
 
 
 class Detail(generic.DetailView):
@@ -77,8 +81,8 @@ def kick(request):
     rpg = get_object_or_404(Rpg, id=request.POST.get('id'))
     if request.user.member == rpg.creator:
         rpg.members.remove(request.POST.get('user-to-remove'))
-        notify(User.objects.get(id=request.POST.get('user-to-remove')).member, NotifType.RPG_KICK,
-               'You were kicked from the game "{}".'.format(rpg.title), '')
+        notify(User.objects.get(member__id=request.POST.get('user-to-remove')).member, NotifType.RPG_KICK,
+               'You were kicked from the game "{}".'.format(rpg.title), reverse('rpg', kwargs={'pk': request.POST.get('id')}))
     return HttpResponseRedirect(reverse('rpg', kwargs={'pk': request.POST.get('id')}) + '?nousername=1')
 
 
@@ -98,7 +102,7 @@ def add_to(request):
         users = User.objects.filter(username=request.POST.get('username'))
         if users.count() == 0:
             return HttpResponseRedirect(reverse('rpg', kwargs={'pk': request.POST.get('id')}))
-        rpg.members.add(users[0].id)
+        rpg.members.add(users[0].member.id)
         notify(users[0].member, NotifType.RPG_ADDED, 'You were added to the game "{}".'.format(rpg.title), url)
     return HttpResponseRedirect(url)
 

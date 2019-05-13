@@ -19,21 +19,36 @@
 
 {% block body %}
     <h1>{{ inv.name }} - {{ object.name }}</h1>
-    <p><a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
+    <p>in <a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
+
     {% if perms.inventory.change_record or object.owner == user.member %}
         <a class="btn btn-primary" href="{% url "inventory:edit_record" inv=inv.canonical_ pk=object.pk %}">Edit</a>
     {% endif %}
-    <h3>Acquired: </h3>
-    <p>{% if object.acquired %}{{ object.acquired|date }}{% else %}Time immemorial{% endif %}</p>
-    <h3>Description</h3>
-    <p>
-        {% if object.image %}
-                <img alt="{{ object.name }} example image" class="my-responsive" src="{{ object.image }}">
-        {% endif %}
 
-        {{ object.description|linebreaksbr }}
-    </p>
-    {% if object.owner %}<p>Graciously lent to the society by {{ object.owner }}</p>{% endif %}
+    {% if object.image %}
+        <img alt="{{ object.name }} example image" class="my-responsive" src="{{ object.image }}">
+    {% endif %}
+
+    {% if object.acquired %}
+        <h3>Acquired: </h3>
+        <p>{% if object.acquired.day == 1 and object.acquired.month == 1 %}{{ object.acquired.year }}{% else %}
+            {{ object.acquired|date }}{% endif %}</p>
+    {% endif %}
+
+    {% if object.quantity > 1 %}
+        <h3>Quantity: {{ object.quantity }}</h3>
+    {% endif %}
+
+    {% if object.description %}
+        <h3>Description</h3>
+        <p>
+            {{ object.description|linebreaksbr }}
+        </p>
+    {% endif %}
+
+    <div class="clearfix"></div>
+    {% if object.owner %}
+        <div class="well well-sm">Graciously lent to the society by {{ object.owner }}</div>{% endif %}
 
     {% if perms.inventory.view_loan and object.inventory.loans and object.get_live_loans|length > 0 %}
         <h3>Loans</h3>

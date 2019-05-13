@@ -11,6 +11,13 @@ which the rest of the site extends.
 This defines the navbar and the extra scripts.
 {% endcomment %}
 
+{% block head %}
+    {{ block.super }}
+    {# Add some SEO metadata to help discoverability #}
+    <meta name="keywords" content="Warwick, D&D, Tabletop, Boardgames, Dungeons and Dragons, Card Games, Wargaming, Role Play, LARP, student, MTG, Magic, Magic the Gathering, Coventry">
+    <meta name="description" content="Warwick Tabletop and Role-Playing Society provides Warwick students with access to role-playing, boardgaming, LAPR, CCGs and a community to engage with these activities.">
+{% endblock %}
+
 {% block topscripts %}
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
@@ -159,7 +166,7 @@ This defines the navbar and the extra scripts.
                                 <i class="fas fa-fw fa-info-circle"></i> Introduction
                             </a></li>
                             <li><a href="{% string_setting "inventory_larp" %}">
-                                <i class="fas fa-fw fa-shield-alt"></i> Equiptment
+                                <i class="fas fa-fw fa-shield-alt"></i> Equipment
                             </a></li>
                             <li><a href="{% string_setting "larp_rules" %}">
                                 <i class="fas fa-fw fa-scroll"></i> Rulebook
@@ -247,6 +254,7 @@ This defines the navbar and the extra scripts.
                         element: e,
                         placeholder: "Write Markdown (or just regular text) here...",
                         forceSync: true,
+                        autoDownloadFontAwesome:false,
                     })
                 );
             });

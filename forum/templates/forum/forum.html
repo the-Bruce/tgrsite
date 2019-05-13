@@ -86,10 +86,10 @@
                     <form action="{% url 'createthread' %}" method="POST">
                         {% csrf_token %}
                         <div class="form-group">
-                            {{ form }}
+                            {% include "widgets/render_form_content.html" with form=form %}
                             <input type="hidden" name="forum" value="{{ current.id }}">
                         </div>
-                        <input type="submit" class="form-control" value="Post">
+                        <input type="submit" class="form-control btn-primary" value="Post">
                     </form>
                 </div>
             </div>

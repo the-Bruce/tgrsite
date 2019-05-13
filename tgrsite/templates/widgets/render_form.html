@@ -1,42 +1,5 @@
 <form method="post">
     {% csrf_token %}
-    {% if form.non_field_errors %}
-        <div class="errors">
-            {{ form.non_field_errors }}
-        </div>
-    {% endif %}
-
-    {% for hidden in form.hidden_fields %}
-        {{ hidden }}
-    {% endfor %}
-
-    {% for field in form.visible_fields %}
-        {% comment %}Change the attributes added for checkboxes and radio boxes{% endcomment %}
-        {% if field.field.widget.input_type == "checkbox" or field.field.widget.input_type == "radio" %}
-            <div class="form-group{% if field.errors %} has-error{% endif %}">
-                <div class="{{ field.field.widget.input_type }}">
-                    <label>
-                        {{ field }}
-                        {{ field.label }}
-                    </label>
-                    {% if field.errors %}
-                        <p class="help-block">{{ field.errors }}</p>
-                    {% elif field.help_text %}
-                        <p class="help-block">{{ field.help_text }}</p>
-                    {% endif %}
-                </div>
-            </div>
-        {% else %}
-            <div class="form-group{% if field.errors %} has-error{% endif %}">
-                <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <p class="help-block">{{ field.errors }}</p>
-                {% elif field.help_text %}
-                    <p class="help-block">{{ field.help_text }}</p>
-                {% endif %}
-            </div>
-        {% endif %}
-    {% endfor %}
-    <input type="submit" class="form-control" value="Save">
+    {% include "widgets/render_form_content.html" %}
+    <input type="submit" class="form-control btn-primary" value="Save">
 </form>

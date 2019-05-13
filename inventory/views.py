@@ -1,8 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
-from .forms import SuggestionForm, LoanRequestForm, RecordForm
+from .forms import SuggestionForm, LoanRequestForm, RecordForm, LoanNotesForm
 from .models import Inventory, Loan, Record, Suggestion
 
 """
@@ -150,7 +150,7 @@ class UpdateSuggestion(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class UpdateRecord(UpdateView):
     model = Record
     form_class = RecordForm
-    template_name = "inventory/edit_suggestion.html"
+    template_name = "inventory/edit_record.html"
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
@@ -165,7 +165,7 @@ class UpdateRecord(UpdateView):
 class CreateRecord(CreateView):
     model = Suggestion
     form_class = RecordForm
-    template_name = "inventory/edit_suggestion.html"
+    template_name = "inventory/edit_record.html"
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
@@ -203,6 +203,22 @@ class UpdateLoan(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return ctxt
 
 
+class NotateLoan(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Loan
+    form_class = LoanNotesForm
+    template_name = "inventory/edit_loan.html"
+    permission_required = "change_loan"
+
+    def get_queryset(self):
+        inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
+        return Loan.objects.filter(inventory=inv)
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        ctxt['inv'] = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
+        return ctxt
+
+
 class CreateLoan(LoginRequiredMixin, CreateView):
     model = Loan
     form_class = LoanRequestForm
@@ -223,4 +239,3 @@ class CreateLoan(LoginRequiredMixin, CreateView):
         form.instance.inventory = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
         form.instance.requester = self.request.user.member
         return super().form_valid(form)
-

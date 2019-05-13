@@ -7,7 +7,7 @@
 
 {% block body %}
     <h1>{{ inv.name }} Record</h1>
-    <p>{% if object %}
+    <p>in {% if object %}
         <a href="{% url "inventory:item_detail" inv=inv.canonical_ pk=object.pk %}">Details</a>
     {% else %}
         <a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a>

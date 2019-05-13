@@ -32,7 +32,7 @@ class Record(models.Model):
     quantity = models.IntegerField(default=1)
     image = models.URLField(blank=True)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
-    acquired = models.DateField(blank=True)
+    acquired = models.DateField(blank=True, null=True)
     owner = models.ForeignKey(users.Member, on_delete=models.PROTECT, blank=True, null=True)  # Set if not the society's
 
     def __str__(self):

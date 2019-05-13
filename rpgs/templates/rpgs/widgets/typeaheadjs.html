@@ -1,0 +1,11 @@
+<script>/* enable popovers */
+$(function () {
+    $('[data-toggle="popover"]').popover({trigger: 'hover', html: true})
+})</script>
+<script type="text/javascript">
+    $.get("{% url 'allmembers' %}", function (data) {
+        $(".add-member-input").each(function (index) {
+            $(this).typeahead({source: data})
+        })
+    }, 'json');
+</script>
