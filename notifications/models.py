@@ -81,10 +81,9 @@ class NotificationSubscriptions(models.Model):
             NotifType.OTHER: self.other
         }
 
-        if category in mapping:
-            return mapping[category]
-        else:
-            return SubType.NONE
+
+        return mapping.get(category, SubType.NONE)
+
 
     def __str__(self):
         return str(self.member.equiv_user.username)
