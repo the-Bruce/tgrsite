@@ -20,7 +20,7 @@ def doSummaryNotificationMailings():
 
     mails = []
     request = HttpRequest()
-    request.META['HTTP_HOST'] = settings.ALLOWED_HOSTS[0]
+    request.META['HTTP_HOST'] = settings.PRIMARY_HOST
     for pk in user_notifications.keys():
         noti = user_notifications[pk]
         user = Member.objects.get(pk=pk).equiv_user
@@ -40,7 +40,7 @@ def doSummaryNotificationMailings():
 
 def doNewsletterMailings(pk):
     request = HttpRequest()
-    request.META['HTTP_HOST'] = settings.ALLOWED_HOSTS[0]
+    request.META['HTTP_HOST'] = settings.PRIMARY_HOST
     subs = NotificationSubscriptions.objects.filter(newsletter__exact=SubType.FULL)
     newsletter = Newsletter.objects.get(pk=pk)
     subject = newsletter.title + " | Warwick Tabletop and Role-Playing Society"
