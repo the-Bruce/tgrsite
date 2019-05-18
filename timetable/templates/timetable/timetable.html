@@ -9,7 +9,9 @@
             text-align: center;
             vertical-align: middle !important;
         }
-
+        .aggresivewb {
+            word-break: break-all;
+        }
     </style>
     <noscript>
         <style>
@@ -33,7 +35,8 @@
         {% for timetable in timetables %}
             <div>
                 <h1>{{ timetable.title }}</h1>
-                <table class="table table-bordered table-striped table-responsive">
+                <div class="table-responsive">
+                <table class="table table-bordered table-striped">
                     {% if timetable.colour %}
                         <thead class="{% if timetable.colour.light_text %}bg-primary{% else %}bg-light{% endif %}"
                                style="background-color: {{ timetable.colour.html_code }}">
@@ -73,6 +76,7 @@
                     </tbody>
 
                 </table>
+                </div>
                 {% for note in timetable.notes.splitlines %}
                     <p>{{ note }}</p>
                 {% endfor %}
