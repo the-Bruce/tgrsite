@@ -1,0 +1,10 @@
+{% extends "admin/base.html" %}
+{% block extrastyle %}
+    {% if debug %}
+        <style>
+            #header {
+                background-color: darkred !important;
+            }
+        </style>
+    {% endif %}
+{% endblock %}

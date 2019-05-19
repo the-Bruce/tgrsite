@@ -14,16 +14,16 @@ This defines the navbar and the extra scripts.
 {% block head %}
     {{ block.super }}
     {# Add some SEO metadata to help discoverability #}
-    <meta name="keywords" content="Warwick, D&D, Tabletop, Boardgames, Dungeons and Dragons, Card Games, Wargaming, Role Play, LARP, student, MTG, Magic, Magic the Gathering, Coventry">
-    <meta name="description" content="Warwick Tabletop and Role-Playing Society provides Warwick students with access to role-playing, boardgaming, LAPR, CCGs and a community to engage with these activities.">
+    <meta name="keywords" content="Warwick, D&D, Tabletop, Boardgames, Board Games, Dungeons and Dragons, Card Games, Wargaming, Role Play, LARP, student, MTG, Magic, Magic the Gathering, Coventry">
+    <meta name="description" content="Warwick Tabletop and Role-Playing Society provides Warwick students with access to role-playing, board games, LARP, CCGs and a community to engage with these activities.">
 {% endblock %}
 
 {% block topscripts %}
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="{% static 'bootstrap3-typeahead.js' %}"></script>
+    <script src="{% static 'bootstrap3-typeahead.js' %}"></script>
 
     {% comment font icons library %}{% endcomment %}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
