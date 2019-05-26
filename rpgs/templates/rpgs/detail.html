@@ -63,7 +63,9 @@
         {% else %}
             No description
         {% endif %}</div>
-        <p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{ rpg.get_timeslot_or_unspecified }})
+        <p>
+            {% if rpg.is_in_the_past %}Ran{% else %}Run{% endif %} by {{ rpg.game_master_list }}
+            (<strong>Timeslot:</strong> {{ rpg.get_timeslot_or_unspecified }})
             {% if rpg.is_in_the_past %}<strong>[finished]</strong>{% endif %}
         </p>
 
