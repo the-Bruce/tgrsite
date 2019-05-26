@@ -2,6 +2,7 @@ from datetime import date
 
 from django.core import validators
 from django.db import models
+from django.shortcuts import reverse
 
 
 # Create your models here.
@@ -17,6 +18,9 @@ class Week(models.Model):
 
     class Meta:
         ordering = ['year', 'number']
+
+    def get_absolute_url(self):
+        return reverse("timetable")
 
 
 class Event(models.Model):
@@ -60,3 +64,6 @@ class Timetable(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+    def get_absolute_url(self):
+        return reverse("single_timetable", kwargs={"pk":self.pk})

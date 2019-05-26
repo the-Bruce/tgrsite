@@ -37,8 +37,8 @@
                     {% comment not done :( %}
 				<a href="{% url 'rpg_manage' rpg.id %}"><i class="fa fa-user" aria-hidden="true"></i></a>
 				{% endcomment %}
-                    <a href="{% url 'rpg_edit' rpg.id %}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                    <a href="{% url 'rpg_delete' rpg.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    <a href="{% url 'rpg_edit' rpg.id %}"><i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i></a>
+                    <a href="{% url 'rpg_delete' rpg.id %}"><i class="fas fa-fw fa-trash-alt" aria-hidden="true"></i></a>
                 {% endif %}
 			</span>
         </h4>
@@ -81,9 +81,9 @@
                     <a href="{% url 'user' member.id %}">{{ member }}</a>
                     {% if rpg.creator == user.member %}
                         <a href="javascript:{}" onclick="document.getElementById('kick{{ member }}').submit();"
+                           class="text-danger"
                            data-toggle="popover" data-placement="right"
-                           data-content="Remove this user from this game"><span
-                                class="glyphicon glyphicon-remove"></span></a>
+                           data-content="Remove this user from this game"><i class="fas fa-fw fa-times"></i></a>
                         <form action="{% url 'rpg_kick' %}" method="POST" id="kick{{ member }}" hidden>
                             {% csrf_token %}
                             <input type="hidden" name="id" value="{{ rpg.id }}">
@@ -131,7 +131,7 @@
             {% endif %}
         {% endif %}
         {% if not embed %}
-            {% include "rpgs/widgets/typeaheadjs.html" %}
+            {% include "widgets/typeaheadjs.html" %}
         {% endif %}
     </div>
 </div>

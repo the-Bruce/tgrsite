@@ -4,16 +4,17 @@
 {% block title %}
     Messages
 {% endblock %}
+
 {% block body %}
     <h1>Messages</h1>
     <ul class="nobullet">
         {% for thread in threads %}
             <li>
-                <a href="{% url 'message_thread' thread.id %}">
+                <a href="{% url 'message:message_thread' thread.id %}">
                     <strong>{% get_conversation_name thread request.user.username %}
                         ({{ thread.get_latest.timestamp }})</strong></a>
 
-                {% include 'messaging/messages.html' with messages=thread.five %}
+                {% include 'messaging/widget/messages.html' with messages=thread.five %}
             </li>
             <br>
         {% empty %}
@@ -30,10 +31,12 @@
         </a>
         <div id="body_qdm" class="panel-collapse collapse in">
             <div class="panel-body">
-                <form method="POST" action="{% url 'message_direct' %}?next={{ request.path }}" id="quickdm">
+                <form method="POST" action="{% url 'message:message_direct' %}?next={{ request.path }}" id="quickdm">
                     {% csrf_token %}
                     <div class="form-group">
-                        <input class="form-control" name="target" placeholder="recipient">
+                        <input class="form-control add-member-input" type="text" name="target" autocomplete="off"
+                               data-provide="typeahead"
+                               id="add-member-input" placeholder="recipient">
                         <textarea class="form-control" placeholder="message" name="message" form="quickdm"
                                   autocomplete="off"></textarea>
                         <input type="submit" class="form-control" value="Send">
@@ -42,4 +45,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block bottomscripts %}
+    {{ block.super }}
+    {% include "widgets/typeaheadjs.html" %}
 {% endblock %}

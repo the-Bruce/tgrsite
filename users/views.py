@@ -40,7 +40,7 @@ def viewmember(request, pk):
 
     context = {
         # whether the viewed user is the logged in one
-        'me': member.id == pk,
+        'me': request.user.member.id == pk,
         'result': request.GET.get('result', None),
         'member': member,
 

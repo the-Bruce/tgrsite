@@ -1,13 +1,14 @@
+
 <ul class="nobullet">
     {% for message in messages %}
         <li>
             {% if full %}
-                {{ message.timestamp }}
+                {{ message.timestamp|timesince }} ago
             {% endif %}
             <a href="{% url 'user' message.sender.id %}">
-                <img src="{{ message.sender.gravatar }}" style="width:16px; height:16px;">
+                <img alt="User logo" src="{{ message.sender.gravatar }}" style="width:16px; height:16px;" aria-hidden="true">
                 {{ message.sender }}</a>:
-            {{ message.content }}
+            {{ message.content|linebreaksbr}}
         </li>
     {% endfor %}
 </ul>

@@ -56,14 +56,18 @@ class Update(PermissionRequiredMixin, generic.edit.UpdateView):
     raise_exception = True
 
     def form_valid(self, form):
+        should_mail = False
         # If newsletter goes from unpublished to published.
         if form.instance.ispublished and not Newsletter.objects.get(id=form.instance.id).ispublished:
             form.instance.pub_date = timezone.now()
             notify_everybody(NotifType.NEWSLETTER,
                              'The newsletter "{}" has been published!'.format(form.instance.title),
                              form.instance.get_absolute_url())
+            should_mail = True
+        response = super(Update, self).form_valid(form)
+        if should_mail:
             doNewsletterMailings(form.instance.id)
-        return super(Update, self).form_valid(form)
+        return response
 
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user, or request.user can change others. """

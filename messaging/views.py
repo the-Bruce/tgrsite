@@ -2,9 +2,10 @@ import re
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 
 from notifications.models import notify, NotifType
 from users.models import Member
@@ -15,7 +16,7 @@ from .models import Message, MessageThread
 # helper function to send messages
 def send_message(member, thread, message):
     # Send the notification to everyone in the thread except the sender.
-    url = reverse('message_thread', args=[thread.id])
+    url = reverse('message:message_thread', args=[thread.id])
     for receiver in thread.participants.all():
         if member != receiver:
             notify(receiver, NotifType.MESSAGE,
@@ -29,8 +30,19 @@ def send_to(sender, message, *pals_usernames):
     return send_message(sender, thread, message)
 
 
-# specific message between two users
-# expected form: 'message': message body, 'target': recipient username
+@login_required
+@require_http_methods(["POST"])
+def rename_thread(request):
+    target = get_object_or_404(MessageThread, pk=request.POST.get('thread'))
+
+    if request.user.member not in target.participants.all():
+        raise Http404()
+
+    target.title = request.POST.get('rename', None)
+    target.full_clean()
+    target.save()
+    return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk':request.POST.get('thread')}))
+
 @login_required
 def direct_message(request):
     # if it's all spaces then send them away
@@ -58,6 +70,10 @@ def direct_message(request):
     return HttpResponseRedirect(request.GET.get('next'))
 
 
+# specific message between two users
+# expected form: 'message': message body, 'target': recipient username
+
+
 # for messaging a groupchat.
 # expected form: 'message': message body.
 @login_required
@@ -72,7 +88,7 @@ def group_message(request, threadid):
     print("Sending message from {} to thread {} with body {}".format(request.user.member, thread,
                                                                      request.POST.get('message')))
     m = send_message(request.user.member, thread, request.POST.get('message'))
-    return HttpResponseRedirect(reverse('message_thread', args=[threadid]))
+    return HttpResponseRedirect(reverse('message:message_thread', args=[threadid]))
 
 
 # DEPRECATED
@@ -121,7 +137,7 @@ def thread(request, pk):
     thread = get_object_or_404(MessageThread, id=pk)
     # make sure the user is in the thread :P
     if request.user.member not in thread.participants.all():
-        return HttpResponseNotFound()
+        raise Http404()
 
     return render(request, 'messaging/detail.html', {'thread': thread})
 
@@ -150,4 +166,4 @@ def get_dm_thread(request, recipient):
 
     print(q)
 
-    return HttpResponseRedirect(reverse('message_thread', kwargs={'pk': q.id}))
+    return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': q.id}))

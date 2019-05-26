@@ -5,13 +5,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from .forms import SuggestionForm, LoanRequestForm, RecordForm, LoanNotesForm
 from .models import Inventory, Loan, Record, Suggestion
 
-"""
-
-CreateLoan
-UpdateRecord
-SuggestionDetail
-"""
-
 
 # Create your views here.
 class ListAllInventory(ListView):

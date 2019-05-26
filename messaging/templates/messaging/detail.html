@@ -1,21 +1,41 @@
 {% extends "tgrsite/main.html" %}
 {% load messaging_tags %}
 {% block title %}
-    {% get_participants_excluding_self thread user %}
+    {% if thread.title %}
+        {{ thread.title }}
+    {% else %}
+        {% get_participants_excluding_self thread user %}
+    {% endif %}
 {% endblock %}
+
 {% block body %}
-    <h1>{% get_participants_excluding_self thread user %}</h1>
+    <h1>
+        {% if thread.title %}
+            {{ thread.title }}
+        {% else %}
+            {% get_participants_excluding_self thread user %}
+        {% endif %}
+        <a data-toggle="collapse" href="#rename_form"><i class="fas fa-pencil-alt"></i></a>
+    </h1>
 
-    {% comment TODO %}
-    TODO: format timestamps nicer using some sort of library
-    {% endcomment %}
-    {% include 'messaging/messages.html' with full=1 messages=thread.get_messages %}
+    <div id="rename_form" class="collapse" aria-hidden="true">
+        <form class="form form-inline" method="post" action="{% url "message:rename_thread" %}">
+            {% csrf_token %}
+            <label for="rename">New Name:</label>
+            <input id="rename" name="rename" type="text" class="form-control" value="{{ thread.title }}">
+            <input type="hidden" name="thread" value="{{ thread.id }}">
+            <input type="submit" class="form-control btn-primary" value="Save">
+        </form>
+    </div>
 
-    <form action="{% url 'message_group' thread.id %}" method="POST" class="form-inline">
+    {# TODO: format timestamps nicer using some sort of library #}
+    {% include 'messaging/widget/messages.html' with full=1 messages=thread.get_messages %}
+
+    <form action="{% url 'message:message_group' thread.id %}" method="POST" class="form">
         {% csrf_token %}
-        <input type="text" name="message" placeholder="message" class="form-control" autofocus autocomplete="off">
+        <textarea name="message" placeholder="message" class="form-control" autofocus autocomplete="off"></textarea>
         <input type="submit" class="form-control" value="Send">
     </form>
-    <a href="{% url 'message_list' %}">Back to list</a>
+    <a href="{% url 'message:message_list' %}">Back to list</a>
 
 {% endblock %}

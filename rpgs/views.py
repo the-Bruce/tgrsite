@@ -14,8 +14,6 @@ from .models import Rpg, Tag
 from .templatetags.rpg_tags import can_manage
 
 
-# list view
-# TODO: paginate
 class Index(generic.ListView):
     template_name = 'rpgs/index.html'
     model = Rpg
@@ -38,7 +36,7 @@ class Detail(generic.DetailView):
 # list view filtered by tag
 class Filter(Index):
     def get_queryset(self):
-        return Rpg.objects.filter(tags__name=self.kwargs['tag'])
+        return super().get_queryset().filter(tags__name=self.kwargs['tag'])
 
 
 # takes a POST form and redirects to the Filter view

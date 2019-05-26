@@ -1,5 +1,4 @@
 {% extends "tgrsite/main.html" %}
-{% load timetable_tags %}
 {% load property_tags %}
 {% block title %}Timetable{% endblock %}
 {% block css %}
@@ -33,54 +32,7 @@
     </div>
     {% spaceless %}
         {% for timetable in timetables %}
-            <div>
-                <h1>{{ timetable.title }}</h1>
-                <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    {% if timetable.colour %}
-                        <thead class="{% if timetable.colour.light_text %}bg-primary{% else %}bg-light{% endif %}"
-                               style="background-color: {{ timetable.colour.html_code }}">
-                        {% else %}
-                        <thead class="bg-primary">
-                    {% endif %}
-                    <tr>
-                        <td class=""><strong>Week number</strong></td>
-                        {% for week in timetable.weeks.all %}
-                            <td class="centerate"><strong>{{ week.number }}</strong></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class=""><strong>Week commencing</strong></td>
-                        {% for week in timetable.weeks.all %}
-                            <td class="centerate"><strong>{{ week.startDate }}</strong></td>
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for event in timetable.events.all %}
-                        <tr>
-                            <td class="text-center"><strong>{{ event.description }}<br>{{ event.date_time_line }}
-                            </strong>
-                            </td>
-                            {% for booking in timetable.weeks.all|for_event:event %}
-                                <td class="centerate" colspan="{{ booking.0 }}">
-                                    {% if booking.1 %}
-                                        {{ booking.1 }}
-                                    {% else %}
-                                        Not running
-                                    {% endif %}
-                                </td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-
-                </table>
-                </div>
-                {% for note in timetable.notes.splitlines %}
-                    <p>{{ note }}</p>
-                {% endfor %}
-            </div>
+            {% include "timetable/widgets/render_timetable.html" with timetable=timetable %}
         {% endfor %}
     {% endspaceless %}
     <div class="modal fade" id="webcal_subscribe" role="dialog">
@@ -101,4 +53,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block rightbar %}
+    {% if perms.timetable.change_timetable %}
+        <a class="btn btn-default" href="{% url "admin:app_list" "timetable" %}">Edit</a>
+    {% endif %}
 {% endblock %}

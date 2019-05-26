@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, reverse
@@ -9,7 +10,7 @@ from .forms import SubscriptionForm
 from .models import Notification, delete_old, NotificationSubscriptions
 
 
-class UpdateSubscriptions(SuccessMessageMixin, UpdateView):
+class UpdateSubscriptions(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = NotificationSubscriptions
     form_class = SubscriptionForm
     template_name = "notifications/preferences.html"

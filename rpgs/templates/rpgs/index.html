@@ -25,7 +25,7 @@
     {% for rpg in rpgs %}
         {% include "rpgs/detail.html" with embed="true" %}
     {% endfor %}
-    {% include "rpgs/widgets/typeaheadjs.html" %}
+    {% include "widgets/typeaheadjs.html" %}
 
     {% if is_paginated %}
         <ul class="pagination">
@@ -62,17 +62,25 @@
                 {% rpgs_root as o %}
                 <p>
                     {% if request.path == o %}
-                        <a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
+                        {% if request.GET.showfinished == "true" %}
+                            <a href="{% url 'rpg_tag' 'rpg' %}?showfinished=true">Show only RPGs</a>
+                        {% else %}
+                            <a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
+                        {% endif %}
                     {% else %}
-                        <a href="{% url 'rpgs' %}">Show all games (not just RPGs)</a>
+                        {% if request.GET.showfinished == "true" %}
+                            <a href="{% url 'rpgs' %}?showfinished=true">Show all games (not just RPGs)</a>
+                        {% else %}
+                            <a href="{% url 'rpgs' %}">Show all games (not just RPGs)</a>
+                        {% endif %}
                     {% endif %}
                 </p>
 
                 </p>
                 {% if request.GET.showfinished == "true" %}
-                    <a href=".">Stop showing past games</a>
+                    <a href="">Stop showing past games</a>
                 {% else %}
-                    <a href=".?showfinished=true">Show past games</a>
+                    <a href="?showfinished=true">Show past games</a>
                 {% endif %}
                 </p>
 
@@ -84,8 +92,8 @@
                     <div class="form-group input-group">
                         <input class="form-control" type="text" name="tag" placeholder="Tag name">
                         <span class="input-group-btn">
-						<button class="btn btn-default" type="submit">Filter</button>
-                    </span>
+						    <button class="btn btn-default" type="submit">Filter</button>
+                        </span>
                     </div>
                 </form>
             </div>
