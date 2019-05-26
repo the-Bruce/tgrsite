@@ -35,6 +35,9 @@ class Record(models.Model):
     acquired = models.DateField(blank=True, null=True)
     owner = models.ForeignKey(users.Member, on_delete=models.PROTECT, blank=True, null=True)  # Set if not the society's
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 

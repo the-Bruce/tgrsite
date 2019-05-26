@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 
 from users.models import Member
 
@@ -6,17 +7,20 @@ body_size = 32768
 
 
 class Forum(models.Model):
-    def __str__(self):
-        return self.title
-
     parent = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
         blank=True, null=True,
         related_name='subforums')
 
-    sort_index = models.IntegerField(default=0)
-    sort_index.help_text = 'Index for sorting. Lower value = earlier in list.'
+    sort_index = models.IntegerField(default=0,
+                                     help_text='Index for sorting. Lower value = earlier in list.')
+
+    title = models.CharField(max_length=64, verbose_name="Name")
+    description = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.title
 
     # string that represents the forum's location
     # eg "Roleplaying / LARP / Character Sheets"
@@ -43,11 +47,6 @@ class Forum(models.Model):
         return tree[3:]
 
     get_parent_tree.short_description = 'Location'
-
-    title = models.CharField(max_length=64)
-    title.verbose_name = 'Name'
-
-    description = models.CharField(max_length=256, blank=True)
 
     # QuerySet of subforums
     def get_subforums(self):
@@ -84,18 +83,13 @@ class Forum(models.Model):
         else:
             return None
 
+    def get_absolute_url(self):
+        return reverse("subforum", args=(self.pk,))
+
 
 # return self.thread_set.order_by('pub_date').reverse()[:1][::-1]
 
 class Thread(models.Model):
-    def __str__(self):
-        return self.title
-
-    def get_author(self):
-        return Member.objects.get(id=self.author.id).equiv_user.username
-
-    get_author.short_description = 'Author'
-
     # cascade because we need to be able to delete forums maybe?
     # in which case forumless threads will either die,
     # or need to be moved -before- the forum is deleted
@@ -111,6 +105,14 @@ class Thread(models.Model):
     # until we implement proper banning/deactivation, just cascade
     author = models.ForeignKey(Member, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.title
+
+    def get_author(self):
+        return Member.objects.get(id=self.author.id).equiv_user.username
+
+    get_author.short_description = 'Author'
+
     def get_response_count(self):
         return Response.objects.filter(thread=self.id).count()
 
@@ -119,11 +121,21 @@ class Thread(models.Model):
         authors.append(self.author)
         return list(set(authors))
 
+    def get_absolute_url(self):
+        return reverse("viewthread", args=(self.id,))
+
 
 # a reply in a forum thread
 # there are fundamental similarities between thread OPs and responses;
 # but the decision was made early to put the latter as part of the Thread class...
 class Response(models.Model):
+    # when a thread is deleted its responses are deleted
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    body = models.TextField(max_length=body_size)
+
+    pub_date = models.DateTimeField('date posted', auto_now_add=True)
+    author = models.ForeignKey(Member, on_delete=models.CASCADE)
+
     def __str__(self):
         # TODO: probably strip markdown
         return self.body
@@ -133,9 +145,5 @@ class Response(models.Model):
 
     get_author.short_description = 'Author'
 
-    # when a thread is deleted its responses are deleted
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
-    body = models.TextField(max_length=body_size)
-
-    pub_date = models.DateTimeField('date posted', auto_now_add=True)
-    author = models.ForeignKey(Member, on_delete=models.CASCADE)
+    def get_absolute_url(self):
+        return reverse("viewthread", args=(self.thread_id,))+"#response-"+str(self.pk)

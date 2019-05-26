@@ -1,10 +1,7 @@
 from django.db import models
-
+from django.shortcuts import reverse
 
 class Page(models.Model):
-    def __str__(self):
-        return self.name
-
     name = models.CharField(max_length=64, blank=False)
     name.help_text = 'Internal name of page'
 
@@ -24,3 +21,9 @@ class Page(models.Model):
     leftbar.help_text = 'Left sidebar contents (use panels)'
     rightbar = models.TextField(max_length=16384, blank=True)
     rightbar.help_text = 'Right sidebar contents (use panels)'
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("page", kwargs={"name":self.name})

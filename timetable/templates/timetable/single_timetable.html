@@ -1,0 +1,25 @@
+{% extends "tgrsite/main.html" %}
+{% load property_tags %}
+
+{% block title %}Timetable{% endblock %}
+{% block css %}
+    {{ block.super }}
+    <style>
+        .centerate {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% spaceless %}
+        {% include "timetable/widgets/render_timetable.html" with timetable=timetable %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block rightbar %}
+    {% if perms.timetable.change_timetable %}
+        <a class="btn btn-default" href="{% url "admin:app_list" "timetable" %}">Edit</a>
+    {% endif %}
+{% endblock %}

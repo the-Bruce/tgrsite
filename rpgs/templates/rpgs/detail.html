@@ -37,8 +37,9 @@
                     {% comment not done :( %}
 				<a href="{% url 'rpg_manage' rpg.id %}"><i class="fa fa-user" aria-hidden="true"></i></a>
 				{% endcomment %}
-                    <a href="{% url 'rpg_edit' rpg.id %}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                    <a href="{% url 'rpg_delete' rpg.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    <a href="{% url 'rpg_edit' rpg.id %}"><i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i></a>
+                    <a href="{% url 'rpg_delete' rpg.id %}"><i class="fas fa-fw fa-trash-alt"
+                                                               aria-hidden="true"></i></a>
                 {% endif %}
 			</span>
         </h4>
@@ -63,7 +64,9 @@
         {% else %}
             No description
         {% endif %}</div>
-        <p>Ran by {{ rpg.game_master_list }} (<strong>Timeslot:</strong> {{ rpg.get_timeslot_or_unspecified }})
+        <p>
+            {% if rpg.is_in_the_past %}Ran{% else %}Run{% endif %} by {{ rpg.game_master_list }}
+            (<strong>Timeslot:</strong> {{ rpg.get_timeslot_or_unspecified }})
             {% if rpg.is_in_the_past %}<strong>[finished]</strong>{% endif %}
         </p>
 
@@ -71,8 +74,8 @@
 
             Players <span class="badge">{{ rpg.members.count }} / {{ rpg.players_wanted }}</span>
             <span class="sr-only">:
-		{% for member in rpg.members.all %}{{ member }},{% endfor %}
-		</span>
+                {% for member in rpg.members.all %}{{ member }},{% endfor %}
+            </span>
         </strong>
 
         <ul class="nobullet">
@@ -81,9 +84,9 @@
                     <a href="{% url 'user' member.id %}">{{ member }}</a>
                     {% if rpg.creator == user.member %}
                         <a href="javascript:{}" onclick="document.getElementById('kick{{ member }}').submit();"
+                           class="text-danger"
                            data-toggle="popover" data-placement="right"
-                           data-content="Remove this user from this game"><span
-                                class="glyphicon glyphicon-remove"></span></a>
+                           data-content="Remove this user from this game"><i class="fas fa-fw fa-times"></i></a>
                         <form action="{% url 'rpg_kick' %}" method="POST" id="kick{{ member }}" hidden>
                             {% csrf_token %}
                             <input type="hidden" name="id" value="{{ rpg.id }}">
@@ -99,7 +102,8 @@
                 {% csrf_token %}
                 <input type="hidden" name="id" value="{{ rpg.id }}">
                 <div class="input-group">
-                    <input class="form-control add-member-input" type="text" name="username" autocomplete="off" data-provide="typeahead"
+                    <input class="form-control add-member-input" type="text" name="username" autocomplete="off"
+                           data-provide="typeahead"
                            id="add-member-input-{{ rpg.id }}">
                     <span class="input-group-btn">
 						<input class="btn btn-default" type="submit" value="Add">
@@ -131,7 +135,7 @@
             {% endif %}
         {% endif %}
         {% if not embed %}
-            {% include "rpgs/widgets/typeaheadjs.html" %}
+            {% include "widgets/typeaheadjs.html" %}
         {% endif %}
     </div>
 </div>

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm, Textarea, TextInput, EmailInput, PasswordInput, ValidationError
+from django.utils.safestring import mark_safe
 
 from .models import Member
 
@@ -84,9 +85,10 @@ class MemberForm(ModelForm):
         }
 
         help_texts = {
-            'official_photo_url': 'Provide a URL for a real photo of you. This is only shown on the exec page and '
-                                  'only if you are a member of exec! Gravatar is used by the rest of the site for '
-                                  'profile pictures - for more information see this '
-                                  '<a href="https://github.com/the-Bruce/tgrsite/wiki/Gravatar">guide</a>.',
+            'official_photo_url': mark_safe(
+                'Provide a URL for a real photo of you. '
+                'This is only shown on the exec page and only if you are a member of exec! '
+                'Gravatar is used by the rest of the site for profile pictures - for more information see this '
+                '<a href="https://github.com/the-Bruce/tgrsite/wiki/Gravatar">guide</a>.'),
             'discord': 'Add your discord ID to aid recognition on the society discord'
         }

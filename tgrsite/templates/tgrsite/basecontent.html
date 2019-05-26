@@ -101,15 +101,15 @@
             {% endcomment %}
         {% endblock %}
 
-</head>
+    </head>
 
-<body>
-<div id="not-footer">
-    {% block navbar %}{% endblock %}
+    <body>
+    <div id="not-footer">
+        {% block navbar %}{% endblock %}
 
-    <!-- page -->
-    <div class="container-fluid">
-        {% comment %}
+        <!-- page -->
+        <div class="container-fluid">
+            {% comment %}
 	<!--this was here in case people preferred page headings to be
 	above all content including sidebars. the people I surveyed preferred the old way.
 	Might do an A/B test on the entire site at some point-->
@@ -121,42 +121,40 @@
 			<div class="col-md-3"></div>
 		</div>
 	{% endcomment %}
-       {% block mainbody %}
-            <div class="row">
-                <div class="col-lg-3">
-                    {% block leftcontents %}
-                    {% endblock %}
-                </div>
+            {% block mainbody %}
+                <div class="row">
+                    <div class="col-lg-3">
+                        {% block leftcontents %}
+                        {% endblock %}
+                    </div>
 
-                <div class="col-lg-3 col-lg-push-6">
-                    {% block rightbar %}
-                        {% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
-                    {% endblock %}
-                </div>
+                    <div class="col-lg-3 col-lg-push-6">
+                        {% block rightbar %}
+                            {% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
+                        {% endblock %}
+                    </div>
 
-                <div class="col-lg-6 col-lg-pull-3">
-                    {% block body %}
+                    <div class="col-lg-6 col-lg-pull-3">
                         {% block messages %}
                         {% endblock %}
-                        {% comment %}
-					This is the part that gets overridden by templates that extend this one.
-					{% endcomment %}
-                    {% endblock %}
-                </div>
-            </div><!-- .row -->
-        {% endblock %}
-    </div><!-- .container -->
-</div>
+                        {% block body %}
+                            {# This is the part that gets overridden by templates that extend this one. #}
+                        {% endblock %}
+                    </div>
+                </div><!-- .row -->
+            {% endblock %}
+        </div><!-- .container -->
+    </div>
 
     <footer id="footer">
         {% block footer %}{% endblock %}
     </footer>
 
-{% comment %} For scripts at the bottom of the page. {% endcomment %}
-{% block bottomscripts %}
-{% endblock %}
-{% block bottomerscripts %}
-{% endblock %}
-</body>
-</html>
+    {% comment %} For scripts at the bottom of the page. {% endcomment %}
+    {% block bottomscripts %}
+    {% endblock %}
+    {% block bottomerscripts %}
+    {% endblock %}
+    </body>
+    </html>
 {% endspaceless %}
