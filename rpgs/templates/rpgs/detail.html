@@ -38,7 +38,8 @@
 				<a href="{% url 'rpg_manage' rpg.id %}"><i class="fa fa-user" aria-hidden="true"></i></a>
 				{% endcomment %}
                     <a href="{% url 'rpg_edit' rpg.id %}"><i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i></a>
-                    <a href="{% url 'rpg_delete' rpg.id %}"><i class="fas fa-fw fa-trash-alt" aria-hidden="true"></i></a>
+                    <a href="{% url 'rpg_delete' rpg.id %}"><i class="fas fa-fw fa-trash-alt"
+                                                               aria-hidden="true"></i></a>
                 {% endif %}
 			</span>
         </h4>
@@ -73,8 +74,8 @@
 
             Players <span class="badge">{{ rpg.members.count }} / {{ rpg.players_wanted }}</span>
             <span class="sr-only">:
-		{% for member in rpg.members.all %}{{ member }},{% endfor %}
-		</span>
+                {% for member in rpg.members.all %}{{ member }},{% endfor %}
+            </span>
         </strong>
 
         <ul class="nobullet">
@@ -101,7 +102,8 @@
                 {% csrf_token %}
                 <input type="hidden" name="id" value="{{ rpg.id }}">
                 <div class="input-group">
-                    <input class="form-control add-member-input" type="text" name="username" autocomplete="off" data-provide="typeahead"
+                    <input class="form-control add-member-input" type="text" name="username" autocomplete="off"
+                           data-provide="typeahead"
                            id="add-member-input-{{ rpg.id }}">
                     <span class="input-group-btn">
 						<input class="btn btn-default" type="submit" value="Add">

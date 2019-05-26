@@ -35,6 +35,7 @@
 
     <form action="{% url 'signup-done' %}" method="POST">
         {% csrf_token %}
+        {# data-_extention-text-contrast??? #}
         <input name="captcha-token" value="{{ token }}" data-_extension-text-contrast="bg" type="hidden">
         <div class="form-group">
             {{ form.as_p }}
