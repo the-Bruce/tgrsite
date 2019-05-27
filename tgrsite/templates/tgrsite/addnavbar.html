@@ -148,7 +148,7 @@ This defines the navbar and the extra scripts.
 
                         </ul>
                     </li>
-
+w
 
                     <li><a href="{% url 'rpgs' %}">
                         <i class="fas fa-fw fa-magic"></i> Events
@@ -193,7 +193,7 @@ This defines the navbar and the extra scripts.
                         {% endcomment %}
                         <li><a href="{% url 'all_notifications' %}"
                                {% if request.user.member.notification_count > 0 %}style="color: #f04747;"{% endif %}><i
-                                class="fa fa-bell"
+                                class="fas fa-bell"
                                 aria-label="Notifications"></i> {{ request.user.member.notification_count }}</a></li>
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     {% else %}
@@ -218,13 +218,13 @@ This defines the navbar and the extra scripts.
 
 {% block footer %}
     <div id="footer-content">
-        <div class="footer-link"><i class="fa fa-facebook-official" aria-hidden="true"></i>&nbsp;<a
+        <div class="footer-link"><i class="fab fa-facebook-square" aria-hidden="true"></i>&nbsp;<a
                 href="//www.facebook.com/TAGAROPLE/">Facebook</a></div>
-        <div class="footer-link"><i class="fa fa-external-link-square" aria-hidden="true"></i>&nbsp;<a
+        <div class="footer-link"><i class="fas fa-external-link-square-alt" aria-hidden="true"></i>&nbsp;<a
                 href="//www.warwicksu.com/societies/sff/">Warwick SU Page</a></div>
-        <div class="footer-link"><i class="fa fa-user-secret" aria-hidden="true"></i>&nbsp;<a href="/page/privacy">Privacy
+        <div class="footer-link"><i class="fas fa-user-secret" aria-hidden="true"></i>&nbsp;<a href="/page/privacy">Privacy
             Policy</a></div>
-        <div class="footer-link"><i class="fa fa-commenting" aria-hidden="true"></i>&nbsp;<a
+        <div class="footer-link"><i class="fas fa-comment-dots" aria-hidden="true"></i>&nbsp;<a
                 href="/page/content-policy">Content Policy</a></div>
     </div>
 {% endblock %}

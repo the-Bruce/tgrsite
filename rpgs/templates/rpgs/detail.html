@@ -35,7 +35,7 @@
                 {% if rpg.creator == user.member or user.member in rpg.game_masters.all %}
 
                     {% comment not done :( %}
-				<a href="{% url 'rpg_manage' rpg.id %}"><i class="fa fa-user" aria-hidden="true"></i></a>
+				<a href="{% url 'rpg_manage' rpg.id %}"><i class="fas fa-user" aria-hidden="true"></i></a>
 				{% endcomment %}
                     <a href="{% url 'rpg_edit' rpg.id %}"><i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i></a>
                     <a href="{% url 'rpg_delete' rpg.id %}"><i class="fas fa-fw fa-trash-alt"

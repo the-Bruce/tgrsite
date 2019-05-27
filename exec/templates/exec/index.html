@@ -39,7 +39,7 @@
                         {% endif %}</h3>
                     <p>{{ role.bio }}
                         {% if request.user.member == role.incumbent %}
-                            <a href="{% url 'exec_editbio' role.id %}"><i class="fa fa-pencil"></i></a>
+                            <a href="{% url 'exec_editbio' role.id %}"><i class="fas fa-pencil-alt"></i></a>
                         {% endif %}</p>
                 </div>
             </div>
