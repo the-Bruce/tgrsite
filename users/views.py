@@ -38,9 +38,14 @@ def viewmember(request, pk):
 
     # = ','.join(str()
 
+    is_me=False
+    if (request.user.is_authenticated):
+        is_me=(request.user.member.id == pk)
+    
+    
     context = {
         # whether the viewed user is the logged in one
-        'me': request.user.member.id == pk,
+        'me': is_me,
         'result': request.GET.get('result', None),
         'member': member,
 
@@ -50,6 +55,9 @@ def viewmember(request, pk):
         'rpgs': Rpg.objects.filter(game_masters__id=pk),
         'execroles': execroles,
     }
+    
+    
+        
     return render(request, 'users/view.html', context)
 
 
