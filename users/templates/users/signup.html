@@ -37,13 +37,11 @@
         {% csrf_token %}
         {# data-_extention-text-contrast??? #}
         <input name="captcha-token" value="{{ token }}" data-_extension-text-contrast="bg" type="hidden">
+        {% include "widgets/render_form_content.html" with form=form %}
         <div class="form-group">
-            {{ form.as_p }}
-            <p>
-                <label for="captcha">Captcha question: {{ captcha }}</label>
-                <input id="captcha" class="form-control" name="captcha" data-_extension-text-contrast="" type="text">
-                <span class="helptext">{{ captcha_help }}</span>
-            </p>
+            <label for="captcha">Captcha question: {{ captcha }}</label>
+            <input id="captcha" class="form-control" name="captcha" data-_extension-text-contrast="" type="text">
+            <span class="help-block">{{ captcha_help }}</span>
         </div>
         <input type="submit" value="Sign Me Up" class="form-control">
     </form>
