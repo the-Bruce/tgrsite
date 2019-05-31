@@ -15,10 +15,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
+
 from exec.models import ExecRole
 from forum.models import Thread, Response
 from rpgs.models import Rpg
-from .captcha import make_captcha
+from .captcha import create_signed_captcha, check_signed_captcha
 from .forms import MemberForm, UserForm, LoginForm, SignupForm
 from .models import Member
 
@@ -38,9 +39,14 @@ def viewmember(request, pk):
 
     # = ','.join(str()
 
+    is_me=False
+    if (request.user.is_authenticated):
+        is_me=(request.user.member.id == pk)
+    
+    
     context = {
         # whether the viewed user is the logged in one
-        'me': request.user.member.id == pk,
+        'me': is_me,
         'result': request.GET.get('result', None),
         'member': member,
 
@@ -50,6 +56,9 @@ def viewmember(request, pk):
         'rpgs': Rpg.objects.filter(game_masters__id=pk),
         'execroles': execroles,
     }
+    
+    
+        
     return render(request, 'users/view.html', context)
 
 
@@ -128,27 +137,18 @@ def signup_view(request):
 
 
 def add_captcha_to_form(form):
-    (question, answer, captcha_help) = make_captcha()
-    return {'form': form, 'captcha': question, 'token': hash3(answer), 'captcha_help': captcha_help}
-
-def getSecret():
-    # This means that captcha is invalid over midnight but reduces replay attacks to beyond the
-    # difficulty of actually solving the captcha
-    return settings.SECRET_KEY + str(datetime.date.today())
-
-def hash3(inp):
-    return hmac.new(key=getSecret().encode(), msg=str(inp).encode(), digestmod="sha256").hexdigest()
+    (question, answer, captcha_help) = create_signed_captcha()
+    return {'form': form, 'captcha': question, 'token': answer, 'captcha_help': captcha_help}
 
 
 def signup_process(request):
     form = SignupForm(request.POST)
-    if (form.is_valid()):
-
+    if form.is_valid():
         data_valid = True
         captcha_input = re.sub(r'\s', '', request.POST['captcha'])
         captcha_target = re.sub(r'\s', '', request.POST['captcha-token'])
         # CHECK CAPTCHA!
-        if not hmac.compare_digest(hash3(captcha_input), captcha_target):
+        if not check_signed_captcha(captcha_input, captcha_target):
             # Should be attached to captcha, but this is the closest thing.
             form.add_error(None, ValidationError('You didn\'t answer the captcha correctly!'))
             data_valid = False
