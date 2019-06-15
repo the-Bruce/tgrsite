@@ -169,7 +169,7 @@ class CreateRecord(PermissionRequiredMixin, CreateView):
     model = Suggestion
     form_class = RecordForm
     template_name = "inventory/edit_record.html"
-    permission_required = "create_record"
+    permission_required = "add_record"
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
