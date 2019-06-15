@@ -21,7 +21,7 @@
     <h1>{{ inv.name }} - {{ object.name }}</h1>
     <p>in <a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
 
-    {% if perms.inventory.change_record or object.owner == user.member %}
+    {% if perms.inventory.change_record %}
         <a class="btn btn-primary" href="{% url "inventory:edit_record" inv=inv.canonical_ pk=object.pk %}">Edit</a>
     {% endif %}
 

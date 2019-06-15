@@ -1,9 +1,18 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin as PRMBase
+from django.contrib import messages
+
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from .forms import SuggestionForm, LoanRequestForm, RecordForm, LoanNotesForm
 from .models import Inventory, Loan, Record, Suggestion
+
+
+class PermissionRequiredMixin(PRMBase):
+    def handle_no_permission(self):
+        messages.add_message(self.request, messages.ERROR, "You don't have permission to perform that action.")
+        return super().handle_no_permission()
 
 
 # Create your views here.
@@ -140,10 +149,11 @@ class UpdateSuggestion(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return ctxt
 
 
-class UpdateRecord(UpdateView):
+class UpdateRecord(PermissionRequiredMixin, UpdateView):
     model = Record
     form_class = RecordForm
     template_name = "inventory/edit_record.html"
+    permission_required = "change_record"
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
@@ -155,10 +165,11 @@ class UpdateRecord(UpdateView):
         return ctxt
 
 
-class CreateRecord(CreateView):
+class CreateRecord(PermissionRequiredMixin, CreateView):
     model = Suggestion
     form_class = RecordForm
     template_name = "inventory/edit_record.html"
+    permission_required = "create_record"
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
