@@ -41,10 +41,6 @@ class MeetingDetail(DetailView):
 
         return item
 
-    def get(self, request, *args, **kwargs):
-        print(self.kwargs['folder'])
-        return super().get(request, *args, **kwargs)
-
 
 class CreateMeeting(PermissionRequiredMixin, CreateView):
     permission_required = "minutes:add_meeting"
