@@ -4,8 +4,8 @@ from . import views
 
 app_name = "minutes"
 urlpatterns = [
-    path("<path:folder>/<str:name>/",views.MeetingDetail.as_view(), name="meeting_detail"),
-
-    path("<int:pk>/", views.meetingBounce), # Shortcut as pk is technically sufficient
-
+    path("", views.index, name="index"),
+    path("new/", views.CreateMeeting.as_view(), name="new_meeting"),
+    path("<int:pk>/", views.meetingBounce, name="meeting_bounce"),  # Shortcut as pk is technically sufficient
+    path("<path:folder>/<str:name>/", views.MeetingDetail.as_view(), name="meeting_detail"),
 ]

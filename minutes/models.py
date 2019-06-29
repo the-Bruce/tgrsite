@@ -14,11 +14,16 @@ class Folder(models.Model):
 
     class Meta:
         unique_together = ('name', 'parent')
+        ordering = ('-name',)
 
     def __str__(self):
         if self.parent is None:
             return "\\" + self.name + "\\"
         return str(self.parent) + self.name + "\\"
+
+    @property
+    def pretty_name(self):
+        return self.name.replace("_", " ").replace(".", "")
 
     def parents(self):
         if self.parent is None:
@@ -27,6 +32,17 @@ class Folder(models.Model):
         p.append(self.name)
         return p
 
+    def parents_id(self):
+        if self.parent is None:
+            return [self.id]
+        p = self.parent.parents_id()
+        p.append(self.id)
+        return p
+
+    @classmethod
+    def roots(cls):
+        return cls.objects.filter(parent__isnull=True)
+
     def canonical_(self):
         return ("/".join(self.parents())).lower()
 
@@ -34,11 +50,15 @@ class Folder(models.Model):
 class Meeting(models.Model):
     name = models.CharField(max_length=30,
                             validators=[RegexValidator("[a-zA-Z0-9][a-zA-Z0-9-_]*")])
-    title = models.CharField(max_length=50)
-    folder = models.ForeignKey(Folder, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=80)
+    folder = models.ForeignKey(Folder, on_delete=models.SET_NULL, null=True, related_name="meetings")
     body = models.TextField()
     date = models.DateField(default=now)
     author = models.ForeignKey(users.Member, on_delete=models.PROTECT)
+
+    class Meta:
+        ordering = ("-date", "-name")
+        unique_together = ("title", "folder")
 
     def __str__(self):
         return self.title

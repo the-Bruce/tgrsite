@@ -1,0 +1,21 @@
+<div class="panel panel-default">
+	<a class="panel-heading block" data-toggle="collapse" href="#folder{{ folder.pk }}">
+		{{ folder.pretty_name }}
+	</a>
+	<div id="folder{{ folder.pk }}" class="panel-collapse collapse{% if not child or folder.id in child.folder.parents_id %} in{% endif %}">
+		<div class="panel-body">
+			{% for subfolder in folder.children.all %}
+                {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child %}
+            {% endfor %}
+            {% if folder.meetings %}
+                <div class="list-group">
+                    {% for meeting in folder.meetings.all %}
+                        <a href="{{ meeting.get_absolute_url }}" class="list-group-item {% if meeting == child %}active{% endif %}">
+                            {{ meeting.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+		</div>
+	</div>
+</div>

@@ -2,8 +2,30 @@
 {% load markdown_tags %}
 
 {% block body %}
-    <h3>{{ object.title }} - {{ object.date|date }}</h3>
+    <h1>{{ object.title }} - {{ object.date|date }}</h1>
     <p>Posted by {{ object.author }}</p>
     <p>{{ object.body|parse_md }}</p>
     <p></p>
+{% endblock %}
+
+{% block rightbar %}
+    <p class="btn-group">
+
+        {% if perms.minutes.add_meeting %}
+            <a class="btn btn-primary" href="{% url "minutes:new_meeting" %}">New</a>
+        {% endif %}
+        {% if perms.minutes.change_meeting %}
+            <a class="btn btn-default" href="{% url "admin:minutes_meeting_change" object.id %}">Edit</a>
+        {% endif %}
+    </p>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Past Meetings
+        </div>
+        <div class="panel-body">
+            {% for root in object.folder.roots %}
+                {% include "minutes/widgets/foldertree.html" with folder=root child=object %}
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
