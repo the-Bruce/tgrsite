@@ -9,7 +9,7 @@ from users import models as users
 # Create your models here.
 class Folder(models.Model):
     name = models.CharField(max_length=30,
-                            validators=[RegexValidator("^[a-zA-Z0-9\.][a-zA-Z0-9_]*$",
+                            validators=[RegexValidator("^[a-zA-Z0-9\.][a-zA-Z0-9-_]*$",
                                                        "This may only contain letters, numbers or underscores")])
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
 
@@ -50,7 +50,7 @@ class Folder(models.Model):
 
 class Meeting(models.Model):
     name = models.CharField(max_length=30,
-                            validators=[RegexValidator("^[a-zA-Z0-9][a-zA-Z0-9_]*$",
+                            validators=[RegexValidator("^[a-zA-Z0-9][a-zA-Z0-9-_]*$",
                                                        "This may only contain letters, numbers or underscores")])
     title = models.CharField(max_length=80)
     folder = models.ForeignKey(Folder, on_delete=models.SET_NULL, null=True, related_name="meetings")
