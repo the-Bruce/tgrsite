@@ -1,20 +1,30 @@
-<div class="panel panel-default">
+<div class="panel panel-default mb-0">
 	<a class="panel-heading block" data-toggle="collapse" href="#folder{{ folder.pk }}">
 		{{ folder.pretty_name }}
 	</a>
-	<div id="folder{{ folder.pk }}" class="panel-collapse collapse{% if not child or folder.id in child.folder.parents_id %} in{% endif %}">
+	<div id="folder{{ folder.pk }}" class="panel-collapse collapse{% if folder.id in child.folder.parents_id %} in{% endif %}">
 		<div class="panel-body">
-			{% for subfolder in folder.children.all %}
-                {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child %}
-            {% endfor %}
-            {% if folder.meetings %}
-                <div class="list-group">
+            {% if folder.children.all %}
+                {% for subfolder in folder.children.all %}
+                    {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child %}
+                    {% if not forloop.last %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if folder.meetings.all %}
+                <div class="list-group mb-0">
                     {% for meeting in folder.meetings.all %}
                         <a href="{{ meeting.get_absolute_url }}" class="list-group-item {% if meeting == child %}active{% endif %}">
-                            {{ meeting.name }}
+                            {{ meeting.pretty_name }}
                         </a>
                     {% endfor %}
                 </div>
+            {% else %}
+                {% if not folder.children.all %}
+                    {# Neither folders nor meetings #}
+                    Empty
+                {% endif %}
             {% endif %}
 		</div>
 	</div>

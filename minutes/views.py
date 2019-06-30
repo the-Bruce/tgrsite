@@ -3,7 +3,7 @@ from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, reverse
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, UpdateView
 
 from .models import Folder, Meeting
 from .forms import MeetingForm
@@ -53,6 +53,19 @@ class CreateMeeting(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user.member
+        return super().form_valid(form)
+
+
+class UpdateMeeting(PermissionRequiredMixin, UpdateView):
+    permission_required = "minutes:change_meeting"
+    model = Meeting
+    form_class = MeetingForm
+    template_name = "minutes/edit.html"
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    def form_valid(self, form):
         return super().form_valid(form)
 
 
