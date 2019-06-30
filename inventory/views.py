@@ -1,9 +1,22 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin as PRMBase
+from django.contrib import messages
+
+from django.shortcuts import get_object_or_404, reverse
+from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.contrib.auth.views import redirect_to_login
 
 from .forms import SuggestionForm, LoanRequestForm, RecordForm, LoanNotesForm
 from .models import Inventory, Loan, Record, Suggestion
+
+
+class PermissionRequiredMixin(PRMBase):
+    def handle_no_permission(self):
+        messages.add_message(self.request, messages.ERROR, "You don't have permission to perform that action.")
+        if self.raise_exception or self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("homepage"))
+        return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
 
 
 # Create your views here.
@@ -140,10 +153,11 @@ class UpdateSuggestion(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return ctxt
 
 
-class UpdateRecord(UpdateView):
+class UpdateRecord(PermissionRequiredMixin, UpdateView):
     model = Record
     form_class = RecordForm
     template_name = "inventory/edit_record.html"
+    permission_required = "inventory.change_record"
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
@@ -155,10 +169,11 @@ class UpdateRecord(UpdateView):
         return ctxt
 
 
-class CreateRecord(CreateView):
+class CreateRecord(PermissionRequiredMixin, CreateView):
     model = Suggestion
     form_class = RecordForm
     template_name = "inventory/edit_record.html"
+    permission_required = "inventory.add_record"
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)

@@ -1,4 +1,9 @@
 import random
+from hashlib import sha512
+from hmac import compare_digest
+from datetime import timedelta
+
+from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 
 
 def dice_captcha():
@@ -47,3 +52,51 @@ def ordered_different_randoms(choices):
 def make_captcha():
     captchas = [dice_captcha, sitename_captcha]
     return random.choice(captchas)()
+
+
+def hash2(inp):
+    return sha512(str(inp).encode()).hexdigest()
+
+
+def getSigner():
+    return TimestampSigner()
+
+
+def create_signed_captcha():
+    question, answer, help = make_captcha()
+    answer = hash2(answer)
+    answer = getSigner().sign(answer)
+    return (question, answer, help)
+
+
+def check_signed_captcha(given, answer):
+    try:
+        answer = getSigner().unsign(answer, max_age=timedelta(minutes=10))
+    except (SignatureExpired, BadSignature):
+        return False
+
+    return compare_digest(hash2(given), answer)
+
+
+def hash2(inp):
+    return sha512(str(inp).encode()).hexdigest()
+
+
+def getSigner():
+    return TimestampSigner()
+
+
+def create_signed_captcha():
+    question, answer, help = make_captcha()
+    answer = hash2(answer)
+    answer = getSigner().sign(answer)
+    return (question, answer, help)
+
+
+def check_signed_captcha(given, answer):
+    try:
+        answer = getSigner().unsign(answer, max_age=timedelta(minutes=10))
+    except (SignatureExpired, BadSignature):
+        return False
+
+    return compare_digest(hash2(given), answer)
