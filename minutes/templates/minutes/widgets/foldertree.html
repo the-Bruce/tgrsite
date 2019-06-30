@@ -1,4 +1,4 @@
-<div class="panel panel-default mb-0">
+<div class="panel panel-default {% if mb %}mb-0{% else %}mb-1{% endif %}">
 	<a class="panel-heading block" data-toggle="collapse" href="#folder{{ folder.pk }}">
 		{{ folder.pretty_name }}
 	</a>
@@ -6,10 +6,7 @@
 		<div class="panel-body">
             {% if folder.children.all %}
                 {% for subfolder in folder.children.all %}
-                    {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child %}
-                    {% if not forloop.last %}
-                        <br>
-                    {% endif %}
+                    {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child mb=forloop.last %}
                 {% endfor %}
             {% endif %}
             {% if folder.meetings.all %}
@@ -22,7 +19,7 @@
                 </div>
             {% else %}
                 {% if not folder.children.all %}
-                    {# Neither folders nor meetings #}
+                    {# Neither folders nor meetings exist #}
                     Empty
                 {% endif %}
             {% endif %}

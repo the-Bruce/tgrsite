@@ -7,6 +7,9 @@
         .mb-0 {
             margin-bottom: 0;
         }
+        .mb-1 {
+            margin-bottom: 15px;
+        }
     </style>
 {% endblock %}
 
@@ -34,10 +37,7 @@
         </div>
         <div class="panel-body">
             {% for root in object.folder.roots %}
-                {% include "minutes/widgets/foldertree.html" with folder=root child=object %}
-                {% if not forloop.last %}
-                    <br>
-                {% endif %}
+                {% include "minutes/widgets/foldertree.html" with folder=root child=object mb=forloop.last %}
             {% endfor %}
         </div>
     </div>
