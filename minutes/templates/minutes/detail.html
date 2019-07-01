@@ -22,15 +22,16 @@
 {% endblock %}
 
 {% block rightbar %}
-    <p class="btn-group">
-
-        {% if perms.minutes.add_meeting %}
-            <a class="btn btn-primary" href="{% url "minutes:new_meeting" %}">New</a>
-        {% endif %}
-        {% if perms.minutes.change_meeting %}
-            <a class="btn btn-primary" href="{% url "minutes:change_meeting" object.id %}">Edit</a>
-        {% endif %}
-    </p>
+    {% if perms.minutes.add_meeting or perms.minutes.change_meeting %}
+        <p class="btn-group">
+            {% if perms.minutes.add_meeting %}
+                <a class="btn btn-primary" href="{% url "minutes:new_meeting" %}">New</a>
+            {% endif %}
+            {% if perms.minutes.change_meeting %}
+                <a class="btn btn-primary" href="{% url "minutes:change_meeting" object.id %}">Edit</a>
+            {% endif %}
+        </p>
+    {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
             Past Meetings

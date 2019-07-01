@@ -2,12 +2,20 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, reverse
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin as PRMBase
+from django.contrib import messages
+from django.contrib.auth.views import redirect_to_login
 from django.views.generic import DetailView, CreateView, UpdateView
 
 from .models import Folder, Meeting
 from .forms import MeetingForm
 
+class PermissionRequiredMixin(PRMBase):
+    def handle_no_permission(self):
+        messages.add_message(self.request, messages.ERROR, "You don't have permission to perform that action.")
+        if self.raise_exception or self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("minutes:index"))
+        return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
 
 # Create your views here.
 class MeetingDetail(DetailView):

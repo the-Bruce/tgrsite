@@ -15,7 +15,7 @@ MD_INPUT = {
 class MeetingForm(ModelForm):
     class Meta:
         model = Meeting
-        fields = ['name', 'title', 'folder', 'body', 'date']
+        fields = ['name', 'folder', 'title', 'body', 'date']
         widgets = {
             'name': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'title': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
