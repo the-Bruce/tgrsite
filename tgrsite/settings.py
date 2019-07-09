@@ -61,6 +61,7 @@ INTERNAL_IPS = ['127.0.0.1']
 INSTALLED_APPS = [
     'website_settings',
     'assets',
+    'minutes',
     'inventory',
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',

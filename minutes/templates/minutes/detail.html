@@ -1,0 +1,45 @@
+{% extends "tgrsite/main.html" %}
+{% load markdown_tags %}
+
+{% block allcss %}
+    {{ block.super }}
+    <style>
+        .mb-0 {
+            margin-bottom: 0;
+        }
+        .mb-1 {
+            margin-bottom: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ object.title }}</h1>
+    <h2>{{ object.date|date }}</h2>
+    <p>Posted by {{ object.author }}</p>
+    <p>{{ object.body|parse_md }}</p>
+    <p></p>
+{% endblock %}
+
+{% block rightbar %}
+    {% if perms.minutes.add_meeting or perms.minutes.change_meeting %}
+        <p class="btn-group">
+            {% if perms.minutes.add_meeting %}
+                <a class="btn btn-primary" href="{% url "minutes:new_meeting" %}">New</a>
+            {% endif %}
+            {% if perms.minutes.change_meeting %}
+                <a class="btn btn-primary" href="{% url "minutes:change_meeting" object.id %}">Edit</a>
+            {% endif %}
+        </p>
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Past Meetings
+        </div>
+        <div class="panel-body">
+            {% for root in object.folder.roots %}
+                {% include "minutes/widgets/foldertree.html" with folder=root child=object mb=forloop.last %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
