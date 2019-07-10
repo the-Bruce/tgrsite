@@ -3,6 +3,8 @@ from django.urls import path
 
 from . import views
 
+app_name = "users"
+
 urlpatterns = [
 
     path('user/edit/', views.edit, name='edit'),

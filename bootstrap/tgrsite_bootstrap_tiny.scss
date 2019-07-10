@@ -1,0 +1,27 @@
+$theme-colors: (
+        "primary": #6D0F8C,
+        "secondary": #300140,
+        "tertiary": #9114BA,
+        "light": #e9ecef,
+        "dark": red,
+);
+
+$enable-print-styles: true;
+
+@import "source/functions";
+@import "source/variables";
+
+$border-width: 3px;
+
+@import "source/mixins";
+@import "source/root";
+@import "source/reboot";
+@import "source/type";
+@import "source/images";
+@import "source/code";
+@import "source/grid";
+@import "source/tables";
+@import "source/card";
+@import "source/badge";
+@import "source/utilities";
+@import "source/print";

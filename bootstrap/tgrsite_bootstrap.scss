@@ -1,0 +1,99 @@
+$theme-colors: (
+        "primary": #6D0F8C,
+        "secondary": #300140,
+        "tertiary": #9114BA,
+        "light": #e9ecef,
+        "dark": red,
+);
+
+//300140
+
+@import "source/functions";
+@import "source/variables";
+
+$border-width: 3px;
+
+$navbar-dark-color: rgba($white, .7);
+$navbar-dark-hover-color: rgba($white, 1);
+$navbar-dark-active-color: rgba($white, 1);
+$navbar-dark-disabled-color: rgba($white, .5);
+$navbar-dark-toggler-border-color: rgba($white, .1);
+
+$navbar-light-color: rgba($black, .7);
+$navbar-light-hover-color: rgba($black, 1);
+$navbar-light-active-color: rgba($black, 1);
+$navbar-light-disabled-color: rgba($black, .5);
+$navbar-light-toggler-icon-bg: str-replace(url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='#{$navbar-light-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"), "#", "%23");
+$navbar-light-toggler-border-color: rgba($black, .1);
+
+@import "source/mixins";
+@import "source/root";
+@import "source/reboot";
+@import "source/type";
+@import "source/images";
+@import "source/code";
+@import "source/grid";
+@import "source/tables";
+@import "source/forms";
+@import "source/buttons";
+@import "source/transitions";
+@import "source/dropdown";
+@import "source/button-group";
+@import "source/input-group";
+@import "source/custom-forms";
+@import "source/nav";
+@import "source/navbar";
+@import "source/card";
+@import "source/breadcrumb";
+@import "source/pagination";
+@import "source/badge";
+@import "source/jumbotron";
+@import "source/alert";
+@import "source/progress";
+@import "source/media";
+@import "source/list-group";
+@import "source/close";
+@import "source/toasts";
+@import "source/modal";
+@import "source/tooltip";
+@import "source/popover";
+@import "source/carousel";
+@import "source/spinners";
+@import "source/utilities";
+@import "source/print";
+
+.navbar-dark {
+  .navbar-nav {
+    .nav-link {
+      white-space: nowrap;
+    }
+
+    .active > .nav-link,
+    .nav-link.active {
+      font-weight: bold;
+    }
+  }
+}
+
+html {
+  height: 100vh;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.img-text {
+  height: 1.5ex;
+  vertical-align: baseline;
+}
+
+#pagetop {
+  flex: 1;
+}
+
+.CodeMirror {
+  height: 200px;
+}

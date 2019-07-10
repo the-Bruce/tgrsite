@@ -21,7 +21,8 @@
     <p></p>
 {% endblock %}
 
-{% block rightbar %}
+{% block leftcontents %}
+    {{ block.super }}
     {% if perms.minutes.add_meeting or perms.minutes.change_meeting %}
         <p class="btn-group">
             {% if perms.minutes.add_meeting %}

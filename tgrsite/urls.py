@@ -16,19 +16,11 @@ urlpatterns = [
     path('exec/', include('exec.urls')),
     path('', include('users.urls')),
     path('messages/', include('messaging.urls')),
-    path('bugs/', include('bugreports.urls')),
     path('newsletters/', include('newsletters.urls')),
     path('notifications/', include('notifications.urls')),
     path('inventory/', include('inventory.urls')),
     path('minutes/', include('minutes.urls')),
-
-    # Pseudo "Static" pages - those with no models or fancy behaviour.
-    # e.g. the larp intro page
-    path('', include('statics.urls')),
-
     path('gallery/', include('gallery.urls')),
-
-    # model-based pages, to supersede the statics module
     path('', include('pages.urls')),
 ] + static(settings.MEDIA_URL,
      document_root=settings.MEDIA_ROOT)  # This only runs if DEBUG=True. Its a bad idea on prod

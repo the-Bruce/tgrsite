@@ -12,9 +12,9 @@
         </div>
     {% endif %}
     {% if next %}
-        <form action="{% url 'login-done' %}?next={{ next }}" method="POST">
+        <form action="{% url 'users:login-done' %}?next={{ next }}" method="POST">
     {% else %}
-        <form action="{% url 'login-done' %}" method="POST">
+        <form action="{% url 'users:login-done' %}" method="POST">
     {% endif %}
         {% csrf_token %}
         <div class="form-group">
@@ -24,6 +24,6 @@
         <input type="submit" value="Log In" class="form-control">
     </form>
 
-    <a href="{% url 'signup' %}">Sign up</a> &middot; <a href="{% url 'password_reset' %}">Reset password</a>
+    <a href="{% url 'users:signup' %}">Sign up</a> &middot; <a href="{% url 'users:password_reset' %}">Reset password</a>
 
 {% endblock %}

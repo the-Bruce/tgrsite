@@ -2,6 +2,7 @@ from django.urls import path
 
 from . import views
 
+app_name="exec"
 urlpatterns = [
     path('', views.index, name='exec'),
     path('editbio/<int:pk>/', views.editbio, name='exec_editbio'),

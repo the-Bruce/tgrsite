@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+app_name = "notifications"
+
 urlpatterns = [
     path('', views.all_notifications, name='all_notifications'),
     path('clear/', views.read_all, name='clear_notifications'),

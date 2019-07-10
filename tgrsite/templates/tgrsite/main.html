@@ -1,149 +1,117 @@
-{% extends 'tgrsite/addnavbar.html' %}
+{% extends 'tgrsite/basecontent.html' %}
 {% load static %}
 {% load markdown_tags %}
+{% load property_tags %}
 
 {% comment %}
-THIS IS USED BY THE REST OF THE SITE (excluding the newsletter views using the previous templates).
-This introduces a generic left bar containing recent threads etc.
+THIS IS USED BY THE SITE
 {% endcomment %}
+
+{% block head %}
+    {{ block.super }}
+    {# Add some SEO metadata to help discoverability #}
+    <meta name="keywords"
+          content="Warwick, D&D, Tabletop, Boardgames, Board Games, Dungeons and Dragons, Card Games, Wargaming, Role Play, LARP, student, MTG, Magic, Magic the Gathering, Coventry">
+    <meta name="description"
+          content="Warwick Tabletop and Role-Playing Society provides Warwick students with access to role-playing, board games, LARP, CCGs and a community to engage with these activities.">
+{% endblock %}
 
 {% block topscripts %}
     {{ block.super }}
-    <style>
-        .block {
-            display: block !important;
-        }
-    </style>
+    <script src="{% static 'bootstrap3-typeahead.js' %}"></script>
+
+    {# font icons library #}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    {# Markdown editor #}
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+{% endblock %}
+
+{% block bootstrap %}
+    <link rel="stylesheet" href="{% static "tgrsite_bootstrap.css" %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+{% endblock %}
+
+{% block navbar %}
+    {% include "nav.html" %}
+{% endblock %}
+
+{% block messages %}
+    {% if messages %}
+        <div class="alerts">
+            {% for message in messages %}
+                <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block leftcontents %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Welcome{% if request.user.is_authenticated %} back{% else %}, guest{% endif %}!
-        </div>
-        <div class="panel-body">
-            <ul>
-                {% if request.user.is_staff %}
-                    <li><a href="/admin">Admin site</a></li>
-                {% endif %}
-                {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'me' %}">My profile</a></li>
-                    <li><a href="{% url 'notification_settings' %}">Notification Settings</a></li>
-                    <li><a href="{% url 'logout' %}">Log out</a></li>
-                {% else %}
-                    <li><a href="{% url 'login' %}">Log in</a> / <a href="{% url 'signup' %}">Register</a></li>
-                {% endif %}
-
-                <li><a href="{% url 'bug_create' %}">Report a bug</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <a data-toggle="collapse" class="panel-heading block" href="#body-thread">
-            Recent threads
+    <div class="card d-none d-md-flex">
+        <a class="card-header" href="#ql" data-toggle="collapse">
+            Quick Links
         </a>
-        <div id="body-thread"
-             class="panel-collapse collapse{% if not request.COOKIES.bodyThread or request.COOKIES.bodyThread == "true" %} in{% endif %}"
-             aria-expanded="{% if not request.COOKIES.bodyThread or request.COOKIES.bodyThread == "true" %}true{% else %}false{% endif %}">
-            <div class="panel-body">
-                <ul class="nobullet">
-                    {% for x in latestthreads %}
-                        <li class="latest">
-                            <a href="{% url 'viewthread' x.id %}">{{ x.title|truncatechars:32 }}</a>
-                            <br>
-
-                            <small>
-                                by <a href="{% url 'user' x.author.id %}">
-                                {{ x.author.equiv_user.username|truncatechars:32 }}
-                            </a>
-                                in <a href="{% url 'subforum' x.forum.id %}">{{ x.forum }}</a>
-                                {{ x.pub_date|timesince }} ago
-                            </small>
-                        </li>
-                    {% endfor %}
+        <div class="collapse show" id="ql">
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    {% if request.user.is_staff %}
+                        <li><a class="card-link" href="{% url "admin:index" %}">Admin site</a></li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                        <li><a class="card-link" href="{% url 'users:me' %}">My profile</a></li>
+                        <li><a class="card-link" href="{% url 'notifications:notification_settings' %}">Notification
+                            Settings</a></li>
+                        <li><a class="card-link" href="{% url 'users:logout' %}">Log out</a></li>
+                    {% else %}
+                        <li><a class="card-link" href="{% url 'users:login' %}">Log in</a> / <a
+                                href="{% url 'users:signup' %}">Register</a></li>
+                    {% endif %}
+                    <li><a class="card-link" href="{% string_setting "bug_tracker" %}">Report a Bug</a></li>
                 </ul>
             </div>
         </div>
     </div>
-
-    <div class="panel panel-default">
-        <a data-toggle="collapse" class="panel-heading block" href="#body-replies">
-            Recent replies
-        </a>
-        <div id="body-replies"
-             class="panel-collapse collapse{% if not request.COOKIES.bodyReplies or request.COOKIES.bodyReplies == "true" %} in{% endif %}"
-             aria-expanded="{% if not request.COOKIES.bodyReplies or request.COOKIES.bodyReplies == "true" %}true{% else %}false{% endif %}">
-            <div class="panel-body">
-
-                <ul class="nobullet">
-                    {% for x in latestresponses %}
-                        <li class="latest">
-                            <a href="{% url 'viewthread' x.thread.id %}#response-{{ x.id }}">{{ x.body|parse_md|striptags|truncatechars:32 }}</a>
-                            <br>
-
-                            <small>
-                                by <a href="{% url 'user' x.author.id %}">
-                                {{ x.author.equiv_user.username|truncatechars:32 }}
-                            </a>
-                                {{ x.pub_date|timesince }} ago
-                            </small>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-
-    </div>
-    {% block leftbar %}{% endblock %}
 {% endblock %}
 
-{% block bottomerscripts %}
+{% block footer %}
+    <footer class="bg-light">
+        <div class="nav ml-auto mr-auto d-flex flex-row justify-content-around">
+            <a class="nav-link" href="//www.facebook.com/TAGAROPLE/">
+                <i class="fab fa-facebook-square"></i>&nbsp;Facebook
+            </a>
+            <a class="nav-link align-content-center" href="//www.warwicksu.com/societies/sff/">
+                <img class="img-text" alt="SU logo" src="{% static "SUPurple.png" %}" aria-hidden="true">&nbsp;Warwick&nbsp;SU&nbsp;Page
+            </a>
+            <a class="nav-link" href="{% url "page" "privacy"%}">
+                <i class="fas fa-user-secret"></i>&nbsp;Privacy&nbsp;Policy
+            </a>
+            <a class="nav-link" href="{% url "page" "content-policy"%}">
+                <i class="fas fa-comment-dots"></i>&nbsp;Content&nbsp;Policy
+            </a>
+        </div>
+    </footer>
+{% endblock %}
+
+{% block bottomscripts %}
     {{ block.super }}
     <script>
         $(document).ready(function () {
-            console.log("Setting up");
-            let threads = $('#body-thread');
-            let replies = $('#body-replies');
-            threads.on("hidden.bs.collapse", function (event) {
-                saveState('bodyThread', '#body-thread')
-            });
-            replies.on("hidden.bs.collapse", function (event) {
-                saveState('bodyReplies', '#body-replies')
-            });
-            threads.on("shown.bs.collapse", function (event) {
-                saveState('bodyThread', '#body-thread')
-            });
-            replies.on("shown.bs.collapse", function (event) {
-                saveState('bodyReplies', '#body-replies')
+            console.log("Getting ready.");
+            window.simplemde = [];
+            $(".markdown-input").each(function (i, e) {
+                console.log("Element " + e);
+                window.simplemde.push(
+                    new EasyMDE({
+                        element: e,
+                        placeholder: "Write Markdown (or just regular text) here...",
+                        forceSync: true,
+                        autoDownloadFontAwesome: false,
+                    })
+                );
             });
         });
-
-        function saveState(key, id) {
-            console.log($(id).attr("aria-expanded"));
-            setCookie(key, $(id).attr("aria-expanded"), 365)
-        }
-
-        //Retreived from https://www.w3schools.com/js/js_cookies.asp 2018-10-11 by Thomas Bruce
-        function setCookie(cname, cvalue, exdays) {
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-            var expires = "expires=" + d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) === 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
     </script>
 {% endblock %}

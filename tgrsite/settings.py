@@ -60,22 +60,21 @@ INTERNAL_IPS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     'website_settings',
+    'navbar',
     'assets',
     'minutes',
     'inventory',
-    'forum.apps.ForumConfig',
-    'users.apps.UsersConfig',
-    'rpgs.apps.RpgsConfig',
-    'statics.apps.StaticsConfig',
-    'exec.apps.ExecConfig',
-    'templatetags.apps.TemplatetagsConfig',
-    'timetable.apps.TimetableConfig',
-    'messaging.apps.MessagingConfig',
-    'bugreports.apps.BugreportsConfig',
-    'gallery.apps.GalleryConfig',
-    'pages.apps.PagesConfig',
-    'newsletters.apps.NewslettersConfig',
-    'notifications.apps.NotificationsConfig',
+    'forum',
+    'users',
+    'rpgs',
+    'exec',
+    'templatetags',
+    'timetable',
+    'messaging',
+    'gallery',
+    'pages',
+    'newsletters',
+    'notifications',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -108,6 +107,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'tgrsite.context_processors.latestposts',
+                'tgrsite.context_processors.mergednavbar'
             ],
         },
     },
@@ -220,11 +220,11 @@ CSRF_COOKIE_SECURE = not DEBUG
 X_FRAME_OPTIONS = 'DENY'
 
 MESSAGE_TAGS = {
-    message_constants.DEBUG: 'alert alert-secondary',
-    message_constants.INFO: 'alert alert-primary',
-    message_constants.SUCCESS: 'alert alert-success',
-    message_constants.WARNING: 'alert alert-warning',
-    message_constants.ERROR: 'alert alert-danger',
+    message_constants.DEBUG: 'alert-dark',
+    message_constants.INFO: 'alert-primary',
+    message_constants.SUCCESS: 'alert-success',
+    message_constants.WARNING: 'alert-warning',
+    message_constants.ERROR: 'alert-danger',
 }
 
 # Allow local configuration (change deploy options etc.)

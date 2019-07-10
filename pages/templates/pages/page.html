@@ -9,7 +9,7 @@
 {% block leftbar %}{{ page.leftbar|parse_md_safe }}{% endblock %}
 {% block rightbar %}
     {% if perms.pages.update_page %}
-        <p><a class="btn btn-default" href="{% url "admin:pages_page_change" page.pk %}">Edit</a></p>
+        <p><a class="btn btn-info" href="{% url "admin:pages_page_change" page.pk %}">Edit</a></p>
     {% endif %}
     {{ page.rightbar|parse_md_safe }}
 {% endblock %}
