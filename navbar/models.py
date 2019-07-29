@@ -1,10 +1,9 @@
 from django.db import models
 from django.core import validators
+from .validators import LocalableURLField
 
 
 # Create your models here.
-
-
 class Nav(models.Model):
     sort_index = models.IntegerField(default=0)
     text = models.CharField(max_length=15)
@@ -23,9 +22,13 @@ class Nav(models.Model):
         abstract = True
         ordering = ('sort_index',)
 
+    def __str__(self):
+        return self.text
+
 
 class BarItem(Nav):
-    target = models.URLField(blank=True, help_text="The url this menu item should lead to.")
+    target = LocalableURLField(blank=True, help_text="The url this menu item should lead to.")
+
 
 class BarDropdown(Nav):
     pass
@@ -33,4 +36,4 @@ class BarDropdown(Nav):
 
 class DropDownItem(Nav):
     parent = models.ForeignKey(BarDropdown, on_delete=models.CASCADE, related_name="children")
-    target = models.URLField(blank=True, help_text="The url this menu item should lead to.")
+    target = LocalableURLField(blank=True, help_text="The url this menu item should lead to.")
