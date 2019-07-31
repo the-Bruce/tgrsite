@@ -34,6 +34,7 @@ class LocalableURLFormField(forms.URLField):
     relative_re = re.compile(regex_format, re.IGNORECASE)
 
     def to_python(self, value):
+        # stop it prepending http:// if it is a local url
         if self.relative_re.match(value):
             return value
         else:
