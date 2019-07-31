@@ -44,7 +44,7 @@ SECRET_KEY = s
 
 # Defaults off unless explicitly stated in environment variable
 try:
-    if os.environ['DEBUG'] == 'True':
+    if os.environ['DEBUG'].lower() == 'true':
         DEBUG = True
     else:
         DEBUG = False
@@ -54,9 +54,12 @@ except KeyError:
 # needs 127 to work on my machine...
 ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'), '127.0.0.1']
 PRIMARY_HOST = '127.0.0.1'
-INTERNAL_IPS = ['127.0.0.1']
 
-# Application definition
+if DEBUG:
+    from .ipnetworks import IpNetworks
+    INTERNAL_IPS = IpNetworks(['127.0.0.1', '192.168.0.0/255.255.0.0'])
+else:
+    INTERNAL_IPS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     'website_settings',
