@@ -39,6 +39,16 @@ THIS IS USED BY THE SITE
     {% include "nav.html" %}
 {% endblock %}
 
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% block breadcrumbs_parents %}
+            {% endblock %}
+            <li class="breadcrumb-item active" aria-current="page">{% block breadcrumbs_child %}{% endblock %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
 {% block messages %}
     {% if messages %}
         <div class="alerts">

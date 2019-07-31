@@ -60,6 +60,9 @@
                 <div class="col-md-9">
                     {% block messages %}
                     {% endblock %}
+                    <h1>{% block appname %}{% endblock %}</h1>
+                    {% block breadcrumbs %}
+                    {% endblock %}
                     {% block body %}
                         {# This is the part that gets overridden by templates that extend this one. #}
                     {% endblock %}
