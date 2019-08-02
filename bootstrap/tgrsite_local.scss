@@ -1,0 +1,36 @@
+html {
+  height: 100vh;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.img-text {
+  height: 1.5ex;
+  vertical-align: baseline;
+}
+
+#pagetop {
+  flex: 1;
+}
+
+.CodeMirror {
+  height: 200px;
+}
+
+.photo {
+    width: 144px;
+    height: 144px;
+}
+
+.title {
+    display: inline-block;
+}
+
+.inline-gravatar {
+    display: inline-block;
+    height: 1em;
+}

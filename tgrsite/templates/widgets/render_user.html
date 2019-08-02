@@ -1,0 +1,10 @@
+{% if user.get_full_name %}
+    {{ user.get_full_name }} (
+    <a href="{% url 'users:user' user.member.id %}">{{ user.member }}</a>
+    <img class="inline-gravatar" src="{{ user.member.gravatar }}"
+         alt="Avatar for {{ user.member }}"> )
+{% else %}
+    <a href="{% url 'users:user' user.member.id %}">{{ user.member }}</a>
+    <img class="inline-gravatar" src="{{ user.member.gravatar }}"
+         alt="Avatar for {{ user.member }}">
+{% endif %}

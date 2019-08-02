@@ -57,7 +57,13 @@ THIS IS USED BY THE SITE
     {% if messages %}
         <div class="alerts">
             {% for message in messages %}
-                <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+                <div class="alert alert-dismissible show fade{% if message.tags %} {{ message.tags }}{% endif %}"
+                     role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             {% endfor %}
         </div>
     {% endif %}
@@ -99,10 +105,10 @@ THIS IS USED BY THE SITE
             <a class="nav-link align-content-center" href="//www.warwicksu.com/societies/sff/">
                 <img class="img-text" alt="SU logo" src="{% static "SUPurple.png" %}" aria-hidden="true">&nbsp;Warwick&nbsp;SU&nbsp;Page
             </a>
-            <a class="nav-link" href="{% url "page" "privacy"%}">
+            <a class="nav-link" href="{% url "page" "privacy" %}">
                 <i class="fas fa-user-secret"></i>&nbsp;Privacy&nbsp;Policy
             </a>
-            <a class="nav-link" href="{% url "page" "content-policy"%}">
+            <a class="nav-link" href="{% url "page" "content-policy" %}">
                 <i class="fas fa-comment-dots"></i>&nbsp;Content&nbsp;Policy
             </a>
         </div>

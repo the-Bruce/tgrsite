@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'pages',
     'newsletters',
     'notifications',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -183,6 +184,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
 
 # Monday
 FIRST_DAY_OF_WEEK = 1
+
+# Setup Cripsy to render forms bootstrap4ish
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # as advised by python manage.py check --deploy
 # prevent browsers from MIME type sniffing. doesn't play nice

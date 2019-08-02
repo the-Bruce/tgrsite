@@ -166,7 +166,7 @@ def signup_process(request):
         auth = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
         if auth is not None:
             login(request, auth)
-            return HttpResponseRedirect(reverse('edit'))
+            return HttpResponseRedirect(reverse('users:edit'))
         else:
             mail_managers(
                 'Unknown signup error',

@@ -6,7 +6,7 @@
 
     (Note: to change your profile image, see <a href="https://github.com/the-Bruce/tgrsite/wiki/Gravatar">this guide.</a>)
 
-    <form action="{% url 'update' %}" method="POST">
+    <form action="{% url 'users:update' %}" method="POST">
         {% csrf_token %}
 
         <div class="form-group">

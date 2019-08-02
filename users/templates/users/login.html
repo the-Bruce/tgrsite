@@ -17,13 +17,11 @@
         <form action="{% url 'users:login-done' %}" method="POST">
     {% endif %}
         {% csrf_token %}
-        <div class="form-group">
-            {{ form.as_p }}
-        </div>
-
-        <input type="submit" value="Log In" class="form-control">
+        {% include "widgets/render_form_content.html" %}
+        <input type="submit" class="form-control btn-primary" value="Save">
     </form>
 
-    <a href="{% url 'users:signup' %}">Sign up</a> &middot; <a href="{% url 'users:password_reset' %}">Reset password</a>
+    <a href="{% url 'users:signup' %}">Sign up</a> &middot;
+    <a href="{% url 'users:password_reset' %}">Reset password</a>
 
 {% endblock %}

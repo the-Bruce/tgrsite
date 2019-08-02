@@ -2,67 +2,40 @@
 {% block title %}
     Exec page
 {% endblock %}
+{% block pagetitle %}
+    Society Execs
+{% endblock %}
+{% block breadcrumbs_child %}Exec{% endblock %}
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.exec.change_execrole %}
+        <p><a class="btn btn-block btn-outline-dark" href="{% url "admin:app_list" "exec" %}">Edit</a></p>
+    {% endif %}
+{% endblock %}
 {% block body %}
-
-    <h1>Society Execs</h1>
-
+    <ul class="list-unstyled">
     {% for role in execs %}
         {% if role.incumbent %}
-            <div class="media">
-                <div class="media-left">
-                    <img class="media-object photo"
-                            {% if role.incumbent %}
-                         src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
-                            {% else %}
-                         src="http://gravatar.com/avatar/?default=mm"
-                            {% endif %}
-                         alt="Photo for {{ role.incumbent }}">
-                </div>
-                <div class="media-body wordwrap" id="{{ role.role_title }}">
-                    <h3 class="media-heading title">
+            <li class="media">
+                <img class="photo"
+                     src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
+                     alt="Photo for {{ role.incumbent }}" height="144px">
+                <div class="media-body ml-3" id="{{ role.role_title }}">
+                    <h3>
                         {{ role.role_title }} -
-                        {% if role.incumbent %}
-                            {% if role.incumbent.equiv_user.get_full_name %}
-                                {{ role.incumbent.equiv_user.get_full_name }} (
-                                <a href="{% url 'user' role.incumbent.id %}">{{ role.incumbent }}</a>
-                                <img class="inline-gravatar" src="{{ role.incumbent.gravatar }}"
-                                     alt="Avatar for {{ role.incumbent }}">)
-                            {% else %}
-                                <a href="{% url 'user' role.incumbent.id %}">
-                                    {{ role.incumbent }}
-                                    <img class="inline-gravatar" src="{{ role.incumbent.gravatar }}"
-                                         alt="Avatar for {{ role.incumbent }}">
-                                </a>
-                            {% endif %}
-                        {% else %}
-                            Unoccupied
-                        {% endif %}</h3>
-                    <p>{{ role.bio }}
+                        {% include "widgets/render_member.html" with member=role.incumbent %}
+                    </h3>
+                    <p>
+                        {{ role.bio }}
                         {% if request.user.member == role.incumbent %}
-                            <a href="{% url 'exec_editbio' role.id %}"><i class="fas fa-pencil-alt"></i></a>
-                        {% endif %}</p>
+                            <a href="{% url 'exec:exec_editbio' role.id %}"><i class="fas fa-pencil-alt"></i></a>
+                        {% endif %}
+                    </p>
                 </div>
-            </div>
+            </li>
         {% endif %}
     {% empty %}
-        there doesn't seem to be anyone here
+        <li>No roles have been defined. Get the web admin to add them in the admin interface</li>
     {% endfor %}
-
-    <style type="text/css">
-        .photo {
-            width: 144px;
-            height: 144px;
-        }
-
-        .title {
-            display: inline-block;
-        }
-
-        .inline-gravatar {
-            display: inline-block;
-            height: 1em;
-        }
-
-    </style>
-
+    </ul>
 {% endblock %}

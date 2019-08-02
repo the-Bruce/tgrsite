@@ -1,6 +1,10 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 
 from .models import ExecRole
+
+MD_INPUT = {
+    'class': 'markdown-input'
+}
 
 
 class ExecBioForm(ModelForm):

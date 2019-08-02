@@ -74,26 +74,3 @@ $navbar-light-toggler-border-color: rgba($black, .1);
     }
   }
 }
-
-html {
-  height: 100vh;
-}
-
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.img-text {
-  height: 1.5ex;
-  vertical-align: baseline;
-}
-
-#pagetop {
-  flex: 1;
-}
-
-.CodeMirror {
-  height: 200px;
-}
