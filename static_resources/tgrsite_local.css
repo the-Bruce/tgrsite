@@ -1,0 +1,13 @@
+.photo {
+    width: 144px;
+    height: 144px;
+}
+
+.title {
+    display: inline-block;
+}
+
+.inline-gravatar {
+    display: inline-block;
+    height: 1em;
+}
