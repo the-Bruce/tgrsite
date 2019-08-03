@@ -1,1 +1,32 @@
-{% include "widgets/render_user.html" with user=member.equiv_user %}
+<span class="text-nowrap">
+{% if not nolink %} {# double negative to change default case #}
+    {% if member.equiv_user.get_full_name and not short %}
+        {{ member.equiv_user.get_full_name }} (<a href="{% url 'users:user' member.id %}">{{ member }}</a>
+        {% if member.badge %}
+            <i class="{{ member.badge }}"></i>
+        {% endif %}{% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %})
+    {% else %}
+        <a href="{% url 'users:user' member.id %}">{{ member }}</a>
+        {% if member.badge %}
+            <i class="{{ member.badge }}"></i>
+        {% endif %}
+        {% if not avatarless %}
+            <img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">
+        {% endif %}
+    {% endif %}
+{% else %}
+    {% if member.equiv_user.get_full_name and not short %}
+        {{ member.equiv_user.get_full_name }} ({{ member }}
+        {% if member.badge %}
+            <i class="{{ member.badge }}"></i>
+        {% endif %}{% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %})
+    {% else %}
+        {{ member }}{% if member.badge %}
+            <i class="{{ member.badge }}"></i>
+        {% endif %}
+        {% if not avatarless %}
+            <img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">
+        {% endif %}
+    {% endif %}
+{% endif %}
+</span>

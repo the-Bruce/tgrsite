@@ -15,7 +15,6 @@ class Member(models.Model):
     signature = models.TextField(max_length=1024, blank=True)
     official_photo_url = models.CharField(max_length=512, null=True, blank=True)
 
-
     def gravatar(self, size=128):
         default = "https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg"
         h = hashlib.md5(
@@ -29,6 +28,14 @@ class Member(models.Model):
 
         return 'https://www.gravatar.com/avatar/{}?{}'.format(h, q)
 
+    def badge(self):
+        if self.is_exec():
+            return "fas fa-fw fa-crown text-warning"
+        elif self.is_ex_exec():
+            return "fas fa-fw fa-award text-muted"
+        else:
+            return False
+
     def __str__(self):
         return self.equiv_user.username
 
@@ -36,7 +43,10 @@ class Member(models.Model):
         return len(self.notifications_owned.filter(is_unread=True))
 
     def is_exec(self):
-        return len(self.execrole_set.all()) > 0
+        return self.execrole_set.count() > 0 or self.equiv_user.groups.filter(name='exec').exists()
+
+    def is_ex_exec(self):
+        return self.equiv_user.groups.filter(name='ex_exec').exists()
 
     @staticmethod
     def users_with_perm(perm_name):

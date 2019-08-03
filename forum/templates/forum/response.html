@@ -10,7 +10,7 @@ Included by thread.html which is responsible for rendering the enclosing thread
     <div class="panel-body">
         <div class="media">
             <div class="media-left">
-                <a class="wordwrap" href="{% url 'user' response.author.id %}">
+                <a class="wordwrap" href="{% url 'users:user' response.author.id %}">
                     <img class="media-object avatar" src="{{ response.author.gravatar }}"
                          alt="Avatar for {{ response.author }}">
                     {{ response.author }}
@@ -32,11 +32,11 @@ Included by thread.html which is responsible for rendering the enclosing thread
 
                 {% if response.author == user.member %}
                     {% if is_thread %}
-                        <a href="{% url 'thread_delete' thread.id %}"><i class="fas fa-trash-alt"></i></a>
-                        <a href="{% url 'thread_edit' thread.id %}"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{% url 'forum:thread_delete' thread.id %}"><i class="fas fa-trash-alt"></i></a>
+                        <a href="{% url 'forum:thread_edit' thread.id %}"><i class="fas fa-pencil-alt"></i></a>
                     {% else %}
-                        <a href="{% url 'response_delete' response.id %}"><i class="fas fa-trash-alt"></i></a>
-                        <a href="{% url 'response_edit' response.id %}"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{% url 'forum:response_delete' response.id %}"><i class="fas fa-trash-alt"></i></a>
+                        <a href="{% url 'forum:response_edit' response.id %}"><i class="fas fa-pencil-alt"></i></a>
                     {% endif %}
                 {% endif %}
 

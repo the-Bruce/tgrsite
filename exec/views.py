@@ -1,6 +1,4 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -8,13 +6,6 @@ from django.views.generic import ListView, UpdateView
 
 from .forms import ExecBioForm
 from .models import ExecRole
-
-
-def index(request):
-    context = {
-        'execs': ExecRole.objects.all().order_by('sort_index')
-    }
-    return render(request, 'exec/index.html', context)
 
 
 class Index(ListView):

@@ -5,7 +5,7 @@
 {% block body %}
 
     <h1>Edit post</h1>
-    <form action="{% url 'thread_edit_done' %}" method="POST">
+    <form action="{% url 'forum:thread_edit_done' %}" method="POST">
         {% csrf_token %}
 
         <input type="hidden" name="id" value="{{ id }}">

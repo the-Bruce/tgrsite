@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.views.generic import ListView, DetailView
 
 from notifications.models import notify, NotifType
 from .forms import ThreadForm, ResponseForm, ThreadEditForm
@@ -19,6 +20,14 @@ def index(request):
     return render(request, 'forum/forum.html', context)
 
 
+class RootForum(ListView):
+    model = Forum
+    template_name = "forum/forum.html"
+    context_object_name = "forums"
+
+    def get_queryset(self):
+        return Forum.get_parentless_forums()
+
 # subforum view
 def forum(request, pk):
     current_forum = get_object_or_404(Forum, id=pk)
@@ -33,7 +42,7 @@ def forum(request, pk):
         # prepare a thread form just in case they want to make one
         'form': ThreadForm(),
     }
-    return render(request, 'forum/forum.html', context)
+    return render(request, 'forum/subforum.html', context)
 
 
 # views a thread, optionally with a linked response id
@@ -69,7 +78,7 @@ def create_thread(request):
             forum=Forum.objects.get(id=request.POST.get('forum')),
         )
         thread.save()
-        return HttpResponseRedirect(reverse('viewthread', kwargs={'pk': thread.id}))
+        return HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': thread.id}))
     else:
         # TODO: placeholder error
         return HttpResponse(repr(form.errors))
@@ -86,7 +95,7 @@ def create_response(request):
             pub_date=timezone.now(),
             thread=thread,
         )
-        url = reverse('viewthread', kwargs={'pk': request.POST.get('thread')})
+        url = reverse('forum:viewthread', kwargs={'pk': request.POST.get('thread')})
         for author in thread.get_all_authors():
             if author != request.user.member:
                 notify(author, NotifType.FORUM_REPLY,
@@ -104,7 +113,7 @@ def delete_thread(request, pk):
     if thread.author.equiv_user.id != request.user.id and not request.user.has_perm(''):
         # TODO: placeholder error
         return HttpResponseForbidden()
-    url = reverse('subforum', kwargs={'pk': thread.forum.id})
+    url = reverse('forum:subforum', kwargs={'pk': thread.forum.id})
     thread.delete()
     add_message(request, constants.SUCCESS, "Thread deleted.")
     return HttpResponseRedirect(url)
@@ -116,7 +125,7 @@ def delete_response(request, pk):
     if response.author.equiv_user.id != request.user.id:
         # TODO: placeholder error
         return HttpResponseForbidden()
-    url = reverse('viewthread', kwargs={'pk': response.thread.id})
+    url = reverse('forum:viewthread', kwargs={'pk': response.thread.id})
     response.delete()
     add_message(request, constants.SUCCESS, "Response deleted.")
     return HttpResponseRedirect(url)
@@ -158,10 +167,10 @@ def edit_thread_process(request):
     form = ThreadEditForm(request.POST, instance=thread)
     if (form.is_valid()):
         form.save()
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': id}))
+        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': id}))
     else:
         add_message(request, constants.ERROR, "Unable to edit post.")
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': id}))
+        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': id}))
     return res
 
 
@@ -180,8 +189,8 @@ def edit_response_process(request):
     form = ResponseForm(request.POST, instance=response)
     if (form.is_valid()):
         form.save()
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': response.thread.id}))
+        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': response.thread.id}))
     else:
         add_message(request, constants.ERROR, "Unable to edit response.")
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': response.thread.id}))
+        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': response.thread.id}))
     return res

@@ -5,10 +5,10 @@
 {% block body %}
 
     <h1>Edit response</h1>
-    <form action="{% url 'response_edit_done' %}" method="POST">
+    <form action="{% url 'forum:response_edit_done' %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="id" value="{{ id }}">
-        {% include "widgets/render_form_content.html" with form=form %}
+        {% include "widgets/render_form_content.html" %}
         <input type="submit" class="form-control">
     </form>
 {% endblock %}
