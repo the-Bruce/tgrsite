@@ -1,32 +1,36 @@
-<span class="text-nowrap">
+<span>
 {% if not nolink %} {# double negative to change default case #}
     {% if member.equiv_user.get_full_name and not short %}
-        {{ member.equiv_user.get_full_name }} (<a href="{% url 'users:user' member.id %}">{{ member }}</a>
-        {% if member.badge %}
+        {{ member.equiv_user.get_full_name }} <span class="text-nowrap">( {% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %}
+        <a href="{% url 'users:user' member.id %}">{{ member }}</a>{% if member.badge %}
             <i class="{{ member.badge }}"></i>
-        {% endif %}{% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %})
+        {% endif %} )</span>
     {% else %}
+        <span class="text-nowrap">
+            {% if not avatarless %}
+            <img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">
+        {% endif %}
         <a href="{% url 'users:user' member.id %}">{{ member }}</a>
         {% if member.badge %}
             <i class="{{ member.badge }}"></i>
         {% endif %}
-        {% if not avatarless %}
-            <img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">
-        {% endif %}
+        </span>
     {% endif %}
 {% else %}
     {% if member.equiv_user.get_full_name and not short %}
-        {{ member.equiv_user.get_full_name }} ({{ member }}
-        {% if member.badge %}
+        <span class="text-nowrap">{{ member.equiv_user.get_full_name }}</span> <span class="text-nowrap">( {% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %} {{ member }}{% if member.badge %}
             <i class="{{ member.badge }}"></i>
-        {% endif %}{% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %})
+        {% endif %} )</span>
     {% else %}
-        {{ member }}{% if member.badge %}
-            <i class="{{ member.badge }}"></i>
-        {% endif %}
+        <span class="text-nowrap">
         {% if not avatarless %}
             <img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">
         {% endif %}
+        {{ member }}{% if member.badge %}
+            <i class="{{ member.badge }}"></i>
+        {% endif %}
+        </span>
     {% endif %}
+
 {% endif %}
 </span>

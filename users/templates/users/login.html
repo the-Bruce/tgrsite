@@ -18,7 +18,7 @@
     {% endif %}
         {% csrf_token %}
         {% include "widgets/render_form_content.html" %}
-        <input type="submit" class="form-control btn-primary" value="Save">
+        <input type="submit" class="form-control btn-primary" value="Login">
     </form>
 
     <a href="{% url 'users:signup' %}">Sign up</a> &middot;

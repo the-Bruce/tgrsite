@@ -19,10 +19,19 @@
     <title>{% block title %}{% endblock %} - Warwick Tabletop Games and Role-Playing Society</title>
 
     {% block bootstrap %}
+        <link rel="stylesheet" href="{% static "tgrsite_bootstrap.css" %}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+              integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+              crossorigin="anonymous">
     {% endblock %}
 
     {% comment %} For scripts we don't want at the top of the email. {% endcomment %}
     {% block topscripts %}
+        <script src="{% static 'bootstrap3-typeahead.js' %}"></script>
+        {# font icons library #}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+              integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+              crossorigin="anonymous">
     {% endblock %}
 
     {% block head %}
@@ -32,9 +41,10 @@
     {% endblock %}
 
     {% block css %}
+        <link rel="stylesheet" href="{% static "tgrsite_local.css" %}">
         {% comment %}
-                This is where a page's custom CSS will go, or a link to the relevant stylesheet I guess.
-            {% endcomment %}
+            This is where a page's custom CSS will go, or a link to the relevant stylesheet I guess.
+        {% endcomment %}
     {% endblock %}
 
 </head>

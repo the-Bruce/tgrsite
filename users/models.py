@@ -16,12 +16,10 @@ class Member(models.Model):
     official_photo_url = models.CharField(max_length=512, null=True, blank=True)
 
     def gravatar(self, size=128):
-        default = "https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg"
         h = hashlib.md5(
             self.equiv_user.email.encode('utf8').lower()
         ).hexdigest()
         q = urllib.urlencode({
-            # 'd':default,
             'd': 'identicon',
             's': str(size),
         })
@@ -30,9 +28,9 @@ class Member(models.Model):
 
     def badge(self):
         if self.is_exec():
-            return "fas fa-fw fa-crown text-warning"
+            return "fas fa-crown text-warning"
         elif self.is_ex_exec():
-            return "fas fa-fw fa-award text-muted"
+            return "fas fa-award text-muted"
         else:
             return False
 

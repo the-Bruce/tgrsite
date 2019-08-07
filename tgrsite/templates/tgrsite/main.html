@@ -16,28 +16,7 @@ THIS IS USED BY THE SITE
           content="Warwick Tabletop and Role-Playing Society provides Warwick students with access to role-playing, board games, LARP, CCGs and a community to engage with these activities.">
 {% endblock %}
 
-{% block topscripts %}
-    {{ block.super }}
-    <script src="{% static 'bootstrap3-typeahead.js' %}"></script>
 
-    {# font icons library #}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
-    {# Markdown editor #}
-    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-{% endblock %}
-
-{% block bootstrap %}
-    <link rel="stylesheet" href="{% static "tgrsite_bootstrap.css" %}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-{% endblock %}
-
-{% block css %}
-    <link rel="stylesheet" href="{% static "tgrsite_local.css" %}">
-{% endblock %}
 
 {% block navbar %}
     {% include "nav.html" %}
@@ -117,21 +96,16 @@ THIS IS USED BY THE SITE
 
 {% block bottomscripts %}
     {{ block.super }}
+    {# Markdown editor #}
+    <script src="{% static "markdown-editor.min.js" %}"></script>
+    {% comment %}
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+    {% endcomment %}
     <script>
         $(document).ready(function () {
             console.log("Getting ready.");
-            window.simplemde = [];
-            $(".markdown-input").each(function (i, e) {
-                console.log("Element " + e);
-                window.simplemde.push(
-                    new EasyMDE({
-                        element: e,
-                        placeholder: "Write Markdown (or just regular text) here...",
-                        forceSync: true,
-                        autoDownloadFontAwesome: false,
-                    })
-                );
-            });
+            $(".markdown-input").MarkdownEditor();
         });
     </script>
 {% endblock %}

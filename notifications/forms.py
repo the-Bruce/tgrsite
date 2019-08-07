@@ -13,8 +13,7 @@ class SubscriptionForm(ModelForm):
         model = NotificationSubscriptions
 
         fields = ['member', 'newsletter', 'message', 'rpg_join', 'rpg_leave', 'rpg_kick', 'rpg_add',
-                  'rpg_new', 'forum_reply',
-                  'other']
+                  'rpg_new', 'forum_reply', 'other']
 
         widgets = {
             'member': HiddenInput(),

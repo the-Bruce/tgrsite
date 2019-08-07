@@ -26,21 +26,14 @@ Context's "response_id" the second number in the url, which is the response ID f
 
     {% comment %} Even the OP uses the "response" template {% endcomment %}
     {% include 'forum/response.html' with response=thread is_thread=True %}
-
+    <div>
     {% for response in responses %}
-        {% include 'forum/response.html' %}
+        {% include 'forum/widgets/response.html' %}
     {% endfor %}
-
+    </div>
     {% if request.user.is_authenticated %}
 
-        <form action="{% url 'forum:createresponse' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ form }}
-                <input type="hidden" name="thread" value="{{ thread.id }}">
-            </div>
-            <input type="submit" value="Respond" class="form-control">
-        </form>
+        {% include "widgets/render_form.html" with save="Reply" %}
 
     {% else %}
 

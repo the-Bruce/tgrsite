@@ -1,0 +1,14 @@
+{% load markdown_tags %}
+
+<div class="card mb-2 mb-sm-4">
+    <div class="card-header d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+        <h5 class="text-sm-nowrap d-flex justify-content-sm-between align-items-center mb-2 mb-sm-0">
+            <img class="mr-2" alt="Avatar for {{ response.author }}" src="{{ response.author.gravatar }}" width="50px">
+            {% include "widgets/render_member.html" with member=response.author avatarless=True %}
+        </h5>
+        <p class="card-text d-flex text-muted text-left text-sm-right justify-content-sm-center align-items-sm-center">Posted {{ response.pub_date|timesince }} ago</p>
+    </div>
+    <div class="card-body">
+        <div class="card-text">{{ response.body|parse_md }}</div>
+    </div>
+</div>

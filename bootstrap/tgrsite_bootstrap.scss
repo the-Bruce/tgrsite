@@ -74,3 +74,9 @@ $navbar-light-toggler-border-color: rgba($black, .1);
     }
   }
 }
+
+.card-text {
+  p:last-child {
+    margin-bottom: 0;
+  }
+}

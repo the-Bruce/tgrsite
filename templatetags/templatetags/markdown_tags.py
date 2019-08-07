@@ -5,13 +5,17 @@ from django.utils.safestring import mark_safe
 from markdown import markdown
 
 register = template.Library()
-exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde']
+exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_lists']
 
 
 @register.filter(is_safe=True)
 def parse_md(value):
     return mark_safe(markdown(escape(value), extensions=exts))
 
+@register.filter(is_safe=True)
+def parse_md_card(value):
+    html=markdown(escape(value), extensions=exts)
+    return mark_safe()
 
 # Parses markdown WITHOUT escaping. Use with caution!
 @register.filter(is_safe=True)
