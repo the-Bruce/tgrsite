@@ -6,10 +6,9 @@
                 <span class="text-muted text-right">{{ thread.pub_date|timesince }} ago</span>
             </span>
             <span class="d-flex justify-content-between align-items-baseline">
-                {% include "widgets/render_member.html" with member=thread.author nolink=True short=True %}
+                {% include "parts/render_member.html" with member=thread.author nolink=True short=True %}
                 <span class="badge badge-primary badge-pill">{{ thread.get_response_count }} response{{ thread.get_response_count|pluralize }}</span>
             </span>
-
         </a>
     {% endfor %}
 </div>

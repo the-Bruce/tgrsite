@@ -1,58 +1,70 @@
 {% extends 'tgrsite/main.html' %}
 {% load staticfiles %}
 
-{% block css %}
-    {{ block.super }}
-    <style>
-        .my-responsive {
-            width: 50%;
-            max-width: 500px;
-            height: auto;
-            float: right;
-        }
-    </style>
-{% endblock %}
+{% block title %}{{ inv.name }}{% endblock %}
+{% block pagetitle %}{{ inv.name }}{% endblock %}
 
-{% block title %}
-    {{ inv.name }}
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Details{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.inventory.change_record %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:inventory_record_change" record.id %}">Edit</a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ inv.name }} - {{ object.name }}</h1>
-    <p>in <a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-text">{{ object.name }}</h2>
+        </div>
+        <div class="card-body">
+            {% if perms.inventory.change_record %}
+                <a class="mb-2 btn btn-block btn-outline-primary"
+                   href="{% url "inventory:edit_record" inv=inv.canonical_ pk=object.pk %}">Edit</a>
+            {% endif %}
+            <div class="d-sm-flex flex-row-reverse align-items-center">
+                <div class="ml-sm-2 mb-4 mb-sm-2">
+                    {% if object.image %}
+                        <img alt="{{ object.name }} example image" class="img-fluid" src="{{ object.image }}">
+                    {% endif %}
+                </div>
+                <div>
+                    {% if object.acquired %}
+                        <h3>Acquired: </h3>
+                        <p>{% if object.acquired.day == 1 and object.acquired.month == 1 %}
+                            {{ object.acquired.year }}{% else %}
+                            {{ object.acquired|date }}{% endif %}</p>
+                    {% endif %}
 
-    {% if perms.inventory.change_record %}
-        <a class="btn btn-primary" href="{% url "inventory:edit_record" inv=inv.canonical_ pk=object.pk %}">Edit</a>
-    {% endif %}
+                    {% if object.quantity > 1 %}
+                        <h3>Quantity: {{ object.quantity }}</h3>
+                    {% endif %}
 
-    {% if object.image %}
-        <img alt="{{ object.name }} example image" class="my-responsive" src="{{ object.image }}">
-    {% endif %}
+                    {% if object.description %}
+                        <h3>Description</h3>
+                        {{ object.description|linebreaks }}
+                    {% endif %}
+                </div>
+            </div>
 
-    {% if object.acquired %}
-        <h3>Acquired: </h3>
-        <p>{% if object.acquired.day == 1 and object.acquired.month == 1 %}{{ object.acquired.year }}{% else %}
-            {{ object.acquired|date }}{% endif %}</p>
-    {% endif %}
+            {% if object.owner %}
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Graciously lent to the society
+                            by {% include "parts/render_member.html" with member=object.owner %}
+                        </p>
+                    </div>
+                </div>{% endif %}
 
-    {% if object.quantity > 1 %}
-        <h3>Quantity: {{ object.quantity }}</h3>
-    {% endif %}
-
-    {% if object.description %}
-        <h3>Description</h3>
-        <p>
-            {{ object.description|linebreaksbr }}
-        </p>
-    {% endif %}
-
-    <div class="clearfix"></div>
-    {% if object.owner %}
-        <div class="well well-sm">Graciously lent to the society by {{ object.owner }}</div>{% endif %}
-
-    {% if perms.inventory.view_loan and object.inventory.loans and object.get_live_loans|length > 0 %}
-        <h3>Loans</h3>
-        {% include "inventory/parts/loanlist.html" with loans=object.get_live_loans %}
-    {% endif %}
-
+            {% if perms.inventory.view_loan and object.inventory.loans and object.get_live_loans|length > 0 %}
+                <h3>Loans</h3>
+                {% include "inventory/parts/loanlist.html" with loans=object.get_live_loans %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

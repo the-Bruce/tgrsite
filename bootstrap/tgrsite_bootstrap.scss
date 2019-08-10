@@ -1,3 +1,18 @@
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
+$light: $gray-200;
+$dark: $gray-800;
+
 $theme-colors: (
         "primary": #6D0F8C,
         "secondary": #300140,
@@ -78,5 +93,18 @@ $navbar-light-toggler-border-color: rgba($black, .1);
 .card-text {
   p:last-child {
     margin-bottom: 0;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.form-pseudo-control {
+  &.is-invalid {
+    ~ .invalid-feedback,
+    ~ .invalid-tooltip {
+      display: block;
+    }
   }
 }

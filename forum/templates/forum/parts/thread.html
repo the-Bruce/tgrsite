@@ -1,0 +1,7 @@
+{% extends "forum/parts/response.html" %}
+{% block edit_links %}
+    <a class="btn btn-outline-success" href="{% url 'forum:thread_edit' thread.id %}"><i class="fas fa-pencil-alt"></i></a>
+    <a class="btn btn-outline-danger" href="{% url 'forum:thread_delete' thread.id %}"><i class="fas fa-trash-alt"></i></a>
+{% endblock %}
+
+{% block id %}{% endblock %}{# remove the  #}

@@ -4,10 +4,10 @@ from .models import GalleryImage
 
 
 class GalleryImageAdmin(admin.ModelAdmin):
-    list_display = ('caption', 'filename')
+    list_display = ('caption', 'image')
 
     model = GalleryImage
-    fields = ('filename', 'caption', 'as_img')
+    fields = ('image', 'caption', 'as_img')
     readonly_fields = ('as_img',)
 
 

@@ -8,3 +8,4 @@ tgrsite/keys.py
 local_config.py
 /MEDIA/
 /bootstrap/build/
+/.idea/

@@ -4,12 +4,20 @@
 {% endblock %}
 {% block pagetitle %}Forum{% endblock %}
 {% block breadcrumbs_child %}Forum{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.forum.change_forums %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_forum_changelist" %}">Edit</a>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     <div class="mb-3"><h3>Forums</h3>
         {% if forums %}
-            {% include "forum/widgets/subforum_list.html" with forums=forums %}
+            {% include "forum/parts/subforum_list.html" with forums=forums %}
         {% else %}
-            {% if not threads and current == 'Forum' %}
+            {% if not threads %}
                 Looks like the forum doesn't exist!<br>
                 Contact the <a href="{% url 'exec:exec' %}#Web%20Admin">Web Admin</a>.
             {% endif %}

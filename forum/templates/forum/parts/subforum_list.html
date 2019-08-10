@@ -4,11 +4,11 @@
             <span class="d-flex flex-column flex-sm-row justify-content-between align-items-baseline">
                 <strong>{{ forum.title }}</strong>
                 {% if forum.get_latest_post %}
-                    <span class="text-left text-sm-right"><em>Latest Post:</em> {{ forum.get_latest_post|truncatechars:24 }}</span>
+                    <span class="text-left text-muted text-sm-right"><em>Latest Post:</em> {{ forum.get_latest_post|truncatechars:24 }}</span>
                 {% endif %}
             </span>
             <span class="d-flex flex-column flex-sm-row justify-content-between align-items-baseline">
-                <small class="text-muted">{{ forum.description }}</small>
+                <small>{{ forum.description }}</small>
                 <span class="badge badge-primary badge-pill ml-sm-3">{{ forum.get_threads_count_r }} thread{{ forum.get_threads_count_r|pluralize }}</span>
             </span>
 

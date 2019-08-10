@@ -75,7 +75,7 @@ class SignupForm(ModelForm):
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['discord', 'bio', 'signature', 'official_photo_url']
+        fields = ['discord', 'bio', 'signature', 'official_photo_url', 'dark']
 
         widgets = {
             'discord': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),

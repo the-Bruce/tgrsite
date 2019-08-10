@@ -1,58 +1,47 @@
 {% extends "tgrsite/main.html" %}
 
-{% comment %}
-thread.html renders a single thread, specified in the "thread" context variable
-{% endcomment %}
-
-{% comment response_id %}
-Context's "response_id" the second number in the url, which is the response ID for linking (for now), or None.
-	TODO: make this do something
-	{{ response_id }}
-{% endcomment %}
 {% block title %}
     {{ thread.title }}
 {% endblock %}
 
+{% block pagetitle %}{{ thread.title }}{% endblock %}
 
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "forum:forum" %}">Forum</a></li>
+    {% for parent in thread.forum.get_parents %}
+        <li class="breadcrumb-item"><a href="{% url "forum:subforum" parent.pk %}">{{ parent.title }}</a></li>
+    {% endfor %}
+    <li class="breadcrumb-item"><a href="{% url "forum:subforum" thread.forum.pk %}">{{ thread.forum.title }}</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}{{ thread.title }}{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.forum.change_forums %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_thread_change" thread.id %}">Edit</a>
+    {% endif %}
+{% endblock %}
 
 {% block body %}
+    {% include 'forum/parts/thread.html' with response=thread %}
 
-    <h2 class="wordwrap">{{ thread.title }}</h2>
-
-    <h4>
-        in
-        <a href="{% url 'forum:subforum' thread.forum.id %}">{{ thread.forum }}</a>
-    </h4>
-
-    {% comment %} Even the OP uses the "response" template {% endcomment %}
-    {% include 'forum/response.html' with response=thread is_thread=True %}
-    <div>
-    {% for response in responses %}
-        {% include 'forum/widgets/response.html' %}
-    {% endfor %}
+    <div class="ml-0 ml-sm-4">
+        {% for response in responses %}
+            {% include 'forum/parts/response.html' %}
+        {% endfor %}
     </div>
-    {% if request.user.is_authenticated %}
 
-        {% include "widgets/render_form.html" with save="Reply" %}
-
-    {% else %}
-
-        <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
-        or
-        <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a>
-        to respond.
-
-    {% endif %}
-
-    <style>
-        img.avatar {
-            width: 64px;
-            height: 64px;
-        }
-
-        .post-body img {
-            max-width: 100%;
-        }
-    </style>
-
+    <div class="card mb-4">
+        <div class="card-body">
+            {% if request.user.is_authenticated %}
+                {% include "parts/render_form.html" with save="Reply" %}
+            {% else %}
+                <p class="card-text">
+                    <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
+                    or
+                    <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to respond.
+                </p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

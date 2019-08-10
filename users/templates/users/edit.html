@@ -10,14 +10,14 @@
         {% csrf_token %}
 
         <div class="form-group">
-            {% include "widgets/render_form_content.html" with form=userform %}
+            {% include "parts/render_form_content.html" with form=userform %}
 
             {% comment %}
             {{ userform.as_p }}
             {% endcomment %}
             {% for field in memberform %}
                 {% if field.name != 'official_photo_url' or request.user.member.is_exec %}
-                    {% include "widgets/render_form_widget.html" with field=field %}
+                    {% include "parts/render_form_widget.html" with field=field %}
                 {% endif %}
             {% endfor %}
         </div>

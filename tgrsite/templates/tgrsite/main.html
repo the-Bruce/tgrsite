@@ -49,7 +49,7 @@ THIS IS USED BY THE SITE
 {% endblock %}
 
 {% block leftcontents %}
-    <div class="card d-none d-md-flex">
+    <div class="card d-none d-md-flex mb-2">
         <a class="card-header" href="#ql" data-toggle="collapse">
             Quick Links
         </a>
@@ -76,22 +76,22 @@ THIS IS USED BY THE SITE
 {% endblock %}
 
 {% block footer %}
-    <footer class="bg-light">
-        <div class="nav ml-auto mr-auto d-flex flex-row justify-content-around">
-            <a class="nav-link" href="//www.facebook.com/TAGAROPLE/">
-                <i class="fab fa-facebook-square"></i>&nbsp;Facebook
-            </a>
-            <a class="nav-link align-content-center" href="//www.warwicksu.com/societies/sff/">
-                <img class="img-text" alt="SU logo" src="{% static "SUPurple.png" %}" aria-hidden="true">&nbsp;Warwick&nbsp;SU&nbsp;Page
-            </a>
-            <a class="nav-link" href="{% url "page" "privacy" %}">
-                <i class="fas fa-user-secret"></i>&nbsp;Privacy&nbsp;Policy
-            </a>
-            <a class="nav-link" href="{% url "page" "content-policy" %}">
-                <i class="fas fa-comment-dots"></i>&nbsp;Content&nbsp;Policy
-            </a>
-        </div>
-    </footer>
+
+    <div class="nav ml-auto mr-auto d-flex flex-row justify-content-around">
+        <a class="nav-link text-dark" href="//www.facebook.com/TAGAROPLE/">
+            <i class="fab fa-facebook-square"></i>&nbsp;Facebook
+        </a>
+        <a class="nav-link text-dark align-content-center" href="//www.warwicksu.com/societies/sff/">
+            <img class="img-text" alt="SU logo" src="{% if user.member.dark %}{% static "SUWhite.png" %}{% else %}{% static "SUDark.png" %}{% endif %}" aria-hidden="true">&nbsp;Warwick&nbsp;SU&nbsp;Page
+        </a>
+        <a class="nav-link text-dark" href="{% url "page" "privacy" %}">
+            <i class="fas fa-user-secret"></i>&nbsp;Privacy&nbsp;Policy
+        </a>
+        <a class="nav-link text-dark" href="{% url "page" "content-policy" %}">
+            <i class="fas fa-comment-dots"></i>&nbsp;Content&nbsp;Policy
+        </a>
+    </div>
+
 {% endblock %}
 
 {% block bottomscripts %}
@@ -106,6 +106,7 @@ THIS IS USED BY THE SITE
         $(document).ready(function () {
             console.log("Getting ready.");
             $(".markdown-input").MarkdownEditor();
+            $('[data-toggle="tooltip"]').tooltip()
         });
     </script>
 {% endblock %}

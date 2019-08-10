@@ -25,7 +25,7 @@
     {% for rpg in rpgs %}
         {% include "rpgs/detail.html" with embed="true" %}
     {% endfor %}
-    {% include "widgets/typeaheadjs.html" %}
+    {% include "parts/typeaheadjs.html" %}
 
     {% if is_paginated %}
         <ul class="pagination">

@@ -1,7 +1,8 @@
 <span>
 {% if not nolink %} {# double negative to change default case #}
     {% if member.equiv_user.get_full_name and not short %}
-        {{ member.equiv_user.get_full_name }} <span class="text-nowrap">( {% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %}
+        <span class="text-nowrap">{% if fullname %}{{ member.equiv_user.get_full_name }}{% else %}{{ member.equiv_user.first_name }}{% endif %}</span>
+        <span class="text-nowrap">( {% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %}
         <a href="{% url 'users:user' member.id %}">{{ member }}</a>{% if member.badge %}
             <i class="{{ member.badge }}"></i>
         {% endif %} )</span>
@@ -18,7 +19,8 @@
     {% endif %}
 {% else %}
     {% if member.equiv_user.get_full_name and not short %}
-        <span class="text-nowrap">{{ member.equiv_user.get_full_name }}</span> <span class="text-nowrap">( {% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %} {{ member }}{% if member.badge %}
+        <span class="text-nowrap">{% if fullname %}{{ member.equiv_user.get_full_name }}{% else %}{{ member.equiv_user.first_name }}{% endif %}</span>
+        <span class="text-nowrap">( {% if not avatarless %}<img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">{% endif %} {{ member }}{% if member.badge %}
             <i class="{{ member.badge }}"></i>
         {% endif %} )</span>
     {% else %}

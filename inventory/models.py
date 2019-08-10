@@ -54,10 +54,7 @@ class Record(models.Model):
         return loans.count() < self.quantity
 
     def get_live_loans(self):
-        # All non-rejected loans which haven't been returned and that haven't passed their end date which either
-        # are before their end date or which have been checked out
-        return self.loan_set.filter(Q(rejected__isnull=True, returned_who__isnull=False) &
-                                    Q(Q(end_date__gte=date.today()) | Q(taken_who__isnull=False)))
+        return [x for x in self.loan_set.all() if x.is_live()]
 
 
 class Suggestion(models.Model):
@@ -79,6 +76,14 @@ class Suggestion(models.Model):
 
 
 class Loan(models.Model):
+    class STATE:
+        PENDING = 0
+        REJECTED = 1
+        AUTHORISED = 2
+        TAKEN = 3
+        COMPLETED = 4
+        EXPIRED = 5
+
     requester = models.ForeignKey(users.Member, on_delete=models.PROTECT)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="inventory_loans")
     items = models.ManyToManyField(Record)
@@ -118,10 +123,39 @@ class Loan(models.Model):
     def can_edit(self):
         return not (self.authorised or self.rejected)
 
+    def state(self):
+        if self.rejected:
+            return self.STATE.REJECTED
+        elif self.authorised:
+            if self.returned_who:
+                return self.STATE.COMPLETED
+            elif self.taken_who:
+                return self.STATE.TAKEN
+            else:
+                if self.is_live():
+                    return self.STATE.AUTHORISED
+                else:
+                    return self.STATE.EXPIRED
+        else:
+            if self.is_live():
+                return self.STATE.PENDING
+            else:
+                return self.STATE.EXPIRED
+
+    @property
+    def state_text(self):
+        translation = {self.STATE.AUTHORISED: "Authorised",
+                       self.STATE.EXPIRED: "Expired",
+                       self.STATE.TAKEN: "On Loan",
+                       self.STATE.COMPLETED: "Completed",
+                       self.STATE.REJECTED: "Rejected",
+                       self.STATE.PENDING: "Pending"}
+        return translation[self.state()]
+
     def __str__(self):
         # ThomasB: 20/12/18-25/12/18 (3)
         return str(self.requester) + ": " + str(self.start_date) + "-" + str(self.end_date) + "(" + str(
-            self.items.all().count()) + ")"
+            self.items.all().count()) + ") - "+self.state_text
 
     def contains(self, check_date):
         return self.start_date <= check_date <= self.end_date

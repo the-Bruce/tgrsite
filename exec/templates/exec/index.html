@@ -2,40 +2,47 @@
 {% block title %}
     Exec page
 {% endblock %}
-{% block pagetitle %}
-    Society Execs
-{% endblock %}
+{% block pagetitle %}Society Execs{% endblock %}
 {% block breadcrumbs_child %}Exec{% endblock %}
+
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.exec.change_execrole %}
         <p><a class="btn btn-block btn-outline-dark" href="{% url "admin:app_list" "exec" %}">Edit</a></p>
     {% endif %}
 {% endblock %}
+
 {% block body %}
     <ul class="list-unstyled">
-    {% for role in execs %}
-        {% if role.incumbent %}
-            <li class="media mb-3">
-                <img class="photo"
-                     src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
-                     alt="Photo for {{ role.incumbent }}" height="144px">
-                <div class="media-body ml-3" id="{{ role.role_title }}">
-                    <h4>
-                        {{ role.role_title }} -
-                        {% include "widgets/render_member.html" with member=role.incumbent %}
-                    </h4>
-                    <p>
-                        {{ role.bio }}
-                        {% if request.user.member == role.incumbent %}
-                            <a href="{% url 'exec:exec_editbio' role.id %}"><i class="fas fa-pencil-alt"></i></a>
-                        {% endif %}
-                    </p>
-                </div>
-            </li>
-        {% endif %}
-    {% empty %}
-        <li>No roles have been defined. Get the web admin to add them in the admin interface</li>
-    {% endfor %}
+        {% for role in execs %}
+            {% if role.incumbent %}
+                <li class="card mb-2">
+                    <a class="anchor" id="{{ role.role_title }}"></a>
+                    <div class="card-body">
+                        <h4 class="card-title text-center text-sm-left">
+                            {{ role.role_title }} -
+                            {% include "parts/render_member.html" with member=role.incumbent fullname=True %}
+                            {% if request.user.member == role.incumbent %}
+                                <a class="btn btn-outline-success" href="{% url 'exec:exec_editbio' role.id %}"><i
+                                        class="fas fa-pencil-alt"></i></a>
+                            {% endif %}
+                        </h4>
+                        <div class="d-flex flex-column flex-sm-row">
+                            <div class="mr-sm-4 mb-2 mb-sm-0 align-self-center align-self-sm-start"
+                                 style="flex-basis: 144px; flex-shrink: 0; flex-grow: 0">
+                                <img class="photo card-img align-self-center"
+                                     src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
+                                     alt="Photo for {{ role.incumbent }}" height="144px">
+                            </div>
+                            <div class="card-text">
+                                {{ role.bio|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+        {% empty %}
+            <li>No roles have been defined. Get the web admin to add them in the admin interface</li>
+        {% endfor %}
     </ul>
 {% endblock %}

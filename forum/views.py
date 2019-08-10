@@ -4,22 +4,13 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 
 from notifications.models import notify, NotifType
 from .forms import ThreadForm, ResponseForm, ThreadEditForm
 from .models import Thread, Response, Forum
-
-
-# landing page: "root forum"
-def index(request):
-    context = {
-        'forums': Forum.get_parentless_forums().order_by('sort_index'),
-        'current': 'Forum',
-    }
-    return render(request, 'forum/forum.html', context)
 
 
 class RootForum(ListView):
@@ -29,6 +20,21 @@ class RootForum(ListView):
 
     def get_queryset(self):
         return Forum.get_parentless_forums().order_by('sort_index')
+
+
+class Recent(TemplateView):
+    template_name = "forum/recent.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        threads = Thread.objects.order_by('-pub_date')[:5]
+        responses = Response.objects.order_by('-pub_date')[:5]
+        context.update({
+            'threads': threads,
+            'responses': responses,
+        })
+        return context
 
 
 class ViewSubforum(AccessMixin, SuccessMessageMixin, CreateView):
@@ -156,66 +162,16 @@ class EditResponse(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin,
         return context
 
 
-@login_required
-def edit_thread_view(request, pk):
-    thread = get_object_or_404(Thread, id=pk)
-    if thread.author.equiv_user.id != request.user.id:
-        # TODO: placeholder error
-        return HttpResponseForbidden()
-    form = ThreadEditForm(instance=thread)
-    context = {'form': form, 'id': pk}
-    return render(request, 'forum/edit_thread.html', context)
+class EditThread(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = Thread
+    form_class = ThreadForm  # I'm uncomfortable with letting people move threads around willy-nilly. Will review
+    template_name = "forum/edit_thread.html"
+    success_message = "Thread changed"
 
+    def test_func(self):
+        thread = get_object_or_404(Thread, id=self.kwargs['pk'])
+        return self.request.user.member == thread.author
 
-@login_required
-def edit_response_view(request, pk):
-    response = get_object_or_404(Response, id=pk)
-    if response.author.equiv_user.id != request.user.id:
-        return HttpResponseForbidden()
-    form = ResponseForm(instance=response)
-    context = {'form': form, 'id': pk}
-    return render(request, 'forum/edit_response.html', context)
-
-
-@login_required
-def edit_thread_process(request):
-    id = request.POST.get('id')
-    if (request.method != 'POST'):
-        return HttpResponseRedirect("/")
-
-    thread = get_object_or_404(Thread, id=id)
-
-    # first, standard permissions junk
-    if thread.author.equiv_user.id != request.user.id:
-        return HttpResponseForbidden()
-
-    form = ThreadEditForm(request.POST, instance=thread)
-    if (form.is_valid()):
-        form.save()
-        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': id}))
-    else:
-        add_message(request, constants.ERROR, "Unable to edit post.")
-        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': id}))
-    return res
-
-
-@login_required
-def edit_response_process(request):
-    id = request.POST.get('id')
-    if (request.method != 'POST'):
-        return HttpResponseRedirect("/")
-
-    response = get_object_or_404(Response, id=id)
-
-    # first, standard permissions junk
-    if response.author.equiv_user.id != request.user.id:
-        return HttpResponseForbidden()
-
-    form = ResponseForm(request.POST, instance=response)
-    if (form.is_valid()):
-        form.save()
-        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': response.thread.id}))
-    else:
-        add_message(request, constants.ERROR, "Unable to edit response.")
-        res = HttpResponseRedirect(reverse('forum:viewthread', kwargs={'pk': response.thread.id}))
-    return res
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

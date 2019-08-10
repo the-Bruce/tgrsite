@@ -15,7 +15,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-
 from exec.models import ExecRole
 from forum.models import Thread, Response
 from rpgs.models import Rpg
@@ -39,11 +38,10 @@ def viewmember(request, pk):
 
     # = ','.join(str()
 
-    is_me=False
+    is_me = False
     if (request.user.is_authenticated):
-        is_me=(request.user.member.id == pk)
-    
-    
+        is_me = (request.user.member.id == pk)
+
     context = {
         # whether the viewed user is the logged in one
         'me': is_me,
@@ -56,9 +54,7 @@ def viewmember(request, pk):
         'rpgs': Rpg.objects.filter(game_masters__id=pk),
         'execroles': execroles,
     }
-    
-    
-        
+
     return render(request, 'users/view.html', context)
 
 
@@ -91,14 +87,14 @@ def update(request):
             memberform.save()
             userform.save()
             add_message(request, constants.SUCCESS, "Successfully updated.")
-            res = HttpResponseRedirect(reverse('me'))
+            res = HttpResponseRedirect(reverse('homepage'))  # me
             return res
         else:
             add_message(request, constants.ERROR, "There were problems with the form.")
-            return HttpResponseRedirect(reverse('edit'))
+            return HttpResponseRedirect(reverse('users:edit'))
 
     else:
-        return HttpResponseRedirect(reverse('me'))
+        return HttpResponseRedirect(reverse('homepage'))  # me
 
 
 # view for the login form

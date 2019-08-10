@@ -1,0 +1,195 @@
+//300140
+
+$white: #000;
+$gray-100: #212529;
+$gray-200: #343a40;
+$gray-300: #495057;
+$gray-400: #6c757d;
+$gray-500: #adb5bd;
+$gray-600: #ced4da;
+$gray-700: #dee2e6;
+$gray-800: #e9ecef;
+$gray-900: #f8f9fa;
+$black: #fff;
+
+$light: $gray-300;
+$dark: $gray-800;
+
+$yiq-text-dark: $gray-100;
+$yiq-text-light: $gray-900;
+
+$theme-colors: (
+        "primary": #9114BA,
+        "secondary": #300140,
+        "tertiary": #9114BA,
+        "info": #000fe6,
+);
+
+@import "source/functions";
+
+@import "source/variables";
+
+$border-width: 3px;
+
+$navbar-dark-color: rgba($black, .7);
+$navbar-dark-hover-color: rgba($black, 1);
+$navbar-dark-active-color: rgba($black, 1);
+$navbar-dark-disabled-color: rgba($black, .5);
+$navbar-dark-toggler-border-color: rgba($black, .1);
+
+$navbar-light-color: rgba($white, .7);
+$navbar-light-hover-color: rgba($white, 1);
+$navbar-light-active-color: rgba($white, 1);
+$navbar-light-disabled-color: rgba($white, .5);
+$navbar-light-toggler-icon-bg: str-replace(url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='#{$navbar-light-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"), "#", "%23");
+$navbar-light-toggler-border-color: rgba($white, .1);
+
+@import "source/mixins";
+@import "source/root";
+@import "source/reboot";
+@import "source/type";
+@import "source/images";
+@import "source/code";
+@import "source/grid";
+@import "source/tables";
+@import "source/forms";
+//@import "source/buttons";
+.btn {
+  display: inline-block;
+  font-family: $btn-font-family;
+  font-weight: $btn-font-weight;
+  color: $body-color;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: $btn-border-width solid transparent;
+  @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-line-height, $btn-border-radius);
+  @include transition($btn-transition);
+  @include hover {
+    color: $body-color;
+    text-decoration: none;
+  }
+  &:focus,
+  &.focus {
+    outline: 0;
+    box-shadow: $btn-focus-box-shadow;
+  }
+  &.disabled,
+  &:disabled {
+    opacity: $btn-disabled-opacity;
+    @include box-shadow(none);
+  }
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    @include box-shadow($btn-active-box-shadow);
+    &:focus {
+      @include box-shadow($btn-focus-box-shadow, $btn-active-box-shadow);
+    }
+  }
+}
+a.btn.disabled,
+fieldset:disabled a.btn {
+  pointer-events: none;
+}
+//
+// Swap buttons
+//
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @include button-outline-variant($value); //Changed
+  }
+}
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    @include button-variant($value, $value); //Changed
+  }
+}
+.btn-link {
+  font-weight: $font-weight-normal;
+  color: $link-color;
+  text-decoration: $link-decoration;
+  @include hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+  &:focus,
+  &.focus {
+    text-decoration: $link-hover-decoration;
+    box-shadow: none;
+  }
+  &:disabled,
+  &.disabled {
+    color: $btn-link-disabled-color;
+    pointer-events: none;
+  }
+}
+.btn-lg {
+  @include button-size($btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-line-height-lg, $btn-border-radius-lg);
+}
+.btn-sm {
+  @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+}
+.btn-block {
+  display: block;
+  width: 100%;
+  + .btn-block {
+    margin-top: $btn-block-spacing-y;
+  }
+}
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+@import "source/transitions";
+@import "source/dropdown";
+@import "source/button-group";
+@import "source/input-group";
+@import "source/custom-forms";
+@import "source/nav";
+@import "source/navbar";
+@import "source/card";
+@import "source/breadcrumb";
+@import "source/pagination";
+@import "source/badge";
+@import "source/jumbotron";
+@import "source/alert";
+@import "source/progress";
+@import "source/media";
+@import "source/list-group";
+@import "source/close";
+@import "source/toasts";
+@import "source/modal";
+@import "source/tooltip";
+@import "source/popover";
+@import "source/carousel";
+@import "source/spinners";
+@import "source/utilities";
+@import "source/print";
+
+.navbar-dark {
+  .navbar-nav {
+    .nav-link {
+      white-space: nowrap;
+    }
+
+    .active > .nav-link,
+    .nav-link.active {
+      font-weight: bold;
+    }
+  }
+}
+
+.card-text {
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}

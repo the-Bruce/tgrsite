@@ -1,22 +1,29 @@
 {% extends 'tgrsite/main.html' %}
-{% load staticfiles %}
 
-{% block title %}
-    {{ inv.name }}
+{% block title %}Suggestions - {{ inv.name }}{% endblock %}
+{% block pagetitle %}{{ inv.name }} Suggestions{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Suggestions{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.inventory.change_suggestion %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:inventory_suggestion_changelist" %}">Edit</a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ inv.name }} Suggestions</h1>
-    <p>in <a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
-    <div>
-        <a class="btn btn-success"
+    <div class="mb-3">
+        <a class="btn btn-block btn-outline-success"
            href="{% url "inventory:create_suggestion" inv=inv.canonical_ %}">New Suggestion</a>
     </div>
-    <br>
     <div class="list-group">
         {% for suggestion in object_list %}
             <a href="{% url "inventory:suggestion_detail" inv=inv.canonical_ pk=suggestion.id %}"
-               class="list-group-item">
+               class="list-group-item list-group-item-action">
                 {{ suggestion.name }}
             </a>
         {% endfor %}

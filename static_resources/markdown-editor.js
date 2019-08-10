@@ -91,19 +91,20 @@
                 controls = $('<div class="controls" />'); // button container
 
             const format_classes = "btn btn-light";
+            const button_template = '<button type="button" data-toggle="tooltip" data-placement="bottom" title="';
             $(txt).before(controls.append(
                 '<div class="btn-toolbar" role="toolbar" aria-label="Markdown Toolbar">'
                 + '<div class="btn-group mr-2 mb-1" role="group" aria-label="Formatting">'
-                + ' <button type="button" class="' + format_classes + ' c-bold">Bold</button>'
-                + ' <button type="button" class="' + format_classes + ' c-italic">Italic</button>'
-                + ' <button type="button" class="' + format_classes + ' c-head">Header</button>'
-                + ' <button type="button" class="' + format_classes + ' c-code">Code</button>'
+                + button_template + 'Bold" class="' + format_classes + ' c-bold"><i class="fas fa-bold"></i></button>'
+                + button_template + 'Italic" class="' + format_classes + ' c-italic"><i class="fas fa-italic"></i></button>'
+                + button_template + 'Heading" class="' + format_classes + ' c-head"><i class="fas fa-heading"></i></button>'
+                + button_template + 'Code" class="' + format_classes + ' c-code"><i class="fas fa-code"></i></button>'
                 + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Utilities">'
-                + ' <button type="button" class="' + format_classes + ' c-link">Link</button>'
-                + ' <button type="button" class="' + format_classes + ' c-image">Image</button>'
+                + button_template + 'Link" class="' + format_classes + ' c-link"><i class="fas fa-link"></i></button>'
+                + button_template + 'Image" class="' + format_classes + ' c-image"><i class="fas fa-image"></i></button>'
                 + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Lists">'
-                + ' <button type="button" class="' + format_classes + ' c-ul">Bullet</button>'
-                + ' <button type="button" class="' + format_classes + ' c-ol">Numbered</button>'
+                + button_template + 'Bullet List" class="' + format_classes + ' c-ul"><i class="fas fa-list-ul"></i></button>'
+                + button_template + 'Ordered List" class="' + format_classes + ' c-ol"><i class="fas fa-list-ol"></i></button>'
                 + '</div>' +
                 '</div>'
             ));

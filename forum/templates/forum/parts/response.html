@@ -1,0 +1,26 @@
+{% load markdown_tags %}
+
+<div class="card mb-2 mb-sm-4">
+    <a class="anchor" id="{% block id %}response-{{ response.id }}{% endblock %}"></a>
+    <div class="card-header d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+        <h5 class="text-sm-nowrap d-flex justify-content-sm-between align-items-center mb-2 mb-sm-0">
+            <img class="mr-2" alt="Avatar for {{ response.author }}" src="{{ response.author.gravatar }}" width="50px">
+            {% include "parts/render_member.html" with member=response.author avatarless=True %}
+        </h5>
+        <p class="card-text d-flex text-muted text-left text-sm-right justify-content-sm-center align-items-sm-center">
+            Posted {{ response.pub_date|timesince }} ago</p>
+    </div>
+    <div class="card-body">
+        <div class="card-text">{{ response.body|parse_md }}</div>
+    </div>
+    {% if user.member == response.author %}
+        <div class="card-footer">
+            <div class="btn-group">
+                {% block edit_links %}
+                    <a class="btn btn-outline-success" href="{% url 'forum:response_edit' response.id %}"><i class="fas fa-pencil-alt"></i></a>
+                    <a class="btn btn-outline-danger" href="{% url 'forum:response_delete' response.id %}"><i class="fas fa-trash-alt"></i></a>
+                {% endblock %}
+            </div>
+        </div>
+    {% endif %}
+</div>

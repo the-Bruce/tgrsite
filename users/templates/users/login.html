@@ -17,7 +17,7 @@
         <form action="{% url 'users:login-done' %}" method="POST">
     {% endif %}
         {% csrf_token %}
-        {% include "widgets/render_form_content.html" %}
+        {% include "parts/render_form_content.html" %}
         <input type="submit" class="form-control btn-primary" value="Login">
     </form>
 
