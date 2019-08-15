@@ -1,53 +1,54 @@
-from django.contrib.auth.models import User
-from django.forms import ModelForm, Textarea, TextInput, EmailInput, PasswordInput
+from crispy_forms.helper import *
+from django import forms
+from django.forms import ValidationError, formset_factory
 
-BOOSTRAP_FORM_WIDGET_attrs = {
-    'class': 'form-control'
-}
+import re
 
-
-class LoginForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'password']
-        widgets = {
-            'username': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-            'password': PasswordInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-        }
+from users.models import Member
 
 
-class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+class Respond(forms.Form):
+    message = forms.CharField(label="Message", widget=forms.Textarea(attrs={'autocomplete': 'off', 'rows': '3'}))
 
-        # they all have the same format (TextInputs)
-        widgets = {
-            i: TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs) for i in fields
-        }
-
-        # email needs to be an email field though
-        widgets['email'] = EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs)
+    def clean_message(self):
+        print("clean_message")
+        if re.match(r'^\s*$', self.cleaned_data['message']):
+            raise ValidationError('Message has no content')
+        return self.cleaned_data['message'].strip()
 
 
-class SignupForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password']
+class QuickDM(forms.Form):
+    recipient = forms.CharField(label="Recipient", max_length=100,
+                                widget=forms.TextInput(attrs={'class': 'add-member-input',
+                                                              'autocomplete': 'off'}))
+    message = forms.CharField(label="Message", widget=forms.Textarea(attrs={'autocomplete': 'off', 'rows': '3'}))
 
-        widgets = {
-            'username': TextInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-            'email': EmailInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-            'password': PasswordInput(attrs=BOOSTRAP_FORM_WIDGET_attrs),
-        }
+    def clean_recipient(self):
+        try:
+            recipient = Member.objects.get(equiv_user__username__iexact=self.cleaned_data['recipient'])
+        except Member.DoesNotExist:
+            raise ValidationError('Recipient with that username not found')
+        return recipient
+
+    def clean_message(self):
+        print("clean_message")
+        if re.match(r'^\s*$', self.cleaned_data['message']):
+            raise ValidationError('Message has no content')
+        return self.cleaned_data['message'].strip()
 
 
-class MemberForm(ModelForm):
-    class Meta:
-        model = Member
-        fields = ['bio', 'signature']
+class MemberForm(forms.Form):
+    recipient = forms.CharField(label="Recipient", max_length=100,
+                                widget=forms.TextInput(attrs={'class': 'add-member-input',
+                                                              'autocomplete': 'off'}))
 
-        # neater than explicitly specifying each key as the same value
-        widgets = {
-            i: Textarea(attrs=BOOSTRAP_FORM_WIDGET_attrs) for i in fields
-        }
+    def clean_recipient(self):
+        try:
+            member = Member.objects.get(equiv_user__username__iexact=self.cleaned_data['recipient'])
+        except Member.DoesNotExist:
+            raise ValidationError('User with that username not found')
+        return member
+
+
+MemberFormset = formset_factory(MemberForm, extra=3)
+

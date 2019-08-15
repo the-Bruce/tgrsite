@@ -22,7 +22,7 @@ class Rpgs(TestCase):
         spawn_user('eve', 'eve@tagarople.com', 'XZVrUFm3oy')
         ash = spawn_user('ash', 'ash@sent.com', 'CSXgzrned3').member
 
-        rpg = Rpg(title='test case RPG', players_wanted=2, timeslot=Rpg.THURSDAY, creator_id=ash.id)
+        rpg = Rpg(title='test case RPG', players_wanted=2, timeslot="Thursday", creator_id=ash.id)
         rpg.save()
         rpg.game_masters.add(ash)
         rpg.members.add(alice)
@@ -30,7 +30,7 @@ class Rpgs(TestCase):
     def test_contains_player(self):
         alice, bob, eve, ash = get_member('alice', 'bob', 'eve', 'ash')
         rpg = Rpg.objects.get()
-        self.assertTrue(rpg.contains_player(alice.id))
-        self.assertFalse(rpg.contains_player(bob.id))
-        self.assertFalse(rpg.contains_player(eve.id))
-        self.assertFalse(rpg.contains_player(ash.id))
+        self.assertTrue(alice in rpg.members.all())
+        self.assertFalse(bob in rpg.members.all())
+        self.assertFalse(eve in rpg.members.all())
+        self.assertFalse(ash in rpg.members.all())

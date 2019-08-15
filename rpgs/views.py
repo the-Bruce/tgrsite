@@ -169,7 +169,7 @@ def tags_from_str(str):
 def edit(request, pk):
     rpg = get_object_or_404(Rpg, id=pk)
     # TODO: Test permission code
-    if rpg.creator.equiv_user.id != request.user.id:
+    if rpg.creator.id != request.user.member.id:
         return HttpResponseForbidden()
     form = RpgForm(instance=rpg, initial={'tags': rpg.tags_str()})
     context = {'form': form, 'id': pk, 'rpg': rpg}

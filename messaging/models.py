@@ -15,12 +15,7 @@ class MessageThread(models.Model):
 
     # latest five messages
     def five(self):
-        # for some reason reverse() doesn't do what we want
-        # when you use slices, it messes with it.
-        # List()[::-1] is beautiful pythonic code to reverse a list
-        # [start:end] is common but [start:end:step] is possible
-        # and as always Python handles negatives nicely
-        return self.get_messages().reverse()[:5][::-1]
+        return self.get_messages().reverse()[:5]
 
     def get_messages(self):
         return self.message_set.order_by('timestamp')

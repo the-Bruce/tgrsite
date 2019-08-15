@@ -1,19 +1,42 @@
 import re
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Max, F
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.shortcuts import render, get_object_or_404, reverse
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+from django.views.generic import FormView, ListView, TemplateView, RedirectView
 
 from notifications.models import notify, NotifType
 from users.models import Member
 from .models import Message, MessageThread
+from .forms import QuickDM, Respond, MemberFormset
 
 
 # not a view
 # helper function to send messages
+def find_group(*members):
+    members = set(members)
+    query = MessageThread.objects.all()
+    query = query.annotate(num_participants=Count('participants')).filter(num_participants=len(members))
+    for i in members:
+        query = query.filter(participants=i)
+    try:
+        return query.get()
+    except MessageThread.DoesNotExist:
+        m_thread = MessageThread.objects.create(title="")
+        for member in members:
+            m_thread.participants.add(member)
+        m_thread.save()
+        return m_thread
+    except MessageThread.MultipleObjectsReturned:
+        for i in query:
+            print(i)
+        raise AssertionError("Impossible State Reached")  # TODO: DO NOT LEAVE IN PROD!!!
+
+
 def send_message(member, thread, message):
     # Send the notification to everyone in the thread except the sender.
     url = reverse('message:message_thread', args=[thread.id])
@@ -22,12 +45,6 @@ def send_message(member, thread, message):
             notify(receiver, NotifType.MESSAGE,
                    'You got a message from ' + str(member.equiv_user.username) + ': ' + message, url)
     return Message.objects.create(sender=member, thread=thread, content=message)
-
-
-def send_to(sender, message, *pals_usernames):
-    pals = (Member.objects.get(equiv_user__username=x) for x in pals_usernames)
-    thread = MessageThread.get_thread(pals)
-    return send_message(sender, thread, message)
 
 
 @login_required
@@ -41,129 +58,106 @@ def rename_thread(request):
     target.title = request.POST.get('rename', None)
     target.full_clean()
     target.save()
-    return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk':request.POST.get('thread')}))
-
-@login_required
-def direct_message(request):
-    # if it's all spaces then send them away
-    if re.match(r'^\s*$', request.POST.get('message')):
-        return HttpResponseRedirect(request.GET.get('next'))
-
-    target = get_object_or_404(Member, equiv_user__username=request.POST.get('target'))
-
-    query = MessageThread.objects.annotate(num_participants=Count('participants'))
-    query = query.filter(participants=target)
-    if target.id == request.user.member.id:
-        query = query.filter(num_participants=1)
-    else:
-        query = query.filter(num_participants=2)
-        query = query.filter(participants=request.user.member)
-
-    t, c = query.get_or_create()
-
-    if c:
-        t.participants.add(request.user.member)
-        t.participants.add(target)
-
-    m = send_message(request.user.member, t, request.POST.get('message'))
-    # not sure if this works just yet :0
-    return HttpResponseRedirect(request.GET.get('next'))
+    return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': request.POST.get('thread')}))
 
 
-# specific message between two users
-# expected form: 'message': message body, 'target': recipient username
+class Index(LoginRequiredMixin, FormView):
+    form_class = QuickDM
+    template_name = "messaging/index.html"
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        threads = MessageThread.objects.filter(participants=self.request.user.member).annotate(
+            latest=Max('message__timestamp'))
+        ctxt['threads'] = threads.order_by(F('latest').desc(nulls_last=True))
+
+        return ctxt
+
+    def get_success_url(self):
+        return reverse("message:message_thread", args=[self.object.thread_id])
+
+    def form_valid(self, form):
+        target = form.cleaned_data['recipient']
+        assert isinstance(target, Member)
+
+        t = find_group(target, self.request.user.member)
+        m = send_message(self.request.user.member, t, form.cleaned_data['message'])
+        self.object = m
+        return super().form_valid(form)
 
 
-# for messaging a groupchat.
-# expected form: 'message': message body.
-@login_required
-def group_message(request, threadid):
-    # if it's all spaces then send them away
-    if re.match(r'^\s*$', request.POST.get('message')):
-        return HttpResponseRedirect(request.GET.get('next'))
+class Thread(LoginRequiredMixin, UserPassesTestMixin, FormView):
+    form_class = Respond
+    template_name = "messaging/detail.html"
 
-    thread = get_object_or_404(MessageThread, id=threadid)
+    def test_func(self):
+        thread = get_object_or_404(MessageThread, id=self.kwargs['pk'])
+        # make sure the user is in the thread
+        return self.request.user.member in thread.participants.all()
 
-    t = get_object_or_404(MessageThread, id=threadid)
-    print("Sending message from {} to thread {} with body {}".format(request.user.member, thread,
-                                                                     request.POST.get('message')))
-    m = send_message(request.user.member, thread, request.POST.get('message'))
-    return HttpResponseRedirect(reverse('message:message_thread', args=[threadid]))
+    def get_context_data(self, **kwargs):
+        count = 10
+        ctxt = super().get_context_data(**kwargs)
+        ctxt['thread'] = thread = get_object_or_404(MessageThread, id=self.kwargs['pk'])
+        ctxt['thread_messages'] = thread.message_set.order_by('-timestamp')[:count]
+        ctxt['more'] = (thread.message_set.count() > count)
+        return ctxt
 
+    def get_success_url(self):
+        return reverse("message:message_thread", args=[self.object.thread_id])
 
-# DEPRECATED
-"""
-@login_required
-def dm(request):
-	if re.match(r'^\s*$',request.POST.get('message')):
-		return HttpResponseRedirect(request.GET.get('next'))
-
-	# if we are messaging a known thread
-	if request.POST.get('threadid'):
-		thread = get_object_or_404(MessageThread, id=request.POST.get('threadid'))
-
-	# otherwise we are being given comma-separated users and need to find or make the thread
-	else:
-		targets = request.POST.get('target').split(',')
-
-		# sending user always is in group
-		targets += [request.user.username]
-
-		# eliminate duplicates ;)
-		targets = tuple(set(targets))
-
-		thread = MessageThread.get_thread_from_str(*targets)
-
-	m = send_message(request.user.member, thread, request.POST.get('message'))
-	# not sure if this works just yet :0
-	return HttpResponseRedirect(request.GET.get('next'))
-"""
+    def form_valid(self, form):
+        t = MessageThread.objects.get(pk=self.kwargs['pk'])
+        m = send_message(self.request.user.member, t, form.cleaned_data['message'])
+        self.object = m
+        return super().form_valid(form)
 
 
-@login_required
-def index(request):
-    # todo: if we keep track on a Member their last time they visited the messages page,
-    # we might be able to use that to do notifications
-    # though keeping track of specific messages being "read" would be better
-    threads = MessageThread.objects.filter(participants=request.user.member)
-    context = {
-        'threads': threads
-    }
-    return render(request, 'messaging/index.html', context)
+class CreateGroup(LoginRequiredMixin, FormView):
+    template_name = "messaging/newgroup.html"
+    form_class = MemberFormset
+
+    def get_success_url(self):
+        return reverse("message:message_thread", args=[self.object.pk])
+
+    def form_valid(self, form):
+        members = set()
+        for subform in form:
+            r = subform.cleaned_data['recipient']
+            if r not in members:
+                members.add(r)
+        if self.request.user.member not in members:
+            members.add(self.request.user.member)
+
+        self.object = find_group(*members)
+        return super().form_valid(form)
 
 
-@login_required
-def thread(request, pk):
-    thread = get_object_or_404(MessageThread, id=pk)
-    # make sure the user is in the thread :P
-    if request.user.member not in thread.participants.all():
-        raise Http404()
+class FullThread(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Message
+    paginate_by = 30
+    template_name = "messaging/fullthread.html"
+    context_object_name = "thread_messages"
 
-    return render(request, 'messaging/detail.html', {'thread': thread})
+    def test_func(self):
+        thread = get_object_or_404(MessageThread, id=self.kwargs['thread'])
+        # make sure the user is in the thread
+        return self.request.user.member in thread.participants.all()
+
+    def get_context_data(self, object_list=None, **kwargs):
+        ctxt = super().get_context_data(object_list=object_list, **kwargs)
+        ctxt['thread'] = get_object_or_404(MessageThread, id=self.kwargs['thread'])
+        return ctxt
+
+    def get_queryset(self):
+        thread_ = get_object_or_404(MessageThread, pk=self.kwargs['thread'])
+        return thread_.message_set.order_by('-timestamp').all()
 
 
-# redirects to the thread containing messages between logged-in user and recipient
-@login_required
-def get_dm_thread(request, recipient):
-    # recipient member
-    rec = Member.objects.get(id=recipient)
-    q = MessageThread.objects.annotate(num_participants=Count('participants'))
+class DMThread(LoginRequiredMixin, RedirectView):
+    permanent = False
 
-    q = q.filter(participants=rec)
-
-    print(rec)
-
-    if rec == request.user.member:
-        q = q.filter(num_participants=1)
-    else:
-        q = q.filter(num_participants=2)
-        q = q.filter(participants=request.user.member)
-    q, c = q.get_or_create()
-
-    if c:
-        q.participants.add(request.user.member)
-        q.participants.add(rec)
-
-    print(q)
-
-    return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': q.id}))
+    def get_redirect_url(self, *args, **kwargs):
+        rec = Member.objects.get(id=kwargs['recipient'])
+        q = find_group(self.request.user.member, rec)
+        return reverse("message:message_thread", args=[q.id])

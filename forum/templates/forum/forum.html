@@ -10,9 +10,11 @@
     {% if perms.forum.change_forums %}
         <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_forum_changelist" %}">Edit</a>
     {% endif %}
+    <a class="btn btn-block btn-outline-primary d-none d-md-block" href="{% url "forum:recent" %}">Recent Activity</a>
 {% endblock %}
 
 {% block body %}
+    <a class="btn btn-block btn-outline-primary d-block d-md-none" href="{% url "forum:recent" %}">Recent Activity</a>
     <div class="mb-3"><h3>Forums</h3>
         {% if forums %}
             {% include "forum/parts/subforum_list.html" with forums=forums %}

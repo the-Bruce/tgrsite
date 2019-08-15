@@ -1,0 +1,22 @@
+{% extends "tgrsite/main.html" %}
+{% load messaging_tags %}
+
+{% block title %}
+    {% get_conversation_name thread user %}
+{% endblock %}
+
+{% block pagetitle %}{% get_conversation_name thread user %}{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url 'message:message_list' %}">Messages</a></li>
+    <li class="breadcrumb-item"><a
+            href="{% url 'message:message_thread' thread.pk %}">{% get_conversation_name thread user %}</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Full Thread{% endblock %}
+
+{% block body %}
+    <div class="mb-3">
+        {% include 'messaging/parts/messages.html' with full=True message_list=thread_messages %}
+    </div>
+    {% include 'parts/pagination.html' %}
+{% endblock %}

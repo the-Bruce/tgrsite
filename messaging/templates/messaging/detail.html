@@ -1,41 +1,43 @@
 {% extends "tgrsite/main.html" %}
 {% load messaging_tags %}
+
 {% block title %}
-    {% if thread.title %}
-        {{ thread.title }}
-    {% else %}
-        {% get_participants_excluding_self thread user %}
-    {% endif %}
+    {% get_conversation_name thread user %}
 {% endblock %}
 
-{% block body %}
-    <h1>
-        {% if thread.title %}
-            {{ thread.title }}
-        {% else %}
-            {% get_participants_excluding_self thread user %}
-        {% endif %}
-        <a data-toggle="collapse" href="#rename_form"><i class="fas fa-pencil-alt"></i></a>
-    </h1>
+{% block pagetitle %}{% get_conversation_name thread user %}
+    <a class="btn btn-outline-primary" data-toggle="collapse" href="#rename_form"><i
+            class="fas fa-pencil-alt"></i></a>
+{% endblock %}
 
-    <div id="rename_form" class="collapse" aria-hidden="true">
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url 'message:message_list' %}">Messages</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}{% get_conversation_name thread user %}{% endblock %}
+
+{% block body %}
+    <div id="rename_form" class="collapse mb-2" aria-hidden="true">
         <form class="form form-inline" method="post" action="{% url "message:rename_thread" %}">
             {% csrf_token %}
-            <label for="rename">New Name:</label>
-            <input id="rename" name="rename" type="text" class="form-control" value="{{ thread.title }}">
+            <label for="rename">New Name: </label>
+            <input id="rename" name="rename" type="text" class="form-control ml-2" value="{{ thread.title }}">
             <input type="hidden" name="thread" value="{{ thread.id }}">
-            <input type="submit" class="form-control btn-primary" value="Save">
+            <input type="submit" class="form-control btn-outline-primary ml-2" value="Save">
         </form>
     </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            {% include "parts/render_form.html" with save="Respond" %}
+        </div>
+    </div>
+    <div class="mb-3">
+        {% include 'messaging/parts/messages.html' with full=True message_list=thread_messages %}
+        {% if more %}
+            <div class="mt-3">
+                <a class="btn btn-block btn-outline-primary" href="{% url "message:message_thread_full" thread=thread.pk %}">View All</a>
+            </div>
+        {% endif %}
+    </div>
 
-    {# TODO: format timestamps nicer using some sort of library #}
-    {% include 'messaging/widget/messages.html' with full=1 messages=thread.get_messages %}
-
-    <form action="{% url 'message:message_group' thread.id %}" method="POST" class="form">
-        {% csrf_token %}
-        <textarea name="message" placeholder="message" class="form-control" autofocus autocomplete="off"></textarea>
-        <input type="submit" class="form-control" value="Send">
-    </form>
-    <a href="{% url 'message:message_list' %}">Back to list</a>
 
 {% endblock %}
