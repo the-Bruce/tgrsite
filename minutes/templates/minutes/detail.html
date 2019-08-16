@@ -1,46 +1,46 @@
 {% extends "tgrsite/main.html" %}
 {% load markdown_tags %}
 
-{% block allcss %}
-    {{ block.super }}
-    <style>
-        .mb-0 {
-            margin-bottom: 0;
-        }
-        .mb-1 {
-            margin-bottom: 15px;
-        }
-    </style>
+{% block title %}Minutes{% endblock %}
+{% block pagetitle %}{{ object.title }}{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "minutes:index" %}">Minutes</a></li>
 {% endblock %}
+{% block breadcrumbs_child %}{{ object.title }}{% endblock %}
 
 {% block body %}
-    <h1>{{ object.title }}</h1>
-    <h2>{{ object.date|date }}</h2>
-    <p>Posted by {{ object.author }}</p>
-    <p>{{ object.body|parse_md }}</p>
-    <p></p>
-{% endblock %}
 
-{% block leftcontents %}
-    {{ block.super }}
+    <div class="card mb-3">
+        <a data-toggle="collapse" href="#past_meetings" class="card-header">
+            Past Meetings
+        </a>
+        <div class="collapse" id="past_meetings">
+            <div class="card-body">
+                {% for root in object.folder.roots %}
+                    {% include "minutes/widgets/foldertree.html" with folder=root child=object mb=forloop.last %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
     {% if perms.minutes.add_meeting or perms.minutes.change_meeting %}
-        <p class="btn-group">
+        <p class="btn-group-vertical btn-block">
             {% if perms.minutes.add_meeting %}
-                <a class="btn btn-primary" href="{% url "minutes:new_meeting" %}">New</a>
+                <a class="btn btn-outline-success" href="{% url "minutes:new_meeting" %}">New</a>
             {% endif %}
             {% if perms.minutes.change_meeting %}
-                <a class="btn btn-primary" href="{% url "minutes:change_meeting" object.id %}">Edit</a>
+                <a class="btn btn-outline-primary" href="{% url "minutes:change_meeting" object.id %}">Edit</a>
             {% endif %}
         </p>
     {% endif %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Past Meetings
+    <div class="card">
+        <div class="card-header d-flex flex-column flex-sm-row align-items-sm-center justify-content-between">
+            <h3 class="card-text mb-0">{{ object.date|date }}</h3>
+            <span class="card-text text-muted">Posted by {% include "parts/render_member.html" with member=object.author %}</span>
         </div>
-        <div class="panel-body">
-            {% for root in object.folder.roots %}
-                {% include "minutes/widgets/foldertree.html" with folder=root child=object mb=forloop.last %}
-            {% endfor %}
+        <div class="card-body">
+            <p class="card-text">{{ object.body|parse_md }}</p>
         </div>
     </div>
+
 {% endblock %}
