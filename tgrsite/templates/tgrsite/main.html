@@ -33,8 +33,18 @@ THIS IS USED BY THE SITE
 {% endblock %}
 
 {% block messages %}
-    {% if messages %}
+    {% if messages or not request.COOKIES.noticed_cookies %}
         <div class="alerts">
+            {% if not request.COOKIES.noticed_cookies %}
+                <div id="cookies_warning" class="alert alert-dismissible show fade alert-warning"
+                     role="alert">
+                    This site uses cookies to allow you to stay logged in or for remembering some basic functionality.
+                    Please visit our <a href="{% url "page" "privacy" %}">privacy policy</a> for more details.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
             {% for message in messages %}
                 <div class="alert alert-dismissible show fade{% if message.tags %} {{ message.tags }}{% endif %}"
                      role="alert">
@@ -76,13 +86,14 @@ THIS IS USED BY THE SITE
 {% endblock %}
 
 {% block footer %}
-
     <div class="nav ml-auto mr-auto d-flex flex-row justify-content-around">
         <a class="nav-link text-dark" href="//www.facebook.com/TAGAROPLE/">
             <i class="fab fa-facebook-square"></i>&nbsp;Facebook
         </a>
         <a class="nav-link text-dark align-content-center" href="//www.warwicksu.com/societies/sff/">
-            <img class="img-text" alt="SU logo" src="{% if user.member.dark %}{% static "SUWhite.png" %}{% else %}{% static "SUDark.png" %}{% endif %}" aria-hidden="true">&nbsp;Warwick&nbsp;SU&nbsp;Page
+            <img class="img-text" alt="SU logo"
+                 src="{% if user.member.dark %}{% static "SUWhite.png" %}{% else %}{% static "SUDark.png" %}{% endif %}"
+                 aria-hidden="true">&nbsp;Warwick&nbsp;SU&nbsp;Page
         </a>
         <a class="nav-link text-dark" href="{% url "page" "privacy" %}">
             <i class="fas fa-user-secret"></i>&nbsp;Privacy&nbsp;Policy
@@ -98,15 +109,21 @@ THIS IS USED BY THE SITE
     {{ block.super }}
     {# Markdown editor #}
     <script src="{% static "markdown-editor.min.js" %}"></script>
-    {% comment %}
-    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-    {% endcomment %}
     <script>
         $(document).ready(function () {
             console.log("Getting ready.");
             $(".markdown-input").MarkdownEditor();
             $('[data-toggle="tooltip"]').tooltip()
         });
+
+        function setCookieForeverish(cname, cvalue) {
+            var d = new Date();
+            var expires = "expires=Tue, 19 Jan 2038 03:14:07 UTC";
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        $('#cookies_warning').on('close.bs.alert', function () {
+            setCookieForeverish("noticed_cookies", "true")
+        })
     </script>
 {% endblock %}
