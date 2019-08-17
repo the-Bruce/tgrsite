@@ -26,15 +26,17 @@ class Forum(models.Model):
         if self.parent is None:
             return []
         tree = []
+        seen = {}
         # walk up through tree to root
         x = self.parent
         while True:
             tree.append(x)
-            if x.parent is not None:
+            seen[x.pk] = True
+            if x.parent is not None and x.pk not in seen:
                 # traverse upwards
                 x = x.parent
             else:
-                # reached root
+                # reached root or loop parent
                 break
         return reversed(tree)
 
@@ -71,18 +73,18 @@ class Forum(models.Model):
 
     # recursively get thread count
     # i.e. number of threads here and in all subforums
-    def get_threads_count_r(self):
+    def get_threads_count_r(self, seen=None):
+        if seen is None:
+            seen = {self.pk:True}
         count = 0
         for subforum in self.get_subforums():
-            count += subforum.get_threads_count_r()
+            if not subforum.pk in seen:
+                seen[subforum.pk] = True
+                count += subforum.get_threads_count_r(seen)
         return count + self.get_threads_count()
 
     def get_latest_post(self):
-        s = self.thread_set.order_by('pub_date')
-        if len(s) > 0:
-            return s[len(s) - 1]
-        else:
-            return None
+        return self.thread_set.latest('pub_date')
 
     def get_absolute_url(self):
         return reverse("forum:subforum", args=(self.pk,))
