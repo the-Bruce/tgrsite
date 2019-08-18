@@ -1,9 +1,10 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin, UserPassesTestMixin
 from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
+from django.views.generic import UpdateView, CreateView, DeleteView
 
 from notifications.models import notify_everybody, NotifType
 from notifications.tasks import doNewsletterMailings
@@ -13,7 +14,8 @@ from .models import Newsletter
 
 class Index(generic.ListView):
     model = Newsletter
-    ordering = ['ispublished', '-pub_date']
+    ordering = ('ispublished', '-pub_date')
+    paginate_by = 20
 
 
 class Detail(generic.DetailView):
@@ -26,7 +28,7 @@ class Detail(generic.DetailView):
         return obj
 
 
-class Create(PermissionRequiredMixin, generic.edit.CreateView):
+class Create(PermissionRequiredMixin, CreateView):
     model = Newsletter
     form_class = NewsletterForm
 
@@ -48,12 +50,11 @@ class Create(PermissionRequiredMixin, generic.edit.CreateView):
         return super().get_success_url()
 
 
-class Update(PermissionRequiredMixin, generic.edit.UpdateView):
+class Update(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Newsletter
     form_class = NewsletterForm
 
     permission_required = 'newsletters.change_newsletter'
-    raise_exception = True
 
     def form_valid(self, form):
         should_mail = False
@@ -69,14 +70,13 @@ class Update(PermissionRequiredMixin, generic.edit.UpdateView):
             doNewsletterMailings(form.instance.id)
         return response
 
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user, or request.user can change others. """
-        obj = super(Update, self).get_object()
-        if obj.author and (obj.author != self.request.user.member and not self.request.user.has_perm(
-                'newsletters.modify_others')):
+    def test_func(self):
+        obj = get_object_or_404(Newsletter, pk=self.kwargs['pk'])
+        if obj.author and (obj.author != self.request.user.member and not self.request.user.has_perm('newsletters.modify_others')):
             # If neither owned it nor have modify_others
-            raise Http404
-        return obj
+            return False
+        else:
+            return True
 
 
 def latest(req):
@@ -84,17 +84,15 @@ def latest(req):
     return redirect(letter)
 
 
-class Delete(PermissionRequiredMixin, generic.edit.DeleteView):
+class Delete(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Newsletter
-
     permission_required = 'newsletters.delete_newsletter'
-    raise_exception = True
-    success_url = reverse_lazy('newsletters_index')
+    success_url = reverse_lazy('newsletters:newsletters_index')
 
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user, or request.user can change others. """
-        obj = super(Delete, self).get_object()
+    def test_func(self):
+        obj = get_object_or_404(Newsletter, pk=self.kwargs['pk'])
         if obj.author and (obj.author != self.request.user.member and not self.request.user.has_perm(
                 'newsletters.modify_others')):
-            raise Http404
-        return obj
+            return False
+        else:
+            return True

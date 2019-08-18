@@ -10,17 +10,12 @@ exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_l
 
 @register.filter(is_safe=True)
 def parse_md(value):
-    return mark_safe(markdown(escape(value), extensions=exts))
-
-@register.filter(is_safe=True)
-def parse_md_card(value):
-    html=markdown(escape(value), extensions=exts)
-    return mark_safe()
+    return mark_safe(markdown(escape(value), extensions=exts, output_format='html5'))
 
 # Parses markdown WITHOUT escaping. Use with caution!
 @register.filter(is_safe=True)
 def parse_md_safe(value):
-    return mark_safe(markdown(value, extensions=exts))
+    return mark_safe(markdown(value, extensions=exts, output_format='html5'))
 
 
 class FullStaticNode(static.StaticNode):

@@ -37,7 +37,6 @@
             {% endfor %}
         </ul>
         <ul class="navbar-nav">
-
             {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link {% if request.user.member.notification_count > 0 %}text-danger{% endif %}"
@@ -46,6 +45,25 @@
                            aria-label="Notifications"></i>&nbsp;{{ request.user.member.notification_count }}
                     </a>
                 </li>
+                <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile"
+                           role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-fw fa-user"></i>&nbsp;Account
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                            <a class="dropdown-item" href="{% url "users:me" %}">
+                                <i class="fas fa-fw fa-user-circle"></i>&nbsp;View Profile
+                            </a>
+                            <a class="dropdown-item" href="{% url "users:password_change" %}">
+                                <i class="fas fa-fw fa-key"></i>&nbsp;Change Password
+                            </a>
+                            <a class="dropdown-item" href="{% url "notifications:notification_settings" %}">
+                                <i class="fas fa-fw fa-envelope-open-text"></i>&nbsp;Notification Settings
+                            </a>
+                        </div>
+                    </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "users:logout" %}"><i class="fas fa-fw fa-sign-out-alt"></i>&nbsp;Logout</a>
                 </li>

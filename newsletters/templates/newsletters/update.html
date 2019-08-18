@@ -1,23 +1,13 @@
 {% extends 'tgrsite/main.html' %}
-{% block title %}
-    Update Newsletter
+{% block title %}Update Newsletter{% endblock %}
+{% block pagetitle %}Update Newsletter{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "newsletters:newsletters_index" %}">Newsletters</a></li>
+    <li class="breadcrumb-item"><a href="{% url "newsletters:newsletters_detail" pk=object.pk %}">{{object.title}}</a></li>
 {% endblock %}
+{% block breadcrumbs_child %}Update{% endblock %}
+
 {% block body %}
-    <h1>Update Newsletter</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <div>
-                <div>
-                    {% if field.field.required %} * {% endif %}
-                    {{ field.label_tag }}
-                </div>
-                <div>
-                    {{ field }}
-                </div>
-            </div><br>
-        {% endfor %}
-        <input type="submit" class="form-control">
-    </form>
+    {% include "parts/render_form.html" %}
 {% endblock %}

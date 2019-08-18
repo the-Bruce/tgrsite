@@ -1,23 +1,27 @@
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #6c757d !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
-$black:    #000 !default;
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
 
-$light:         $gray-200;
-$dark:          $gray-800;
+$light: $gray-200;
+$dark: $gray-800;
 
 $theme-colors: (
         "primary": #6D0F8C,
         "secondary": #300140,
         "tertiary": #9114BA,
         "info": #00088a,
+);
+
+$grid-breakpoints: (
+        xs: 0,
 );
 
 $enable-print-styles: true;
@@ -28,14 +32,13 @@ $enable-print-styles: true;
 $border-width: 3px;
 
 @import "source/mixins";
-@import "source/root";
 @import "source/reboot";
 @import "source/type";
 @import "source/images";
 @import "source/code";
-@import "source/grid";
-@import "source/tables";
-@import "source/card";
-@import "source/badge";
-@import "source/utilities";
-@import "source/print";
+@import "source/utilities/text";
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+

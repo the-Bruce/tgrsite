@@ -1,12 +1,22 @@
-{% extends 'tgrsite/emailcontent.html' %}
 {% load markdown_tags %}
 {% load static %}
+{% spaceless %}
+<!doctype html>
+<html lang="en">
+<head>
 
-{% block title %}{{ object.title }}{% endblock %}
-{% block leftcontents %}
-{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ object.title }} - Warwick Tabletop Games and Role-Playing Society</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
+    {# Include this stylesheet twice just in case it helps... #}
+    <link rel="stylesheet" href="{{ request.scheme }}://{{ request.get_host }}{% static "tgrsite_bootstrap_tiny.css" %}">
+    <style>
+        {% include "newsletters/resource/tgrsite_bootstrap_tiny.css" %}
+    </style>
 
-{% block css %}
     <style>
         #incorrect-newsletter {
             margin-left: auto;
@@ -14,26 +24,42 @@
             text-align: center;
             margin-top: 10px;
         }
-    </style>
-{% endblock %}
 
-{% block body %}
-    <p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a
-            href="https://{{ request.get_host }}{% url 'newsletters_detail' object.id %}">here</a>!</p>
-    <img src="{% fullstatic 'newsletter-banner.png' %}" style="width: 100%;"/>
-    <h1>{{ object.title }}
-        <small>
-            {% if object.author %} by <a href="https://{{ request.get_host }}{% url 'user' object.author.id %}">{{ object.author }}</a> {% endif %}
-            <small>({{ object.pub_date }})</small>
-        </small>
-    </h1>
-    <p></p>
-    <article>
-        {{ object.body|parse_md_safe }}
-    </article>
-    {% if unsub %}<small>If you don't want to receive these notification emails any more, please visit your
-        <a href="{{ request.scheme }}://{{ request.get_host }}{% url "notification_settings" %}">
-            notification settings
-        </a>.</small>
-    {% endif %}
-{% endblock %}
+        #email-content img {
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #email-content {
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%
+        }
+    </style>
+</head>
+<body>
+<p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a
+        href="{{ request.scheme }}://{{ request.get_host }}{% url 'newsletters:newsletters_detail' object.id %}">here</a>!
+</p>
+<div id="email-content">
+    <img alt="Warwick Tabletop and Role-Playing Society Banner"
+         src="{{ request.scheme }}://{{ request.get_host }}{# static 'newsletter-banner.png' #}/static/newsletter-banner.png"
+         class="img-fluid mb-2" style="width: 100%">
+
+    <h3 class="mb-2">
+        {% if object.author %}
+            <span>Written by {% include "parts/render_member.html" with member=object.author avatarless=True nobadge=True nolink=True %}</span>
+        {% endif %}
+
+        (<small class="text-nowrap">{{ object.pub_date }}</small>)
+    </h3>
+
+    {{ object.body|parse_md_safe }}
+    <p>If you no longer want to receive these messages, visit <a href="{{ request.scheme }}://{{ request.get_host }}{% url "notifications:notification_settings" %}">your
+        notification subscriptions</a> to unsubscribe.</p>
+</div>
+</body>
+</html>
+{% endspaceless %}

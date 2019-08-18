@@ -1,5 +1,5 @@
 {# Might have to lazy load folders in the future #}
-<div class="{% if mb %}mb-0{% else %}mb-1{% endif %} pl-2 list-group">
+<div class="{% if not mb or me %}mb-2{% else %}mb-0{% endif %} list-group">
     <a class="list-group-item list-group-item-action" data-toggle="collapse"
        aria-expanded="{% if folder.id in child.folder.parents_id %}true{% else %}false{% endif %}"
        href="#folder{{ folder.pk }}">
@@ -9,11 +9,11 @@
         <div class="list-group-item">
             {% if folder.children.all %}
                 {% for subfolder in folder.children.all %}
-                    {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child mb=forloop.last %}
+                        {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child mb=forloop.last me=folder.meetings.all %}
                 {% endfor %}
             {% endif %}
             {% if folder.meetings.all %}
-                <div class="mb-0 pl-2 list-group">
+                <div class="mb-0 list-group">
                     {% for meeting in folder.meetings.all %}
                         <a href="{{ meeting.get_absolute_url }}"
                            class="list-group-item list-group-item-action {% if meeting == child %}active{% endif %}">
@@ -29,5 +29,4 @@
             {% endif %}
         </div>
     </div>
-
 </div>
