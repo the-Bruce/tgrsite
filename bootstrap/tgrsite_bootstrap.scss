@@ -108,3 +108,12 @@ $navbar-light-toggler-border-color: rgba($black, .1);
     }
   }
 }
+
+pre {
+  white-space: pre-line;
+  background-color: $card-bg;
+  background-clip: border-box;
+  padding: $card-spacer-y $card-spacer-x;
+  border: $card-border-width solid $card-border-color;
+  @include border-radius($card-border-radius);
+}

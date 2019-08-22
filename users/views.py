@@ -8,7 +8,8 @@ from django.conf import settings
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.messages import add_message, constants
+from django.contrib.messages import add_message
+from django.contrib.messages import constants as messages
 from django.core.mail import mail_managers
 from django.forms import ValidationError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -86,11 +87,11 @@ def update(request):
         if (memberform.is_valid() and userform.is_valid()):
             memberform.save()
             userform.save()
-            add_message(request, constants.SUCCESS, "Successfully updated.")
+            add_message(request, messages.SUCCESS, "Successfully updated.")
             res = HttpResponseRedirect(reverse('homepage'))  # me
             return res
         else:
-            add_message(request, constants.ERROR, "There were problems with the form.")
+            add_message(request, messages.ERROR, "There were problems with the form.")
             return HttpResponseRedirect(reverse('users:edit'))
 
     else:
@@ -122,7 +123,8 @@ def login_process(request):
         # but this branch will still be met
         # Current fix is to make sure that the login page will always redirect to the user page
         # when a user is logged in (which it should do anyway)
-        return HttpResponseRedirect(reverse('login') + '?result=invalid')
+        add_message(request, messages.ERROR, "Username or password incorrect. Please try again")
+        return HttpResponseRedirect(reverse('users:login'))
 
 
 def signup_view(request):

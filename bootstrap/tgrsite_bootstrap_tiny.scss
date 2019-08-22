@@ -35,10 +35,18 @@ $border-width: 3px;
 @import "source/reboot";
 @import "source/type";
 @import "source/images";
+@import "source/tables";
 @import "source/code";
 @import "source/utilities/text";
 .mb-2 {
   margin-bottom: 0.5rem !important;
 }
-
+pre {
+  white-space: pre-line;
+  background-color: $card-bg;
+  background-clip: border-box;
+  padding: $card-spacer-y $card-spacer-x;
+  border: $card-border-width solid $card-border-color;
+  @include border-radius($card-border-radius);
+}
 

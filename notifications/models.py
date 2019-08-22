@@ -47,6 +47,7 @@ class NotificationSubscriptions(models.Model):
         (SubType.SUMMARY, 'Summary Email'),
         (SubType.FULL, 'Full Email'),
     ]
+
     reduced_subscription_types = subscription_types[:3]
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
 
@@ -59,7 +60,8 @@ class NotificationSubscriptions(models.Model):
                                     default=SubType.WEB)
     rpg_kick = models.IntegerField(verbose_name='Removal from an Event', choices=reduced_subscription_types,
                                    default=SubType.WEB)
-    rpg_add = models.IntegerField(verbose_name='Addition to an Event', choices=reduced_subscription_types, default=SubType.WEB)
+    rpg_add = models.IntegerField(verbose_name='Addition to an Event', choices=reduced_subscription_types,
+                                  default=SubType.WEB)
     forum_reply = models.IntegerField(verbose_name='Reply to a Forum Post You Participated in',
                                       choices=reduced_subscription_types,
                                       default=SubType.WEB)
@@ -81,9 +83,7 @@ class NotificationSubscriptions(models.Model):
             NotifType.OTHER: self.other
         }
 
-
         return mapping.get(category, SubType.NONE)
-
 
     def __str__(self):
         return str(self.member.equiv_user.username)
@@ -91,8 +91,6 @@ class NotificationSubscriptions(models.Model):
     class Meta:
         verbose_name_plural = "Notifications Subscriptions"
         verbose_name = "Notifications Subscription"
-
-
 
 
 class Notification(models.Model):
@@ -113,15 +111,15 @@ class Notification(models.Model):
     content = models.TextField(max_length=8192)
     # A value used to group notifications. Usually a relevant primary key (forum thread key, rpg key, etc.):
     merge_key = models.IntegerField(blank=True, null=True)
-    is_unread = models.BooleanField()
-    is_emailed = models.BooleanField()
+    is_unread = models.BooleanField(default=True)
+    is_emailed = models.BooleanField(default=False)
     time = models.DateTimeField()
 
     def notify_icon(self):
         default_icon = 'fas fa-circle'
         icons = {
-            NotifType.NEWSLETTER: 'far fa-newspaper',
-            NotifType.MESSAGE: 'far fa-comment-dots',
+            NotifType.NEWSLETTER: 'fas fa-newspaper',
+            NotifType.MESSAGE: 'fas fa-comment-dots',
             NotifType.RPG_JOIN: 'fas fa-sign-in-alt',
             NotifType.RPG_LEAVE: 'fas fa-sign-out-alt',
             NotifType.RPG_KICK: 'fas fa-times',
@@ -161,12 +159,17 @@ def create_notification_if_subbed(member, notif_type, content, url, merge_key=No
 
 def delete_old(member):
     week_ago = timezone.now() - timedelta(days=7)
+    year_ago = timezone.now() - timedelta(days=365)
     Notification.objects.filter(member=member, is_unread=False, time__lt=week_ago).delete()
+    Notification.objects.filter(member=member, time__lt=year_ago).delete()
 
 
 def delete_all_old():
+    # Delete anything over 1 week old that has been read, and everything more than a year old
     week_ago = timezone.now() - timedelta(days=7)
+    year_ago = timezone.now() - timedelta(days=365)
     Notification.objects.filter(is_unread=False, time__lt=week_ago).delete()
+    Notification.objects.filter(time__lt=year_ago).delete()
 
 
 def notify_everybody(notif_type, content, url, merge_key=None):

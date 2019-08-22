@@ -1,29 +1,32 @@
-{% extends "tgrsite/emailcontent.html" %}
+{% extends "tgrsite/email.html" %}
+{% load static %}
 
-{% block allcss %}
-    {% comment %}
-        Don't need this css here...
-    {% endcomment %}
-{% endblock %}
+{% block title %}Notifications{% endblock %}
+
 {% block body %}
-    <h1>Greetings {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.</h1>
-    <h3>Here is what has happened over at Warwick Tabletop and Role-Playing Society:</h3>
-    <table class="table table-bordered">
-        {% for n in notifications %}
-            <tr>
-                <td>
-                    <a href="https://{{ request.get_host }}{{ n.url }}">
-                        <div>{{ n.content | truncatechars_html:220 }}</div>
-                    </a>
-                </td>
-                <td>
-                    <small>{{ n.time|time }} {{ n.time|date }}</small>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    <h3>Cheers,<br>The Warwick Tabletop Team</h3>
-    <small>If you don't want to receive these notification emails any more, please visit your
-        <a href="https://{{ request.get_host }}{% url "notification_settings" %}">notification settings</a>.
-    </small>
+    <div id="email-content">
+        <img alt="Warwick Tabletop and Role-Playing Society Banner"
+             src="{{ request.scheme }}://{{ request.get_host }}{% static 'newsletter-banner.png' %}"
+             class="img-fluid mb-2" style="width: 100%">
+        <h1>Greetings {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.</h1>
+        <h3>Here is what has happened over at Warwick Tabletop and Role-Playing Society:</h3>
+        <table class="table table-sm table-bordered">
+            {% for n in notifications %}
+                <tr>
+                    <td style="padding-left: 1em; padding-right: 1em">
+                        <a href="{{ request.scheme }}://{{ request.get_host }}{{ n.url }}">
+                            {{ n.content | truncatechars_html:220 }}
+                        </a>
+                    </td>
+                    <td style="padding-left: 1em; padding-right: 1em">
+                        <small>{{ n.time|time }} {{ n.time|date }}</small>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <h3>Cheers,<br>The Warwick Tabletop Team</h3>
+        <p>If you no longer want to receive these messages, visit <a
+                href="{{ request.scheme }}://{{ request.get_host }}{% url "notifications:notification_settings" %}">your
+            notification subscriptions</a> to unsubscribe.</p>
+    </div>
 {% endblock %}
