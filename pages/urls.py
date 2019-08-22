@@ -3,9 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.page, {'name': 'index'}, name='homepage'),
-    path('sponsorships/', views.page, {'name': 'sponsorships'}, name='sponsorships'),
-    path('larp/', views.page, {'name':'larp_main'}, name='larp_info'),
-    path('larp/lore/', views.page, {'name':'larp_main'}, name='larp_lore'),
-    path('page/<name>/', views.page, name='page'),
+    path('', views.ViewPage.as_view(), {'name': 'index'}, name='homepage'),
+    path('page/<slug:name>/', views.ViewPage.as_view(), name='page'),
 ]

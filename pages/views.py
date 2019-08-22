@@ -1,8 +1,12 @@
 from django.shortcuts import render, get_object_or_404
+from django.views import generic
 
 from .models import Page
 
 
-def page(request, name):
-    instance = get_object_or_404(Page, name__iexact=name)
-    return render(request, 'pages/page.html', {'page': instance})
+class ViewPage(generic.DetailView):
+    model = Page
+    slug_field = 'name'
+    slug_url_kwarg = 'name'
+    context_object_name = 'page'
+    template_name = "pages/page.html"

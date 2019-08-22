@@ -1,7 +1,15 @@
 from django.contrib import admin
 
-from .models import Page
+from .models import Page, BreadcrumbParents
 
-# TODO: implement a PageAdmin, import SimpleMDE so admins
 
-admin.site.register(Page)
+class BreadcrumbInline(admin.TabularInline):
+    model = BreadcrumbParents
+    extra = 0
+
+
+class PageAdmin(admin.ModelAdmin):
+    inlines = [BreadcrumbInline]
+
+
+admin.site.register(Page, PageAdmin)
