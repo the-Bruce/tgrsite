@@ -8,9 +8,6 @@
             text-align: center;
             vertical-align: middle !important;
         }
-        .aggresivewb {
-            word-break: break-all;
-        }
     </style>
     <noscript>
         <style>
@@ -21,34 +18,36 @@
     </noscript>
 {% endblock %}
 {% block body %}
-    <div class="wordwrap">
+    <div class="text-wrap">
         <h3>Subscribe to our calender!</h3>
         <noscript>
-            <p><a class="btn btn-primary" href="{% string_setting "sub_calender" %}">Subscribe</a></p>
+            <p><a class="btn btn-block btn-outline-primary" href="{% url "timetable:subscribe" %}">Subscribe</a></p>
         </noscript>
-        <button type="button" class="js_only btn btn-primary" data-toggle="modal" data-target="#webcal_subscribe">
+        <button type="button" class="js_only btn btn-block btn-outline-primary" data-toggle="modal" data-target="#webcal_subscribe">
             Subscribe
         </button>
     </div>
     {% spaceless %}
         {% for timetable in timetables %}
-            {% include "timetable/widgets/render_timetable.html" with timetable=timetable %}
+            {% include "timetable/parts/render_timetable.html" with timetable=timetable %}
         {% endfor %}
     {% endspaceless %}
-    <div class="modal fade" id="webcal_subscribe" role="dialog">
-        <div class="modal-dialog">
+
+
+    <div class="modal" tabindex="-1" id="webcal_subscribe" role="dialog">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">To subscribe to each of the calenders you can either:</h4>
+                    <h5 class="modal-title">Subscribe to our calender</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <div>
-                        {% text_setting "webcal_sub" %}
-                    </div>
+                    {% include "timetable/parts/render_subtable.html" %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-block btn-outline-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

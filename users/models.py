@@ -29,7 +29,7 @@ class Member(models.Model):
 
     def badge(self):
         if self.is_exec():
-            return "fas fa-crown text-warning"
+            return "fas fa-crown text-gold"
         elif self.is_ex_exec():
             return "fas fa-award text-muted"
         else:

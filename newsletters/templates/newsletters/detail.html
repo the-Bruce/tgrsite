@@ -40,12 +40,10 @@
                 Newsletter</a>
         </div>
         <div class="btn-group-vertical btn-block">
-
                 <a class="btn btn-outline-primary" href="{% url 'newsletters:newsletters_email' object.id %}"
                    download="email_{{ object.id }}.html">Email Version</a>
                 <a class="btn btn-outline-primary" href="{% url 'newsletters:newsletters_plaintext' object.id %}">Text
                     Version</a>
-
         </div>
     {% endif %}
 {% endblock %}

@@ -1,0 +1,20 @@
+{% extends "tgrsite/main.html" %}
+
+{% block title %}Subscribe{% endblock %}
+{% block pagetitle %}Subscribe to our calenders{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "timetable:timetable" %}">Timetable</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Subscribe{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Subscribe to our calender</h5>
+        </div>
+        <div class="card-body">
+            {% include "timetable/parts/render_subtable.html" %}
+        </div>
+    </div>
+{% endblock %}

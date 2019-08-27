@@ -7,22 +7,14 @@ app_name = "rpgs"
 urlpatterns = [
     path('', views.Index.as_view(), name='index'),
     path('<int:pk>/', views.Detail.as_view(), name='detail'),
-    path('tagged/<str:tag>/', views.Filter.as_view(), name='tag'),
-    path('tag_form/', views.tag_form, name='tag_form'),
-    path('join/', views.join, name='join'),
 
-    path('leave/', views.leave, name='leave'),
-    path('kick/', views.kick, name='kick'),
+    path('create/', views.Create.as_view(), name='create'),
+    path('<int:pk>/edit/', views.Update.as_view(), name='edit'),
+    path('<int:pk>/delete/', views.Delete.as_view(), name='delete'),
 
-    path('create/', views.create, name='create'),
-    path('add_to/', views.add_to, name='add_to'),
-    path('<int:pk>/edit/', views.edit, name='edit'),
-    path('<int:pk>/edit/done/', views.edit_process, name='edit_done'),
+    path('<int:pk>/join/', views.Join.as_view(), name='join'),
+    path('<int:pk>/leave/', views.Leave.as_view(), name='leave'),
 
-    # these are nowhere near usable
-    # url(r'^(?P<pk>[0-9]+)/manage$', views.manage, name='rpg_manage'),
-    # url(r'^(?P<pk>[0-9]+)/manage/done$', views.manage_process, name='rpg_manage_done'),
-
-    path('<int:pk>/delete/', views.delete, name='delete'),
-    path('create/finish/', views.create_done, name='create_done'),
+    path('<int:pk>/kick/', views.Kick.as_view(), name='kick'),
+    path('<int:pk>/add_to/', views.AddMember.as_view(), name='add_to'),
 ]

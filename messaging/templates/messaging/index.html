@@ -22,7 +22,7 @@
     <ul class="list-unstyled">
         {% for thread in threads %}
             <li class="card mb-3">
-                <a class="card-header d-flex flex-column flex-sm-row justify-content-sm-between" href="{% url 'message:message_thread' thread.id %}">
+                <a class="card-header card-link d-flex flex-column flex-sm-row justify-content-sm-between" href="{% url 'message:message_thread' thread.id %}">
                     <span class="card-text">{% get_conversation_name thread request.user %}</span>
                     {% if thread.get_latest %}<span class="text-muted">({{ thread.get_latest.timestamp }})</span>{% endif %}
                 </a>

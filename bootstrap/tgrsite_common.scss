@@ -1,0 +1,45 @@
+.navbar-dark {
+  .navbar-nav {
+    .nav-link {
+      white-space: nowrap;
+    }
+
+    .active > .nav-link,
+    .nav-link.active {
+      font-weight: bold;
+    }
+  }
+}
+
+.card-text {
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.form-pseudo-control {
+  &.is-invalid {
+    ~ .invalid-feedback,
+    ~ .invalid-tooltip {
+      display: block;
+    }
+  }
+}
+
+pre {
+  white-space: pre-line;
+  background-color: $card-bg;
+  background-clip: border-box;
+  padding: $card-spacer-y $card-spacer-x;
+  border: $card-border-width solid $card-border-color;
+  @include border-radius($card-border-radius);
+}
+
+.text-break-all {
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+}

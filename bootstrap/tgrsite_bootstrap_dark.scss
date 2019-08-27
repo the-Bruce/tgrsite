@@ -18,15 +18,25 @@ $dark: $gray-800;
 $yiq-text-dark: $gray-100;
 $yiq-text-light: $gray-900;
 
+$card-border-color: rgba($black, .3);
+$list-group-border-color: rgba($black, .3);
+$list-group-active-border-color: $gray-400;
+
 $theme-colors: (
         "primary": #9114BA,
         "secondary": #300140,
-        "tertiary": #9114BA,
+        "tertiary": #BB31E8,
         "info": #000fe6,
+        "gold": #ffc107,
+        "warning":#ffaa27,
 );
+
+
 
 @import "source/functions";
 
+$link-color: theme-color("tertiary");
+$link-hover-color: darken($link-color, 15%);
 @import "source/variables";
 
 $border-width: 3px;
@@ -186,34 +196,4 @@ input[type="button"] {
 @import "source/utilities";
 @import "source/print";
 
-.navbar-dark {
-  .navbar-nav {
-    .nav-link {
-      white-space: nowrap;
-    }
-
-    .active > .nav-link,
-    .nav-link.active {
-      font-weight: bold;
-    }
-  }
-}
-
-.card-text {
-  p:last-child {
-    margin-bottom: 0;
-  }
-
-  img {
-    max-width: 100%;
-  }
-}
-
-pre {
-  white-space: pre-line;
-  background-color: $card-bg;
-  background-clip: border-box;
-  padding: $card-spacer-y $card-spacer-x;
-  border: $card-border-width solid $card-border-color;
-  @include border-radius($card-border-radius);
-}
+@import "tgrsite_common";

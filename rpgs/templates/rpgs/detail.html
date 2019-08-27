@@ -1,144 +1,17 @@
-{% load rpg_tags %}
-{% load markdown_tags %}
-{# TODO: Make this messages #}
-{% if request.GET.status == 'created' %}
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        Game successfully created.
-    </div>
-{% endif %}
+{% extends "tgrsite/main.html" %}
+{% block title %}{{ rpg.title }}{% endblock %}
+{% block pagetitle %}{{ rpg.title }}{% endblock %}
 
-{% if request.GET.error == 'full' %}
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        Game is full
-    </div>
-{% endif %}
-<div class="panel panel-default">
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "rpgs:index" %}">Events</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}{{ rpg.title }}{% endblock %}
 
-    <div class="panel-heading">
-        <h4>
-            <a class="wordwrap" href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a>
-            <span class="pull-right">
-				{% comment %}
-				TODO: Find a way to incorporate can_manage?
-				{% can_manage user.member rpg %}
+{% block body %}
+    {% include "rpgs/parts/event.html" %}
+{% endblock %}
 
-				For now just copied the code into the tempate tag and it works fine...
-				When this is changed be sure to update rpg_tags!
-				{% endcomment %}
-
-                {% if rpg.creator == user.member or user.member in rpg.game_masters.all %}
-
-                    {% comment not done :( %}
-				<a href="{% url 'rpg_manage' rpg.id %}"><i class="fas fa-user" aria-hidden="true"></i></a>
-				{% endcomment %}
-                    <a href="{% url 'rpg_edit' rpg.id %}"><i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i></a>
-                    <a href="{% url 'rpg_delete' rpg.id %}"><i class="fas fa-fw fa-trash-alt"
-                                                               aria-hidden="true"></i></a>
-                {% endif %}
-			</span>
-        </h4>
-
-    </div>
-
-    <div class="panel-body">
-        {% for tag in rpg.tags.all %}
-            <a href="{% url 'rpg_tag' tag %}"><span class="label label-primary wordwrap">{{ tag }}</span></a>
-        {% endfor %}
-        {% if rpg.tags.all %}<br>{% endif %}
-
-        {% if rpg.system %}
-            <em>{{ rpg.system }}</em><br><br>
-        {% endif %}
-        <div class="wordwrap">{% if rpg.description %}
-            {% if embed %}
-                {{ rpg.description|parse_md|truncatechars_html:128 }}
-            {% else %}
-                {{ rpg.description|parse_md }}
-            {% endif %}
-        {% else %}
-            No description
-        {% endif %}</div>
-        <p>
-            {% if rpg.is_in_the_past %}Ran{% else %}Run{% endif %} by {{ rpg.game_master_list }}
-            (<strong>Timeslot:</strong> {{ rpg.get_timeslot_or_unspecified }})
-            {% if rpg.is_in_the_past %}<strong>[finished]</strong>{% endif %}
-        </p>
-
-        <strong>
-
-            Players <span class="badge">{{ rpg.members.count }} / {{ rpg.players_wanted }}</span>
-            <span class="sr-only">:
-                {% for member in rpg.members.all %}{{ member }},{% endfor %}
-            </span>
-        </strong>
-
-        <ul class="nobullet">
-            {% for member in rpg.members.all %}
-                <li>
-                    <a href="{% url 'user' member.id %}">{{ member }}</a>
-                    {% if rpg.creator == user.member %}
-                        <a href="javascript:{}" onclick="document.getElementById('kick{{ member }}').submit();"
-                           class="text-danger"
-                           data-toggle="popover" data-placement="right"
-                           data-content="Remove this user from this game"><i class="fas fa-fw fa-times"></i></a>
-                        <form action="{% url 'rpg_kick' %}" method="POST" id="kick{{ member }}" hidden>
-                            {% csrf_token %}
-                            <input type="hidden" name="id" value="{{ rpg.id }}">
-                            <input type="hidden" name="user-to-remove" value="{{ member.id }}">
-                        </form>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-
-        {% if rpg.creator == user.member %}
-            <form class="form-inline" action="{% url 'rpg_add_to' %}" method="POST" id="add-member">
-                {% csrf_token %}
-                <input type="hidden" name="id" value="{{ rpg.id }}">
-                <div class="input-group">
-                    <input class="form-control add-member-input" type="text" name="username" autocomplete="off"
-                           data-provide="typeahead"
-                           id="add-member-input-{{ rpg.id }}">
-                    <span class="input-group-btn">
-						<input class="btn btn-default" type="submit" value="Add">
-					</span>
-                </div>
-            </form>
-        {% endif %}
-
-        {% comment todo %}
-		TODO: If user is in the current game, replace this with a 'leave' link
-		TODO: create 'manage' widget for people who own/are GMs of a game
-		{% endcomment %}
-
-        {# TODO: THIS #}
-        {% if request.user.is_authenticated %}
-            {% is_player rpg as on %}
-            {% if on %}
-                <form action="{% url 'rpg_leave' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="id" value="{{ rpg.id }}">
-                    <input class="btn btn-default" type="submit" value="Leave">
-                </form>
-            {% elif rpg.members.count < rpg.players_wanted %}
-                <form action="{% url 'rpg_join' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="id" value="{{ rpg.id }}">
-                    <input class="btn btn-default" type="submit" value="Join">
-                </form>
-            {% endif %}
-        {% endif %}
-        {% if not embed %}
-            {% include "parts/typeaheadjs.html" %}
-        {% endif %}
-    </div>
-</div>
-{% if not embed %}
-    <a href="{% url 'rpgs' %}">Back to list</a>
-{% endif %}
+{% block bottomscripts %}
+    {{ block.super }}
+    {% include "parts/user_typeahead.html" %}
+{% endblock %}

@@ -19,7 +19,10 @@ $theme-colors: (
         "tertiary": #9114BA,
         "light": #e9ecef,
         "info": #00088a,
+        "gold": #ffc107,
+        "warning":#ffa700,
 );
+
 
 //300140
 
@@ -77,43 +80,4 @@ $navbar-light-toggler-border-color: rgba($black, .1);
 @import "source/utilities";
 @import "source/print";
 
-.navbar-dark {
-  .navbar-nav {
-    .nav-link {
-      white-space: nowrap;
-    }
-
-    .active > .nav-link,
-    .nav-link.active {
-      font-weight: bold;
-    }
-  }
-}
-
-.card-text {
-  p:last-child {
-    margin-bottom: 0;
-  }
-
-  img {
-    max-width: 100%;
-  }
-}
-
-.form-pseudo-control {
-  &.is-invalid {
-    ~ .invalid-feedback,
-    ~ .invalid-tooltip {
-      display: block;
-    }
-  }
-}
-
-pre {
-  white-space: pre-line;
-  background-color: $card-bg;
-  background-clip: border-box;
-  padding: $card-spacer-y $card-spacer-x;
-  border: $card-border-width solid $card-border-color;
-  @include border-radius($card-border-radius);
-}
+@import "tgrsite_common";

@@ -23,7 +23,7 @@
                     <span class="d-flex flex-column"><strong>
                         {% if not newsletter.ispublished %}[UNPUBLISHED] {% endif %}{{ newsletter.title }}</strong>
                     <small class="">
-                        posted {{ newsletter.pub_date|timesince }} ago by {% include "parts/render_member.html" with member=newsletter.author nolink=True %}
+                        posted {{ newsletter.pub_date|timesince }} ago by {% include "parts/render_member.html" with member=newsletter.author avatarless=True nolink=True %}
                     </small>
                     </span>
                     {{ newsletter.summary }}
@@ -34,4 +34,10 @@
         {% endfor %}
     </div>
     {% include "parts/pagination.html" %}
+{% endblock %}
+{% block leftcontents %}
+{{ block.super }}
+    {% if perms.newsletters.edit_newsletter %}
+        <a class="btn btn-block btn-outline-dark" href="{% url 'admin:newsletters_newsletter_changelist' %}">Edit</a>
+    {% endif %}
 {% endblock %}
