@@ -1,14 +1,9 @@
 {% extends "tgrsite/main.html" %}
 {% load property_tags %}
 {% block title %}Timetable{% endblock %}
+{% block pagetitle %}Timetable{% endblock %}
 {% block css %}
     {{ block.super }}
-    <style>
-        .centerate {
-            text-align: center;
-            vertical-align: middle !important;
-        }
-    </style>
     <noscript>
         <style>
             .js_only {
@@ -17,19 +12,30 @@
         </style>
     </noscript>
 {% endblock %}
+
+{% block breadcrumbs_child %}Timetable{% endblock %}
+
 {% block body %}
-    <div class="text-wrap">
-        <h3>Subscribe to our calender!</h3>
+    <div class="card mb-3">
+        <h3 class="card-header">Subscribe to our calender!</h3>
+        <div class="card-body">
         <noscript>
             <p><a class="btn btn-block btn-outline-primary" href="{% url "timetable:subscribe" %}">Subscribe</a></p>
         </noscript>
-        <button type="button" class="js_only btn btn-block btn-outline-primary" data-toggle="modal" data-target="#webcal_subscribe">
+        <button type="button" class="js_only btn btn-block btn-outline-primary" data-toggle="modal"
+                data-target="#webcal_subscribe">
             Subscribe
         </button>
+        </div>
     </div>
     {% spaceless %}
         {% for timetable in timetables %}
-            {% include "timetable/parts/render_timetable.html" with timetable=timetable %}
+            <div class="card mb-3">
+                <h2 class="card-header">{{ timetable.title }}</h2>
+                <div class="card-body">
+                    {% include "timetable/parts/render_timetable.html" with timetable=timetable %}
+                </div>
+            </div>
         {% endfor %}
     {% endspaceless %}
 
@@ -53,8 +59,10 @@
         </div>
     </div>
 {% endblock %}
-{% block rightbar %}
+
+{% block leftcontents %}
+    {{ block.super }}
     {% if perms.timetable.change_timetable %}
-        <a class="btn btn-default" href="{% url "admin:app_list" "timetable" %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:app_list" "timetable" %}">Edit</a>
     {% endif %}
 {% endblock %}

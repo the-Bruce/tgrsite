@@ -18,3 +18,10 @@
         </div>
     </div>
 {% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.timetable.change_timetable %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:timetable_googlecalender_changelist" %}">Edit</a>
+    {% endif %}
+{% endblock %}

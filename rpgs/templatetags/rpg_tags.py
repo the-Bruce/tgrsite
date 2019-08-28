@@ -5,7 +5,6 @@ register = template.Library()
 
 @register.simple_tag
 def can_manage(member, rpg):
-    print(member.__repr__())
     if not member:
         return False
     # whether given user has permission to manage given rpg
