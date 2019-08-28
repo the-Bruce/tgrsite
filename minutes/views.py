@@ -51,6 +51,14 @@ class MeetingDetail(DetailView):
 
         return item
 
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        meetings = list(Meeting.objects.order_by('date'))
+        index_of = meetings.index(self.object)
+        ctxt['next'] = meetings[index_of + 1] if index_of + 1 < len(meetings) else None
+        ctxt['prev'] = meetings[index_of - 1] if index_of - 1 >= 0 else None
+        return ctxt
+
 
 class CreateMeeting(PermissionRequiredMixin, CreateView):
     permission_required = "minutes:add_meeting"
