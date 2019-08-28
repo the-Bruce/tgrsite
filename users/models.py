@@ -47,6 +47,11 @@ class Member(models.Model):
     def is_ex_exec(self):
         return self.equiv_user.groups.filter(name='ex_exec').exists()
 
+    # Make .member idempotent i.e. user.member is valid even if user is actually a member
+    @property
+    def member(self):
+        return self
+
     @staticmethod
     def users_with_perm(perm_name):
         return Member.objects.filter(
