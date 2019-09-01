@@ -15,6 +15,8 @@ import os
 import django.contrib.messages.constants as message_constants
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.urls import reverse_lazy
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ADMINS = [('Webadmin', 'webadmin@warwicktabletop.co.uk')]
@@ -169,6 +171,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 # site URL that static files are served from
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL=reverse_lazy("homepage")
 
 # directories to collect static files from
 STATICFILES_DIRS = [

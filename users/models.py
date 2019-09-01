@@ -24,7 +24,6 @@ class Member(models.Model):
             'd': 'identicon',
             's': str(size),
         })
-
         return 'https://www.gravatar.com/avatar/{}?{}'.format(h, q)
 
     def badge(self):
@@ -42,7 +41,7 @@ class Member(models.Model):
         return len(self.notifications_owned.filter(is_unread=True))
 
     def is_exec(self):
-        return self.execrole_set.count() > 0 or self.equiv_user.groups.filter(name='exec').exists()
+        return self.exec_roles.count() > 0 or self.equiv_user.groups.filter(name='exec').exists()
 
     def is_ex_exec(self):
         return self.equiv_user.groups.filter(name='ex_exec').exists()

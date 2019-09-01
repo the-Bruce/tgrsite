@@ -67,10 +67,10 @@
                     {% endblock %}
                 </div>
                 <div class="col-md-9">
-                    {% block messages %}
-                    {% endblock %}
                     <h1>{% block pagetitle %}{% endblock %}</h1>
                     {% block breadcrumbs %}
+                    {% endblock %}
+                    {% block messages %}
                     {% endblock %}
                     {% block body %}
                         {# This is the part that gets overridden by templates that extend this one. #}

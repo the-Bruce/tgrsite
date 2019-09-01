@@ -1,27 +1,31 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}Edit profile{% endblock %}
+{% block pagetitle %}Edit Your Profile{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "users:me" %}">Your Profile</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Edit{% endblock %}
+
 {% block body %}
 
     <h1>Your Profile</h1>
 
     (Note: to change your profile image, see <a href="https://github.com/the-Bruce/tgrsite/wiki/Gravatar">this guide.</a>)
 
-    <form action="{% url 'users:update' %}" method="POST">
+    <form method="POST">
         {% csrf_token %}
 
         <div class="form-group">
             {% include "parts/render_form_content.html" with form=userform %}
 
-            {% comment %}
-            {{ userform.as_p }}
-            {% endcomment %}
             {% for field in memberform %}
                 {% if field.name != 'official_photo_url' or request.user.member.is_exec %}
                     {% include "parts/render_form_widget.html" with field=field %}
                 {% endif %}
             {% endfor %}
         </div>
-        <input type="submit" class="form-control btn-primary" value="Save">
+        <input type="submit" class="form-control btn btn-block btn-outline-primary" value="Save">
     </form>
 
 {% endblock %}

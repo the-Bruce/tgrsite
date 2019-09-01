@@ -24,7 +24,7 @@ def sitename_captcha():
     sitename = "warwicktabletop"
     nums = ordered_different_randoms(list(range(7)))
     question = ["What are the ",
-                "{}, {} and {} ".format(ordinal(nums[0] + 1), ordinal(nums[1] + 1), ordinal(nums[2] + 1)),
+                "{}, {} and {} ".format(ordinal(nums[0]), ordinal(nums[1]), ordinal(nums[2])),
                 "letters of our ",
                 random.choice(["site name ", "domain name "]),
                 "(excluding the 'www.' at the start of it)?"
@@ -34,6 +34,7 @@ def sitename_captcha():
 
 
 def ordinal(number):
+    number += 1
     # Converts a number into its ordinal (e.g. 1 -> 1st)
     ordinals = ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"]
     return str(number) + ordinals[number % 10]
@@ -74,29 +75,5 @@ def check_signed_captcha(given, answer):
         answer = getSigner().unsign(answer, max_age=timedelta(minutes=10))
     except (SignatureExpired, BadSignature):
         return False
-
-    return compare_digest(hash2(given), answer)
-
-
-def hash2(inp):
-    return sha512(str(inp).encode()).hexdigest()
-
-
-def getSigner():
-    return TimestampSigner()
-
-
-def create_signed_captcha():
-    question, answer, help = make_captcha()
-    answer = hash2(answer)
-    answer = getSigner().sign(answer)
-    return (question, answer, help)
-
-
-def check_signed_captcha(given, answer):
-    try:
-        answer = getSigner().unsign(answer, max_age=timedelta(minutes=10))
-    except (SignatureExpired, BadSignature):
-        return False
-
+    print("hash:", hash2(given), answer)
     return compare_digest(hash2(given), answer)

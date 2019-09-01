@@ -2,5 +2,5 @@
 <form class="mb-2" method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <input type="submit" class="form-control btn-outline-{% if colour %}{{ colour }}{% else %}dark{% endif %}" value="{% if save %}{{ save }}{% else %}Save{% endif %}">
+    <input type="submit" class="form-control btn-outline-{% if colour %}{{ colour }}{% else %}primary{% endif %}" value="{% if save %}{{ save }}{% else %}Save{% endif %}">
 </form>

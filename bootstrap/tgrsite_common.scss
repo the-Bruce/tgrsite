@@ -43,3 +43,9 @@ pre {
     word-break: break-all !important;
     overflow-wrap: break-word !important;
 }
+
+.alert-block ul {
+  padding-left: 0;
+  list-style: none;
+  margin-bottom: 0;
+}

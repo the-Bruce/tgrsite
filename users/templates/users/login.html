@@ -1,27 +1,21 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}Login{% endblock %}
+{% block pagetitle %}Login{% endblock %}
+
+{% block breadcrumbs_child %}Login{% endblock %}
 
 {% block body %}
 
-    {% if result == 'invalid' %}
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            Username or password was incorrect.
-        </div>
-    {% endif %}
-    {% if next %}
-        <form action="{% url 'users:login-done' %}?next={{ next }}" method="POST">
-    {% else %}
-        <form action="{% url 'users:login-done' %}" method="POST">
-    {% endif %}
-        {% csrf_token %}
-        {% include "parts/render_form_content.html" %}
-        <input type="submit" class="form-control btn-primary" value="Login">
-    </form>
+    {% include "parts/render_form.html" %}
 
-    <a href="{% url 'users:signup' %}">Sign up</a> &middot;
-    <a href="{% url 'users:password_reset' %}">Reset password</a>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text text-center">
+                <a href="{% url 'users:signup' %}">Sign up</a> &middot;
+                <a href="{% url 'users:password_reset' %}">Reset password</a>
+            </p>
+        </div>
+    </div>
+
 
 {% endblock %}

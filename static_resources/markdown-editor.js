@@ -88,7 +88,7 @@
 
         return this.each(function () {
             let txt = this,                          // textarea element
-                controls = $('<div class="controls" />'); // button container
+                controls = $('<div class="controls" id="'+txt.id+'-controls" />'); // button container
 
             const format_classes = "btn btn-light";
             const button_template = '<button type="button" data-toggle="tooltip" data-placement="bottom" title="';

@@ -70,6 +70,9 @@ class Update(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, U
             doNewsletterMailings(form.instance.id)
         return response
 
+    def form_invalid(self, form):
+        super().render_to_response(form)
+
     def test_func(self):
         obj = get_object_or_404(Newsletter, pk=self.kwargs['pk'])
         if obj.author and (obj.author != self.request.user.member and not self.request.user.has_perm('newsletters.modify_others')):
