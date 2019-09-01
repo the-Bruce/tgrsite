@@ -1,0 +1,11 @@
+{% extends "tgrsite/main.html" %}
+{% block title %}Internal Server Error{% endblock %}
+{% block pagetitle %}500: Internal Server Error{% endblock %}
+
+{% block breadcrumbs_child %}Internal Server Error{% endblock %}
+
+{% block body %}
+    <h3>Sorry, that page could not be loaded</h3>
+    <p>Something went wrong while fetching that page. Please try again in a little bit.
+        If this happens repeatedly, please contact the web admin so they can start working on a fix</p>
+{% endblock %}
