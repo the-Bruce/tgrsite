@@ -8,10 +8,7 @@ class MessageThread(models.Model):
     title = models.CharField(max_length=64, blank=True)
 
     def __str__(self):
-        if self.title != '':
-            return self.title
-        else:
-            return ', '.join([str(x) for x in self.participants.all()])
+        return self.title or (', '.join([str(x) for x in self.participants.all()]))
 
     # latest five messages
     def five(self):

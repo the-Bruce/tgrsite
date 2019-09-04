@@ -123,9 +123,11 @@ class CreateGroup(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         members = set()
         for subform in form:
-            r = subform.cleaned_data['recipient']
-            if r not in members:
-                members.add(r)
+            print(subform.cleaned_data)
+            if subform.is_bound and 'recipient' in subform.cleaned_data:
+                r = subform.cleaned_data['recipient']
+                if r not in members:
+                    members.add(r)
         if self.request.user.member not in members:
             members.add(self.request.user.member)
 

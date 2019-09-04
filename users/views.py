@@ -138,17 +138,17 @@ class Signup(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        data=form.data.copy()
+        data = form.data.copy()
         data['captcha_token'] = self.captcha_token
         data['captcha'] = ""
-        form.data=data
+        form.data = data
         return super().form_invalid(form)
 
 
 @login_required
 def allmembers(request):
     usernames = [x.username for x in User.objects.filter(is_active=True).order_by('username')]
-    return JsonResponse(usernames)
+    return JsonResponse(usernames, safe=False)
 
 
 # not a view

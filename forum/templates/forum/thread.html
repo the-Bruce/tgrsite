@@ -25,13 +25,11 @@
 {% block body %}
     {% include 'forum/parts/thread.html' with response=thread %}
 
-    <div class="ml-0 ml-sm-4">
-        {% for response in responses %}
-            {% include 'forum/parts/response.html' %}
-        {% endfor %}
-    </div>
+    {% for response in responses %}
+        {% include 'forum/parts/response.html' %}
+    {% endfor %}
 
-    <div class="card mb-4">
+    <div class="card">
         <div class="card-body">
             {% if request.user.is_authenticated %}
                 {% include "parts/render_form.html" with save="Reply" %}

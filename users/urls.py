@@ -18,20 +18,20 @@ urlpatterns = [
     path('signup/', views.Signup.as_view(), name='signup'),
 
     path('change-password/',
-        views.ChangePassword.as_view(),
-        name='password_change'),
+         views.ChangePassword.as_view(),
+         name='password_change'),
 
     path('reset-password/',
-        views.PasswordReset.as_view(),
-        name='password_reset'),
+         views.PasswordReset.as_view(),
+         name='password_reset'),
 
     path('reset-password/done/',
-        auth_views.PasswordResetDoneView.as_view(),
-        name='password_reset_done'),
+         auth_views.PasswordResetDoneView.as_view(),
+         name='password_reset_done'),
 
     path('reset-password/<slug:uidb64>/<slug:token>',
-        views.PasswordResetConfirm.as_view(),
-        name='password_reset_confirm'),
+         views.PasswordResetConfirm.as_view(),
+         name='password_reset_confirm'),
 
     # API stuff
     path('user/allmembers/', views.allmembers, name='allmembers'),

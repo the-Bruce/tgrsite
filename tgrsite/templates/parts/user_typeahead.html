@@ -4,8 +4,10 @@
 $(function () {
     $('[data-toggle="popover"]').popover({trigger: 'hover', html: true})
 })</script>
-<script type="text/javascript">
+<script>
     $.get("{% url 'users:allmembers' %}", function (data) {
+        console.log("data");
+        console.log(data);
         window.tagarople_user_typeahead_data=data; //Save for other functions to access (yes, naughty, I know)
         $(".add-member-input").each(function (index) {
             $(this).typeahead({source: data, theme: "bootstrap4"})
