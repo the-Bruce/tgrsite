@@ -5,7 +5,13 @@
 {% block breadcrumbs_child %}Internal Server Error{% endblock %}
 
 {% block body %}
-    <h3>Sorry, that page could not be loaded</h3>
-    <p>Something went wrong while fetching that page. Please try again in a little bit.
-        If this happens repeatedly, please contact the web admin so they can start working on a fix</p>
+    <div class="card">
+        <h3 class="card-header">Sorry, that page could not be loaded</h3>
+        <div class="card-body">
+            <p class="card-text">
+                Something went wrong while fetching that page. Please try again in a little bit.
+                If this happens repeatedly, please contact the web admin so they can start working on a fix.
+            </p>
+        </div>
+    </div>
 {% endblock %}
