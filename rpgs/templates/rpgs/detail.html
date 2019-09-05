@@ -15,3 +15,10 @@
     {{ block.super }}
     {% include "parts/user_typeahead.html" %}
 {% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.rpgs.edit_rpg %}
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:rpgs_rpg_change" rpg.pk %}">Edit</a>
+    {% endif %}
+{% endblock %}

@@ -19,11 +19,24 @@
     <div id="rename_form" class="collapse mb-2" aria-hidden="true">
         <form class="form form-inline" method="post" action="{% url "message:rename_thread" %}">
             {% csrf_token %}
-            <label for="rename">New Name: </label>
+            <label for="rename">New Name:</label>
             <input id="rename" name="rename" type="text" class="form-control ml-2" value="{{ thread.title }}">
             <input type="hidden" name="thread" value="{{ thread.id }}">
             <input type="submit" class="form-control btn-outline-primary ml-2" value="Save">
         </form>
+    </div>
+    <div class="card mb-3">
+        <a class="card-header card-link" href="#memberlist" data-toggle="collapse">Participants</a>
+        <div class="collapse" id="memberlist">
+            <ul class="list-group list-group-flush">
+                {% for member in thread.participants.all %}
+                    <li class="list-group-item">
+                        {% include "parts/render_member.html" with avatarless=True link_class="stretched-link card-link" %}
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
     </div>
     <div class="card mb-3">
         <div class="card-body">
@@ -34,7 +47,8 @@
         {% include 'messaging/parts/messages.html' with full=True message_list=thread_messages %}
         {% if more %}
             <div class="mt-3">
-                <a class="btn btn-block btn-outline-primary" href="{% url "message:message_thread_full" thread=thread.pk %}">View All</a>
+                <a class="btn btn-block btn-outline-primary"
+                   href="{% url "message:message_thread_full" thread=thread.pk %}">View All</a>
             </div>
         {% endif %}
     </div>

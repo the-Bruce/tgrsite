@@ -14,7 +14,8 @@ from django.views import generic
 
 from notifications.models import NotifType, notify_everybody, notify
 from users.models import Member
-from .forms import RpgForm
+from messaging.views import find_group
+from .forms import RpgForm, RpgCreateForm
 from .models import Rpg, Tag
 from .templatetags.rpg_tags import can_manage
 
@@ -46,7 +47,7 @@ class Detail(generic.DetailView):
 class Create(LoginRequiredMixin, generic.CreateView):
     template_name = 'rpgs/create.html'
     model = Rpg
-    form_class = RpgForm
+    form_class = RpgCreateForm
 
     def form_valid(self, form):
         form.instance.creator = self.request.user.member
@@ -169,13 +170,31 @@ class AddMember(LoginRequiredMixin, UserPassesTestMixin, generic.View):
 
     def post(self, *args, **kwargs):
         try:
-            added = User.objects.get(member__id=self.request.POST.get('username')).member
+            added = User.objects.get(username__iexact=self.request.POST.get('username')).member
         except User.DoesNotExist:
             add_message(self.request, messages.WARNING, "Username not found")
-            return HttpResponseRedirect(reverse('rpgs:detail', kwargs={'pk': self.kwargs['pk']}))
-        self.rpg.members.add(added)
-        notify(added, NotifType.RPG_KICK,
-               'You were added to the game "{}".'.format(self.rpg.title),
-               reverse('rpgs:detail', kwargs={'pk': self.request.POST.get('id')}))
-        add_message(self.request, messages.SUCCESS, "{} Added to Event".format(added.equiv_user.username))
+        else:
+            if self.rpg.members.count() >= self.rpg.players_wanted:
+                add_message(self.request, messages.WARNING, "Game is full")
+            else:
+                self.rpg.members.add(added)
+                notify(added, NotifType.RPG_KICK,
+                       'You were added to the game "{}".'.format(self.rpg.title),
+                       reverse('rpgs:detail', kwargs={'pk': self.kwargs['pk']}))
+                add_message(self.request, messages.SUCCESS, "{} Added to Event".format(added.equiv_user.username))
         return HttpResponseRedirect(reverse('rpgs:detail', kwargs={'pk': self.kwargs['pk']}))
+
+
+class MessageGroup(LoginRequiredMixin, UserPassesTestMixin, generic.RedirectView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.rpg = None
+
+    def test_func(self):
+        self.rpg = get_object_or_404(Rpg, id=self.kwargs['pk'])
+        return self.request.user.member in self.rpg.members.all() or self.request.user.member in self.rpg.game_masters.all()
+
+    def get_redirect_url(self, *args, **kwargs):
+        members = {*self.rpg.members.all(), *self.rpg.game_masters.all()}
+        group = find_group(*members, name=self.rpg.title)
+        return reverse("message:message_thread", kwargs={'pk': group.pk})

@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import Textarea, CharField
+from django.forms import Textarea, CharField, NumberInput
 
 import re
 
@@ -26,7 +26,7 @@ class RpgForm(forms.ModelForm):
         model = Rpg
         fields = ['title', 'system', 'description', 'players_wanted', 'time_slot', 'location', 'is_in_the_past', ]
         widgets = {
-            'description': Textarea(attrs=MD_INPUT)
+            'description': Textarea(attrs=MD_INPUT),
         }
 
     def clean_tag_list(self):
@@ -34,6 +34,15 @@ class RpgForm(forms.ModelForm):
         tags = {x.strip().lower() for x in splitter.split(tags)}
         if '' in tags:
             tags.remove('')
-        if len(max(tags, key=len)) > 40:
+        if tags and len(max(tags, key=len)) > 40:
             raise forms.ValidationError("Tag too long")
         return tags
+
+
+class RpgCreateForm(RpgForm):
+    class Meta:
+        model = Rpg
+        fields = ['title', 'system', 'description', 'players_wanted', 'time_slot', 'location']
+        widgets = {
+            'description': Textarea(attrs=MD_INPUT),
+        }

@@ -60,6 +60,9 @@
                     </li>
                 {% endfor %}
             </ul>
+            {% if user.member in rpg.members.all or user.member in rpg.game_masters.all %}
+                <a class="btn btn-block btn-outline-primary mt-2" href="{% url "rpgs:message" rpg.pk %}">Message All</a>
+            {% endif %}
         {% endif %}
     </div>
     {% if not embed and user.is_authenticated %}

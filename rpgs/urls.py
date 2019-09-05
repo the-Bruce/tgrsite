@@ -17,4 +17,6 @@ urlpatterns = [
 
     path('<int:pk>/kick/', views.Kick.as_view(), name='kick'),
     path('<int:pk>/add_to/', views.AddMember.as_view(), name='add_to'),
+
+    path('<int:pk>/message/', views.MessageGroup.as_view(), name='message')
 ]

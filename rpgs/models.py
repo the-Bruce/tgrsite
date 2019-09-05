@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import validators
 from django.shortcuts import reverse
 
 from users.models import Member
@@ -13,7 +14,7 @@ class Rpg(models.Model):
     description = models.TextField(max_length=8192, blank=True, help_text="Longform description")
     time_slot = models.CharField(max_length=64, blank=True, help_text="The date/time(s) this event will occur")
     location = models.CharField(max_length=64, blank=True, help_text="The location where this event will occur")
-    players_wanted = models.IntegerField()
+    players_wanted = models.PositiveSmallIntegerField(validators=[validators.MinValueValidator(1)])
     is_in_the_past = models.BooleanField(default=False, help_text="Has the event already happened?")
 
     created_at = models.DateTimeField(auto_now_add=True)

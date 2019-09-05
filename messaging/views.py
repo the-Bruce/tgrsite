@@ -17,7 +17,7 @@ from .forms import QuickDM, Respond, MemberFormset
 
 # not a view
 # helper function to send messages
-def find_group(*members):
+def find_group(*members, name=""):
     members = set(members)
     query = MessageThread.objects.all()
     query = query.annotate(num_participants=Count('participants')).filter(num_participants=len(members))
@@ -26,7 +26,7 @@ def find_group(*members):
     try:
         return query.get()
     except MessageThread.DoesNotExist:
-        m_thread = MessageThread.objects.create(title="")
+        m_thread = MessageThread.objects.create(title=name)
         for member in members:
             m_thread.participants.add(member)
         m_thread.save()

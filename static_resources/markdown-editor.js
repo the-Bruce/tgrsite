@@ -155,8 +155,8 @@
 
                 // no actual text selection or text selection matches default placeholder text
                 if (range.start === range.end) {
-                    txt.value = txt.value.substring(0, range.end) + tag.start + tag.placeholder + tag.end + txt.value.substring(range.end);
-                    setCaretToPos(txt, range.end + tag.start.length + number_of_spaces_removed_from_placeholder, range.end + tag.start.length + number_of_spaces_removed_from_placeholder + trimmed_placeholder.length);
+                    txt.value = txt.value.substring(0, range.start) + tag.start + tag.placeholder + tag.end + txt.value.substring(range.end);
+                    setCaretToPos(txt, range.start + tag.start.length + number_of_spaces_removed_from_placeholder, range.end + tag.start.length + number_of_spaces_removed_from_placeholder + trimmed_placeholder.length);
 
                     // we have selected text
                 } else {
@@ -166,8 +166,7 @@
 
                     // the others need to wrapped between tags
                     else
-                        txt.value = txt.value.replace(selectedText, tag.start + selectedText + tag.end);
-
+                        txt.value=txt.value.substring(0, range.start) + tag.start + selectedText + tag.end + txt.value.substring(range.end);
                 }
 
                 return true;

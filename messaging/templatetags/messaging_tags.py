@@ -20,4 +20,8 @@ def get_conversation_name(thread_, me):
 
         if me in participants and len(participants) > 1:
             participants.remove(me)
-        return ', '.join(participants)
+        title = ', '.join(participants)
+        if len(title) > 50:
+            title = title[0:50]
+            title = title.strip() + "..."
+        return title
