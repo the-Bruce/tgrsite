@@ -12,7 +12,7 @@ class Rpg(models.Model):
     title = models.CharField(max_length=64, verbose_name='Name', help_text="The event's name")
     system = models.CharField(max_length=64, blank=True, help_text="The system that is being used")
     description = models.TextField(max_length=8192, blank=True, help_text="Longform description")
-    time_slot = models.CharField(max_length=64, blank=True, help_text="The date/time(s) this event will occur")
+    timeslot = models.CharField(max_length=64, blank=True, help_text="The date/time(s) this event will occur")
     location = models.CharField(max_length=64, blank=True, help_text="The location where this event will occur")
     players_wanted = models.PositiveSmallIntegerField(validators=[validators.MinValueValidator(1)])
     is_in_the_past = models.BooleanField(default=False, help_text="Has the event already happened?")
