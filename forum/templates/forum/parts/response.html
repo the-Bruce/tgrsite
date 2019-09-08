@@ -13,14 +13,18 @@
     <div class="card-body">
         <div class="card-text">{{ response.body|parse_md }}</div>
     </div>
-    {% if user.member == response.author %}
+    {% block edit_links %}
+    {% if user.member == response.author or perms.forum.change_response or perms.forum.delete_response %}
         <div class="card-footer">
             <div class="btn-group">
-                {% block edit_links %}
+                {% if user.member == response.author or perms.forum.change_response %}
                     <a class="btn btn-outline-success" href="{% url 'forum:response_edit' response.id %}"><i class="fas fa-pencil-alt"></i></a>
+                {% endif %}
+                {% if user.member == response.author or perms.forum.delete_response %}
                     <a class="btn btn-outline-danger" href="{% url 'forum:response_delete' response.id %}"><i class="fas fa-trash-alt"></i></a>
-                {% endblock %}
+                {% endif %}
             </div>
         </div>
     {% endif %}
+    {% endblock %}
 </div>

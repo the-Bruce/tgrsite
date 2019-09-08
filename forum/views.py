@@ -128,7 +128,7 @@ class DeleteThread(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin,
 
     def test_func(self):
         thread = get_object_or_404(Thread, id=self.kwargs['pk'])
-        return self.request.user.member == thread.author
+        return self.request.user.member == thread.author or self.request.user.has_perm('forum.delete_thread')
 
     def get_success_url(self):
         return reverse('forum:subforum', kwargs={'forum': self.object.forum.id})
@@ -141,7 +141,7 @@ class DeleteResponse(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
 
     def test_func(self):
         response = get_object_or_404(Response, id=self.kwargs['pk'])
-        return self.request.user.member == response.author
+        return self.request.user.member == response.author or self.request.user.has_perm('forum.delete_response')
 
     def get_success_url(self):
         return reverse('forum:viewthread', kwargs={'thread': self.object.thread.id})
@@ -155,7 +155,7 @@ class EditResponse(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin,
 
     def test_func(self):
         response = get_object_or_404(Response, id=self.kwargs['pk'])
-        return self.request.user.member == response.author
+        return self.request.user.member == response.author or self.request.user.has_perm('forum.change_response')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -170,7 +170,7 @@ class EditThread(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, U
 
     def test_func(self):
         thread = get_object_or_404(Thread, id=self.kwargs['pk'])
-        return self.request.user.member == thread.author
+        return self.request.user.member == thread.author or self.request.user.has_perm('forum.change_thread')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

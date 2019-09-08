@@ -1,7 +1,18 @@
 {% extends "forum/parts/response.html" %}
 {% block edit_links %}
-    <a class="btn btn-outline-success" href="{% url 'forum:thread_edit' thread.id %}"><i class="fas fa-pencil-alt"></i></a>
-    <a class="btn btn-outline-danger" href="{% url 'forum:thread_delete' thread.id %}"><i class="fas fa-trash-alt"></i></a>
+        {% if user.member == response.author or perms.forum.change_thread or perms.forum.delete_thread %}
+        <div class="card-footer">
+            <div class="btn-group">
+                {% if user.member == response.author or perms.forum.change_thread %}
+                    <a class="btn btn-outline-success" href="{% url 'forum:thread_edit' thread.id %}"><i class="fas fa-pencil-alt"></i></a>
+                {% endif %}
+                {% if user.member == response.author or perms.forum.delete_thread %}
+                    <a class="btn btn-outline-danger" href="{% url 'forum:thread_delete' thread.id %}"><i class="fas fa-trash-alt"></i></a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}
 
 {% block id %}{% endblock %}{# remove the  #}

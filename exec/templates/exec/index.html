@@ -8,7 +8,7 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.exec.change_execrole %}
-        <p><a class="btn btn-block btn-outline-dark" href="{% url "admin:app_list" "exec" %}">Edit</a></p>
+        <p><a class="btn btn-block btn-outline-dark" href="{% url "admin:exec_execrole_changelist" %}">Edit</a></p>
     {% endif %}
 {% endblock %}
 
@@ -42,7 +42,7 @@
                 </li>
             {% endif %}
         {% empty %}
-            <li>No roles have been defined. Get the web admin to add them in the admin interface</li>
+            <li class="card bg-danger mb-2"><div class="card-body">No roles have been defined. Get the web admin to add them in the admin interface</div></li>
         {% endfor %}
     </ul>
 {% endblock %}

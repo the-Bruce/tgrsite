@@ -14,12 +14,12 @@
         {% endif %}
         <div class="card-body">
             {% if member != request.user.member %}
-                <p class="card-text"><a class="btn btn-block btn-outline-primary"
+                <p class="card-text mb-3"><a class="btn btn-block btn-outline-primary"
                                         href="{% url 'message:get_dm_thread' member.id %}">Message</a></p>
             {% endif %}
 
             {% if member.exec_roles.all %}
-                <h3>
+                <h3 class="mb-3">
                     {% for x in member.exec_roles.all %}
                         {% if not forloop.first %} / {% endif %}
                         <a href="{% url 'exec:exec' %}#{{ x.role_title|urlencode }}">{{ x.role_title }}</a>
@@ -27,27 +27,27 @@
                 </h3>
             {% endif %}
             {% if member.discord %}
-                <h3><i class="fab fa-discord"></i> {{ member.discord }}</h3>
+                <h3 class="mb-3"><i class="fab fa-discord"></i> {{ member.discord }}</h3>
             {% endif %}
             {% if member.bio %}
-                <div class="card card-body card-text mb-2">{{ member.bio|parse_md }}</div>{% endif %}
+                <div class="card card-body card-text mb-3">{{ member.bio|parse_md }}</div>{% endif %}
 
             {% if recent_threads %}
-                <div class="mb-2">
+                <div class="mb-3">
                     <h4>Recent threads</h4>
                     {% include "forum/parts/thread_list.html" with threads=recent_threads userless=True %}
                 </div>
             {% endif %}
 
             {% if recent_responses %}
-                <div class="mb-2">
+                <div class="mb-3">
                     <h4>Recent responses</h4>
                     {% include "forum/parts/response_list.html" with responses=recent_responses userless=True %}
                 </div>
             {% endif %}
 
             {% if rpgs %}
-                <div class="mb-2">
+                <div class="mb-3">
                     <h4>Events running</h4>
                     <div class="list-group">
                         {% for rpg in rpgs %}
