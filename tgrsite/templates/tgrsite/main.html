@@ -75,8 +75,7 @@ THIS IS USED BY THE SITE
                             Settings</a></li>
                         <li><a class="card-link" href="{% url 'users:logout' %}">Log out</a></li>
                     {% else %}
-                        <li><a class="card-link" href="{% url 'users:login' %}">Log in</a> / <a
-                                href="{% url 'users:signup' %}">Register</a></li>
+                        <li><a class="card-link" href="{% url 'users:login' %}">Log in</a> / <a class="card-link ml-0" href="{% url 'users:signup' %}">Register</a></li>
                     {% endif %}
                     <li><a class="card-link" href="{% string_setting "bug_tracker" %}">Report a Bug</a></li>
                 </ul>
