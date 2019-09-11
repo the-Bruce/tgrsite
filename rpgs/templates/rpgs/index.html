@@ -49,6 +49,12 @@
 
     {% for rpg in rpgs %}
         {% include "rpgs/parts/event.html" with rpg=rpg embed=True %}
+    {% empty %}
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text text-muted">No matching events. Maybe relax your filters?</p>
+            </div>
+        </div>
     {% endfor %}
 
     {% if is_paginated %}

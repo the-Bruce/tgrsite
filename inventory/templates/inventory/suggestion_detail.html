@@ -19,29 +19,32 @@
 
 {% block body %}
     <div class="card">
-    <div class="card-header">
-        <h2 class="card-text">
-            {{ object.name }}
-        </h2>
-    </div>
-    <div class="card-body">
-        {% if object.archived %}
-        <div class="alert alert-dark">Archived</div>{% endif %}
-    <h3>Requested by {% include "parts/render_member.html" with member=object.requester %}</h3>
-    <h3>Why should we buy this game?</h3>
-    {{ object.justification|linebreaks }}
-    <h3>How did you discover it?</h3>
-    {{ object.context|linebreaks }}
+        <div class="card-header">
+            <h2 class="card-text">
+                {{ object.name }}
+            </h2>
+        </div>
+        <div class="card-body">
+            {% if object.archived %}
+                <div class="alert alert-dark">Archived</div>{% endif %}
+            <h3>Requested by {% include "parts/render_member.html" with member=object.requester %}</h3>
+            {% if object.justification %}
+                <h3>Why should we buy this game?</h3>
+                {{ object.justification|linebreaks }}
+            {% endif %}
+            {% if object.context %}
+                <h3>How did you discover it?</h3>
+                {{ object.context|linebreaks }}
+            {% endif %}
+            {% if object.link %}<p class="card-text"><strong>Link: </strong><a class="card-link" href="{{ object.link }}">{{ object.link }}</a></p>{% endif %}
 
-    {% if object.link %}<p>Link: <a href="{{ object.link }}">{{ object.link }}</a></p>{% endif %}
-
-    {% if perms.inventory.change_suggestion %}
-        <form action="{% url "inventory:archive_suggestion" pk=object.pk %}" method="post">
-            {% csrf_token %}
-            <input type="submit" class="btn btn-block btn-outline-warning" value="Archive">
-        </form>
-    {% endif %}
-    </div>
+            {% if perms.inventory.change_suggestion and not object.archived %}
+                <form action="{% url "inventory:archive_suggestion" pk=object.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-block btn-outline-warning" value="Archive">
+                </form>
+            {% endif %}
+        </div>
     </div>
 
 {% endblock %}

@@ -26,6 +26,8 @@
                class="list-group-item list-group-item-action">
                 {{ suggestion.name }}
             </a>
+        {% empty %}
+            <div class="list-group-item text-muted">No suggestions yet. Maybe you can be the first?</div>
         {% endfor %}
     </div>
 {% endblock %}

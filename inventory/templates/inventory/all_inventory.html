@@ -37,6 +37,8 @@
                 {{ object.name }}
                 {% if object.quantity > 1 %}<span class="badge badge-primary badge-pill ">{{ object.quantity }}</span>{% endif %}
             </a>
+        {% empty %}
+            <div class="list-group-item text-muted">No records exist</div>
         {% endfor %}
     </div>
 {% endblock %}

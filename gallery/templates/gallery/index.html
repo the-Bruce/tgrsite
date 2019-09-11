@@ -20,14 +20,23 @@
 {% endblock %}
 
 {% block body %}
-    <div class="d-flex flex-row flex-wrap align-items-center justify-content-center">
-        {% for img in images %}
-            <a class="m-2" href="{{ img.image.url }}" data-toggle="lightbox" data-gallery="tabletop"
-               data-title="{{ img.caption }}">
-                <img src="{{ img.image.url }}" class="img-fluid img-thumbnail" alt="{{ img.caption }}" width="280px">
-            </a>
-        {% endfor %}
-    </div>
+    {% if images %}
+        <div class="d-flex flex-row flex-wrap align-items-center justify-content-center">
+            {% for img in images %}
+                <a class="m-2" href="{{ img.image.url }}" data-toggle="lightbox" data-gallery="tabletop"
+                   data-title="{{ img.caption }}">
+                    <img src="{{ img.image.url }}" class="img-fluid img-thumbnail" alt="{{ img.caption }}"
+                         width="280px">
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text text-muted">Sorry, no photos have been added yet.</p>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block bottomscripts %}

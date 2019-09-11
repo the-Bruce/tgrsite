@@ -20,8 +20,14 @@
             {% include "forum/parts/subforum_list.html" with forums=forums %}
         {% else %}
             {% if not threads %}
-                Looks like the forum doesn't exist!<br>
-                Contact the <a href="{% url 'exec:exec' %}#Web%20Admin">Web Admin</a>.
+                <div class="card bg-warning">
+                    <p class="card-header">Looks like the forum doesn't exist!</p>
+                    <div class="card-body">
+                        <p class="card-text">Contact the <a class="card-link" href="{% url 'exec:exec' %}#Web%20Admin">Web Admin</a>.</p>
+                    </div>
+                </div>
+
+
             {% endif %}
         {% endif %}
     </div>

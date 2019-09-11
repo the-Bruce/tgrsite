@@ -21,6 +21,6 @@
             <span class="badge badge-pill badge-primary">{{ loan.items.count }}</span>
         </a>
     {% empty %}
-        <div class="alert alert-info">You have no active loans!</div>
+        <div class="list-group-item text-muted">You have no active loans!</div>
     {% endfor %}
 </div>

@@ -35,7 +35,7 @@ class Index(generic.ListView):
         if not self.request.GET.get('showfull', False):
             queryset = queryset.annotate(n_members=Count('members')).filter(players_wanted__gt=F('n_members'))
 
-        return queryset.order_by('pinned', '-created_at')
+        return queryset.order_by('-pinned', '-created_at')
 
 
 class Detail(generic.DetailView):

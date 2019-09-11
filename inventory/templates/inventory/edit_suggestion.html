@@ -14,5 +14,9 @@
 {% block breadcrumbs_child %}{% if object %}Edit{% else %}Create{% endif %}{% endblock %}
 
 {% block body %}
-    {% include "parts/render_form.html" %}
+    {% if object %}
+        {% include "parts/render_form.html" with save="Update" %}
+    {% else %}
+        {% include "parts/render_form.html" with save="Submit" %}
+    {% endif %}
 {% endblock %}

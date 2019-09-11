@@ -7,7 +7,8 @@ class LoanAdmin(admin.ModelAdmin):
     model = Loan
     fields = ("requester", "inventory", "items", "start_date", "end_date", "authorised", "rejected", "taken_when",
               "taken_who", "returned_when", "returned_who", "notes", "state_text")
-    readonly_fields = ('state_text',)
+    readonly_fields = ('state_text', "start_date", "end_date", "authorised", "rejected", "taken_when",
+                       "taken_who", "returned_when", "returned_who")
 
 
 # Register your models here.

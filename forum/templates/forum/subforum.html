@@ -42,7 +42,7 @@
                 data-target="#createThreadCollapse"
                 aria-expanded="false" aria-controls="createThreadCollapse">Create Thread
         </button>
-        <div class="collapse" id="createThreadCollapse">
+        <div class="collapse{% if form.errors %} show{% endif %}" id="createThreadCollapse">
             <div class="card">
                 <div class="card-body">
                     {% include "parts/render_form.html" with save="Post" %}

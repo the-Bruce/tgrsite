@@ -12,9 +12,9 @@
        aria-controls="quickdm">
         Quick DM
     </a>
-    <div class="card collapse mb-3" id="quickdm">
+    <div class="card collapse mb-3{% if form.errors %} show{% endif %}" id="quickdm">
         <div class="card-body">
-            {% include "parts/render_form.html" %}
+            {% include "parts/render_form.html" with save="Send" %}
         </div>
     </div>
     <a class="btn btn-block btn-outline-success mb-3" href="{% url "message:create_group" %}">New Group</a>
@@ -22,16 +22,24 @@
     <ul class="list-unstyled">
         {% for thread in threads %}
             <li class="card mb-3">
-                <a class="card-header card-link d-flex flex-column flex-sm-row justify-content-sm-between" href="{% url 'message:message_thread' thread.id %}">
+                <a class="card-header card-link d-flex flex-column flex-sm-row justify-content-sm-between"
+                   href="{% url 'message:message_thread' thread.id %}">
                     <span class="card-text">{% get_conversation_name thread request.user %}</span>
-                    {% if thread.get_latest %}<span class="text-muted">({{ thread.get_latest.timestamp }})</span>{% endif %}
+                    {% if thread.get_latest %}
+                        <span class="text-muted">({{ thread.get_latest.timestamp }})</span>{% endif %}
                 </a>
                 <div class="card-body">
                     {% include 'messaging/parts/messages.html' with message_list=thread.five %}
                 </div>
             </li>
         {% empty %}
-            You haven't received any messages yet.
+            <li class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text text-muted">
+                        You haven't received any messages yet.
+                    </p>
+                </div>
+            </li>
         {% endfor %}
     </ul>
 
