@@ -27,7 +27,7 @@ class Member(models.Model):
         return 'https://www.gravatar.com/avatar/{}?{}'.format(h, q)
 
     def badge(self):
-        if self.equiv_user.is_superuser():
+        if self.equiv_user.is_superuser:
             return "fas fa-crown text-gold"
         elif self.is_exec():
             return "fas fa-star text-gold"
