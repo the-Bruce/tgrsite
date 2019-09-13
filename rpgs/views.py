@@ -197,4 +197,6 @@ class MessageGroup(LoginRequiredMixin, UserPassesTestMixin, generic.RedirectView
     def get_redirect_url(self, *args, **kwargs):
         members = {*self.rpg.members.all(), *self.rpg.game_masters.all()}
         group = find_group(*members, name=self.rpg.title)
+        add_message(self.request, messages.WARNING, "Please note, if the people in the event change you will need to "
+                                                    "create a new messaging group.")
         return reverse("message:message_thread", kwargs={'pk': group.pk})

@@ -61,7 +61,7 @@
                 {% endfor %}
             </ul>
             {% if user.member in rpg.members.all or user.member in rpg.game_masters.all %}
-                <a class="btn btn-block btn-outline-primary mt-2" href="{% url "rpgs:message" rpg.pk %}">Message All</a>
+                <a class="btn btn-block btn-outline-primary mt-2" href="{% url "rpgs:message" rpg.pk %}">Message Current Members</a>
             {% endif %}
         {% endif %}
     </div>

@@ -12,6 +12,11 @@
     </div>
     <div class="card-body">
         <div class="card-text">{{ response.body|parse_md }}</div>
+
+        {% if response.author.signature %}
+            <hr>
+            <div class="card-text">{{ response.author.signature|parse_md }}</div>
+        {% endif %}
     </div>
     {% block edit_links %}
     {% if user.member == response.author or perms.forum.change_response or perms.forum.delete_response %}
