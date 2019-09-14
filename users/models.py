@@ -40,7 +40,7 @@ class Member(models.Model):
         return self.equiv_user.username
 
     def notification_count(self):
-        return len(self.notifications_owned.filter(is_unread=True))
+        return self.notifications_owned.filter(is_unread=True).count()
 
     def is_exec(self):
         return self.exec_roles.count() > 0 or self.equiv_user.groups.filter(name='exec').exists()

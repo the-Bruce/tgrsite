@@ -10,5 +10,5 @@ Cheers,
 The Warwick Tabletop and Roleplaying Society!
 
 If you don't want to receive these notification emails any more,please visit your notification settings here:
-https://www.warwicktabletop.co.uk{% url "notification_settings" %}
+https://www.warwicktabletop.co.uk{% url "notifications:notification_settings" %}
 {% endautoescape %}
