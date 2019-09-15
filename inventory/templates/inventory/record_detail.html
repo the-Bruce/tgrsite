@@ -26,12 +26,12 @@
                 <a class="mb-2 btn btn-block btn-outline-primary"
                    href="{% url "inventory:edit_record" inv=inv.canonical_ pk=object.pk %}">Edit</a>
             {% endif %}
-            <div class="d-sm-flex flex-row-reverse align-items-center">
-                <div class="ml-sm-2 mb-4 mb-sm-2">
-                    {% if object.image %}
+            <div class="d-sm-flex {% if object.image %}flex-row-reverse{% else %}flex-row{% endif %} align-items-center">
+                {% if object.image %}
+                    <div class="ml-sm-2 mb-4 mb-sm-2">
                         <img alt="{{ object.name }} example image" class="img-fluid" src="{{ object.image }}">
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
                 <div>
                     {% if object.acquired %}
                         <h3>Acquired: </h3>

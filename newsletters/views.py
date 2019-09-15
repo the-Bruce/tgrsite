@@ -27,6 +27,15 @@ class Detail(generic.DetailView):
             raise Http404
         return obj
 
+    def get_context_data(self, **kwargs):
+        ctxt=super().get_context_data(**kwargs)
+        newsletters = list(Newsletter.objects.filter(ispublished=True).order_by('pub_date'))
+        index_of = newsletters.index(self.object)
+        ctxt['next'] = newsletters[index_of + 1] if index_of + 1 < len(newsletters) else None
+        ctxt['prev'] = newsletters[index_of - 1] if index_of - 1 >= 0 else None
+        return ctxt
+
+
 
 class Create(PermissionRequiredMixin, CreateView):
     model = Newsletter
@@ -67,7 +76,7 @@ class Update(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, U
             should_mail = True
         response = super(Update, self).form_valid(form)
         if should_mail:
-            doNewsletterMailings(form.instance.id)
+            doNewsletterMailings(form.instance.id)  # Need to defer this after super to send with latest changes
         return response
 
     def form_invalid(self, form):
