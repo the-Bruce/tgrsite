@@ -49,3 +49,10 @@ pre {
   list-style: none;
   margin-bottom: 0;
 }
+
+blockquote {
+  padding-left: map_get($spacers, 3);
+  border-left: $gray-400;
+  border-width: 2px;
+  border-left-style: solid;
+}

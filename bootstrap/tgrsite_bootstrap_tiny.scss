@@ -43,6 +43,7 @@ $border-width: 3px;
 .mb-2 {
   margin-bottom: 0.5rem !important;
 }
+
 pre {
   white-space: pre-line;
   background-color: $card-bg;
@@ -52,3 +53,9 @@ pre {
   @include border-radius($card-border-radius);
 }
 
+blockquote {
+  padding-left: map_get($spacers, 3);
+  border-left: $gray-400;
+  border-width: 2px;
+  border-left-style: solid;
+}
