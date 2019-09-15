@@ -1,5 +1,18 @@
 {% extends "tgrsite/main.html" %}
+
+{% block title %}Minutes{% endblock %}
+{% block pagetitle %}Update Minutes{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "minutes:index" %}">Minutes</a></li>
+    {% if object %}
+        <li class="breadcrumb-item">
+            <a href="{% url "minutes:meeting_bounce" pk=object.pk %}">{{ object.title }}</a>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block breadcrumbs_child %}{% if object %}Edit{% else %}Add{% endif %}{% endblock %}
+
 {% block body %}
-    <h1>Update Minutes</h1>
-    {% include "widgets/render_form.html" %}
+    {% include "parts/render_form.html" %}
 {% endblock %}

@@ -15,6 +15,8 @@ import os
 import django.contrib.messages.constants as message_constants
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.urls import reverse_lazy
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ADMINS = [('Webadmin', 'webadmin@warwicktabletop.co.uk')]
@@ -44,7 +46,7 @@ SECRET_KEY = s
 
 # Defaults off unless explicitly stated in environment variable
 try:
-    if os.environ['DEBUG'] == 'True':
+    if os.environ['DEBUG'].lower() == 'true':
         DEBUG = True
     else:
         DEBUG = False
@@ -54,34 +56,39 @@ except KeyError:
 # needs 127 to work on my machine...
 ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'), '127.0.0.1']
 PRIMARY_HOST = '127.0.0.1'
-INTERNAL_IPS = ['127.0.0.1']
 
-# Application definition
+if DEBUG:
+    from .ipnetworks import IpNetworks
+    INTERNAL_IPS = IpNetworks(['127.0.0.1', '192.168.0.0/255.255.0.0'])
+else:
+    INTERNAL_IPS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     'website_settings',
+    'navbar',
     'assets',
     'minutes',
     'inventory',
-    'forum.apps.ForumConfig',
-    'users.apps.UsersConfig',
-    'rpgs.apps.RpgsConfig',
-    'statics.apps.StaticsConfig',
-    'exec.apps.ExecConfig',
-    'templatetags.apps.TemplatetagsConfig',
-    'timetable.apps.TimetableConfig',
-    'messaging.apps.MessagingConfig',
-    'bugreports.apps.BugreportsConfig',
-    'gallery.apps.GalleryConfig',
-    'pages.apps.PagesConfig',
-    'newsletters.apps.NewslettersConfig',
-    'notifications.apps.NotificationsConfig',
+    'forum',
+    'users',
+    'rpgs',
+    'exec',
+    'templatetags',
+    'timetable',
+    'messaging',
+    'gallery',
+    'pages',
+    'newsletters',
+    'notifications',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'redirect'
 ]
 
 MIDDLEWARE = [
@@ -108,6 +115,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'tgrsite.context_processors.latestposts',
+                'tgrsite.context_processors.mergednavbar'
             ],
         },
     },
@@ -156,28 +164,6 @@ USE_I18N = True
 
 USE_L10N = True
 
-# https://docs.djangoproject.com/en/1.10/topics/i18n/timezones/
-# Notable excerpts:
-"""Even if your website is available in only one time zone, it's still good
-practice to store data in UTC in your database. The main reason is Daylight
-Saving Time (DST). Many countries have a system of DST, where clocks are moved
-forward in spring and backward in autumn. If you're working in local time,
-you're likely to encounter errors twice a year, when the transitions happen. (
-The pytz documentation discusses these issues in greater detail.) This
-probably doesn't matter for your blog, but it's a problem if you over-bill or
-under-bill your customers by one hour, twice a year, every year. The solution
-to this problem is to use UTC in the code and use local time only when
-interacting with end users."""
-
-"""When time zone support is enabled (USE_TZ=True), Django uses
-time-zone-aware datetime objects. If your code creates datetime objects, they
-should be aware too. In this mode, the example above becomes:
-
-from django.utils import timezone
-
-now = timezone.now()
-"""
-
 # Europe/London means GMT+0 with a DST offset of +1:00 i.e. England time
 TIME_ZONE = 'Europe/London'
 USE_TZ = True
@@ -186,6 +172,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 # site URL that static files are served from
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL=reverse_lazy("homepage")
 
 # directories to collect static files from
 STATICFILES_DIRS = [
@@ -202,6 +190,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
 
 # Monday
 FIRST_DAY_OF_WEEK = 1
+
+# Setup Cripsy to render forms bootstrap4ish
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # as advised by python manage.py check --deploy
 # prevent browsers from MIME type sniffing. doesn't play nice
@@ -220,11 +211,11 @@ CSRF_COOKIE_SECURE = not DEBUG
 X_FRAME_OPTIONS = 'DENY'
 
 MESSAGE_TAGS = {
-    message_constants.DEBUG: 'alert alert-secondary',
-    message_constants.INFO: 'alert alert-primary',
-    message_constants.SUCCESS: 'alert alert-success',
-    message_constants.WARNING: 'alert alert-warning',
-    message_constants.ERROR: 'alert alert-danger',
+    message_constants.DEBUG: 'alert-dark',
+    message_constants.INFO: 'alert-primary',
+    message_constants.SUCCESS: 'alert-success',
+    message_constants.WARNING: 'alert-warning',
+    message_constants.ERROR: 'alert-danger',
 }
 
 # Allow local configuration (change deploy options etc.)

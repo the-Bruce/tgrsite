@@ -7,3 +7,6 @@ tgrsite/keys.py
 *.pyc
 local_config.py
 /MEDIA/
+/bootstrap/build/
+/.idea/
+/local/

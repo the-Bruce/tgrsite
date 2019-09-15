@@ -5,6 +5,16 @@ from django.db import models
 from django.shortcuts import reverse
 
 
+class GoogleCalender(models.Model):
+    url = models.CharField(max_length=120,
+                           help_text="Please ensure that it starts at the // (i.e. without the https: or webcal: part)")
+    name = models.CharField(max_length=30)
+    sort=models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+
 # Create your models here.
 class Week(models.Model):
     startDate = models.CharField(max_length=10)
@@ -66,4 +76,4 @@ class Timetable(models.Model):
         return str(self.title)
 
     def get_absolute_url(self):
-        return reverse("single_timetable", kwargs={"pk":self.pk})
+        return reverse("single_timetable", kwargs={"pk": self.pk})

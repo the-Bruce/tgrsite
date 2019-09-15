@@ -1,25 +1,29 @@
-from django.forms import ModelForm, Textarea, TextInput, DateInput, Select
+from django.forms import ModelForm, Textarea, ChoiceField
+from django.utils.functional import lazy
 
 from .models import Meeting, Folder
-
-# CSS class to add to every form widget to make bootstrap nice
-BOOTSTRAP_FORM_WIDGET_attrs = {
-    'class': 'form-control'
-}
 
 MD_INPUT = {
     'class': 'markdown-input'
 }
 
 
+def sorted_folders():
+    return sorted([(x.pk, str(x)) for x in Folder.objects.all()], key=lambda x: x[1])
+
+
 class MeetingForm(ModelForm):
+    folder = ChoiceField(choices=sorted_folders)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Meeting
         fields = ['name', 'folder', 'title', 'body', 'date']
         widgets = {
-            'name': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
-            'title': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
-            'folder': Select(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'body': Textarea(attrs=MD_INPUT),
-            'date': DateInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs)
         }
+
+    def clean_folder(self):
+        return Folder.objects.get(pk=self.cleaned_data['folder'])

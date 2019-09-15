@@ -1,0 +1,44 @@
+{% load static %}
+{% spaceless %}
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %} - Warwick Tabletop Games and Role-Playing Society</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
+    {# Include this stylesheet twice just in case it helps... #}
+    <link rel="stylesheet" href="{{ request.scheme }}://{{ request.get_host }}{% static "tgrsite_bootstrap_tiny.css" %}">
+    <style>
+        {% include "newsletters/resource/tgrsite_bootstrap_tiny.css" %}
+
+        #incorrect-newsletter {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #email-content img {
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #email-content {
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%
+        }
+    </style>
+</head>
+<body>
+{% block body %}
+{% endblock %}
+</body>
+</html>
+{% endspaceless %}

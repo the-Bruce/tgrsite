@@ -1,0 +1,17 @@
+{% extends "tgrsite/main.html" %}
+{% block title %}Forbidden{% endblock %}
+{% block pagetitle %}403: Forbidden{% endblock %}
+
+{% block breadcrumbs_child %}Forbidden{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <h3 class="card-header">Sorry, you don't have permission to do that.</h3>
+        <div class="card-body">
+            <p class="card-text">
+                If you believe that you should be able to do that, please contact the web admin to investigate.
+                You could also try logging in with a more privileged account (if you have one...)
+            </p>
+        </div>
+    </div>
+{% endblock %}

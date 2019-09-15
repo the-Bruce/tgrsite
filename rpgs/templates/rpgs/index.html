@@ -3,123 +3,67 @@
 {% load rpg_tags %}
 {% load pagination_tags %}
 
-{% block title %}
-    Events
-{% endblock %}
+{% block title %}Events{% endblock %}
+{% block pagetitle %}Events{% endblock %}
 
-{% block body %}
+{% block breadcrumbs_child %}Events{% endblock %}
 
-    {% rpg_url as r %}
-    {% if request.path == r %}
-        <h1>RPGs</h1>
-    {% else %}
-        <h1>Games</h1>
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.rpgs.edit_rpg %}
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:rpgs_rpg_changelist" %}">Edit</a>
     {% endif %}
-
+    <div class="card card-body">
+        <h4 class="card-title">Update Filters</h4>
+        <form class="">
+            <div class="form-group">
+                <label class="sr-only" for="events_tag">Tag:</label>
+                <input id="events_tag" class="form-control" name="tag" placeholder="Tag" value="{{ request.GET.tag }}">
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="showfull" id="events_showfull"
+                           {% if request.GET.showfull %}checked{% endif %}>
+                    <label class="form-check-label" for="events_showfull">
+                        Full Events
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="showfinished" id="events_showfinished"
+                           {% if request.GET.showfinished %}checked{% endif %}>
+                    <label class="form-check-label" for="events_showfinished">
+                        Completed Events
+                    </label>
+                </div>
+            </div>
+            <button class="btn btn-block btn-outline-primary" type="submit">Filter</button>
+        </form>
+    </div>
+{% endblock %}
+{% block body %}
     {% if request.user.is_authenticated %}
-        <p><a href="{% url 'rpg_create' %}">
-            <button class="btn btn-primary">Create event</button>
+        <p><a href="{% url 'rpgs:create' %}">
+            <button class="btn btn-block btn-outline-primary">Create event</button>
         </a></p>
     {% endif %}
 
     {% for rpg in rpgs %}
-        {% include "rpgs/detail.html" with embed="true" %}
+        {% include "rpgs/parts/event.html" with rpg=rpg embed=True %}
+    {% empty %}
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text text-muted">No matching events. Maybe relax your filters?</p>
+            </div>
+        </div>
     {% endfor %}
-    {% include "widgets/typeaheadjs.html" %}
 
     {% if is_paginated %}
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li><a href="?{% url_replace request 'page' page_obj.previous_page_number %}">&laquo;</a></li>
-            {% else %}
-                <li class="disabled"><span>&laquo;</span></li>
-            {% endif %}
-            {% for i in paginator.page_range %}
-                {% if page_obj.number == i %}
-                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                {% else %}
-                    <li><a href="?{% url_replace request 'page' i %}">{{ i }}</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <li><a href="?{% url_replace request 'page' page_obj.next_page_number %}">&raquo;</a></li>
-            {% else %}
-                <li class="disabled"><span>&raquo;</span></li>
-            {% endif %}
-        </ul>
+        {% include "parts/pagination.html" %}
     {% endif %}
 
 {% endblock %}
-{% block rightbar %}
-
-    <div class="panel panel-default">
-        <a class="block panel-heading" href="#body_rpgfilter" data-toggle="collapse">
-            Filters
-        </a>
-        <div id="body_rpgfilter" class="panel-collapse collapse in">
-            <div class="panel-body">
-
-                {% rpgs_root as o %}
-                <p>
-                    {% if request.path == o %}
-                        {% if request.GET.showfinished == "true" %}
-                            <a href="{% url 'rpg_tag' 'rpg' %}?showfinished=true">Show only RPGs</a>
-                        {% else %}
-                            <a href="{% url 'rpg_tag' 'rpg' %}">Show only RPGs</a>
-                        {% endif %}
-                    {% else %}
-                        {% if request.GET.showfinished == "true" %}
-                            <a href="{% url 'rpgs' %}?showfinished=true">Show all games (not just RPGs)</a>
-                        {% else %}
-                            <a href="{% url 'rpgs' %}">Show all games (not just RPGs)</a>
-                        {% endif %}
-                    {% endif %}
-                </p>
-
-                </p>
-                {% if request.GET.showfinished == "true" %}
-                    <a href="">Stop showing past games</a>
-                {% else %}
-                    <a href="?showfinished=true">Show past games</a>
-                {% endif %}
-                </p>
-
-
-                <form class="form-inline" method="POST" action="{% url 'rpg_tag_form' %}">
-                    {% csrf_token %}
-                    <br/>
-                    <p><strong>Filter by tags:</strong></p>
-                    <div class="form-group input-group">
-                        <input class="form-control" type="text" name="tag" placeholder="Tag name">
-                        <span class="input-group-btn">
-						    <button class="btn btn-default" type="submit">Filter</button>
-                        </span>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <a href="#body_rpgstart" data-toggle="collapse" class="block panel-heading">Events guide</a>
-        <div id="body_rpgstart" class="panel-collapse collapse in">
-            <div class="panel-body">
-                <h4>To start an event:</h4>
-                <ol>
-                    <li>Click the "Create event" button</li>
-                    <li>Give your event a name, description, etc.</li>
-                    <li>Tags can help quickly describe your event - eg if you are running an RPG, the "rpg" tag will
-                        help
-                        people find it.
-                    </li>
-                </ol>
-
-                <h4>To chat with your participants:</h4>
-                <ol>
-                    <li>On the event's page, click a user's name to visit their profile.</li>
-                    <li>Message them by hitting the "Message" button</li>
-                </ol>
-            </div>
-        </div>
-    </div>
+{% block bottomscripts %}
+    {{ block.super }}
+    {% include "parts/user_typeahead.html" %}
 {% endblock %}
+

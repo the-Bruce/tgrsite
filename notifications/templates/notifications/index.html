@@ -1,31 +1,42 @@
 {% extends 'tgrsite/main.html' %}
+{% load humanize %}
 {% block title %}Notifications{% endblock %}
+{% block pagetitle %}Your Notifications{% endblock %}
+
+{% block breadcrumbs_child %}Notifications{% endblock %}
+
 {% block body %}
 
-    <h1>Your Notifications</h1>
-    <p>Notifications are in beta! Please note that old notifications will be deleted after a week.</p>
-    <p><a href="{% url 'clear_notifications' %}">
-        <button class="btn btn-primary">Mark all as read</button>
-    </a></p>
-    <div class="list-group">
+    <form method="post" class="mb-3" action="{% url 'notifications:clear_notifications' %}">
+        {% csrf_token %}
+        <button class="btn btn-block btn-outline-primary">Mark all as read</button>
+    </form>
+    <div class="list-group mb-3">
         {% for notification in notifications %}
-            {% if notification.is_unread %}
-                <strong>
-            {% endif %}
-        <a href="{% url 'read_notification' notification.id %}" class="list-group-item" style="">
-            <i class="{{ notification.notify_icon }}" aria-hidden="true"></i>
-            {{ notification.content | truncatechars_html:220 }}
-            <span class="pull-right">
-			    {{ notification.time|timesince }} ago
-		    </span>
-        </a>
-        {% if notification.is_unread %}
-            </strong>
-        {% endif %}
+
+            <a href="{% url 'notifications:read_notification' notification.id %}"
+               class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                <span>
+                    <i class="{{ notification.notify_icon }}" aria-hidden="true"></i>
+                    {% if notification.is_unread %}
+                        <strong>
+                    {% endif %}
+                    {{ notification.content | truncatechars_html:220 }}
+                    {% if notification.is_unread %}
+                        </strong>
+                    {% endif %}
+                </span>
+                <span class="ml-sm-2 mt-2 mt-sm-0 badge-pill badge badge-primary">
+			        {{ notification.time|naturaltime }}
+		        </span>
+            </a>
         {% empty %}
-            Wow, you're all caught up! Enjoy the silence.
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">Wow, you're all caught up! Enjoy the silence.</p>
+                </div>
+            </div>
         {% endfor %}
-        <br/>
     </div>
 
 {% endblock %}

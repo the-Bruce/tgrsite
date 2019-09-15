@@ -1,0 +1,80 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-md navbar-dark bg-secondary mb-3">
+    <a class="navbar-brand" href="/"><img src="{% static "WebLogoSmall.png"%}" height="30"
+                                          alt="Warwick Tabletop Games and Role-Playing Society"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto flex-wrap">
+            {% for nav in navbar %}
+                {% if nav.drop %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown{{ nav.element.id }}"
+                           role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="{{ nav.element.icon_set }} fa-fw {{ nav.element.icon }}"></i>&nbsp;{{ nav.element.text }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown{{ nav.element.id }}">
+                            {% for subnav in nav.element.children.all %}
+                                <a class="dropdown-item" href="{{ subnav.target }}">
+                                    <i class="{{ subnav.icon_set }} fa-fw {{ subnav.icon }}"></i>&nbsp;{{ subnav.text }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ nav.element.target }}">
+                            <i class="{{ nav.element.icon_set }} fa-fw {{ nav.element.icon }}"></i>&nbsp;{{ nav.element.text }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <ul class="navbar-nav">
+            {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.user.member.notification_count > 0 %}text-danger{% endif %}"
+                       href="{% url 'notifications:all_notifications' %}">
+                        <i class="fas fa-bell"
+                           aria-label="Notifications"></i>&nbsp;{{ request.user.member.notification_count }}
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile"
+                           role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-fw fa-user"></i>&nbsp;Account
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                            <a class="dropdown-item" href="{% url "users:me" %}">
+                                <i class="fas fa-fw fa-user-circle"></i>&nbsp;View Profile
+                            </a>
+                            <a class="dropdown-item" href="{% url "users:password_change" %}">
+                                <i class="fas fa-fw fa-key"></i>&nbsp;Change Password
+                            </a>
+                            <a class="dropdown-item" href="{% url "notifications:notification_settings" %}">
+                                <i class="fas fa-fw fa-envelope-open-text"></i>&nbsp;Notification Settings
+                            </a>
+                        </div>
+                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "users:logout" %}"><i class="fas fa-fw fa-sign-out-alt"></i>&nbsp;Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:login' %}?next={{ request.path }}"><i class="fas fa-fw fa-sign-in-alt"></i>&nbsp;Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:signup' %}"><i class="fas fa-plus-circle"></i>&nbsp;Sign&nbsp;up</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

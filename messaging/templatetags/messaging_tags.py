@@ -1,24 +1,27 @@
 from django import template
 
+from django.contrib.auth.models import User
+from users.models import Member
+
 register = template.Library()
 
 
 @register.simple_tag
-def get_participants_excluding_self(mthread, user):
-    party = mthread.participants.all()
-    party2 = [str(x) for x in party if user.username != x.equiv_user.username]
-    if (len(party2) == 0):
-        party2 += [user.username]
-    return ', '.join(party2)
+def get_conversation_name(thread_, me):
+    if thread_.title:
+        return thread_.title
+    else:
+        if isinstance(me, User):
+            me = me.username
+        elif isinstance(me, Member):
+            me = me.equiv_user.username
 
+        participants = [str(x) for x in thread_.participants.all()]
 
-@register.simple_tag
-def get_conversation_name(convo, me):
-    if convo.title != '':
-        return convo.title
-
-    arr = [str(x) for x in convo.participants.all()]
-
-    if me in arr and len(arr) > 1:
-        arr.remove(me)
-    return ', '.join(arr)
+        if me in participants and len(participants) > 1:
+            participants.remove(me)
+        title = ', '.join(participants)
+        if len(title) > 50:
+            title = title[0:50]
+            title = title.strip() + "..."
+        return title

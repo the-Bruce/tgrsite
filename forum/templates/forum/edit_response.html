@@ -1,14 +1,17 @@
 {% extends "tgrsite/main.html" %}
-{% block title %}
-    Edit response
-{% endblock %}
-{% block body %}
+{% block title %}Edit Response{% endblock %}
+{% block pagetitle %}Edit Response{% endblock %}
 
-    <h1>Edit response</h1>
-    <form action="{% url 'response_edit_done' %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="id" value="{{ id }}">
-        {% include "widgets/render_form_content.html" with form=form %}
-        <input type="submit" class="form-control">
-    </form>
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "forum:forum" %}">Forum</a></li>
+    {% for parent in object.thread.forum.get_parents %}
+        <li class="breadcrumb-item"><a href="{% url "forum:subforum" parent.pk %}">{{ parent.title }}</a></li>
+    {% endfor %}
+    <li class="breadcrumb-item"><a href="{% url "forum:subforum" object.thread.forum_id %}">{{ object.thread.forum.title }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "forum:viewthread" object.thread_id %}">{{ object.thread.title }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "forum:viewthread" object.thread_id %}#response-{{ object.pk }}">Response</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Edit{% endblock %}
+{% block body %}
+    {% include "parts/render_form.html" %}
 {% endblock %}

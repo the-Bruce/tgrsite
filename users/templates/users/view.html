@@ -1,66 +1,88 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}{{ member.equiv_user.username }}{% endblock %}
+{% block pagetitle %}{% include "parts/render_member.html" with short=True avatarless=True nolink=True %}{% endblock %}
+
+{% block breadcrumbs_child %}Profile{% endblock %}
+
 {% block body %}
 
     {% load markdown_tags %}
 
-    <div class="jumbotron">
-        <img src="{{ member.gravatar }}" alt="Avatar for {{ member.equiv_user.username }}" class="avatar">
-
-        <h1 class="wordwrap">{{ member.equiv_user.username }}</h1>
-        {% if member != request.user.member %}
-            <a href="{% url 'message:get_dm_thread' member.id %}">Message</a>
-        {% endif %}
+    <div class="card">
         {% if member.equiv_user.first_name or member.equiv_user.last_name %}
-            <h2 class="wordwrap">{{ member.equiv_user.get_full_name }}</h2>
+            <h2 class="card-header">{{ member.equiv_user.get_full_name }}</h2>
         {% endif %}
-        {% if execroles %}
-            <h3>
-                {% for x in execroles %}
-                    {% if x != execroles|first %} / {% endif %}
-                    <a href="{% url 'exec' %}#{{ x.role_title }}">{{ x.role_title }}</a>
-                {% endfor %}
-            </h3>
-        {% endif %}
-        {% if member.discord %}
-            <h3><i class="fab fa-discord"></i> {{ member.discord }}</h3>
-        {% endif %}
-        <div class="wordwrap">{{ member.bio|parse_md }}</div>
+        <div class="card-body">
+            {% if member != request.user.member %}
+                <p class="card-text mb-3"><a class="btn btn-block btn-outline-primary"
+                                        href="{% url 'message:get_dm_thread' member.id %}">Message</a></p>
+            {% endif %}
 
-        {% if recent_threads %}
-            <h4>Recent threads</h4>
-            <ul class="nobullet">
-                {% for thread in recent_threads %}
-                    <li><a href="{% url 'viewthread' thread.id %}">{{ thread.title|truncatechars:32 }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+            {% if member.exec_roles.all %}
+                <h3 class="mb-3">
+                    {% for x in member.exec_roles.all %}
+                        {% if not forloop.first %} / {% endif %}
+                        <a href="{% url 'exec:exec' %}#{{ x.role_title|urlencode }}">{{ x.role_title }}</a>
+                    {% endfor %}
+                </h3>
+            {% endif %}
+            {% if member.discord %}
+                <h3 class="mb-3"><i class="fab fa-discord"></i> {{ member.discord }}</h3>
+            {% endif %}
+            {% if member.bio %}
+                <div class="card card-body card-text mb-3">{{ member.bio|parse_md }}</div>{% endif %}
 
-        {% if recent_responses %}
-            <h4>Recent responses</h4>
-            <ul class="nobullet">
-                {% for response in recent_responses %}
-                    <li>
-                        <a href="{% url 'viewthread' pk=response.thread.id %}#response-{{ response.id }}">
-                            {{ response.body|parse_md|striptags|truncatechars:32 }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+            {% if recent_threads %}
+                <div class="mb-3">
+                    <h4>Recent threads</h4>
+                    {% include "forum/parts/thread_list.html" with threads=recent_threads userless=True %}
+                </div>
+            {% endif %}
 
-        {% if rpgs %}
-            <h4>Games running</h4>
-            <ul class="nobullet">
-                {% for rpg in rpgs %}
-                    <li><a href="{% url 'rpg' rpg.id %}">{{ rpg.title }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+            {% if recent_responses %}
+                <div class="mb-3">
+                    <h4>Recent responses</h4>
+                    {% include "forum/parts/response_list.html" with responses=recent_responses userless=True %}
+                </div>
+            {% endif %}
 
-        {% if me or request.user.member.id == member.id %}
-            <a href="{% url 'edit' %}">Edit profile</a>
+            {% if rpgs %}
+                <div class="mb-3">
+                    <h4>Events running</h4>
+                    <div class="list-group">
+                        {% for rpg in rpgs %}
+                            <a class="list-group-item list-group-item-action d-flex flex-column"
+                               href="{% url 'rpgs:detail' rpg.id %}">
+                                <span class="d-flex flex-column flex-sm-row justify-content-between align-items-baseline">
+                                    <strong>{{ rpg.title }}</strong>
+                                    <span class="text-muted text-right flex-sm-shrink-0 ml-sm-2">{{ rpg.timeslot }}</span>
+                                </span>
+                                <span class="d-flex flex-column flex-sm-row justify-content-between align-items-baseline">
+                                    <span class="">{{ rpg.system }}</span>
+                                    <span class="badge badge-pill badge-primary mb-0 d-none d-sm-block">{{ rpg.members.count }}/{{ rpg.players_wanted }}</span>
+                                </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+
+        </div>
+        {% if request.user.member == member %}
+            <div class="card-footer">
+                <a class="btn btn-block btn-outline-primary" href="{% url 'users:edit' %}">Edit profile</a>
+            </div>
         {% endif %}
     </div>
-
+{% endblock %}
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.users.change_member %}
+        {% if perms.auth.change_user %}
+            <a class="btn btn-block btn-outline-dark" href="{% url "admin:auth_user_change" member.equiv_user.pk %}">Edit</a>
+        {% else %}
+            <a class="btn btn-block btn-outline-dark" href="{% url "admin:users_member_change" member.pk %}">Edit</a>
+        {% endif %}
+    {% endif %}
 {% endblock %}

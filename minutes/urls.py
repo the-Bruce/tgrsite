@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 app_name = "minutes"
+
 urlpatterns = [
     path("", views.index, name="index"),
     path("new/", views.CreateMeeting.as_view(), name="new_meeting"),

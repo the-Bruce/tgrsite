@@ -4,10 +4,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
+from redirect.views import redirect
 
-# the homepage is now a model and is located in pages.urls
-# to use it, create a Page model with the name "index"
-# url(r'^$', TemplateView.as_view(template_name='tgrsite/index.html'), name='homepage'),
+
 urlpatterns = [
     path('timetable/', include('timetable.urls')),
     path('admin/', admin.site.urls),
@@ -16,19 +15,23 @@ urlpatterns = [
     path('exec/', include('exec.urls')),
     path('', include('users.urls')),
     path('messages/', include('messaging.urls')),
-    path('bugs/', include('bugreports.urls')),
     path('newsletters/', include('newsletters.urls')),
     path('notifications/', include('notifications.urls')),
     path('inventory/', include('inventory.urls')),
     path('minutes/', include('minutes.urls')),
-
-    # Pseudo "Static" pages - those with no models or fancy behaviour.
-    # e.g. the larp intro page
-    path('', include('statics.urls')),
-
     path('gallery/', include('gallery.urls')),
-
-    # model-based pages, to supersede the statics module
     path('', include('pages.urls')),
+    path('<slug:source>/', redirect)
 ] + static(settings.MEDIA_URL,
-     document_root=settings.MEDIA_ROOT)  # This only runs if DEBUG=True. Its a bad idea on prod
+           document_root=settings.MEDIA_ROOT)  # This only runs if DEBUG=True. Its a bad idea on prod
+
+if settings.DEBUG:
+    from django.views.generic import TemplateView
+
+    print("debug urls added")
+    urlpatterns += [
+        path('400', TemplateView.as_view(template_name='400.html')),
+        path('403', TemplateView.as_view(template_name='403.html')),
+        path('404', TemplateView.as_view(template_name='404.html')),
+        path('500', TemplateView.as_view(template_name='500.html')),
+    ]

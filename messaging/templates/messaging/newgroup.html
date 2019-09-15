@@ -1,0 +1,22 @@
+{% extends "tgrsite/main.html" %}
+{% load messaging_tags %}
+{% load staticfiles %}
+
+{% block title %}New Group - Messaging{% endblock %}
+
+{% block pagetitle %}New Group{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url 'message:message_list' %}">Messages</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}New Group{% endblock %}
+
+{% block body %}
+    {% include "parts/render_formset.html" %}
+{% endblock %}
+
+{% block bottomscripts %}
+    {{ block.super }}
+    {% include "parts/user_typeahead.html" %}
+    <script src="{% static "formset_helpers.js" %}"></script>
+{% endblock %}

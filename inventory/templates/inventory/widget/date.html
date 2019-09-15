@@ -1,4 +1,4 @@
-<div class="form-inline">
+<div class="form-inline form-pseudo-control{% if "is-invalid" in widget.attrs.class %} is-invalid{% endif %}">
 {% for subwidget in widget.subwidgets %}
     {% include subwidget.template_name with widget=subwidget %}
 {% endfor %}

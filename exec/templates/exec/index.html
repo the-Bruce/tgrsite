@@ -2,67 +2,47 @@
 {% block title %}
     Exec page
 {% endblock %}
+{% block pagetitle %}Society Execs{% endblock %}
+{% block breadcrumbs_child %}Exec{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.exec.change_execrole %}
+        <p><a class="btn btn-block btn-outline-dark" href="{% url "admin:exec_execrole_changelist" %}">Edit</a></p>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
-
-    <h1>Society Execs</h1>
-
-    {% for role in execs %}
-        {% if role.incumbent %}
-            <div class="media">
-                <div class="media-left">
-                    <img class="media-object photo"
-                            {% if role.incumbent %}
-                         src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
-                            {% else %}
-                         src="http://gravatar.com/avatar/?default=mm"
+    <ul class="list-unstyled">
+        {% for role in execs %}
+            {% if role.incumbent %}
+                <li class="card mb-2">
+                    <a class="anchor" id="{{ role.role_title }}"></a>
+                    <div class="card-body">
+                        <h4 class="card-title text-center text-sm-left">
+                            {{ role.role_title }} -
+                            {% include "parts/render_member.html" with member=role.incumbent fullname=True %}
+                            {% if request.user.member == role.incumbent %}
+                                <a class="btn btn-outline-success" href="{% url 'exec:exec_editbio' role.id %}"><i
+                                        class="fas fa-pencil-alt"></i></a>
                             {% endif %}
-                         alt="Photo for {{ role.incumbent }}">
-                </div>
-                <div class="media-body wordwrap" id="{{ role.role_title }}">
-                    <h3 class="media-heading title">
-                        {{ role.role_title }} -
-                        {% if role.incumbent %}
-                            {% if role.incumbent.equiv_user.get_full_name %}
-                                {{ role.incumbent.equiv_user.get_full_name }} (
-                                <a href="{% url 'user' role.incumbent.id %}">{{ role.incumbent }}</a>
-                                <img class="inline-gravatar" src="{{ role.incumbent.gravatar }}"
-                                     alt="Avatar for {{ role.incumbent }}">)
-                            {% else %}
-                                <a href="{% url 'user' role.incumbent.id %}">
-                                    {{ role.incumbent }}
-                                    <img class="inline-gravatar" src="{{ role.incumbent.gravatar }}"
-                                         alt="Avatar for {{ role.incumbent }}">
-                                </a>
-                            {% endif %}
-                        {% else %}
-                            Unoccupied
-                        {% endif %}</h3>
-                    <p>{{ role.bio }}
-                        {% if request.user.member == role.incumbent %}
-                            <a href="{% url 'exec_editbio' role.id %}"><i class="fas fa-pencil-alt"></i></a>
-                        {% endif %}</p>
-                </div>
-            </div>
-        {% endif %}
-    {% empty %}
-        there doesn't seem to be anyone here
-    {% endfor %}
-
-    <style type="text/css">
-        .photo {
-            width: 144px;
-            height: 144px;
-        }
-
-        .title {
-            display: inline-block;
-        }
-
-        .inline-gravatar {
-            display: inline-block;
-            height: 1em;
-        }
-
-    </style>
-
+                        </h4>
+                        <div class="d-flex flex-column flex-sm-row">
+                            <div class="mr-sm-4 mb-2 mb-sm-0 align-self-center align-self-sm-start"
+                                 style="flex-basis: 144px; flex-shrink: 0; flex-grow: 0">
+                                <img class="photo card-img align-self-center"
+                                     src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
+                                     alt="Photo for {{ role.incumbent }}" height="144px">
+                            </div>
+                            <div class="card-text">
+                                {{ role.bio|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+        {% empty %}
+            <li class="card bg-warning mb-2"><div class="card-body">No roles have been defined. Get the web admin to add them in the admin interface</div></li>
+        {% endfor %}
+    </ul>
 {% endblock %}

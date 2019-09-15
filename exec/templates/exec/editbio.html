@@ -2,15 +2,14 @@
 {% block title %}
     Edit exec bio
 {% endblock %}
+
+{% block pagetitle %}
+    Edit bio for {{ object.role_title }}
+{% endblock %}
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url 'exec:exec' %}">Exec</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Edit{% endblock %}
 {% block body %}
-
-    <h1>Edit bio for {{ rolename }}</h1>
-    <form method="POST" action="{% url 'exec_editbio_done' pk %}">
-        {% csrf_token %}
-
-        {{ form }}
-        <input type="submit">
-    </form>
-
-
+    {% include "parts/render_form.html" %}
 {% endblock %}

@@ -22,29 +22,32 @@ class Forum(models.Model):
     def __str__(self):
         return self.title
 
+    def get_parents(self):
+        if self.parent is None:
+            return []
+        tree = []
+        seen = {}
+        # walk up through tree to root
+        x = self.parent
+        while True:
+            tree.append(x)
+            seen[x.pk] = True
+            if x.parent is not None and x.pk not in seen:
+                # traverse upwards
+                x = x.parent
+            else:
+                # reached root or loop parent
+                break
+        return reversed(tree)
+
     # string that represents the forum's location
     # eg "Roleplaying / LARP / Character Sheets"
     # might be useful to generalise this for Threads
     def get_parent_tree(self):
-        # the root forum won't use this display on the site,
-        # but it will in the Admin page.
-        if self.parent is None:
+        tree = [str(x) for x in self.get_parents()]
+        if not tree:
             return '-'
-
-        tree = ''
-
-        # walk up through tree to root
-        x = self.parent
-        while True:
-            tree = ' / ' + str(x) + tree
-            if x.parent is not None:
-                # traverse upwards
-                x = x.parent
-            else:
-                # reached root
-                break
-        # cut off the leading slash and space (first two characters)
-        return tree[3:]
+        return ' / '.join(tree)
 
     get_parent_tree.short_description = 'Location'
 
@@ -70,21 +73,21 @@ class Forum(models.Model):
 
     # recursively get thread count
     # i.e. number of threads here and in all subforums
-    def get_threads_count_r(self):
+    def get_threads_count_r(self, seen=None):
+        if seen is None:
+            seen = {self.pk:True}
         count = 0
         for subforum in self.get_subforums():
-            count += subforum.get_threads_count_r()
+            if not subforum.pk in seen:
+                seen[subforum.pk] = True
+                count += subforum.get_threads_count_r(seen)
         return count + self.get_threads_count()
 
     def get_latest_post(self):
-        s = self.thread_set.order_by('pub_date')
-        if len(s) > 0:
-            return s[len(s) - 1]
-        else:
-            return None
+        return self.thread_set.latest('pub_date')
 
     def get_absolute_url(self):
-        return reverse("subforum", args=(self.pk,))
+        return reverse("forum:subforum", args=(self.pk,))
 
 
 # return self.thread_set.order_by('pub_date').reverse()[:1][::-1]
@@ -122,7 +125,7 @@ class Thread(models.Model):
         return list(set(authors))
 
     def get_absolute_url(self):
-        return reverse("viewthread", args=(self.id,))
+        return reverse("forum:viewthread", args=(self.id,))
 
 
 # a reply in a forum thread
@@ -146,4 +149,4 @@ class Response(models.Model):
     get_author.short_description = 'Author'
 
     def get_absolute_url(self):
-        return reverse("viewthread", args=(self.thread_id,))+"#response-"+str(self.pk)
+        return reverse("forum:viewthread", args=(self.thread_id,)) + "#response-" + str(self.pk)

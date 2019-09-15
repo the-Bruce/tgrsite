@@ -2,11 +2,6 @@ from django.forms import ModelForm, Textarea, TextInput
 
 from .models import Thread, Response
 
-# CSS class to add to every form widget to make bootstrap nice
-BOOTSTRAP_FORM_WIDGET_attrs = {
-    'class': 'form-control'
-}
-
 MD_INPUT = {
     'class': 'markdown-input'
 }
@@ -17,7 +12,6 @@ class ThreadForm(ModelForm):
         model = Thread
         fields = ['title', 'body']
         widgets = {
-            'title': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'body': Textarea(attrs=MD_INPUT),
         }
 
@@ -29,7 +23,6 @@ class ThreadEditForm(ModelForm):
         model = Thread
         fields = ['title', 'body', 'forum']
         widgets = {
-            'title': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'body': Textarea(attrs=MD_INPUT),
         }
 

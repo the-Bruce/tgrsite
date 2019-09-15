@@ -1,26 +1,50 @@
 {% extends 'tgrsite/main.html' %}
 {% load staticfiles %}
 
-{% block title %}
-    {{ inv.name }}
+{% block title %}{{ inv.name }}{% endblock %}
+{% block pagetitle %}{{ inv.name }} Suggestions{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "inventory:list_suggestions" inv=inv.canonical_ %}">Suggestions</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Details{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.inventory.change_suggesion %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:inventory_suggestion_change" suggestion.id %}">Edit</a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ object.inventory.name }} - {{ object.name }}</h1>
-    <p>in <a href="{% url "inventory:list_suggestions" inv=inv.canonical_ %}">Suggestions</a></p>
-    {% if object.archived %}
-        <div class="alert alert-warning">Archived</div>{% endif %}
-    <h3>Requested by {{ object.requester }}</h3>
-    <h3>Why should we buy this game?</h3>
-    <p>{{ object.justification|linebreaksbr }}</p>
-    <h3>How did you discover it?</h3>
-    <p>{{ object.context|linebreaksbr }}</p>
-    {% if object.link %}<p>Link: <a href="{{ object.link }}">{{ object.link }}</a></p>{% endif %}
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-text">
+                {{ object.name }}
+            </h2>
+        </div>
+        <div class="card-body">
+            {% if object.archived %}
+                <div class="alert alert-dark">Archived</div>{% endif %}
+            <h3>Requested by {% include "parts/render_member.html" with member=object.requester %}</h3>
+            {% if object.justification %}
+                <h3>Why should we buy this game?</h3>
+                {{ object.justification|linebreaks }}
+            {% endif %}
+            {% if object.context %}
+                <h3>How did you discover it?</h3>
+                {{ object.context|linebreaks }}
+            {% endif %}
+            {% if object.link %}<p class="card-text"><strong>Link: </strong><a class="card-link" href="{{ object.link }}">{{ object.link }}</a></p>{% endif %}
 
-    {% if perms.inventory.change_suggestion %}
-        <form action="{% url "inventory:archive_suggestion" pk=object.pk %}" method="post">
-            {% csrf_token %}
-            <input type="submit" class="btn btn-warning" value="Archive">
-        </form>
-    {% endif %}
+            {% if perms.inventory.change_suggestion and not object.archived %}
+                <form action="{% url "inventory:archive_suggestion" pk=object.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-block btn-outline-warning" value="Archive">
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
 {% endblock %}

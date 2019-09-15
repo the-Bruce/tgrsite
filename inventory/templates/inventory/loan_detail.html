@@ -1,109 +1,121 @@
 {% extends 'tgrsite/main.html' %}
 {% load staticfiles %}
 
-{% block title %}
-    {{ inv.name }}
+{% block title %}Loans - {{ inv.name }}{% endblock %}
+{% block pagetitle %}{{ inv.name }}{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "inventory:list_loans" inv=inv.canonical_ %}">Loans</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Details{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.inventory.change_loan %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:inventory_loan_change" loan.id %}">Edit</a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ object.inventory.name }} - Loan Request</h1>
-    <p>in <a href="{% url "inventory:list_loans" inv=inv.canonical_ %}">Loans</a></p>
-    {# State prompt: #}
-    {% if object.rejected %}
-        <div class="alert alert-danger">Rejected</div>
-    {% elif object.authorised %}
-        {% if object.returned_who %}
-            <div class="alert alert-info">Completed</div>
-        {% elif object.taken_who %}
-            <div class="alert alert-info">On Loan</div>
-        {% else %}
-            {% if object.is_live %}
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-text">Loan Request</h2>
+        </div>
+        <div class="card-body">
+            {# State prompt: #}
+            {% if object.state == object.STATE.REJECTED %}
+                <div class="alert alert-danger">Rejected</div>
+            {% elif object.state == object.STATE.AUTHORISED %}
                 <div class="alert alert-success">Authorised</div>
-            {% else %}
-                <div class="alert alert-info">Expired</div>
+            {% elif object.state == object.STATE.TAKEN %}
+                <div class="alert alert-primary">On Loan</div>
+            {% elif object.state == object.STATE.COMPLETED %}
+                <div class="alert alert-info">Completed</div>
+            {% elif object.state == object.STATE.EXPIRED %}
+                <div class="alert alert-dark">Expired</div>
             {% endif %}
-        {% endif %}
-    {% else %}
-        {% if object.is_live %}
-        {% else %}
-            <div class="alert alert-info">Expired</div>
-        {% endif %}
-    {% endif %}
 
-    {% if object.can_edit %}
-        <p><a class="btn btn-primary" href="{% url "inventory:edit_loan" inv=inv.canonical_ pk=object.pk %}">Edit</a>
-        </p>
-    {% endif %}
-    <h3>Requested by {{ object.requester }}</h3>
-    <h3>When?</h3>
-    <p>{{ object.start_date|date }}-{{ object.end_date|date }}</p>
-    <h3>What?</h3>
-    <div class="list-group">
-        {% for item in object.items.all %}
-            <a class="list-group-item" href="{% url "inventory:item_detail" inv=inv.canonical_ pk=item.pk %}">
-                {{ item.name }}
-            </a>
-        {% endfor %}
+            {% if object.can_edit %}
+                <p class="mb-2"><a class="btn btn-block btn-outline-primary"
+                                   href="{% url "inventory:edit_loan" inv=inv.canonical_ pk=object.pk %}">Edit</a>
+                </p>
+            {% endif %}
+            <h4>Requested by {% include "parts/render_member.html" with member=object.requester %}</h4>
+            <h4>When?</h4>
+            <p>{{ object.start_date|date }} - {{ object.end_date|date }}</p>
+            <h4>What?</h4>
+            <div class="list-group mb-2">
+                {% for item in object.items.all %}
+                    <a class="list-group-item list-group-item-action"
+                       href="{% url "inventory:item_detail" inv=inv.canonical_ pk=item.pk %}">
+                        {{ item.name }}
+                    </a>
+                {% endfor %}
+            </div>
+            {% if object.authorised %}
+                <h4>Request authorised by:</h4>
+                <p>{% include "parts/render_member.html" with member=object.authorised %}</p>
+            {% endif %}
+            {% if object.rejected %}
+                <h4>Request rejected by:</h4>
+                <p>{% include "parts/render_member.html" with member=object.rejected %}</p>
+            {% endif %}
+            {% if object.taken_who %}
+                <h4>Objects taken:</h4>
+                <p>{{ object.taken_when|date }}</p>
+                <p>Witnessed by: {% include "parts/render_member.html" with member=object.taken_who %}</p>
+            {% endif %}
+            {% if object.returned_who %}
+                <h4>Objects returned:</h4>
+                <p>{{ object.returned_when|date }}</p>
+                <p>Witnessed by: {% include "parts/render_member.html" with member=object.returned_who %}</p>
+            {% endif %}
+
+
+            {% if not object.rejected %}
+                {% if perms.inventory.can_authorise and not object.authorised %}
+                    <form action="{% url "inventory:authorise_loan" pk=object.pk %}" id="authorise" method="post">
+                        {% csrf_token %}
+                    </form>
+                    <form action="{% url "inventory:reject_loan" pk=object.pk %}" id="reject" method="post">
+                        {% csrf_token %}
+                    </form>
+                    <div class="btn-block btn-group-vertical mb-2">
+                        <button type="submit" class="btn btn-outline-success" form="authorise" value="Authorise">
+                            Authorise
+                        </button>
+                        <button type="submit" class="btn btn-outline-danger" form="reject" value="Reject">Reject
+                        </button>
+                    </div>
+                {% endif %}
+                {% if perms.inventory.can_witness and object.authorised %}
+                    {% if not object.taken_who %}
+                        <form class="mb-2" action="{% url "inventory:taken_loan" pk=object.pk %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-block btn-outline-info" value="Mark Taken">
+                        </form>
+                    {% elif not object.returned_who %}
+                        <form class="mb-2" action="{% url "inventory:returned_loan" pk=object.pk %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-block btn-outline-info" value="Mark Returned">
+                        </form>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+
+            {% if perms.inventory.view_loan %}
+                {% if object.notes %}
+                    <h4>Notes</h4>
+                    {{ object.notes|linebreaks }}
+                {% endif %}
+                {% if perms.inventory.change_loan %}
+                    <a class="btn btn-block btn-outline-primary"
+                       href="{% url "inventory:notate_loan" inv=inv.canonical_ pk=object.pk %}">
+                        {% if object.notes %}Change{% else %}Add{% endif %} notes
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
-    {% if object.authorised %}
-        <h3>Request authorised by:</h3>
-        <p>{{ object.authorised }}</p>
-    {% endif %}
-    {% if object.rejected %}
-        <h3>Request rejected by:</h3>
-        <p>{{ object.rejected }}</p>
-    {% endif %}
-    {% if object.taken_who %}
-        <h3>Objects taken:</h3>
-        <p>{{ object.taken_when|date }}</p>
-        <p>Witnessed by: {{ object.taken_who }}</p>
-    {% endif %}
-    {% if object.returned_who %}
-        <h3>Objects returned:</h3>
-        <p>{{ object.returned_when|date }}</p>
-        <p>Witnessed by: {{ object.returned_who }}</p>
-    {% endif %}
-
-
-    {% if not object.rejected %}
-        {% if perms.inventory.can_authorise and not object.authorised %}
-            <div class="pb-1">
-                <form action="{% url "inventory:authorise_loan" pk=object.pk %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-success" value="Authorise">
-                </form>
-            </div>
-            <div>
-                <form action="{% url "inventory:reject_loan" pk=object.pk %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-danger" value="Reject">
-                </form>
-            </div>
-        {% endif %}
-        {% if perms.inventory.can_witness and object.authorised %}
-            {% if not object.taken_who %}
-                <form action="{% url "inventory:taken_loan" pk=object.pk %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-info" value="Mark Taken">
-                </form>
-            {% elif not object.returned_who %}
-                <form action="{% url "inventory:returned_loan" pk=object.pk %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-info" value="Mark Returned">
-                </form>
-            {% endif %}
-        {% endif %}
-    {% endif %}
-
-    {% if perms.inventory.view_loan %}
-        {% if object.notes %}
-            <h3>Notes</h3>
-            {{ object.notes|linebreaks }}
-        {% endif %}
-        {% if perms.inventory.change_loan %}
-            <a class="btn btn-primary" href="{% url "inventory:notate_loan" inv=inv.canonical_ pk=object.pk %}">
-                {% if object.notes %}Change{% else %}Add{% endif %} notes
-            </a>
-        {% endif %}
-    {% endif %}
 {% endblock %}

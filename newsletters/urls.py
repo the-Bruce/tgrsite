@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+app_name = "newsletters"
+
 urlpatterns = [
     path('', views.Index.as_view(template_name='newsletters/index.html'), name='newsletters_index'),
     path('create/', views.Create.as_view(template_name='newsletters/create.html'), name='newsletters_create'),

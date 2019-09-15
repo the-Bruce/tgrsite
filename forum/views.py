@@ -4,184 +4,174 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 
 from notifications.models import notify, NotifType
 from .forms import ThreadForm, ResponseForm, ThreadEditForm
 from .models import Thread, Response, Forum
 
 
-# landing page: "root forum"
-def index(request):
-    context = {
-        'forums': Forum.get_parentless_forums().order_by('sort_index'),
-        'current': 'Forum',
-    }
-    return render(request, 'forum/forum.html', context)
+class RootForum(ListView):
+    model = Forum
+    template_name = "forum/forum.html"
+    context_object_name = "forums"
+
+    def get_queryset(self):
+        return Forum.get_parentless_forums().order_by('sort_index')
 
 
-# subforum view
-def forum(request, pk):
-    current_forum = get_object_or_404(Forum, id=pk)
+class Recent(TemplateView):
+    template_name = "forum/recent.html"
 
-    # put pinned/stickied threads first
-    threads = Thread.objects.filter(forum=pk).extra(order_by=['-is_pinned', '-pub_date'])
-    context = {
-        'current': current_forum,
-        'forums': current_forum.get_subforums().order_by('sort_index'),
-        'threads': threads,
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-        # prepare a thread form just in case they want to make one
-        'form': ThreadForm(),
-    }
-    return render(request, 'forum/forum.html', context)
+        threads = Thread.objects.order_by('-pub_date')[:5]
+        responses = Response.objects.order_by('-pub_date')[:5]
+        context.update({
+            'threads': threads,
+            'responses': responses,
+        })
+        return context
 
 
-# views a thread, optionally with a linked response id
-def thread(request, pk, response_id=False):
-    context = {
-        'thread': get_object_or_404(Thread, id=pk),
-        'responses': Response.objects.filter(thread=pk),
+class ViewSubforum(AccessMixin, SuccessMessageMixin, CreateView):
+    model = Thread
+    form_class = ThreadForm
+    template_name = "forum/subforum.html"
+    success_message = "Thread successfully created"
 
-        # this currently does not do anything
-        # but may be used later to like,
-        # anchor to the response
-        'response_id': response_id,
-        'form': ResponseForm(),
-    }
-    return render(request, 'forum/thread.html', context)
+    def post(self, request, *args, **kwargs):
+        # Login required but only for post
+        if not request.user.is_authenticated:
+            self.handle_no_permission()
+        else:
+            return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_forum = get_object_or_404(Forum, id=self.kwargs['forum'])
+        # put pinned/stickied threads first
+        threads = Thread.objects.filter(forum_id=self.kwargs['forum']).extra(order_by=['-is_pinned', '-pub_date'])
+        context.update({
+            'current': current_forum,
+            'forums': current_forum.get_subforums().order_by('sort_index'),
+            'threads': threads
+        })
+        return context
+
+    def form_valid(self, form):
+        """
+        title=form.cleaned_data['title'],
+        body=form.cleaned_data['body'],
+        author=request.user.member,
+        pub_date=timezone.now(),
+        forum=Forum.objects.get(id=request.POST.get('forum')),
+        """
+        form.instance.author = self.request.user.member
+        form.instance.pub_date = timezone.now()
+        form.instance.forum = Forum.objects.get(id=self.kwargs['forum'])
+        return super().form_valid(form)
 
 
-# a wrapper around thread() for the sake of the urlconf being less convoluted
-def response(request, pk):
-    current = get_object_or_404(Response, id=pk)
-    return thread(request, current.thread.id, pk)
+class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
+    model = Response
+    form_class = ResponseForm
+    template_name = "forum/thread.html"
+    success_message = "Response successfully created"
 
+    def post(self, request, *args, **kwargs):
+        # Login required but only for post
+        if not request.user.is_authenticated:
+            self.handle_no_permission()
+        else:
+            return super().post(request, *args, **kwargs)
 
-@login_required
-def create_thread(request):
-    form = ThreadForm(request.POST)
-    if (form.is_valid()):
-        thread = Thread(
-            title=form.cleaned_data['title'],
-            body=form.cleaned_data['body'],
-            author=request.user.member,
-            pub_date=timezone.now(),
-            forum=Forum.objects.get(id=request.POST.get('forum')),
-        )
-        thread.save()
-        return HttpResponseRedirect(reverse('viewthread', kwargs={'pk': thread.id}))
-    else:
-        # TODO: placeholder error
-        return HttpResponse(repr(form.errors))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'thread': get_object_or_404(Thread, id=self.kwargs['thread']),
+            'responses': Response.objects.filter(thread=self.kwargs['thread']).order_by('pub_date'),
+        })
+        return context
 
+    def form_valid(self, form):
+        """
+        body=form.cleaned_data['body'],
+        author=request.user.member,
+        pub_date=timezone.now(),
+        thread=thread,
+        """
+        thread = Thread.objects.get(id=self.kwargs['thread'])
 
-@login_required
-def create_response(request):
-    form = ResponseForm(request.POST)
-    if (form.is_valid()):
-        thread = Thread.objects.get(id=request.POST.get('thread'))
-        res = Response(
-            body=form.cleaned_data['body'],
-            author=request.user.member,
-            pub_date=timezone.now(),
-            thread=thread,
-        )
-        url = reverse('viewthread', kwargs={'pk': request.POST.get('thread')})
+        form.instance.author = self.request.user.member
+        form.instance.pub_date = timezone.now()
+        form.instance.thread = thread
+
+        # Create Notifications
+        url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']})
         for author in thread.get_all_authors():
-            if author != request.user.member:
+            if author != self.request.user.member:
                 notify(author, NotifType.FORUM_REPLY,
-                       '{} replied to a thread you\'ve commented in!'.format(request.user.username), url, thread.id)
-        res.save()
-        return HttpResponseRedirect(url)
-    else:
-        # TODO: placeholder error
-        return HttpResponse(repr(form.errors))
+                       '{} replied to a thread you\'ve commented in!'.format(self.request.user.username), url,
+                       thread.id)
+
+        return super().form_valid(form)
 
 
-@login_required
-def delete_thread(request, pk):
-    thread = Thread.objects.get(id=pk)
-    if thread.author.equiv_user.id != request.user.id and not request.user.has_perm(''):
-        # TODO: placeholder error
-        return HttpResponseForbidden()
-    url = reverse('subforum', kwargs={'pk': thread.forum.id})
-    thread.delete()
-    add_message(request, constants.SUCCESS, "Thread deleted.")
-    return HttpResponseRedirect(url)
+class DeleteThread(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+    model = Thread
+    success_message = "Thread Deleted"
+    template_name = "forum/delete_thread.html"
+
+    def test_func(self):
+        thread = get_object_or_404(Thread, id=self.kwargs['pk'])
+        return self.request.user.member == thread.author or self.request.user.has_perm('forum.delete_thread')
+
+    def get_success_url(self):
+        return reverse('forum:subforum', kwargs={'forum': self.object.forum.id})
 
 
-@login_required
-def delete_response(request, pk):
-    response = Response.objects.get(id=pk)
-    if response.author.equiv_user.id != request.user.id:
-        # TODO: placeholder error
-        return HttpResponseForbidden()
-    url = reverse('viewthread', kwargs={'pk': response.thread.id})
-    response.delete()
-    add_message(request, constants.SUCCESS, "Response deleted.")
-    return HttpResponseRedirect(url)
+class DeleteResponse(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+    model = Response
+    success_message = "Response Deleted"
+    template_name = "forum/delete_response.html"
+
+    def test_func(self):
+        response = get_object_or_404(Response, id=self.kwargs['pk'])
+        return self.request.user.member == response.author or self.request.user.has_perm('forum.delete_response')
+
+    def get_success_url(self):
+        return reverse('forum:viewthread', kwargs={'thread': self.object.thread.id})
 
 
-@login_required
-def edit_thread_view(request, pk):
-    thread = get_object_or_404(Thread, id=pk)
-    if thread.author.equiv_user.id != request.user.id:
-        # TODO: placeholder error
-        return HttpResponseForbidden()
-    form = ThreadEditForm(instance=thread)
-    context = {'form': form, 'id': pk}
-    return render(request, 'forum/edit_thread.html', context)
+class EditResponse(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = Response
+    form_class = ResponseForm
+    template_name = "forum/edit_response.html"
+    success_message = "Response changed"
+
+    def test_func(self):
+        response = get_object_or_404(Response, id=self.kwargs['pk'])
+        return self.request.user.member == response.author or self.request.user.has_perm('forum.change_response')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
-@login_required
-def edit_response_view(request, pk):
-    response = get_object_or_404(Response, id=pk)
-    if response.author.equiv_user.id != request.user.id:
-        return HttpResponseForbidden()
-    form = ResponseForm(instance=response)
-    context = {'form': form, 'id': pk}
-    return render(request, 'forum/edit_response.html', context)
+class EditThread(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = Thread
+    form_class = ThreadForm  # I'm uncomfortable with letting people move threads around willy-nilly. Will review
+    template_name = "forum/edit_thread.html"
+    success_message = "Thread changed"
 
+    def test_func(self):
+        thread = get_object_or_404(Thread, id=self.kwargs['pk'])
+        return self.request.user.member == thread.author or self.request.user.has_perm('forum.change_thread')
 
-@login_required
-def edit_thread_process(request):
-    id = request.POST.get('id')
-    if (request.method != 'POST'):
-        return HttpResponseRedirect("/")
-
-    thread = get_object_or_404(Thread, id=id)
-
-    # first, standard permissions junk
-    if thread.author.equiv_user.id != request.user.id:
-        return HttpResponseForbidden()
-
-    form = ThreadEditForm(request.POST, instance=thread)
-    if (form.is_valid()):
-        form.save()
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': id}))
-    else:
-        add_message(request, constants.ERROR, "Unable to edit post.")
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': id}))
-    return res
-
-
-@login_required
-def edit_response_process(request):
-    id = request.POST.get('id')
-    if (request.method != 'POST'):
-        return HttpResponseRedirect("/")
-
-    response = get_object_or_404(Response, id=id)
-
-    # first, standard permissions junk
-    if response.author.equiv_user.id != request.user.id:
-        return HttpResponseForbidden()
-
-    form = ResponseForm(request.POST, instance=response)
-    if (form.is_valid()):
-        form.save()
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': response.thread.id}))
-    else:
-        add_message(request, constants.ERROR, "Unable to edit response.")
-        res = HttpResponseRedirect(reverse('viewthread', kwargs={'pk': response.thread.id}))
-    return res
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

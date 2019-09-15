@@ -1,0 +1,55 @@
+html {
+  height: 100vh;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.img-text {
+  height: 1.5ex;
+  vertical-align: baseline;
+}
+
+#pagetop {
+  flex: 1;
+}
+
+.photo {
+  width: 144px;
+  height: 144px;
+}
+
+.title {
+  display: inline-block;
+}
+
+.inline-gravatar {
+  display: inline-block;
+  height: 1em;
+}
+
+.requiredField {
+  font-weight: bold;
+}
+
+.asteriskField {
+  display: none;
+}
+
+a.anchor {
+  display: block;
+  position: relative;
+  top: -80px;
+  visibility: hidden;
+}
+
+.my-responsive {
+  width: 50%;
+  max-width: 500px;
+  height: auto;
+  float: right;
+}
+
