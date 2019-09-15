@@ -1,6 +1,5 @@
 from django import template
 from django.templatetags import static
-from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from markdown import markdown
 from bleach.sanitizer import Cleaner
@@ -11,7 +10,7 @@ exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_l
 
 @register.filter(is_safe=True)
 def parse_md(value):
-    return split_escape_after(markdown(split_escape_before(value), extensions=exts, output_format='html5'))
+    return md_bleach(markdown(break_tags(value), extensions=exts, output_format='html5'))
 
 
 # Parses markdown WITHOUT escaping. Use with caution!
@@ -31,26 +30,14 @@ def do_static(parser, token):
     return FullStaticNode.handle_token(parser, token)
 
 
-_html_escapes_before = {
-    ord('&'): '&amp;',
-    ord('<'): '&lt;',
-    # ord('>'): '&gt;', # Potentially risky, using bleach to help mitigate this, but allows blockquotes
-}
-
-_html_escapes_after = {
-    ord('"'): '&quot;',
-    ord("'"): '&#39;',
-}
+def break_tags(text):
+    # Provides no security, but makes casual tag insertion fail
+    return text.replace('<', '&lt;')
 
 
-def split_escape_before(text):
-    return str(text).translate(_html_escapes_before)
-
-
-def split_escape_after(text):
-    text = str(text).translate(_html_escapes_after)
+def md_bleach(text):
     cleaner = Cleaner(tags=['p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'em', 'strong', 'a', 'ul', 'ol', 'li',
                             'blockquote', 'img', 'pre', 'code', 'hr'],
-                      attributes={'a': ['href']}, protocols=['http', 'https'])
+                      attributes={'a': ['href'], 'img': ['src', 'alt']}, protocols=['http', 'https'])
     text = cleaner.clean(text)
     return mark_safe(text)
