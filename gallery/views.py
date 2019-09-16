@@ -1,8 +1,8 @@
-from django.shortcuts import render
-
+from django.views.generic import ListView
 from .models import GalleryImage
 
 
-def index(request):
-    images = GalleryImage.objects.all()
-    return render(request, 'gallery/index.html', {'images': images})
+class Index(ListView):
+    model = GalleryImage
+    template_name = 'gallery/index.html'
+    context_object_name = "images"

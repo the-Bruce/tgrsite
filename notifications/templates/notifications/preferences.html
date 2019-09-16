@@ -1,26 +1,12 @@
 {% extends 'tgrsite/main.html' %}
-{% block title %}
-    Notification Preferences
-{% endblock %}
-{% block body %}
+{% block title %}Notification Preferences{% endblock %}
+{% block pagetitle %}Update Notification Preferences{% endblock %}
 
-    <h1>Update Notification Preferences</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
-            <div>
-                <div>
-                    {{ field.label_tag }}
-                </div>
-                <div>
-                    {{ field }}
-                </div>
-            </div><br>
-        {% endfor %}
-        <input type="submit" class="form-control">
-    </form>
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "notifications:all_notifications" %}">Notifications</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Preferences{% endblock%}
+
+{% block body %}
+{% include "parts/render_form.html" %}
 {% endblock %}

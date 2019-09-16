@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from users.views import spawn_user
 from .models import MessageThread
-from .views import send_message
+from .views import send_message, find_group
 
 
 # useful utility function to find members by username
@@ -58,7 +58,7 @@ class Messaging(TestCase):
 
     def test_send_message(self):
         alice, bob = get_member('Alice', 'Bob')
-        thread = MessageThread.get_thread(alice, bob)
+        thread = find_group(alice, bob)
         # make sure there is only one message in thread so that get doesn't fail
         thread.message_set.all().delete()
 
@@ -70,7 +70,7 @@ class Messaging(TestCase):
     def test_messagethread_str(self):
         print("test_messagethread_str")
         alice, bob = get_member('Alice', 'Bob')
-        thread = MessageThread.get_thread(alice, bob)
+        thread = find_group(alice, bob)
 
         # make sure it's clear :P
         thread.message_set.all().delete()

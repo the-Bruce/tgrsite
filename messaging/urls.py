@@ -3,16 +3,12 @@ from django.urls import path
 from . import views
 
 app_name = "message"
+
 urlpatterns = [
-    path('', views.index, name='message_list'),
-
-    # DEPRECATED
-    # url(r'^dm$', views.dm, name='message_dm'),
-
-    path('direct_message/', views.direct_message, name='message_direct'),
-    path('group_message/<int:threadid>/', views.group_message, name='message_group'),
-
-    path('thread/<int:pk>/', views.thread, name='message_thread'),
+    path('', views.Index.as_view(), name='message_list'),
+    path('new/', views.CreateGroup.as_view(), name='create_group'),
+    path('thread/<int:pk>/', views.Thread.as_view(), name='message_thread'),
+    path('thread/<int:thread>/full/', views.FullThread.as_view(), name='message_thread_full'),
     path('thread/name/', views.rename_thread, name='rename_thread'),
-    path('dm_thread/<int:recipient>/', views.get_dm_thread, name='get_dm_thread'),
+    path('dm_thread/<int:recipient>/', views.DMThread.as_view(), name='get_dm_thread'),
 ]

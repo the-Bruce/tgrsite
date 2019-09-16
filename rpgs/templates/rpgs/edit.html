@@ -1,13 +1,13 @@
 {% extends "tgrsite/main.html" %}
-{% block title %}
-    {{ rpg.title }}
-{% endblock %}
-{% block body %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block pagetitle %}Edit Event{% endblock %}
 
-    <h1>Edit game</h1>
-    <form action="{% url 'rpg_edit_done' id %}" method="POST">
-        {% csrf_token %}
-        {% include "widgets/render_form_content.html" %}
-        <input type="submit" class="form-control btn-primary" value="Save">
-    </form>
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "rpgs:index" %}">Events</a></li>
+    <li class="breadcrumb-item"><a href="{% url "rpgs:detail" object.pk %}">{{ object.title }}</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Edit{% endblock %}
+
+{% block body %}
+    {% include "parts/render_form.html" %}
 {% endblock %}

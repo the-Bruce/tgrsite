@@ -1,0 +1,21 @@
+{% extends "tgrsite/main.html" %}
+{% block title %}Delete Response{% endblock %}
+{% block pagetitle %}Delete Response{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "forum:forum" %}">Forum</a></li>
+    {% for parent in object.thread.forum.get_parents %}
+        <li class="breadcrumb-item"><a href="{% url "forum:subforum" parent.pk %}">{{ parent.title }}</a></li>
+    {% endfor %}
+    <li class="breadcrumb-item"><a href="{% url "forum:subforum" object.thread.forum_id %}">{{ object.thread.forum.title }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "forum:viewthread" object.thread_id %}">{{ object.thread.title }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "forum:viewthread" object.thread_id %}#response-{{ object.pk }}">Response</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Delete{% endblock %}
+
+{% block body %}
+<form method="post">{% csrf_token %}
+    <legend>Are you sure you want to delete your response to <em>{{ object.thread.title }}</em>?</legend>
+    <input class="btn btn-block btn-outline-danger" type="submit" value="Confirm">
+</form>
+{% endblock %}

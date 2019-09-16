@@ -14,29 +14,44 @@ class Member(models.Model):
     bio = models.TextField(max_length=4096, blank=True)
     signature = models.TextField(max_length=1024, blank=True)
     official_photo_url = models.CharField(max_length=512, null=True, blank=True)
-
+    dark = models.BooleanField(default=False, help_text="Enable Dark Mode(beta) on this account")
 
     def gravatar(self, size=128):
-        default = "https://pbs.twimg.com/media/Civ9AUkVAAAwihS.jpg"
         h = hashlib.md5(
             self.equiv_user.email.encode('utf8').lower()
         ).hexdigest()
         q = urllib.urlencode({
-            # 'd':default,
             'd': 'identicon',
             's': str(size),
         })
-
         return 'https://www.gravatar.com/avatar/{}?{}'.format(h, q)
+
+    def badge(self):
+        if self.equiv_user.is_superuser:
+            return "fas fa-crown text-gold"
+        elif self.is_exec():
+            return "fas fa-star text-gold"
+        elif self.is_ex_exec():
+            return "fas fa-award text-muted"
+        else:
+            return False
 
     def __str__(self):
         return self.equiv_user.username
 
     def notification_count(self):
-        return len(self.notifications_owned.filter(is_unread=True))
+        return self.notifications_owned.filter(is_unread=True).count()
 
     def is_exec(self):
-        return len(self.execrole_set.all()) > 0
+        return self.exec_roles.count() > 0 or self.equiv_user.groups.filter(name='exec').exists()
+
+    def is_ex_exec(self):
+        return self.equiv_user.groups.filter(name='ex_exec').exists()
+
+    # Make .member idempotent i.e. user.member is valid even if user is actually a member
+    @property
+    def member(self):
+        return self
 
     @staticmethod
     def users_with_perm(perm_name):

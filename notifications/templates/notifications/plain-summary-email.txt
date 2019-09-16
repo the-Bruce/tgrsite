@@ -2,12 +2,13 @@
 
 Here is what's happening over at Warwick Tabletop and Role-Playing Society:
 
-{% for n in notifications %}{{ n.time|date }} {{ n.time|time }}: {{ n.content | safe | truncatechars:220 }}{% endfor %}
+{% for n in notifications %}{{ n.time|date }} {{ n.time|time }}: {{ n.content | safe | truncatechars:220 }}
+{% endfor %}
 Please log in to view your notifications in detail.
 
 Cheers,
 The Warwick Tabletop and Roleplaying Society!
 
 If you don't want to receive these notification emails any more,please visit your notification settings here:
-https://www.warwicktabletop.co.uk{% url "notification_settings" %}
+https://www.warwicktabletop.co.uk{% url "notifications:notification_settings" %}
 {% endautoescape %}

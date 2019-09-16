@@ -1,13 +1,12 @@
 {% extends "tgrsite/main.html" %}
-{% block title %}
-    Create event
-{% endblock %}
-{% block body %}
+{% block title %}Create event{% endblock %}
+{% block pagetitle %}Create event{% endblock %}
 
-    <h1>Create event</h1>
-    <form action="{% url 'create_done' %}" method="POST">
-        {% csrf_token %}
-        {% include "widgets/render_form_content.html" %}
-        <input type="submit" class="form-control btn-primary" value="Save">
-    </form>
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "rpgs:index" %}">Events</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Create{% endblock %}
+
+{% block body %}
+    {% include "parts/render_form.html" %}
 {% endblock %}

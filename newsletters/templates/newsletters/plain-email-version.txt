@@ -5,8 +5,8 @@
 
 {{ object.body|tidy_md }}
 
-View the full version at https://{{ request.get_host }}{% url 'newsletters_detail' object.id %}
+View the full version at https://{{ request.get_host }}{% url 'newsletters:newsletters_detail' object.id %}
 
 If you don't want to receive these notification emails any more, please visit your notification settings here:
-https://{{ request.get_host }}{% url "notification_settings" %}
+https://{{ request.get_host }}{% url "notifications:notification_settings" %}
 {% endautoescape %}

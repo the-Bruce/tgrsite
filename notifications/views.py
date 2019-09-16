@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.shortcuts import render, get_object_or_404, reverse
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, ListView, RedirectView, View
 
 from .forms import SubscriptionForm
 from .models import Notification, delete_old, NotificationSubscriptions
@@ -27,38 +27,45 @@ class UpdateSubscriptions(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def get_success_message(self, cleaned_data):
         return "Personal Subscription Settings Updated!"
 
-
+# Debug only. Probably should remove from prod...
 @login_required
 def email_notifications(request):
     context = {
-        'notifications': Notification.objects.filter(member=request.user.member).order_by('-is_unread', '-time'),
+        'notifications': Notification.objects.filter(member=request.user.member, is_unread=True).order_by('-time'),
     }
     return render(request, 'notifications/summary-email.html', context)
 
 
-@login_required
-def all_notifications(request):
-    context = {
-        'notifications': Notification.objects.filter(member=request.user.member).order_by('-is_unread', '-time'),
-    }
-    return render(request, 'notifications/index.html', context)
+class AllNotifications(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'notifications/index.html'
+    context_object_name = 'notifications'
+
+    def get_queryset(self):
+        return Notification.objects.filter(member=self.request.user.member).order_by('-is_unread', '-time')
 
 
-@login_required
-def read_all(request):
-    Notification.objects.filter(member=request.user.member).update(is_unread=False)
-    delete_old(request.user.member)
-    return HttpResponseRedirect(reverse('all_notifications'))
+class ReadAll(LoginRequiredMixin, View):
+    def post(self, request):
+        Notification.objects.filter(member=request.user.member).update(is_unread=False)
+        delete_old(request.user.member)
+        return HttpResponseRedirect(reverse('notifications:all_notifications'))
 
 
-@login_required
-def mark_read(request, pk):
-    user_notifs = Notification.objects.filter(member=request.user.member)
-    notif = get_object_or_404(user_notifs, id=pk)
-    notif.is_unread = False
-    notif.save()
-    delete_old(request.user.member)
-    if notif.url and notif.url != '':
-        return HttpResponseRedirect(notif.url)
-    else:
-        return HttpResponseRedirect(reverse('all_notifications'))
+class ReadNotification(LoginRequiredMixin, UserPassesTestMixin, RedirectView):
+    def __init__(self):
+        self.object = None
+        super().__init__()
+
+    def test_func(self):
+        self.object = Notification.objects.get(id=self.kwargs['pk'])
+        return self.object.member == self.request.user.member
+
+    def get_redirect_url(self, *args, **kwargs):
+        self.object.is_unread = False
+        self.object.save()
+        delete_old(self.request.user.member)
+        if self.object.url:
+            return self.object.url
+        else:
+            return reverse('notifications:all_notifications')

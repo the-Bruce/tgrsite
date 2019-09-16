@@ -1,160 +1,110 @@
 {% load static %}
 {% load markdown_tags %}
-{% spaceless %}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        {% comment %}
+<!doctype html>
+<html lang="en">
+<head>
+    {% comment %}
     THIS IS NEVER USED DIRECTLY.
     So all scripts should instead be added in addnavbar, the next template up,
     using the topscripts and bottomscripts blocks.
-    This defines the global grid format - a col3 sidebar, a col6 body and a col3 sidebar.
+    This defines the global grid format - a col3 sidebar, and a col9 body.
     {% endcomment %}
 
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon">
-        <link rel="shortcut" href="{% static "favicon.ico" %}" type="image/x-icon">
-        <link rel="apple-touch-icon" href="{% static "logosimple_white.png" %}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+    <link rel="shortcut" href="{% static "favicon.ico" %}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{% static "WebLogo.png" %}">
 
-        <title>{% block title %}{% endblock %} - Warwick Tabletop and Role-Playing Society</title>
+    <title>{% block title %}{% endblock %} - Warwick Tabletop Games and Role-Playing Society</title>
 
-        {% block bootstrap %}
-        {% endblock %}
+    {% block bootstrap %}
+        {% if user.member.dark %}
+            <link rel="stylesheet" href="{% static "tgrsite_bootstrap_dark.css" %}">
+        {% else %}
+            <link rel="stylesheet" href="{% static "tgrsite_bootstrap.css" %}">
+        {% endif %}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+              integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+              crossorigin="anonymous">
+    {% endblock %}
 
-        {% comment %} For scripts we don't want at the top of the email. {% endcomment %}
-        {% block topscripts %}
-        {% endblock %}
+    {% comment %} For scripts we don't want at the top of the email. {% endcomment %}
+    {% block topscripts %}
+    {% endblock %}
 
-        {% block head %}
-            {% comment %}
+    {% block head %}
+        {% comment %}
 		    Custom per-page includes such as the gallery plugin on the Gallery page.
 	    {% endcomment %}
-        {% endblock %}
-        {% block allcss %}
-            <style>
-                .latest {
-                    margin-bottom: 10px;
-                }
+    {% endblock %}
 
-                img.avatar {
-                    width: 128px;
-                    height: 128px;
-                }
+    {% block css %}
+        <link rel="stylesheet" href="{% static "tgrsite_local.css" %}">
+        {% comment %}
+            This is where a page's custom CSS will go, or a link to the relevant stylesheet I guess.
+        {% endcomment %}
+    {% endblock %}
 
-                img.brand-img {
-                    width: 32px;
-                    height: 32px;
-                    margin-top: -5px;
-                }
+</head>
 
-                .navbar {
-                    border-radius: 0;
-                {% if debug %}
-                    background-color: darkred !important;
-                {% endif %}
-                }
-
-                .jumbotron {
-                    text-align: center;
-                }
-
-                .nobullet {
-                    padding: 0;
-                    list-style-type: none;
-                }
-
-                .wordwrap {
-                    white-space: -moz-pre-wrap !important;
-                    white-space: -pre-wrap;
-                    white-space: -o-pre-wrap;
-                    white-space: pre-wrap;
-                    word-wrap: break-word;
-                    white-space: -webkit-pre-wrap;
-                    word-break: break-word;
-                    white-space: normal;
-                }
-
-                article img {
-                    max-width: 100%; /* Don't overflow. */
-                    margin-bottom: 5px;
-                    margin-top: 5px;
-                }
-
-                .errorlist {
-                    color: #a94442;
-                }
-
-                .CodeMirror {
-                    height: 200px;
-                }
-
-                .CodeMirror-scroll {
-                    min-height: 0px;
-                }
-            </style>
-        {% endblock %}
-
-        {% block css %}
-            {% comment %}
-                This is where a page's custom CSS will go, or a link to the relevant stylesheet I guess.
-            {% endcomment %}
-        {% endblock %}
-
-    </head>
-
-    <body>
-    <div id="not-footer">
+<body>
+<div id="pagetop">
+    <div class="sticky-top">
+        {% if debug %}
+            <div class="container-fluid align-content-center mb-0" style="background: darkred"><p
+                    class="text-center text-light font-weight-bolder mb-0">DEBUG</p></div>
+        {% endif %}
         {% block navbar %}{% endblock %}
-
-        <!-- page -->
-        <div class="container-fluid">
-            {% comment %}
-	<!--this was here in case people preferred page headings to be
-	above all content including sidebars. the people I surveyed preferred the old way.
-	Might do an A/B test on the entire site at some point-->
-		<div class="row">
-			<div class="col-md-3"></div>
-			<div class="col-md-6">
-				<h1>{% block heading %}{% endblock %}</h1>
-			</div>
-			<div class="col-md-3"></div>
-		</div>
-	{% endcomment %}
-            {% block mainbody %}
-                <div class="row">
-                    <div class="col-lg-3">
-                        {% block leftcontents %}
-                        {% endblock %}
-                    </div>
-
-                    <div class="col-lg-3 col-lg-push-6">
-                        {% block rightbar %}
-                            {% comment %} Allows different pages to implement their own right-bar, e.g. messages has Quick DM here. {% endcomment %}
-                        {% endblock %}
-                    </div>
-
-                    <div class="col-lg-6 col-lg-pull-3">
-                        {% block messages %}
-                        {% endblock %}
-                        {% block body %}
-                            {# This is the part that gets overridden by templates that extend this one. #}
-                        {% endblock %}
-                    </div>
-                </div><!-- .row -->
-            {% endblock %}
-        </div><!-- .container -->
     </div>
 
-    <footer id="footer">
-        {% block footer %}{% endblock %}
-    </footer>
 
-    {% comment %} For scripts at the bottom of the page. {% endcomment %}
-    {% block bottomscripts %}
-    {% endblock %}
-    {% block bottomerscripts %}
-    {% endblock %}
-    </body>
-    </html>
-{% endspaceless %}
+    <div class="container-fluid">
+
+        {% block mainbody %}
+            <div class="row">
+                <div class="col-md-3 order-md-first order-2 d-none d-md-block pr-md-1">
+                    {# Blank region. Any ideas? A clock maybe, or a death ray. Submissions welcome, but must be smaller than the box #}
+                </div>
+                <div class="col-md-9 order-first order-0">
+                    <h1>{% block pagetitle %}{% endblock %}</h1>
+                    {% block breadcrumbs %}
+                    {% endblock %}
+                    {% block messages %}
+                    {% endblock %}
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 mr-0 order-md-first order-2 pr-md-1 mb-md-3">
+                    {% block leftcontents %}
+                    {% endblock %}
+                </div>
+                <div class="col-md-9 order-last">
+                    {% block body %}
+                        {# This is the part that gets overridden by templates that extend this one. #}
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+</div>
+
+<footer class="bg-light">
+    {% block footer %}{% endblock %}
+</footer>
+
+{% comment %} For scripts at the bottom of the page. {% endcomment %}
+{% block bottomscripts %}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'bootstrap3-typeahead.min.js' %}"></script>
+{% endblock %}
+</body>
+</html>

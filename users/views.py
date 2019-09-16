@@ -1,196 +1,154 @@
-# temp
-import datetime
-import hmac
-import json
-import re
-
-from django.conf import settings
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.messages import add_message, constants
-from django.core.mail import mail_managers
-from django.forms import ValidationError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.contrib.messages import add_message
+from django.contrib.messages import constants as messages
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView, View, DetailView
 
-
-from exec.models import ExecRole
 from forum.models import Thread, Response
 from rpgs.models import Rpg
-from .captcha import create_signed_captcha, check_signed_captcha
-from .forms import MemberForm, UserForm, LoginForm, SignupForm
+from .captcha import create_signed_captcha
+from .forms import MemberForm, UserForm, SignupForm
 from .models import Member
 
 
-def viewmember(request, pk):
-    if (pk == 'me'):
-        # if we're logged in, get the user id and use that
-        if (request.user.is_authenticated):
-            pk = request.user.member.id
+class ProfileView(DetailView):
+    model = Member
+    template_name = "users/view.html"
+    context_object_name = "member"
+
+    def get_queryset(self):
+        return Member.objects.filter(equiv_user__is_active=True)
+
+    def get_context_data(self, **kwargs):
+        pk = self.object.pk
+        ctxt = super().get_context_data(**kwargs)
+        ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
+                     'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
+                     'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False)})
+        return ctxt
+
+
+class MyProfile(LoginRequiredMixin, ProfileView):
+    def get_object(self, queryset=None):
+        return self.request.user.member
+
+
+class Edit(LoginRequiredMixin, View):
+    # TODO use a more generic view for this, FormProcessMixin like behaviour perhaps?
+
+    def get(self, request):
+        context = {
+            # I want ultimately to get request.user to return member, this is convoluted to prevent this breaking
+            'userform': UserForm(instance=request.user.member.equiv_user),
+            'memberform': MemberForm(instance=request.user.member),
+        }
+        return render(request, 'users/edit.html', context)
+
+    def post(self, request):
+        # generate a filled form from the post request
+        memberform = MemberForm(request.POST, instance=request.user.member)
+        userform = UserForm(request.POST, instance=request.user)
+        if memberform.is_valid() & userform.is_valid():
+            memberform.save()
+            userform.save()
+            add_message(request, messages.SUCCESS, "Profile successfully updated.")
+            return HttpResponseRedirect(reverse('users:me'))
         else:
-            # if we're not logged in then it's an inappropriate request
-            return HttpResponseRedirect('/', status=400)
+            context = {
+                'userform': userform,
+                'memberform': memberform,
+            }
+            return render(request, 'users/edit.html', context)
 
-    member = get_object_or_404(Member, id=pk)
 
-    execroles = ExecRole.objects.filter(incumbent__id=pk)
+class Login(LoginView):
+    template_name = "users/login.html"
+    redirect_authenticated_user = True  # A very slight privacy risk. Negligible for our site...
 
-    # = ','.join(str()
+    def form_valid(self, form):
+        add_message(self.request, messages.SUCCESS, "Successfully logged in!")
+        return super().form_valid(form)
 
-    is_me=False
-    if (request.user.is_authenticated):
-        is_me=(request.user.member.id == pk)
-    
-    
-    context = {
-        # whether the viewed user is the logged in one
-        'me': is_me,
-        'result': request.GET.get('result', None),
-        'member': member,
 
-        # activity info
-        'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
-        'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
-        'rpgs': Rpg.objects.filter(game_masters__id=pk),
-        'execroles': execroles,
-    }
-    
-    
-        
-    return render(request, 'users/view.html', context)
+class Logout(LogoutView):
+    next_page = reverse_lazy("homepage")
+
+    def get_next_page(self):
+        add_message(self.request, messages.SUCCESS, "Successfully logged out!")
+        return super().get_next_page()
+
+
+class ChangePassword(PasswordChangeView):
+    def get_success_url(self):
+        add_message(self.request, messages.SUCCESS, "Password Changed")
+        return reverse("users:me")
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    def get_success_url(self):
+        add_message(self.request, messages.SUCCESS, "Password Reset Successfully")
+        return reverse("users:login")
+
+
+class PasswordReset(PasswordResetView):
+    def get_success_url(self):
+        return reverse("users:password_reset_confirm")
+
+
+class Signup(FormView):
+    form_class = SignupForm
+    template_name = "users/signup.html"
+    success_url = reverse_lazy("users:me")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.captcha_question = ""
+        self.captcha_token = ""
+        self.captcha_help = ""
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['captcha_token'] = self.captcha_token
+        return initial
+
+    def get_form(self, form_class=None):
+        q, a, h = create_signed_captcha()
+        self.captcha_question = q
+        self.captcha_token = a
+        self.captcha_help = h
+        form = super().get_form(form_class)
+        form.fields['captcha'].label = self.captcha_question
+        form.fields['captcha'].help_text = self.captcha_help
+        return form
+
+    def form_valid(self, form):
+        spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
+        auth = authenticate(self.request, username=form.cleaned_data['username'],
+                            password=form.cleaned_data['password'])
+        if auth is None:
+            raise RuntimeError("Impossible state reached")
+        login(self.request, auth)
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        data = form.data.copy()
+        data['captcha_token'] = self.captcha_token
+        data['captcha'] = ""
+        form.data = data
+        return super().form_invalid(form)
 
 
 @login_required
 def allmembers(request):
-    usernames = [x.username for x in User.objects.all()]
-    return HttpResponse(json.dumps(usernames))
-
-
-# edit page
-@login_required
-def edit(request):
-    context = {
-        'member': request.user.member,
-        'result': request.GET.get('result', None),
-        'userform': UserForm(instance=request.user),
-        'memberform': MemberForm(instance=request.user.member),
-    }
-    return render(request, 'users/edit.html', context)
-
-
-# the actual logic for editing the user once the form's sent
-@login_required
-def update(request):
-    if (request.method == 'POST'):
-        # generate a filled form from the post request
-        memberform = MemberForm(request.POST, instance=request.user.member)
-        userform = UserForm(request.POST, instance=request.user)
-        if (memberform.is_valid() and userform.is_valid()):
-            memberform.save()
-            userform.save()
-            add_message(request, constants.SUCCESS, "Successfully updated.")
-            res = HttpResponseRedirect(reverse('me'))
-            return res
-        else:
-            add_message(request, constants.ERROR, "There were problems with the form.")
-            return HttpResponseRedirect(reverse('edit'))
-
-    else:
-        return HttpResponseRedirect(reverse('me'))
-
-
-# view for the login form
-def login_view(request):
-    # if they try and view the login page, and are logged in, redirect
-    if (request.user.is_authenticated):
-        return HttpResponseRedirect(request.GET.get('next') or reverse('me'))
-
-    form = LoginForm()
-    context = {'form': form, 'result': request.GET.get('result'), 'next': request.GET.get('next')}
-    return render(request, 'users/login.html', context)
-
-
-# actually logs the user in
-def login_process(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        return HttpResponseRedirect(request.GET.get('next') or '/')
-    else:
-        # FIXME
-        # there is a bug here where the user will successfully log in
-        # but this branch will still be met
-        # Current fix is to make sure that the login page will always redirect to the user page
-        # when a user is logged in (which it should do anyway)
-        return HttpResponseRedirect(reverse('login') + '?result=invalid')
-
-
-def signup_view(request):
-    form = SignupForm()
-    context = add_captcha_to_form(form)
-    context['result'] = request.GET.get('result')
-    return render(request, 'users/signup.html', context)
-
-
-def add_captcha_to_form(form):
-    (question, answer, captcha_help) = create_signed_captcha()
-    return {'form': form, 'captcha': question, 'token': answer, 'captcha_help': captcha_help}
-
-
-def signup_process(request):
-    form = SignupForm(request.POST)
-    if form.is_valid():
-        data_valid = True
-        captcha_input = re.sub(r'\s', '', request.POST['captcha'])
-        captcha_target = re.sub(r'\s', '', request.POST['captcha-token'])
-        # CHECK CAPTCHA!
-        if not check_signed_captcha(captcha_input, captcha_target):
-            # Should be attached to captcha, but this is the closest thing.
-            form.add_error(None, ValidationError('You didn\'t answer the captcha correctly!'))
-            data_valid = False
-        # CHECK CASE!
-        elif User.objects.filter(username__iexact=form.cleaned_data['username']).exists():
-            form.add_error('username', ValidationError('A user with that name already exists.'))
-            data_valid = False
-
-        if not data_valid:
-            return render(request, 'users/signup.html', add_captcha_to_form(form))
-
-        # now that we're here, the form is DEFINITELY valid.
-        u = spawn_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password'])
-
-        auth = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-        if auth is not None:
-            login(request, auth)
-            return HttpResponseRedirect(reverse('edit'))
-        else:
-            mail_managers(
-                'Unknown signup error',
-                'Unknown signup error with valid form. Auth is None. Find below form data:\nraw username: {}\nraw email: {}, cleaned username: {}, cleaned email: {}, user id: {}'.format(
-                    form.data['username'], form.data['email'], form.cleaned_data['username'],
-                    form.cleaned_data['email'], u.id),
-                fail_silently=True
-            )
-            form.add_error(None, ValidationError('Unknown error. The webadmin has been notified.'))
-            return render(request, 'users/signup.html', add_captcha_to_form(form))
-    else:
-        # This should only be true if the username is invalid yet also already exists
-        # i.e. never?
-        if 'username' in form.data and User.objects.filter(username__iexact=form.data['username']).exists():
-            form.add_error('username', ValidationError('A user with that name already exists.'))
-
-        # display the errors from the default validators
-        return render(request, 'users/signup.html', add_captcha_to_form(form))
-
-
-@login_required
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect('/')
+    usernames = [x.username for x in User.objects.filter(is_active=True).order_by('username')]
+    return JsonResponse(usernames, safe=False)
 
 
 # not a view

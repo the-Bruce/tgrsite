@@ -1,24 +1,12 @@
 {% extends 'tgrsite/main.html' %}
-{% block title %}
-    New Newsletter
-{% endblock %}
-{% block body %}
+{% block title %}New Newsletter{% endblock %}
+{% block pagetitle %}New Newsletter{% endblock %}
 
-    <h1>New Newsletter</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <div>
-                <div>
-                    {% if field.field.required %} * {% endif %}
-                    {{ field.label_tag }}
-                </div>
-                <div>
-                    {{ field }}
-                </div>
-            </div><br>
-        {% endfor %}
-        <input type="submit" class="form-control">
-    </form>
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "newsletters:newsletters_index" %}">Newsletters</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}New{% endblock %}
+
+{% block body %}
+    {% include "parts/render_form.html" %}
 {% endblock %}

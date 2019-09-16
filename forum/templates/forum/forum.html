@@ -1,105 +1,34 @@
 {% extends "tgrsite/main.html" %}
 {% block title %}
-    {{ current }}
+    Forum
 {% endblock %}
+{% block pagetitle %}Forum{% endblock %}
+{% block breadcrumbs_child %}Forum{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.forum.change_forums %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_forum_changelist" %}">Edit</a>
+    {% endif %}
+    <a class="btn btn-block btn-outline-primary d-none d-md-block" href="{% url "forum:recent" %}">Recent Activity</a>
+{% endblock %}
+
 {% block body %}
-
-    <h1>{{ current }}</h1>
-
-    {% if current.parent.id %}
-        in
-        <a href="{% url 'subforum' current.parent.id %}">
-            {{ current.parent }}
-        </a>
-
-        <br><br>
-    {% elif current != 'Forum' %}
-        in <a href="{% url 'forum' %}">Forum</a>
-        <br><br>
-    {% endif %}
-
-    {% if forums %}
-
-        {% if current == 'Forum' %}
-            FORUMS
+    <a class="btn btn-block btn-outline-primary d-block d-md-none" href="{% url "forum:recent" %}">Recent Activity</a>
+    <div class="mb-3"><h3>Forums</h3>
+        {% if forums %}
+            {% include "forum/parts/subforum_list.html" with forums=forums %}
         {% else %}
-            SUBFORUMS
-        {% endif %}
-        <div class="list-group">
-            {% for forum in forums %}
-                <a href="{% url 'subforum' forum.id %}" class="list-group-item" style="">
-                    <strong>{{ forum }}</strong>
-                    <small><em>{{ forum.description|default:"no description" }}</em>
-                    </small>
-
-                    <br>{{ forum.get_threads_count_r }} thread{{ forum.get_threads_count_r|pluralize }}
-
-                    {% if forum.get_latest_post %}
-                        <span class="pull-right">
-		<em>Latest Post:</em>
-		{{ forum.get_latest_post|truncatechars:24 }}
-		</span>
-                    {% endif %}
-
-                </a>
-            {% endfor %}
-        </div>
-    {% else %}
-        {% if not threads and current == 'Forum' %}
-            Looks like the forum doesn't exist!<br>
-            Contact the <a href="{% url 'exec' %}">Web Admin</a>.
-        {% endif %}
-    {% endif %}
-
-
-    {% if threads %}
-        THREADS: {{ current.get_threads_count }}
-        <div class="list-group">
-            {% for thread in threads %}
-                <a href="{% url 'viewthread' thread.id %}" class="list-group-item">
-
-                    {% if thread.is_pinned %}
-                        <i class="far fa-sticky-note"></i>
-                    {% endif %}
-                    {{ thread.title }}
-
-                    <span class="pull-right">
-			{{ thread.pub_date|timesince }} ago
-			</span>
-                    <br>
-                    <small>{{ thread.author|truncatechars:32 }}</small>
-                    <span class="pull-right">
-				{{ thread.get_response_count }} response{{ thread.get_response_count|pluralize }}
-			</span>
-
-                </a>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% if request.user.is_authenticated and current != 'Forum' %}
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#createThreadCollapse"
-                aria-expanded="false" aria-controls="createThreadCollapse">Create Thread
-        </button>
-        <div class="collapse" id="createThreadCollapse">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <form action="{% url 'createthread' %}" method="POST">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            {% include "widgets/render_form_content.html" with form=form %}
-                            <input type="hidden" name="forum" value="{{ current.id }}">
-                        </div>
-                        <input type="submit" class="form-control btn-primary" value="Post">
-                    </form>
+            {% if not threads %}
+                <div class="card bg-warning">
+                    <p class="card-header">Looks like the forum doesn't exist!</p>
+                    <div class="card-body">
+                        <p class="card-text">Contact the <a class="card-link" href="{% url 'exec:exec' %}#Web%20Admin">Web Admin</a>.</p>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-    {% endif %}
 
-    {% comment markdown %}
-    {% load markdown_tags %}
-    This will be escaped!
-    {{ '<a href="">This is how you parse Markdown ;)</a>'|parse_md }}
-    {% endcomment %}
+            {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}

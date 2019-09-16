@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404, reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.views import redirect_to_login
-from django.core.exceptions import PermissionDenied
 
 from .forms import SuggestionForm, LoanRequestForm, RecordForm, LoanNotesForm
 from .models import Inventory, Loan, Record, Suggestion
@@ -15,9 +14,7 @@ from .models import Inventory, Loan, Record, Suggestion
 class PermissionRequiredMixin(PRMBase):
     def handle_no_permission(self):
         messages.add_message(self.request, messages.ERROR, "You don't have permission to perform that action.")
-        if self.raise_exception:
-            raise PermissionDenied(self.get_permission_denied_message())
-        if self.request.user.is_authenticated:
+        if self.raise_exception or self.request.user.is_authenticated:
             return HttpResponseRedirect(reverse("homepage"))
         return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
 

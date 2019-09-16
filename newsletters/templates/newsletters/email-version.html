@@ -1,39 +1,29 @@
-{% extends 'tgrsite/emailcontent.html' %}
+{% extends "tgrsite/email.html" %}
 {% load markdown_tags %}
 {% load static %}
 
 {% block title %}{{ object.title }}{% endblock %}
-{% block leftcontents %}
-{% endblock %}
-
-{% block css %}
-    <style>
-        #incorrect-newsletter {
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-            margin-top: 10px;
-        }
-    </style>
-{% endblock %}
 
 {% block body %}
     <p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a
-            href="https://{{ request.get_host }}{% url 'newsletters_detail' object.id %}">here</a>!</p>
-    <img src="{% fullstatic 'newsletter-banner.png' %}" style="width: 100%;"/>
-    <h1>{{ object.title }}
-        <small>
-            {% if object.author %} by <a href="https://{{ request.get_host }}{% url 'user' object.author.id %}">{{ object.author }}</a> {% endif %}
-            <small>({{ object.pub_date }})</small>
-        </small>
-    </h1>
-    <p></p>
-    <article>
+            href="{{ request.scheme }}://{{ request.get_host }}{% url 'newsletters:newsletters_detail' object.id %}">here</a>!
+    </p>
+    <div id="email-content">
+        <img alt="Warwick Tabletop and Role-Playing Society Banner"
+             src="{{ request.scheme }}://{{ request.get_host }}{% static 'images/newsletter_banner_2.png' %}"
+             class="img-fluid mb-2" style="width: 100%">
+
+        <h3 class="mb-2">
+            {% if object.author %}
+                <span>Written by {% include "parts/render_member.html" with member=object.author avatarless=True nobadge=True nolink=True %}</span>
+            {% endif %}
+
+            (<small class="text-nowrap">{{ object.pub_date }}</small>)
+        </h3>
+
         {{ object.body|parse_md_safe }}
-    </article>
-    {% if unsub %}<small>If you don't want to receive these notification emails any more, please visit your
-        <a href="{{ request.scheme }}://{{ request.get_host }}{% url "notification_settings" %}">
-            notification settings
-        </a>.</small>
-    {% endif %}
+        <p>If you no longer want to receive these messages, visit <a
+                href="{{ request.scheme }}://{{ request.get_host }}{% url "notifications:notification_settings" %}">your
+            notification subscriptions</a> to unsubscribe.</p>
+    </div>
 {% endblock %}

@@ -1,0 +1,53 @@
+{% extends "tgrsite/main.html" %}
+{% block title %}
+    {{ current }}
+{% endblock %}
+
+{% block pagetitle %}{{ current }}{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "forum:forum" %}">Forum</a></li>
+    {% for parent in current.get_parents %}
+        <li class="breadcrumb-item"><a href="{% url "forum:subforum" parent.pk %}">{{ parent.title }}</a></li>
+    {% endfor %}
+{% endblock %}
+{% block breadcrumbs_child %}{{ current }}{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.forum.change_forums %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_forum_change" current.id %}">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    {% if forums %}
+        <div class="mb-2">
+            <h3>Subforums</h3>
+            {% include "forum/parts/subforum_list.html" with forums=forums %}
+        </div>
+    {% endif %}
+
+    {% if threads %}
+        <div class="mb-2">
+            <h3>Threads</h3>
+            {% include "forum/parts/thread_list.html" with threads=threads %}
+        </div>
+    {% endif %}
+
+    {# New Thread #}
+    {% if request.user.is_authenticated %}
+        <button class="btn btn-block btn-outline-success" type="button" data-toggle="collapse"
+                data-target="#createThreadCollapse"
+                aria-expanded="false" aria-controls="createThreadCollapse">Create Thread
+        </button>
+        <div class="collapse{% if form.errors %} show{% endif %}" id="createThreadCollapse">
+            <div class="card">
+                <div class="card-body">
+                    {% include "parts/render_form.html" with save="Post" %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

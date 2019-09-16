@@ -1,17 +1,24 @@
 {% extends 'tgrsite/main.html' %}
-{% load staticfiles %}
 
-{% block title %}
-    {{ inv.name }}
+{% block title %}Loans - {{ inv.name }}{% endblock %}
+{% block pagetitle %}{{ inv.name }} Loans{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Loans{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.inventory.change_loan %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:inventory_loan_changelist" %}">Edit</a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ inv.name }} Loans</h1>
-    <p>in <a href="{% url "inventory:index" inv=inv.canonical_ %}">{{ inv.name }}</a></p>
-    <div>
-        <a class="btn btn-success"
+    <div class="mb-3">
+        <a class="btn btn-block btn-outline-success"
            href="{% url "inventory:create_loan" inv=inv.canonical_ %}">Request Loan</a>
     </div>
-    <br>
     {% include "inventory/parts/loanlist.html" with loans=object_list %}
 {% endblock %}

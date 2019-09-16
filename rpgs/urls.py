@@ -2,25 +2,21 @@ from django.urls import path
 
 from . import views
 
+app_name = "rpgs"
+
 urlpatterns = [
-    path('', views.Index.as_view(), name='rpgs'),
-    path('<int:pk>/', views.Detail.as_view(), name='rpg'),
-    path('tagged/<str:tag>/', views.Filter.as_view(), name='rpg_tag'),
-    path('tag_form/', views.tag_form, name='rpg_tag_form'),
-    path('join/', views.join, name='rpg_join'),
+    path('', views.Index.as_view(), name='index'),
+    path('<int:pk>/', views.Detail.as_view(), name='detail'),
 
-    path('leave/', views.leave, name='rpg_leave'),
-    path('kick/', views.kick, name='rpg_kick'),
+    path('create/', views.Create.as_view(), name='create'),
+    path('<int:pk>/edit/', views.Update.as_view(), name='edit'),
+    path('<int:pk>/delete/', views.Delete.as_view(), name='delete'),
 
-    path('create/', views.create, name='rpg_create'),
-    path('add_to/', views.add_to, name='rpg_add_to'),
-    path('<int:pk>/edit/', views.edit, name='rpg_edit'),
-    path('<int:pk>/edit/done/', views.edit_process, name='rpg_edit_done'),
+    path('<int:pk>/join/', views.Join.as_view(), name='join'),
+    path('<int:pk>/leave/', views.Leave.as_view(), name='leave'),
 
-    # these are nowhere near usable
-    # url(r'^(?P<pk>[0-9]+)/manage$', views.manage, name='rpg_manage'),
-    # url(r'^(?P<pk>[0-9]+)/manage/done$', views.manage_process, name='rpg_manage_done'),
+    path('<int:pk>/kick/', views.Kick.as_view(), name='kick'),
+    path('<int:pk>/add_to/', views.AddMember.as_view(), name='add_to'),
 
-    path('<int:pk>/delete/', views.delete, name='rpg_delete'),
-    path('create/finish/', views.create_done, name='create_done'),
+    path('<int:pk>/message/', views.MessageGroup.as_view(), name='message')
 ]

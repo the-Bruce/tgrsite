@@ -1,0 +1,48 @@
+{% load timetable_tags %}
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        {% if timetable.colour %}
+            <thead class="{% if timetable.colour.light_text %}bg-primary{% else %}bg-light{% endif %}"
+                   style="background-color: {{ timetable.colour.html_code }}">
+            {% else %}
+            <thead class="bg-primary">
+        {% endif %}
+        <tr>
+            <td class=""><strong>Week number</strong></td>
+            {% for week in timetable.weeks.all %}
+                <td class="text-center align-middle"><strong>{{ week.number }}</strong></td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td class=""><strong>Week commencing</strong></td>
+            {% for week in timetable.weeks.all %}
+                <td class="text-center align-middle"><strong>{{ week.startDate }}</strong></td>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in timetable.events.all %}
+            <tr>
+                <td class="text-center align-middle"><strong>{{ event.description }}<br>{{ event.date_time_line }}
+                </strong>
+                </td>
+                {% for booking in timetable.weeks.all|for_event:event %}
+                    <td class="text-center align-middle" colspan="{{ booking.0 }}">
+                        {% if booking.1 %}
+                            {{ booking.1 }}
+                        {% else %}
+                            Not running
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+{% for note in timetable.notes.splitlines %}
+    <p class="card-text">{{ note }}</p>
+{% endfor %}

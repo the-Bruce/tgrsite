@@ -1,8 +1,10 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, Textarea, TextInput, EmailInput, PasswordInput, ValidationError
+from django.forms import ModelForm, Textarea, TextInput, CharField, HiddenInput, EmailInput, PasswordInput
+from django.forms import ValidationError
 from django.utils.safestring import mark_safe
 
 from .models import Member
+from .captcha import check_signed_captcha
 
 BOOTSTRAP_FORM_WIDGET_attrs = {
     'class': 'form-control'
@@ -49,14 +51,15 @@ class UserForm(ModelForm):
 
 
 class SignupForm(ModelForm):
+    captcha = CharField(max_length=32, label="Something went wrong generating a captcha. Please contact the web admin")
+    captcha_token = CharField(widget=HiddenInput)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
 
         widgets = {
-            'username': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
-            'email': EmailInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
-            'password': PasswordInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+            'password': PasswordInput()
         }
 
         help_texts = {
@@ -64,18 +67,24 @@ class SignupForm(ModelForm):
         }
 
     def clean(self):
-        data = self.cleaned_data
-        if 'username' not in data:
-            raise ValidationError('')
+        captcha = self.cleaned_data['captcha']
+        captcha_token = self.cleaned_data['captcha_token']
+        if not check_signed_captcha(captcha, captcha_token):
+            self.add_error('captcha', "Invalid Captcha Answer")
+        return self.cleaned_data
 
-        if len(data['username']) > 32:
-            self.add_error('username', ValidationError('Username must be 32 characters or fewer.'))
+    def clean_username(self):
+        if len(self.cleaned_data['username']) > 32:
+            raise ValidationError('Username must be 32 characters or fewer.')
+        if User.objects.filter(username__iexact=self.cleaned_data['username']).exists():
+            raise ValidationError('Username already exists.')
+        return self.cleaned_data['username']
 
 
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['discord', 'bio', 'signature', 'official_photo_url']
+        fields = ['discord', 'bio', 'signature', 'official_photo_url', 'dark']
 
         widgets = {
             'discord': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),

@@ -1,36 +1,48 @@
 from django import forms
+from django.forms import Textarea, CharField, NumberInput
 
-from .models import Rpg
+import re
+
+from .models import Rpg, Tag
+
+MD_INPUT = {
+    'class': 'markdown-input'
+}
+
+splitter = re.compile('[|:;,]')
 
 
 class RpgForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(RpgForm, self).__init__(*args, **kwargs)
-        for f in self.fields:
-            if f != 'am_i_gm' and f != 'is_in_the_past' and f != 'description':
-                self.fields[f].widget.attrs['class'] = 'form-control'
-            if f == 'is_in_the_past':
-                self.fields[f].label = 'Has this finished?'
-            if f == 'description':
-                self.fields[f].widget.attrs['class'] = 'markdown-input'
+    tag_list = CharField(required=False, help_text="A list of tags separated by commas. "
+                                                   "Please remember to add add 'rpg' to any rpgs")
 
-    am_i_gm = forms.BooleanField(required=False)
-    am_i_gm.label = 'Are you running this?'
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk and ('tag_list' not in self.initial or not self.initial['tag_list']):
+            self.initial['tag_list'] = self.instance.tags_str()
+            self.fields['tag_list'].value = self.instance.tags_str()
 
     class Meta:
         model = Rpg
-        fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'is_in_the_past', ]
+        fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'location', 'is_in_the_past', ]
+        widgets = {
+            'description': Textarea(attrs=MD_INPUT),
+        }
 
-    tags = forms.CharField(required=False, help_text="A list of tags separated by commas")
+    def clean_tag_list(self):
+        tags = self.cleaned_data['tag_list']
+        tags = {x.strip().lower() for x in splitter.split(tags)}
+        if '' in tags:
+            tags.remove('')
+        if tags and len(max(tags, key=len)) > 40:
+            raise forms.ValidationError("Tag too long")
+        return tags
 
 
-# Unused so far
-class RpgManageForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(RpgManageForm, self).__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs['class'] = 'form-control'
-
+class RpgCreateForm(RpgForm):
     class Meta:
         model = Rpg
-        fields = ['members']
+        fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'location']
+        widgets = {
+            'description': Textarea(attrs=MD_INPUT),
+        }

@@ -1,0 +1,61 @@
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
+$light: $gray-200;
+$dark: $gray-800;
+
+$theme-colors: (
+        "primary": #6D0F8C,
+        "secondary": #300140,
+        "tertiary": #9114BA,
+        "info": #00088a,
+        "gold": #ffc107,
+        "warning":#e79700,
+);
+
+$grid-breakpoints: (
+        xs: 0,
+);
+
+$enable-print-styles: true;
+
+@import "source/functions";
+@import "source/variables";
+
+$border-width: 3px;
+
+@import "source/mixins";
+@import "source/reboot";
+@import "source/type";
+@import "source/images";
+@import "source/tables";
+@import "source/code";
+@import "source/utilities/text";
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+pre {
+  white-space: pre-line;
+  background-color: $card-bg;
+  background-clip: border-box;
+  padding: $card-spacer-y $card-spacer-x;
+  border: $card-border-width solid $card-border-color;
+  @include border-radius($card-border-radius);
+}
+
+blockquote {
+  padding-left: map_get($spacers, 3);
+  border-left: $gray-400;
+  border-width: 2px;
+  border-left-style: solid;
+}

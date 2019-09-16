@@ -1,0 +1,27 @@
+{% extends "tgrsite/main.html" %}
+
+{% block title %}Subscribe{% endblock %}
+{% block pagetitle %}Subscribe to our calenders{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "timetable:timetable" %}">Timetable</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Subscribe{% endblock %}
+
+{% block body %}
+    <div class="card">
+
+        <h5 class="card-header mb-0">Subscribe to our calender</h5>
+
+        <div class="card-body">
+            {% include "timetable/parts/render_subtable.html" %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.timetable.change_timetable %}
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:timetable_googlecalender_changelist" %}">Edit</a>
+    {% endif %}
+{% endblock %}

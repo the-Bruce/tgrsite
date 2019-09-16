@@ -1,24 +1,31 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}Newsletters{% endblock %}
+{% block pagetitle %}Newsletters{% endblock %}
+
+{% block breadcrumbs_child %}Newsletters{% endblock %}
+
 {% block body %}
 
-    <h1>Newsletters</h1>
+
     {% if perms.newsletters.add_newsletter %}
-        <p><a href="{% url 'newsletters_create' %}">Create a new newsletter</a></p>
+        <a class="btn btn-block btn-outline-primary mb-3" href="{% url 'newsletters:newsletters_create' %}">Create a new
+            newsletter</a>
     {% endif %}
-    <p>Please note that only the newest newsletters are here! The older newsletters (before Summer 2018) can be found in
-        the <a href="{% url 'forum' %}">forum</a>.</p>
-    <br/>
-    <div class="list-group">
+    <p>
+        Please note that only the newest newsletters are here! The older newsletters (before Summer 2018) can be found
+        in the <a href="{% url 'forum:forum' %}">forum</a>.
+    </p>
+    <div class="list-group mb-3">
         {% for newsletter in object_list %}
             {% if perms.newsletters.change_newsletter or newsletter.ispublished %}
-                <a href="{% url 'newsletters_detail' newsletter.id %}" class="list-group-item" style="">
-                    <strong>{% if not newsletter.ispublished %}[UNPUBLISHED] {% endif %}{{ newsletter.title }}</strong>
-                    <span class="pull-right">
-				posted {{ newsletter.pub_date|timesince }} ago
-			</span>
-                    <small>(by {{ newsletter.author|truncatechars:32 }})</small>
-                    <br>
+                <a href="{% url 'newsletters:newsletters_detail' newsletter.id %}"
+                   class="list-group-item list-group-item-action">
+                    <span class="d-flex flex-column"><strong>
+                        {% if not newsletter.ispublished %}[UNPUBLISHED] {% endif %}{{ newsletter.title }}</strong>
+                    <small class="">
+                        posted {{ newsletter.pub_date|timesince }} ago by {% include "parts/render_member.html" with member=newsletter.author avatarless=True nolink=True %}
+                    </small>
+                    </span>
                     {{ newsletter.summary }}
                 </a>
             {% endif %}
@@ -26,5 +33,11 @@
             There are no newsletters yet! Sadness.
         {% endfor %}
     </div>
-
+    {% include "parts/pagination.html" %}
+{% endblock %}
+{% block leftcontents %}
+{{ block.super }}
+    {% if perms.newsletters.edit_newsletter %}
+        <a class="btn btn-block btn-outline-dark" href="{% url 'admin:newsletters_newsletter_changelist' %}">Edit</a>
+    {% endif %}
 {% endblock %}

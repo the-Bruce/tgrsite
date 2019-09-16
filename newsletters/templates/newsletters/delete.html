@@ -1,10 +1,16 @@
 {% extends 'tgrsite/main.html' %}
-{% block title %}
-    Delete Newsletter
+{% block title %}Delete Newsletter{% endblock %}
+{% block pagetitle %}Delete Newsletter{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "newsletters:newsletters_index" %}">Newsletters</a></li>
+    <li class="breadcrumb-item"><a href="{% url "newsletters:newsletters_detail" pk=object.pk %}">{{object.title}}</a></li>
 {% endblock %}
+{% block breadcrumbs_child %}Delete{% endblock %}
+
 {% block body %}
     <form method="post">{% csrf_token %}
-        <p>Are you sure you want to delete "{{ object }}"?</p>
-        <input type="submit" value="Confirm">
+        <legend>Are you sure you want to delete the newsletter <em>{{ object.title }}</em>?</legend>
+        <input class="btn btn-block btn-outline-danger" type="submit" value="Confirm">
     </form>
 {% endblock %}

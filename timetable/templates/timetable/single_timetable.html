@@ -2,24 +2,27 @@
 {% load property_tags %}
 
 {% block title %}Timetable{% endblock %}
-{% block css %}
-    {{ block.super }}
-    <style>
-        .centerate {
-            text-align: center;
-            vertical-align: middle !important;
-        }
-    </style>
+{% block pagetitle %}{{ timetable.title }}{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "timetable:timetable" %}">Timetable</a></li>
 {% endblock %}
+{% block breadcrumbs_child %}{{ timetable.title }}{% endblock %}
 
 {% block body %}
-    {% spaceless %}
-        {% include "timetable/widgets/render_timetable.html" with timetable=timetable %}
-    {% endspaceless %}
+    <div class="card">
+        <div class="card-body">
+            {% spaceless %}
+                {% include "timetable/parts/render_timetable.html" with timetable=timetable %}
+            {% endspaceless %}
+        </div>
+    </div>
+
 {% endblock %}
 
-{% block rightbar %}
+{% block leftcontents %}
+    {{ block.super }}
     {% if perms.timetable.change_timetable %}
-        <a class="btn btn-default" href="{% url "admin:app_list" "timetable" %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:app_list" "timetable" %}">Edit</a>
     {% endif %}
 {% endblock %}
