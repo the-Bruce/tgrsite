@@ -30,9 +30,10 @@ class Detail(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctxt=super().get_context_data(**kwargs)
         newsletters = list(Newsletter.objects.filter(ispublished=True).order_by('pub_date'))
-        index_of = newsletters.index(self.object)
-        ctxt['next'] = newsletters[index_of + 1] if index_of + 1 < len(newsletters) else None
-        ctxt['prev'] = newsletters[index_of - 1] if index_of - 1 >= 0 else None
+        if self.object.ispublished:
+            index_of = newsletters.index(self.object)
+            ctxt['next'] = newsletters[index_of + 1] if index_of + 1 < len(newsletters) else None
+            ctxt['prev'] = newsletters[index_of - 1] if index_of - 1 >= 0 else None
         return ctxt
 
 
