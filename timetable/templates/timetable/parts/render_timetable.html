@@ -3,10 +3,11 @@
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
+
         {% if timetable.colour %}
-            <thead class="{% if timetable.colour.light_text %}bg-primary{% else %}bg-light{% endif %}"
-                   style="background-color: {{ timetable.colour.html_code }}">
-            {% else %}
+            <thead class="bg-primary {% if timetable.colour.light_text %}text-always-light{% else %}text-always-dark{% endif %}"
+                   style="background-color: {{ timetable.colour.html_code }} !important;">
+        {% else %}
             <thead class="bg-primary">
         {% endif %}
         <tr>
