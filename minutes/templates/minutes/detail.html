@@ -64,6 +64,6 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.timetable.change_timetable %}
-        <a class="btn btn-block btn-outline-dark" href="{% url "admin:minutes_meeting_changelist" %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark" href="{% url "admin:minutes_meeting_change" object.pk %}">Edit</a>
     {% endif %}
 {% endblock %}

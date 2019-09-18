@@ -56,3 +56,6 @@ blockquote {
   border-width: 2px;
   border-left-style: solid;
 }
+
+@include text-emphasis-variant(".text-always-light", #e9ecef);
+@include text-emphasis-variant(".text-always-dark", #343a40);
