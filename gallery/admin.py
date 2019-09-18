@@ -7,7 +7,7 @@ class GalleryImageAdmin(admin.ModelAdmin):
     list_display = ('caption', 'image')
 
     model = GalleryImage
-    fields = ('image', 'caption', 'as_img')
+    fields = ('image', 'caption', 'full_caption', 'as_img')
     readonly_fields = ('as_img',)
 
 

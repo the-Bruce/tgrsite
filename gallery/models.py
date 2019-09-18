@@ -12,7 +12,7 @@ class GalleryImage(models.Model):
 
     image = models.ImageField(upload_to='gallery/%Y/%m/%d/', blank=False)
     caption = models.CharField(max_length=1024, blank=True)
-    full_caption = models.CharField(max_length=2048, blank=True)
+    full_caption = models.TextField(max_length=2048, blank=True)
 
     # helper function.
     # bad practice to mix render code in with models
