@@ -37,7 +37,7 @@ def break_tags(text):
 
 def md_bleach(text):
     cleaner = Cleaner(tags=['p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'em', 'strong', 'a', 'ul', 'ol', 'li',
-                            'blockquote', 'img', 'pre', 'code', 'hr'],
+                            'blockquote', 'img', 'pre', 'code', 'hr', 'del'],
                       attributes={'a': ['href'], 'img': ['src', 'alt']}, protocols=['http', 'https'])
     text = cleaner.clean(text)
     return mark_safe(text)
