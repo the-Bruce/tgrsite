@@ -9,7 +9,7 @@ class GoogleCalender(models.Model):
     url = models.CharField(max_length=120,
                            help_text="Please ensure that it starts at the // (i.e. without the https: or webcal: part)")
     name = models.CharField(max_length=30)
-    sort=models.IntegerField()
+    sort = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -77,3 +77,12 @@ class Timetable(models.Model):
 
     def get_absolute_url(self):
         return reverse("single_timetable", kwargs={"pk": self.pk})
+
+
+class RoomLink(models.Model):
+    url = models.CharField(max_length=120,
+                           help_text="Link provided by interactive map")
+    room = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.room

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Timetable, Booking, Event, Week, ColourScheme, GoogleCalender
+from .models import Timetable, Booking, Event, Week, ColourScheme, GoogleCalender, RoomLink
 
 
 # Register your models here.
@@ -39,3 +39,4 @@ admin.site.register(Week, WeekAdmin)
 admin.site.register(ColourScheme)
 admin.site.register(Timetable)
 admin.site.register(GoogleCalender)
+admin.site.register(RoomLink)
