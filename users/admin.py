@@ -10,6 +10,7 @@ class MemberInline(admin.StackedInline):
     model = Member
     can_delete = False
     verbose_name_plural = 'member'
+    readonly_fields = ('dark',)
 
 
 class RpgInline(admin.TabularInline):
@@ -23,7 +24,8 @@ class UserAdmin(BaseUserAdmin):
 
 class MemberAdmin(admin.ModelAdmin):
     # inlines = (RpgInline,)
-    pass
+    search_fields = ('equiv_user__username','discord')
+    readonly_fields = ('dark',)
 
 
 admin.site.unregister(User)

@@ -14,7 +14,7 @@ class TimetableView(ListView):
 
     def get_context_data(self, *args, **kwargs):
         ctxt = super().get_context_data(*args, **kwargs)
-        ctxt['google_cals'] = GoogleCalender.objects.all()
+        ctxt['google_cals'] = GoogleCalender.objects.all().order_by('sort')
         return ctxt
 
 
@@ -31,4 +31,4 @@ class SubscribeView(ListView):
     context_object_name = "google_cals"
 
     def get_queryset(self):
-        return GoogleCalender.objects.all()
+        return GoogleCalender.objects.all().order_by('sort')
