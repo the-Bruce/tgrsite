@@ -10,4 +10,4 @@ class MarkdownPreview(View):
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'body': request.POST['md']})
+        return render(request, self.template_name, {'body': request.POST['md'].strip()})

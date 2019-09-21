@@ -1,8 +1,10 @@
 {% load markdown_tags %}
-<div class="card mt-1 mb-2">
-    <div class="card-body">
-        <div class="card-text">
-            {% if body|parse_md %}{{ body|parse_md }}{% else %}<p class="text-muted"><em>No Content</em></p>{% endif %}
+{% if body %}
+    <div class="card mt-1 mb-2">
+        <div class="card-body">
+            <div class="card-text">
+                {{ body|parse_md }}
+            </div>
         </div>
     </div>
-</div>
+{% endif %}
