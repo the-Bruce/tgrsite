@@ -18,7 +18,11 @@
         <form class="">
             <div class="form-group">
                 <label class="sr-only" for="events_tag">Tag:</label>
-                <input id="events_tag" class="form-control" name="tag" placeholder="Tag" value="{{ request.GET.tag }}">
+                <input id="events_tag" class="form-control add-tag-input" data-provide="typeahead" autocomplete="off" name="tag" placeholder="Tag" value="{{ request.GET.tag }}">
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="events_user">User:</label>
+                <input id="events_user" class="form-control add-member-input" data-provide="typeahead" autocomplete="off" name="user" placeholder="Username" value="{{ request.GET.user }}">
             </div>
             <div class="form-group">
                 <div class="form-check">
@@ -65,5 +69,6 @@
 {% block bottomscripts %}
     {{ block.super }}
     {% include "parts/user_typeahead.html" %}
+    {% include "parts/tag_typeahead.html" %}
 {% endblock %}
 
