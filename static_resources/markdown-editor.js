@@ -4,7 +4,21 @@
  derived from https://github.com/digitalnature/MarkdownEditor
  and https://github.com/jamiebicknell/Markdown-Helper
 */
-;(function ($, window, document, undefined) {
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            var csrftoken = getCookie('csrftoken');
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+(function ($, window, document, undefined) {
     $.fn.MarkdownEditor = function () {
 
         var adjustOffset = function (input, offset) {
@@ -105,8 +119,11 @@
                 + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Lists">'
                 + button_template + 'Bullet List" class="' + format_classes + ' c-ul"><i class="fas fa-list-ul"></i></button>'
                 + button_template + 'Ordered List" class="' + format_classes + ' c-ol"><i class="fas fa-list-ol"></i></button>'
-                + '</div>' +
-                '</div>'
+                + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Preview">'
+                + button_template + 'Preview" class="' + format_classes + ' c-preview"><i class="fas fa-eye"></i></button>'
+                + '</div>'
+                + '</div>'
+                + '<div class="preview"></div>'
             ));
 
             $(txt).on('keypress', function (event) {
@@ -119,6 +136,9 @@
 
                 let tagName = this.className.substr(format_classes.length + 3),
                     range = {start: txt.selectionStart, end: txt.selectionEnd};
+                if (tagName === "preview") {
+                    return createPreview(txt, controls)
+                }
 
                 //head should instead affect the whole line
                 if (['head', 'ul','ol'].includes(tagName)) {
@@ -178,6 +198,13 @@
 
 })(jQuery, window, document);
 
+function createPreview(txt, controls) {
+    $.post("/api/md_preview/",{'md':txt.value}, function (data, status, jqXHR) {
+        controls.find('.preview').html(data).slideDown();
+    });
+    return true;
+}
+
 function MarkdownHelper(block, event) {
     let check, input, start, range, lines, state, value, first, prior, label, begin, width, caret;
     if (event.keyCode === 13) {
@@ -228,4 +255,20 @@ function MarkdownHelper(block, event) {
             return false;
         }
     }
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

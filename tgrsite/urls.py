@@ -15,6 +15,7 @@ urlpatterns = [
     path('exec/', include('exec.urls')),
     path('', include('users.urls')),
     path('messages/', include('messaging.urls')),
+    path('api/', include('templatetags.urls')),
     path('newsletters/', include('newsletters.urls')),
     path('notifications/', include('notifications.urls')),
     path('inventory/', include('inventory.urls')),
