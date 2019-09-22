@@ -16,15 +16,16 @@
     <div class="card card-body">
         <h4 class="card-title">Filter by...</h4>
         <form class="">
-            <div class="form-group">
+            <fieldset class="form-group">
                 <label class="sr-only" for="events_tag">Tag:</label>
                 <input id="events_tag" class="form-control add-tag-input" data-provide="typeahead" autocomplete="off" name="tag" placeholder="Tag" value="{{ request.GET.tag }}">
-            </div>
-            <div class="form-group">
+            </fieldset>
+            <fieldset class="form-group">
                 <label class="sr-only" for="events_user">User:</label>
                 <input id="events_user" class="form-control add-member-input" data-provide="typeahead" autocomplete="off" name="user" placeholder="Username" value="{{ request.GET.user }}">
-            </div>
-            <div class="form-group">
+            </fieldset>
+            <fieldset class="form-group">
+            <h4 class="card-text">Show...</h4>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" name="showfull" id="events_showfull"
                            {% if request.GET.showfull %}checked{% endif %}>
@@ -39,7 +40,7 @@
                         Completed Events
                     </label>
                 </div>
-            </div>
+            </fieldset>
             <button class="btn btn-block btn-outline-primary" type="submit">Filter</button>
         </form>
     </div>
