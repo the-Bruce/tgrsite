@@ -123,7 +123,7 @@ class CreateGroup(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         members = set()
         for subform in form:
-            print(subform.cleaned_data)
+            #print(subform.cleaned_data)
             if subform.is_bound and 'recipient' in subform.cleaned_data:
                 r = subform.cleaned_data['recipient']
                 if r not in members:
