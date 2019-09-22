@@ -98,8 +98,10 @@ class PasswordResetConfirm(PasswordResetConfirmView):
 
 
 class PasswordReset(PasswordResetView):
+    html_email_template_name = "registration/password_reset_html_email.html"
+
     def get_success_url(self):
-        return reverse("users:password_reset_confirm")
+        return reverse("users:password_reset_done")
 
 
 class Signup(FormView):
