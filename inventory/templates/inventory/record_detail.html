@@ -59,8 +59,8 @@
                             by {% include "parts/render_member.html" with member=object.owner %}
                         </p>
                     </div>
-                </div>{% endif %}
-
+                </div>
+            {% endif %}
             {% if perms.inventory.view_loan and object.inventory.loans and object.get_live_loans|length > 0 %}
                 <h3>Loans</h3>
                 {% include "inventory/parts/loanlist.html" with loans=object.get_live_loans %}

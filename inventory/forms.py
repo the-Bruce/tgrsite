@@ -61,7 +61,7 @@ class LoanRequestForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
+        #print(cleaned_data)
         if not self.is_bound:  # Stop further processing.
             return
         unavailable = []
