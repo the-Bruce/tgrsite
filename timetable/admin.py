@@ -14,7 +14,7 @@ class NewBookingInline(admin.StackedInline):
 class ChangeBookingInline(admin.StackedInline):
     model = Booking
     fields = ['room', 'event']
-    extra = 0
+    extra = 1
 
 
 class WeekAdmin(admin.ModelAdmin):
