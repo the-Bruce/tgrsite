@@ -7,7 +7,7 @@ from .models import NotificationSubscriptions
 
 class SubscriptionsAdmin(admin.ModelAdmin):
     readonly_fields = ('member',)
-    search_fields = ('member',)
+    search_fields = ('member__equiv_user__username',)
 
 
 admin.site.register(NotificationSubscriptions, SubscriptionsAdmin)
