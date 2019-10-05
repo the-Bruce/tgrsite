@@ -18,7 +18,9 @@
         <div class="collapse" id="past_meetings">
             <div class="card-body">
                 {% for root in object.folder.roots %}
-                    {% include "minutes/widgets/foldertree.html" with folder=root child=object mb=forloop.last %}
+                    {% if root.visible or root == object.folder or root in object.folder.parents_name.all %}
+                        {% include "minutes/widgets/foldertree.html" with folder=root child=object mb=forloop.last %}
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

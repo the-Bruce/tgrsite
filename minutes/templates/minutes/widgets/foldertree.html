@@ -7,22 +7,26 @@
     </a>
     <div id="folder{{ folder.pk }}" class="collapse{% if folder.id in child.folder.parents_id %} show{% endif %}">
         <div class="list-group-item">
-            {% if folder.children.all %}
+            {% if folder.visible_children or subfolder == child.folder or folder in child.folder.parents.all %}
                 {% for subfolder in folder.children.all %}
+                    {% if subfolder.visible or subfolder == child.folder or subfolder in child.folder.parents.all %}
                         {% include "minutes/widgets/foldertree.html" with folder=subfolder child=child mb=forloop.last me=folder.meetings.all %}
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             {% if folder.meetings.all %}
                 <div class="mb-0 list-group">
                     {% for meeting in folder.meetings.all %}
-                        <a href="{{ meeting.get_absolute_url }}"
-                           class="list-group-item list-group-item-action {% if meeting == child %}active{% endif %}">
-                            {{ meeting.pretty_name }}
-                        </a>
+                        {% if meeting.visible or meeting == child %}
+                            <a href="{{ meeting.get_absolute_url }}"
+                               class="list-group-item list-group-item-action {% if meeting == child %}active{% endif %}">
+                                {{ meeting.pretty_name }}
+                            </a>
+                        {% endif %}
                     {% endfor %}
                 </div>
             {% else %}
-                {% if not folder.children.all %}
+                {% if not folder.visible_children or subfolder == child.folder or folder in child.folder.parents.all %}
                     {# Neither folders nor meetings exist #}
                     <span class="text-muted">Empty</span>
                 {% endif %}

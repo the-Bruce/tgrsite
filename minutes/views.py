@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.db.models import Q
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, reverse
@@ -6,6 +7,9 @@ from django.contrib.auth.mixins import PermissionRequiredMixin as PRMBase
 from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.views.generic import DetailView, CreateView, UpdateView
+
+from functools import reduce
+from operator import and_
 
 from .models import Folder, Meeting
 from .forms import MeetingForm
@@ -55,8 +59,22 @@ class MeetingDetail(DetailView):
         ctxt = super().get_context_data(**kwargs)
         meetings = list(Meeting.objects.order_by('date'))
         index_of = meetings.index(self.object)
-        ctxt['next'] = meetings[index_of + 1] if index_of + 1 < len(meetings) else None
-        ctxt['prev'] = meetings[index_of - 1] if index_of - 1 >= 0 else None
+        m = index_of + 1
+        while m < len(meetings):
+            if reduce(and_, [p.visible for p in meetings[m].parents()], meetings[m].visible):
+                ctxt['next'] = meetings[m]
+                break # exit while without hitting else clause
+            m = m + 1
+        else:
+            ctxt['next'] = None
+        m = index_of - 1
+        while m >= 0:
+            if reduce(and_,[p.visible for p in meetings[m].parents()], meetings[m].visible):
+                ctxt['prev'] = meetings[m]
+                break
+            m = m - 1
+        else:
+            ctxt['prev'] = None
         return ctxt
 
 
@@ -93,5 +111,5 @@ def meetingBounce(request, pk):
 
 
 def index(request):
-    meeting = Meeting.objects.latest(field_name="date")
+    meeting = Meeting.objects.filter(~Q(name__istartswith='.')).latest(field_name="date")
     return HttpResponseRedirect(meeting.get_absolute_url())

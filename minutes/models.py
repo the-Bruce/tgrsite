@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -27,11 +28,18 @@ class Folder(models.Model):
     def pretty_name(self):
         return self.name.replace("_", " ").replace(".", "")
 
-    def parents(self):
+    def parents_name(self):
         if self.parent is None:
             return [self.name]
-        p = self.parent.parents()
+        p = self.parent.parents_name()
         p.append(self.name)
+        return p
+
+    def parents(self):
+        if self.parent is None:
+            return [self]
+        p = self.parent.parents()
+        p.append(self)
         return p
 
     def parents_id(self):
@@ -41,18 +49,33 @@ class Folder(models.Model):
         p.append(self.id)
         return p
 
+    @property
+    def visible(self):
+        if self.name:
+            return self.name[0] != '.'
+        else:
+            return False
+
+    @property
+    def visible_children(self):
+        return self.children.filter(~Q(name__istartswith="."))
+
+    @classmethod
+    def visible_roots(cls):
+        return cls.objects.filter(Q(parent__isnull=True) & ~Q(name__istartswith="."))
+
     @classmethod
     def roots(cls):
         return cls.objects.filter(parent__isnull=True)
 
     def canonical_(self):
-        return ("/".join(self.parents())).lower()
+        return ("/".join(self.parents_name())).lower()
 
 
 class Meeting(models.Model):
     name = models.CharField(max_length=30,
                             help_text="Letters, numbers or underscores only",
-                            validators=[RegexValidator("^[a-zA-Z0-9][a-zA-Z0-9-_]*$",
+                            validators=[RegexValidator("^[a-zA-Z0-9.][a-zA-Z0-9-_]*$",
                                                        "This may only contain letters, numbers or underscores")])
     title = models.CharField(max_length=80)
     folder = models.ForeignKey(Folder, on_delete=models.SET_NULL, null=True, related_name="meetings")
@@ -66,10 +89,20 @@ class Meeting(models.Model):
 
     @property
     def pretty_name(self):
-        return self.name.replace("_", " ")
+        return self.name.replace("_", " ").replace(".", "")
 
     def __str__(self):
         return self.title
+
+    @property
+    def visible(self):
+        if self.name:
+            return self.name[0] != "."
+        else:
+            return False
+
+    def parents(self):
+        return self.folder.parents()
 
     def get_absolute_url(self):
         return reverse("minutes:meeting_detail", kwargs={'folder': self.folder.canonical_(), 'name': self.name.lower()})
