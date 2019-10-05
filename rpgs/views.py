@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.messages import add_message
 from django.contrib.messages import constants as messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import F, Count, Q
+from django.db.models import F, Count, Q, Case, When, IntegerField
 # testing
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -30,17 +30,22 @@ class Index(generic.ListView):
             queryset = queryset.filter(tags__name__iexact=self.request.GET['tag'])
         if self.request.GET.get('user', False):
             try:
-                user=Member.objects.get(equiv_user__username__iexact=self.request.GET.get('user'))
+                user = Member.objects.get(equiv_user__username__iexact=self.request.GET.get('user'))
             except Member.DoesNotExist:
                 pass
             else:
-                queryset = queryset.filter(Q(members=user)|Q(creator=user)|Q(game_masters=user)).distinct()
+                queryset = queryset.filter(Q(members=user) | Q(creator=user) | Q(game_masters=user)).distinct()
         if not self.request.GET.get('showfinished', False):
             queryset = queryset.filter(is_in_the_past=False)
-        if not self.request.GET.get('showfull', False):
-            queryset = queryset.annotate(n_members=Count('members')).filter(players_wanted__gt=F('n_members'))
+        queryset = queryset.annotate(n_remain=F('players_wanted') - Count('members')).annotate(full=Case(When(n_remain=0,then=1), default=0, output_field=IntegerField()))
+        if self.request.GET.get('showfull', False) or not self.request.GET.get('isfilter', False):
+            # second filter needed to detect if the filtered form has been submitted
+            # as checkbox False is transmitted by omitting the attribute (stupid!)
+            pass
+        else:
+            queryset = queryset.filter(full__exact=0)
 
-        return queryset.order_by('-pinned', '-created_at')
+        return queryset.order_by('-pinned', 'full', '-created_at')
 
 
 class Detail(generic.DetailView):
@@ -205,6 +210,7 @@ class MessageGroup(LoginRequiredMixin, UserPassesTestMixin, generic.RedirectView
         add_message(self.request, messages.WARNING, "Please note, if the people in the event change you will need to "
                                                     "create a new messaging group.")
         return reverse("message:message_thread", kwargs={'pk': group.pk})
+
 
 def alltags(request):
     tags = [x.name for x in Tag.objects.all().order_by('name')]

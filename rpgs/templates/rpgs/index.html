@@ -16,6 +16,7 @@
     <div class="card card-body">
         <h4 class="card-title">Filter by...</h4>
         <form class="">
+            <input id="events_filtered" name="isfilter" type="hidden" value="on">
             <fieldset class="form-group">
                 <label class="sr-only" for="events_tag">Tag:</label>
                 <input id="events_tag" class="form-control add-tag-input" data-provide="typeahead" autocomplete="off" name="tag" placeholder="Tag" value="{{ request.GET.tag }}">
@@ -28,7 +29,7 @@
             <h4 class="card-text">Show...</h4>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" name="showfull" id="events_showfull"
-                           {% if request.GET.showfull %}checked{% endif %}>
+                           {% if request.GET.showfull or not request.GET.isfilter %}checked{% endif %}>
                     <label class="form-check-label" for="events_showfull">
                         Full Events
                     </label>
