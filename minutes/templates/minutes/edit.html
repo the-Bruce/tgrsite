@@ -6,9 +6,7 @@
 {% block breadcrumbs_parents %}
     <li class="breadcrumb-item"><a href="{% url "minutes:index" %}">Minutes</a></li>
     {% if object %}
-        <li class="breadcrumb-item">
-            <a href="{% url "minutes:meeting_bounce" pk=object.pk %}">{{ object.title }}</a>
-        </li>
+        <li class="breadcrumb-item"><a href="{% url "minutes:meeting_bounce" pk=object.pk %}">{{ object.title }}</a></li>
     {% endif %}
 {% endblock %}
 {% block breadcrumbs_child %}{% if object %}Edit{% else %}Add{% endif %}{% endblock %}
