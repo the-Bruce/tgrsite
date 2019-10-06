@@ -4,7 +4,22 @@
  derived from https://github.com/digitalnature/MarkdownEditor
  and https://github.com/jamiebicknell/Markdown-Helper
 */
-;(function ($, window, document, undefined) {
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$.ajaxSetup({
+    beforeSend: function (xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            var csrftoken = getCookie('csrftoken');
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+(function ($, window, document, undefined) {
     $.fn.MarkdownEditor = function () {
 
         var adjustOffset = function (input, offset) {
@@ -88,7 +103,8 @@
 
         return this.each(function () {
             let txt = this,                          // textarea element
-                controls = $('<div class="controls" id="'+txt.id+'-controls" />'); // button container
+                stale = true,
+                controls = $('<div class="controls" id="' + txt.id + '-controls" />'); // button container
 
             const format_classes = "btn btn-light";
             const button_template = '<button type="button" data-toggle="tooltip" data-placement="bottom" title="';
@@ -105,11 +121,17 @@
                 + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Lists">'
                 + button_template + 'Bullet List" class="' + format_classes + ' c-ul"><i class="fas fa-list-ul"></i></button>'
                 + button_template + 'Ordered List" class="' + format_classes + ' c-ol"><i class="fas fa-list-ol"></i></button>'
-                + '</div>' +
-                '</div>'
+                + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Preview">'
+                + button_template + 'Preview" class="' + format_classes + ' c-preview"><i class="fas fa-eye"></i></button>'
+                + '</div>'
+                + '</div>'
+                + '<div class="preview"></div>'
             ));
-
+            controls.find('.preview').slideUp();
             $(txt).on('keypress', function (event) {
+                controls.find('.card').addClass("text-muted");
+                controls.find('.fa-eye-slash').removeClass('fa-eye-slash').addClass('fa-eye');
+                stale = true;
                 return MarkdownHelper(txt, event);
             });
 
@@ -119,9 +141,21 @@
 
                 let tagName = this.className.substr(format_classes.length + 3),
                     range = {start: txt.selectionStart, end: txt.selectionEnd};
+                if (tagName === "preview") {
+                    if (stale) {
+                        stale = false;
+                        controls.find('.fa-eye').removeClass('fa-eye').addClass('fa-eye-slash');
+                        createPreview(txt, controls);
+                    } else {
+                        controls.find('.preview').slideUp();
+                        controls.find('.fa-eye-slash').removeClass('fa-eye-slash').addClass('fa-eye');
+                        stale = true;
+                    }
+                    return true
+                }
 
                 //head should instead affect the whole line
-                if (['head', 'ul','ol'].includes(tagName)) {
+                if (['head', 'ul', 'ol'].includes(tagName)) {
                     let linestart = txt.value.lastIndexOf('\n', range.start) + 1,
                         lineend = txt.value.indexOf('\n', range.end) - 1;
                     lineend = lineend === -2 ? range.end : lineend;
@@ -166,7 +200,7 @@
 
                     // the others need to wrapped between tags
                     else
-                        txt.value=txt.value.substring(0, range.start) + tag.start + selectedText + tag.end + txt.value.substring(range.end);
+                        txt.value = txt.value.substring(0, range.start) + tag.start + selectedText + tag.end + txt.value.substring(range.end);
                 }
 
                 return true;
@@ -177,6 +211,12 @@
     };
 
 })(jQuery, window, document);
+
+function createPreview(txt, controls) {
+    $.post("/api/md_preview/", {'md': txt.value}, function (data, status, jqXHR) {
+        controls.find('.preview').html(data).slideDown();
+    });
+}
 
 function MarkdownHelper(block, event) {
     let check, input, start, range, lines, state, value, first, prior, label, begin, width, caret;
@@ -228,4 +268,20 @@ function MarkdownHelper(block, event) {
             return false;
         }
     }
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
