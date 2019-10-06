@@ -1,13 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.messages import add_message
+from django.contrib.messages import constants as messages
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.shortcuts import render, get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView, ListView, RedirectView, View
 
 from .forms import SubscriptionForm
-from .models import Notification, delete_old, NotificationSubscriptions
+from .models import Notification, delete_old, NotificationSubscriptions, SubType
 
 
 class UpdateSubscriptions(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -27,12 +29,24 @@ class UpdateSubscriptions(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def get_success_message(self, cleaned_data):
         return "Personal Subscription Settings Updated!"
 
+
+@login_required
+def quick_newsletter_subscribe(request):
+    member = request.user.member
+    notification_subs = member.notificationsubscriptions
+    notification_subs.newsletter = SubType.FULL
+    notification_subs.full_clean()
+    notification_subs.save()
+    add_message(request, messages.SUCCESS, "You have subscribed to the newsletter.")
+    return HttpResponseRedirect(reverse("notifications:notification_settings"))
+
+
 # Debug only. Probably should remove from prod...
 @login_required
 def email_notifications(request):
     context = {
         'notifications': Notification.objects.filter(member=request.user.member, is_unread=True).order_by('-time'),
-    }
+        }
     return render(request, 'notifications/summary-email.html', context)
 
 

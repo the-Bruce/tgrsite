@@ -35,7 +35,7 @@ affix_map = {ord(i): None for i in affixes}
 @register.simple_tag
 def room_link(room):
     room = room.strip().translate(affix_map)
-    print(room)
+    # print(room)
     if len(room) == 0:
         return None
     try:

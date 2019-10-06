@@ -111,5 +111,13 @@
                 </div>
             {% endif %}
         </div>
+    {% elif not embed %}
+        <div class="card-footer d-flex flex-column flex-sm-row justify-content-center align-items-sm-center">
+            <p class="card-text">
+                    <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
+                    or
+                    <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to join this event.
+                </p>
+        </div>
     {% endif %}
 </div>

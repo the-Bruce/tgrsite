@@ -21,7 +21,7 @@ class ResponseInline(admin.StackedInline):
 class ThreadAdmin(admin.ModelAdmin):
     inlines = [ResponseInline]
     list_display = ('title', 'body', 'get_author',)
-    list_filter = ['pub_date']
+    list_filter = ['pub_date', 'forum']
 
 
 class ResponseAdmin(admin.ModelAdmin):

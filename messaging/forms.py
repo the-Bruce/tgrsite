@@ -11,7 +11,7 @@ class Respond(forms.Form):
     message = forms.CharField(label="Message", widget=forms.Textarea(attrs={'autocomplete': 'off', 'rows': '3'}))
 
     def clean_message(self):
-        print("clean_message")
+        # print("clean_message")
         if re.match(r'^\s*$', self.cleaned_data['message']):
             raise ValidationError('Message has no content')
         return self.cleaned_data['message'].strip()
@@ -31,7 +31,7 @@ class QuickDM(forms.Form):
         return recipient
 
     def clean_message(self):
-        print("clean_message")
+        # print("clean_message")
         if re.match(r'^\s*$', self.cleaned_data['message']):
             raise ValidationError('Message has no content')
         return self.cleaned_data['message'].strip()
