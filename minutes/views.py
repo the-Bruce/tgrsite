@@ -61,7 +61,7 @@ class MeetingDetail(DetailView):
 
 
 class CreateMeeting(PermissionRequiredMixin, CreateView):
-    permission_required = "minutes:add_meeting"
+    permission_required = "minutes.add_meeting"
     model = Meeting
     form_class = MeetingForm
     template_name = "minutes/edit.html"
@@ -75,7 +75,7 @@ class CreateMeeting(PermissionRequiredMixin, CreateView):
 
 
 class UpdateMeeting(PermissionRequiredMixin, UpdateView):
-    permission_required = "minutes:change_meeting"
+    permission_required = "minutes.change_meeting"
     model = Meeting
     form_class = MeetingForm
     template_name = "minutes/edit.html"
