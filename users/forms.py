@@ -102,6 +102,6 @@ class MemberForm(ModelForm):
                 'Provide a URL for a real photo of you. '
                 'This is only shown on the exec page and only if you are a member of exec! '
                 'Gravatar is used by the rest of the site for profile pictures - for more information see this '
-                '<a href="https://github.com/the-Bruce/tgrsite/wiki/Gravatar">guide</a>.'),
+                '<a href="https://github.com/WarwickTabletop/tgrsite/wiki/Gravatar">guide</a>.'),
             'discord': 'Add your discord ID to aid recognition on the society discord'
         }

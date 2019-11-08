@@ -1,5 +1,4 @@
 /*
-
  jQuery Markdown editor
  derived from https://github.com/digitalnature/MarkdownEditor
  and https://github.com/jamiebicknell/Markdown-Helper

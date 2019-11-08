@@ -3,5 +3,15 @@ from django.contrib import admin
 
 from .models import Folder, Meeting
 
-admin.site.register(Folder)
-admin.site.register(Meeting)
+
+class FolderAdmin(admin.ModelAdmin):
+    list_filter = ("parent",)
+
+
+class MeetingAdmin(admin.ModelAdmin):
+    list_display = ("title", "folder")
+    list_filter = ("folder",)
+
+
+admin.site.register(Folder, FolderAdmin)
+admin.site.register(Meeting, MeetingAdmin)

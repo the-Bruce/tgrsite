@@ -6,3 +6,4 @@ class Index(ListView):
     model = GalleryImage
     template_name = 'gallery/index.html'
     context_object_name = "images"
+    ordering = ("-id",)
