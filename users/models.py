@@ -11,6 +11,7 @@ from django.db.models.query import Q
 class Member(models.Model):
     equiv_user = models.OneToOneField(User, on_delete=models.CASCADE)
     discord = models.CharField(max_length=100, blank=True)
+    pronoun = models.CharField(max_length=50, blank=True, verbose_name="pronouns")
     bio = models.TextField(max_length=4096, blank=True)
     signature = models.TextField(max_length=1024, blank=True)
     official_photo_url = models.CharField(max_length=512, null=True, blank=True)

@@ -88,10 +88,11 @@ class SignupForm(ModelForm):
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['discord', 'bio', 'signature', 'official_photo_url', 'dark']
+        fields = ['discord', 'pronoun', 'bio', 'signature', 'official_photo_url', 'dark']
 
         widgets = {
             'discord': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
+            'pronoun': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'bio': Textarea(attrs=MD_INPUT),
             'signature': Textarea(attrs=MD_INPUT),
             'official_photo_url': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs)
@@ -103,5 +104,6 @@ class MemberForm(ModelForm):
                 'This is only shown on the exec page and only if you are a member of exec! '
                 'Gravatar is used by the rest of the site for profile pictures - for more information see this '
                 '<a href="https://github.com/WarwickTabletop/tgrsite/wiki/Gravatar">guide</a>.'),
-            'discord': 'Add your discord ID to aid recognition on the society discord'
+            'discord': 'Add your discord ID to aid recognition on the society discord',
+            'pronoun': 'Please add your pronouns to allow other members know how to refer to you'
         }
