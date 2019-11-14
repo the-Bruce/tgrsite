@@ -43,7 +43,7 @@ def doNewsletterMailings(pk):
     request.META['HTTP_HOST'] = settings.PRIMARY_HOST
     subs = NotificationSubscriptions.objects.filter(newsletter__exact=SubType.FULL)
     newsletter = Newsletter.objects.get(pk=pk)
-    subject = newsletter.title + " | Warwick Tabletop and Role-Playing Society"
+    subject = newsletter.title + " | Warwick Tabletop Games and Roleplaying Society"
     text = loader.render_to_string("newsletters/plain-email-version.txt", {"object": newsletter},
                                    request)
     html = loader.render_to_string("newsletters/email-version.html", {"object": newsletter, "unsub": True},
