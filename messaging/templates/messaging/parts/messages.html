@@ -7,7 +7,7 @@
                     <a href="{% url "users:user" pk=message.sender.pk %}"
                        class="d-flex align-content-center justify-content-center mt-1"
                        {% if not full %}data-toggle="tooltip" data-html="true" title="{{ message.timestamp|naturaltime }}"{% endif %}>
-                        <img width="{% if full %}40{% else %}30{% endif %}" src="{{ message.sender.gravatar }}"
+                        <img width="{% if full %}40{% else %}30{% endif %}" height="{% if full %}40{% else %}30{% endif %}" src="{{ message.sender.gravatar }}"
                              alt="{{ message.sender.equiv_user.username }}">
                     </a>
                 </div>
@@ -20,7 +20,7 @@
                             </small>
                         </div>
                     {% endif %}
-                    <div class="card-text text-break-all">
+                    <div class="card-text text-break">
                         {{ message.content|linebreaks }}
                     </div>
                 </div>
