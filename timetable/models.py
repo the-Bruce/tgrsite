@@ -76,7 +76,7 @@ class Timetable(models.Model):
         return str(self.title)
 
     def get_absolute_url(self):
-        return reverse("single_timetable", kwargs={"pk": self.pk})
+        return reverse("timetable:single_timetable", kwargs={"pk": self.pk})
 
 
 class RoomLink(models.Model):
