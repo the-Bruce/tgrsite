@@ -27,7 +27,7 @@ class Week(models.Model):
         return str(self.year) + " week " + str(self.number)
 
     class Meta:
-        ordering = ['year', 'number']
+        ordering = ['-year', 'number']
 
     def get_absolute_url(self):
         return reverse("timetable")
