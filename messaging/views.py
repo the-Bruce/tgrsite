@@ -41,9 +41,13 @@ def send_message(member, thread, message):
     # Send the notification to everyone in the thread except the sender.
     url = reverse('message:message_thread', args=[thread.id])
     for receiver in thread.participants.all():
+        message_txt = 'You got a message from ' + str(member.equiv_user.username)
+        if thread.title:
+            message_txt += ' in chat "' + str(thread.title) + '"'
+        message_txt += ': ' + message
         if member != receiver:
             notify(receiver, NotifType.MESSAGE,
-                   'You got a message from ' + str(member.equiv_user.username) + ': ' + message, url)
+                   message_txt, url)
     return Message.objects.create(sender=member, thread=thread, content=message)
 
 
