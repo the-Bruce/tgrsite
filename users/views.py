@@ -35,7 +35,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
         return ctxt
 
 
-class MyProfile(LoginRequiredMixin, ProfileView):
+class MyProfile(ProfileView):
     def get_object(self, queryset=None):
         return self.request.user.member
 
