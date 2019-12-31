@@ -31,7 +31,7 @@
         </p>
         {% if rpg.game_masters.all %}
             <p class="card-text mb-0">
-                Ran by:
+                {% if rpg.is_in_the_past %}Ran{% else %}Run{% endif %} by:
                 {% for member in rpg.game_masters.all %}
                     {% include "parts/render_member.html" with avatarless=True %}
                     {% if not forloop.last %}{% if forloop.revcounter0 == 1 %}and{% else %},{% endif %}{% endif %}
