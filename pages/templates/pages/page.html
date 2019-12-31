@@ -18,8 +18,11 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.pages.change_page %}
-        <a class="btn btn-block btn-outline-dark" href="{% url "admin:pages_page_change" page.pk %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:pages_page_change" page.pk %}">Edit</a>
     {% endif %}
+    {% for widget in page.widgets.all %}
+        {% include "pages/parts/sidebar_widget.html" with widget=widget %}
+    {% endfor %}
     {{ page.leftbar|parse_md_safe }}
 {% endblock %}
 

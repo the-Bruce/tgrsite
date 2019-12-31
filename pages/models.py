@@ -24,3 +24,26 @@ class BreadcrumbParents(models.Model):
     name = models.CharField(max_length=64, blank=False, help_text='Name to display')
     order = models.IntegerField(blank=False, help_text='Order parents are to appear (lower is earlier)')
     page = models.ForeignKey(Page, blank=False, on_delete=models.CASCADE, related_name="breadcrumb_parents")
+
+    class Meta:
+        verbose_name = "Breadcrumb Parent"
+        verbose_name_plural = "Breadcrumb Parents"
+
+
+class Widget(models.Model):
+    POSTER = 0
+    EVENTS = 1
+    WIDGETS = ((POSTER, "Event Poster"), (EVENTS, "Upcoming Events"))
+    type = models.SmallIntegerField(choices=WIDGETS, help_text='Add sidebar widgets you want to appear on this page')
+    page = models.ForeignKey(Page, blank=False, on_delete=models.CASCADE, related_name="widgets")
+    wide = models.BooleanField(default=False,
+                               help_text='Set this to true if the widget should'
+                                         ' only appear while the sidebar is separate')
+
+    def __str__(self):
+        t = self.type
+        for i in self.WIDGETS:
+            if t == i[0]:
+                return i[1]
+        else:
+            return "Unknown"

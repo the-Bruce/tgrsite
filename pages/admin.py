@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Page, BreadcrumbParents
+from .models import Page, BreadcrumbParents, Widget
 
 
 class BreadcrumbInline(admin.TabularInline):
@@ -8,8 +8,13 @@ class BreadcrumbInline(admin.TabularInline):
     extra = 0
 
 
+class WidgetInline(admin.StackedInline):
+    model = Widget
+    extra = 0
+
+
 class PageAdmin(admin.ModelAdmin):
-    inlines = [BreadcrumbInline]
+    inlines = [WidgetInline, BreadcrumbInline]
 
 
 admin.site.register(Page, PageAdmin)
