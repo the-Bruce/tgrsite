@@ -111,6 +111,9 @@ class Thread(models.Model):
     # until we implement proper banning/deactivation, just cascade
     author = models.ForeignKey(Member, on_delete=models.CASCADE)
 
+    # people subscribed to updates
+    subscribed = models.ManyToManyField(Member, related_name="thread_notification_subscriptions")
+
     def __str__(self):
         return self.title
 
@@ -129,7 +132,6 @@ class Thread(models.Model):
 
     def get_absolute_url(self):
         return reverse("forum:viewthread", args=(self.id,))
-
 
 # a reply in a forum thread
 # there are fundamental similarities between thread OPs and responses;

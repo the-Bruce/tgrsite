@@ -13,8 +13,8 @@ urlpatterns = [
 
     path('thread/<int:pk>/delete/', views.DeleteThread.as_view(), name='thread_delete'),
     path('thread/<int:pk>/edit/', views.EditThread.as_view(), name='thread_edit'),
+    path('api/thread_subscription/', views.ChangeSubscription.as_view(), name='thread_subscribe'),
 
     path('response/<int:pk>/delete/', views.DeleteResponse.as_view(), name='response_delete'),
     path('response/<int:pk>/edit/', views.EditResponse.as_view(), name='response_edit'),
-
 ]

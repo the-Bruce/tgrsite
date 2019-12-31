@@ -18,8 +18,26 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.forum.change_forums %}
-        <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_thread_change" thread.id %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:forum_thread_change" thread.id %}">Edit</a>
     {% endif %}
+    <form method="post" action="{% url "forum:thread_subscribe" %}">
+        {% csrf_token %}
+        <input type="hidden" name="thread" value="{{ thread.pk }}">
+        {% if user.member in thread.subscribed.all %}
+            <input type="hidden" name="unsubscribe" value="true">
+            <button class="mb-3 btn btn-block btn-outline-primary" type="submit">
+                <i class="fas fa-bell-slash"></i>
+                Unsubscribe from Notifications
+            </button>
+        {% else %}
+            <input type="hidden" name="subscribe" value="true">
+            <button class="mb-3 btn btn-block btn-outline-primary" type="submit">
+                <i class="fas fa-bell"></i>
+                Subscribe to Notifications
+            </button>
+        {% endif %}
+    </form>
+
 {% endblock %}
 
 {% block body %}
