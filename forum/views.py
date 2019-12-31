@@ -87,7 +87,13 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
         if not request.user.is_authenticated:
             self.handle_no_permission()
         else:
-            return super().post(request, *args, **kwargs)
+            thread=get_object_or_404(Thread, id=self.kwargs['thread'])
+            if thread.is_locked and not request.user.has_perm('forum.add_response'):
+                add_message(request, constants.ERROR, "Sorry, this thread is locked. No responses can be created")
+                self.handle_no_permission()
+            else:
+                return super().post(request, *args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -105,6 +105,9 @@ class Thread(models.Model):
     # pinned/stickied/whatever threads will show up before all others in their forums
     is_pinned = models.BooleanField(default=False)
 
+    # prevents people not admin from replying to a thread
+    is_locked = models.BooleanField(default=False)
+
     # until we implement proper banning/deactivation, just cascade
     author = models.ForeignKey(Member, on_delete=models.CASCADE)
 

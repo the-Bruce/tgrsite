@@ -29,17 +29,23 @@
         {% include 'forum/parts/response.html' %}
     {% endfor %}
 
+
     <div class="card">
         <div class="card-body">
-            {% if request.user.is_authenticated %}
-                {% include "parts/render_form.html" with save="Reply" %}
+            {% if not thread.is_locked or perms.forum.add_response %}
+                {% if request.user.is_authenticated %}
+                    {% include "parts/render_form.html" with save="Reply" %}
+                {% else %}
+                    <p class="card-text">
+                        <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
+                        or
+                        <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to respond.
+                    </p>
+                {% endif %}
             {% else %}
-                <p class="card-text">
-                    <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
-                    or
-                    <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to respond.
-                </p>
+                <p class="card-text text-muted">This thread is locked. No further responses can be posted.</p>
             {% endif %}
         </div>
     </div>
+
 {% endblock %}
