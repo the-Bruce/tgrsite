@@ -20,7 +20,7 @@
     {% if perms.forum.change_forums %}
         <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:forum_thread_change" thread.id %}">Edit</a>
     {% endif %}
-    {% if not user.is_authenticated %}
+    {% if user.is_authenticated %}
         <form method="post" action="{% url "forum:thread_subscribe" %}">
             {% csrf_token %}
             <input type="hidden" name="thread" value="{{ thread.pk }}">
