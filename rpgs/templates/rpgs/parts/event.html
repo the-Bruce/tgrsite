@@ -22,13 +22,13 @@
             <em class="card-text">{{ rpg.system }}</em>
         </div>
 
-        <p class="card-title">
+        <div class="card-text">
             {% if embed %}
                 {{ rpg.description|parse_md|truncatechars_html:512 }}
             {% else %}
                 {{ rpg.description|parse_md }}
             {% endif %}
-        </p>
+        </div>
         {% if rpg.game_masters.all %}
             <p class="card-text mb-0">
                 {% if rpg.is_in_the_past %}Ran{% else %}Run{% endif %} by:
