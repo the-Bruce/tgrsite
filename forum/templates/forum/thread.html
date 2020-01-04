@@ -18,7 +18,26 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.forum.change_forums %}
-        <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_thread_change" thread.id %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:forum_thread_change" thread.id %}">Edit</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url "forum:thread_subscribe" %}">
+            {% csrf_token %}
+            <input type="hidden" name="thread" value="{{ thread.pk }}">
+            {% if user.member in thread.subscribed.all %}
+                <input type="hidden" name="unsubscribe" value="true">
+                <button class="mb-3 btn btn-block btn-outline-primary" type="submit">
+                    <i class="fas fa-bell-slash"></i>
+                    Unsubscribe from Notifications
+                </button>
+            {% else %}
+                <input type="hidden" name="subscribe" value="true">
+                <button class="mb-3 btn btn-block btn-outline-primary" type="submit">
+                    <i class="fas fa-bell"></i>
+                    Subscribe to Notifications
+                </button>
+            {% endif %}
+        </form>
     {% endif %}
 {% endblock %}
 
@@ -29,17 +48,23 @@
         {% include 'forum/parts/response.html' %}
     {% endfor %}
 
+
     <div class="card">
         <div class="card-body">
-            {% if request.user.is_authenticated %}
-                {% include "parts/render_form.html" with save="Reply" %}
+            {% if not thread.is_locked or perms.forum.add_response %}
+                {% if request.user.is_authenticated %}
+                    {% include "parts/render_form.html" with save="Reply" %}
+                {% else %}
+                    <p class="card-text">
+                        <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
+                        or
+                        <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to respond.
+                    </p>
+                {% endif %}
             {% else %}
-                <p class="card-text">
-                    <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
-                    or
-                    <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to respond.
-                </p>
+                <p class="card-text text-muted">This thread is locked. No further responses can be posted.</p>
             {% endif %}
         </div>
     </div>
+
 {% endblock %}

@@ -27,7 +27,7 @@ class Week(models.Model):
         return str(self.year) + " week " + str(self.number)
 
     class Meta:
-        ordering = ['year', 'number']
+        ordering = ['-year', 'number']
 
     def get_absolute_url(self):
         return reverse("timetable")
@@ -76,7 +76,7 @@ class Timetable(models.Model):
         return str(self.title)
 
     def get_absolute_url(self):
-        return reverse("single_timetable", kwargs={"pk": self.pk})
+        return reverse("timetable:single_timetable", kwargs={"pk": self.pk})
 
 
 class RoomLink(models.Model):
@@ -86,3 +86,16 @@ class RoomLink(models.Model):
 
     def __str__(self):
         return self.room
+
+
+class SpecialEvent(models.Model):
+    title = models.CharField(max_length=50)
+    room = models.CharField(max_length=30)
+    week = models.SmallIntegerField()
+    display_date = models.CharField(max_length=50, help_text="The description of date and time to display")
+    sort_date = models.DateField(help_text="The date to sort by, usually start date")
+    hide_date = models.DateField(help_text="The date to hide this event after")
+    poster = models.ImageField(blank=True, upload_to='posters/%Y/%m/%d/')
+
+    def __str__(self):
+        return self.title + ": " + self.display_date

@@ -32,7 +32,7 @@ class Forum(models.Model):
         while True:
             tree.append(x)
             seen[x.pk] = True
-            if x.parent is not None and x.pk not in seen:
+            if x.parent is not None and x.parent.pk not in seen:
                 # traverse upwards
                 x = x.parent
             else:
@@ -105,8 +105,14 @@ class Thread(models.Model):
     # pinned/stickied/whatever threads will show up before all others in their forums
     is_pinned = models.BooleanField(default=False)
 
+    # prevents people not admin from replying to a thread
+    is_locked = models.BooleanField(default=False)
+
     # until we implement proper banning/deactivation, just cascade
     author = models.ForeignKey(Member, on_delete=models.CASCADE)
+
+    # people subscribed to updates
+    subscribed = models.ManyToManyField(Member, related_name="thread_notification_subscriptions")
 
     def __str__(self):
         return self.title
@@ -126,7 +132,6 @@ class Thread(models.Model):
 
     def get_absolute_url(self):
         return reverse("forum:viewthread", args=(self.id,))
-
 
 # a reply in a forum thread
 # there are fundamental similarities between thread OPs and responses;

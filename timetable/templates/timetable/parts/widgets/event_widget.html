@@ -1,0 +1,17 @@
+{% load event_tags %}
+{% upcoming_events as events %}
+{% if events %}
+    <div class="card mb-3">
+        <h4 class="card-header">
+            Upcoming Special Events
+        </h4>
+        <div class="card-body">
+            {% for event in events %}
+                <p class="card-text">
+                    <strong>{{ event.title }}</strong> ({{ event.room }},
+                    Week {{ event.week }}, {{ event.display_date }})
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

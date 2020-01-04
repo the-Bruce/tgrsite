@@ -1,15 +1,14 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message, constants
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import View, ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
+from django.http import HttpResponseRedirect
 
 from notifications.models import notify, NotifType
-from .forms import ThreadForm, ResponseForm, ThreadEditForm
+from .forms import ThreadForm, ResponseForm
 from .models import Thread, Response, Forum
 
 
@@ -73,7 +72,9 @@ class ViewSubforum(AccessMixin, SuccessMessageMixin, CreateView):
         form.instance.author = self.request.user.member
         form.instance.pub_date = timezone.now()
         form.instance.forum = Forum.objects.get(id=self.kwargs['forum'])
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        Thread.objects.get(id=form.instance.id).subscribed.add(self.request.user.member)
+        return response
 
 
 class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
@@ -87,7 +88,12 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
         if not request.user.is_authenticated:
             self.handle_no_permission()
         else:
-            return super().post(request, *args, **kwargs)
+            thread = get_object_or_404(Thread, id=self.kwargs['thread'])
+            if thread.is_locked and not request.user.has_perm('forum.add_response'):
+                add_message(request, constants.ERROR, "Sorry, this thread is locked. No responses can be created")
+                self.handle_no_permission()
+            else:
+                return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -112,13 +118,29 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
 
         # Create Notifications
         url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']})
-        for author in thread.get_all_authors():
+        for author in thread.subscribed.all():
             if author != self.request.user.member:
                 notify(author, NotifType.FORUM_REPLY,
-                       '{} replied to a thread you\'ve commented in!'.format(self.request.user.username), url,
+                       '{} replied to a thread you\'ve subscribed to!'.format(self.request.user.username), url,
                        thread.id)
-
+        if self.request.user.member not in thread.subscribed.all():
+            thread.subscribed.add(self.request.user.member)
         return super().form_valid(form)
+
+
+class ChangeSubscription(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        sub = True if 'subscribe' in request.POST else False
+        unsub = True if 'unsubscribe' in request.POST else False
+        user = request.user.member
+        thread = Thread.objects.get(pk=request.POST['thread'])
+        if unsub:
+            if user in thread.subscribed.all():
+                thread.subscribed.remove(user)
+        elif sub:
+            if user not in thread.subscribed.all():
+                thread.subscribed.add(user)
+        return HttpResponseRedirect(thread.get_absolute_url())
 
 
 class DeleteThread(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):

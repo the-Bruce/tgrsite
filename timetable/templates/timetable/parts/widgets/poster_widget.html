@@ -1,0 +1,9 @@
+{% load event_tags %}
+{% next_poster as event %}
+{% if event %}
+    <div class="card mb-3">
+        <img class="card-img"
+             alt="Poster for {{ event.title }} ({{ event.room }}, {{ event.display_date }})"
+             src="{{ event.poster.url }}">
+    </div>
+{% endif %}

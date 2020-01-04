@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Timetable, Booking, Event, Week, ColourScheme, GoogleCalender, RoomLink
+from .models import Timetable, Booking, Event, Week, ColourScheme, GoogleCalender, RoomLink, SpecialEvent
 
 
 # Register your models here.
@@ -34,6 +34,7 @@ class TimetableAdmin(admin.ModelAdmin):
     model = Timetable
 
 
+admin.site.register(SpecialEvent)
 admin.site.register(Event)
 admin.site.register(Week, WeekAdmin)
 admin.site.register(ColourScheme)

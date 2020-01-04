@@ -18,7 +18,7 @@ from .forms import MemberForm, UserForm, SignupForm
 from .models import Member
 
 
-class ProfileView(DetailView):
+class ProfileView(LoginRequiredMixin, DetailView):
     model = Member
     template_name = "users/view.html"
     context_object_name = "member"
@@ -35,7 +35,7 @@ class ProfileView(DetailView):
         return ctxt
 
 
-class MyProfile(LoginRequiredMixin, ProfileView):
+class MyProfile(ProfileView):
     def get_object(self, queryset=None):
         return self.request.user.member
 
