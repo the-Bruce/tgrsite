@@ -33,9 +33,9 @@ class MeetingDetail(DetailView):
                 folder = folders.get(name__iexact=i)
                 folders = folder.children.all()
             except (Folder.MultipleObjectsReturned, Folder.DoesNotExist):
-                Http404("Unknown folder")
+                raise Http404("Unknown folder")
         if folder is None:
-            Http404("Unknown folder")
+            raise Http404("Unknown folder")
         return folder.meetings.all()
 
     def get_object(self, queryset=None):

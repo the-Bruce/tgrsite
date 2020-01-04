@@ -32,7 +32,7 @@ class Forum(models.Model):
         while True:
             tree.append(x)
             seen[x.pk] = True
-            if x.parent is not None and x.pk not in seen:
+            if x.parent is not None and x.parent.pk not in seen:
                 # traverse upwards
                 x = x.parent
             else:
