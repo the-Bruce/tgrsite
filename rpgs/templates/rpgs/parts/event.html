@@ -22,7 +22,7 @@
             <em class="card-text">{{ rpg.system }}</em>
         </div>
 
-        <div class="card-text">
+        <div class="card-text mb-2">
             {% if embed %}
                 {{ rpg.description|parse_md|truncatechars_html:512 }}
             {% else %}

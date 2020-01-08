@@ -92,7 +92,7 @@ class SpecialEvent(models.Model):
     title = models.CharField(max_length=50)
     room = models.CharField(max_length=30)
     week = models.SmallIntegerField()
-    display_date = models.CharField(max_length=50, help_text="The description of date and time to display")
+    display_date = models.CharField(max_length=60, help_text="The description of date and time to display")
     sort_date = models.DateField(help_text="The date to sort by, usually start date")
     hide_date = models.DateField(help_text="The date to hide this event after")
     poster = models.ImageField(blank=True, upload_to='posters/%Y/%m/%d/')
