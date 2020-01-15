@@ -18,7 +18,10 @@
 
   img {
     max-width: 100%;
-    width: 800px;
+
+    :not(.inline-gravatar) {
+      width: 800px;
+    }
   }
 
 }
@@ -42,8 +45,8 @@ pre {
 }
 
 .text-break-all {
-    word-break: break-all !important;
-    overflow-wrap: break-word !important;
+  word-break: break-all !important;
+  overflow-wrap: break-word !important;
 }
 
 .alert-block ul {
