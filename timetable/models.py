@@ -90,7 +90,8 @@ class RoomLink(models.Model):
 
 class SpecialEvent(models.Model):
     title = models.CharField(max_length=50)
-    room = models.CharField(max_length=30)
+    url = models.URLField(blank=True, max_length=200)
+    room = models.CharField(blank=True, max_length=30)
     week = models.SmallIntegerField()
     display_date = models.CharField(max_length=60, help_text="The description of date and time to display")
     sort_date = models.DateField(help_text="The date to sort by, usually start date")
