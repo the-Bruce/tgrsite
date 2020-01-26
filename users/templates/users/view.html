@@ -33,7 +33,7 @@
                 <h3 class="mb-3"><i class="fab fa-fw fa-discord"></i> {{ member.discord }}</h3>
             {% endif %}
             {% if member.bio %}
-                <div class="card card-body card-text mb-3">{{ member.bio|parse_md }}</div>{% endif %}
+                <div class="card card-body card-text markdown-text mb-3">{{ member.bio|parse_md }}</div>{% endif %}
 
             {% if recent_threads %}
                 <div class="mb-3">

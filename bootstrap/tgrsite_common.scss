@@ -11,21 +11,6 @@
   }
 }
 
-.card-text {
-  p:last-child {
-    margin-bottom: 0;
-  }
-
-  img {
-    max-width: 100%;
-
-    :not(.inline-gravatar) {
-      width: 800px;
-    }
-  }
-
-}
-
 .form-pseudo-control {
   &.is-invalid {
     ~ .invalid-feedback,
