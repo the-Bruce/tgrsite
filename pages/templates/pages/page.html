@@ -23,7 +23,7 @@
     {% for widget in page.widgets.all %}
         {% include "pages/parts/sidebar_widget.html" with widget=widget %}
     {% endfor %}
-    {{ page.leftbar|parse_md_safe }}
+    {% if page.markdown %}{{ page.leftbar|parse_md_safe }}{% else %}{{ page.leftbar|safe }}{% endif %}
 {% endblock %}
 
-{% block body %}{{ block.super }}{{ page.body|parse_md_safe }}{% endblock %}
+{% block body %}{{ block.super }}{% if page.markdown %}{{ page.body|parse_md_safe }}{% else %}{{ page.body|safe }}{% endif %}{% endblock %}

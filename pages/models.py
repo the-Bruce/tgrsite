@@ -11,6 +11,7 @@ class Page(models.Model):
     head = models.TextField(max_length=16384, blank=True, help_text='Custom HTML to go in the <head> of the page')
     css = models.TextField(max_length=16384, blank=True, help_text='Custom CSS styles for the page')
     leftbar = models.TextField(max_length=16384, blank=True, help_text='Left sidebar contents (use cards)')
+    markdown = models.BooleanField(default=True, help_text='Enable markdown rendering in this page')
 
     def __str__(self):
         return self.name
