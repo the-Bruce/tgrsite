@@ -53,3 +53,14 @@ a.anchor {
   float: right;
 }
 
+.markdown-text {
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  img {
+    max-width: 100%;
+    width: 600px;
+  }
+
+}

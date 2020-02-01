@@ -2,8 +2,10 @@
 {% next_poster as event %}
 {% if event %}
     <div class="card mb-3">
-        <img class="card-img"
-             alt="Poster for {{ event.title }} ({{ event.room }}, {{ event.display_date }})"
-             src="{{ event.poster.url }}">
+        {% if event.url %}<a href="{{ event.url }}">{% endif %}
+            <img class="card-img"
+                 alt="Poster for {{ event.title }} ({{ event.room }}, {{ event.display_date }})"
+                 src="{{ event.poster.url }}">
+        {% if event.url %}</a>{% endif %}
     </div>
 {% endif %}

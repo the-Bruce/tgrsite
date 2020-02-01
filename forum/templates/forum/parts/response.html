@@ -11,11 +11,11 @@
             Posted {{ response.pub_date|timesince }} ago</p>
     </div>
     <div class="card-body">
-        <div class="card-text">{{ response.body|parse_md }}</div>
+        <div class="card-text markdown-text">{{ response.body|parse_md }}</div>
 
         {% if response.author.signature %}
             <hr>
-            <div class="card-text">{{ response.author.signature|parse_md }}</div>
+            <div class="card-text markdown-text">{{ response.author.signature|parse_md }}</div>
         {% endif %}
     </div>
     {% block edit_links %}

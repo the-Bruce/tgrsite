@@ -11,16 +11,6 @@
   }
 }
 
-.card-text {
-  p:last-child {
-    margin-bottom: 0;
-  }
-
-  img {
-    max-width: 100%;
-  }
-}
-
 .form-pseudo-control {
   &.is-invalid {
     ~ .invalid-feedback,
@@ -40,8 +30,8 @@ pre {
 }
 
 .text-break-all {
-    word-break: break-all !important;
-    overflow-wrap: break-word !important;
+  word-break: break-all !important;
+  overflow-wrap: break-word !important;
 }
 
 .alert-block ul {

@@ -1,5 +1,7 @@
 {% load event_tags %}
+{% load timetable_tags %}
 {% upcoming_events as events %}
+
 {% if events %}
     <div class="card mb-3">
         <h4 class="card-header">
@@ -7,9 +9,11 @@
         </h4>
         <div class="card-body">
             {% for event in events %}
+                {% room_link event.room as link %}
                 <p class="card-text">
-                    <strong>{{ event.title }}</strong> ({{ event.room }},
-                    Week {{ event.week }}, {{ event.display_date }})
+                    <strong>{% if event.url %}<a href="{{ event.url }}">{{ event.title }}</a>{% else %}{{ event.title }}{% endif %}</strong>
+                    ({% if event.room %}{% if link %}<a class="card-link" target="_blank" rel="noopener noreferrer" href="{{ link }}">{{ event.room }}</a>{% else %}{{ event.room }}{% endif %},
+                {% endif %}Week {{ event.week }}, {{ event.display_date }})
                 </p>
             {% endfor %}
         </div>

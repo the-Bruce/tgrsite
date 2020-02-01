@@ -12,6 +12,9 @@ exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_l
 def parse_md(value):
     return md_bleach(markdown(break_tags(value), extensions=exts, output_format='html5'))
 
+@register.filter(is_safe=True)
+def parse_md_text(value):
+    return md_bleach_imgless(markdown(break_tags(value), extensions=exts, output_format='html5'))
 
 # Parses markdown WITHOUT escaping. Use with caution!
 @register.filter(is_safe=True)
@@ -39,5 +42,13 @@ def md_bleach(text):
     cleaner = Cleaner(tags=['p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'em', 'strong', 'a', 'ul', 'ol', 'li',
                             'blockquote', 'img', 'pre', 'code', 'hr', 'del'],
                       attributes={'a': ['href'], 'img': ['src', 'alt']}, protocols=['http', 'https'])
+    text = cleaner.clean(text)
+    return mark_safe(text)
+
+
+def md_bleach_imgless(text):
+    cleaner = Cleaner(tags=['p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'em', 'strong', 'a', 'ul', 'ol', 'li',
+                            'blockquote', 'pre', 'code', 'hr', 'del'],
+                      attributes={'a': ['href']}, protocols=['http', 'https'], strip=True)
     text = cleaner.clean(text)
     return mark_safe(text)

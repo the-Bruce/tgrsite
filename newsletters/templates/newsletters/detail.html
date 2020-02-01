@@ -24,7 +24,7 @@
             {% endif %}
         </div>
     {% endif %}
-    <div class="card mb-3">
+    <div class="card mb-3 newsletter">
         <img alt="Warwick Tabletop and Role-Playing Society Banner" src="{% static 'images/newsletter_banner_2.png' %}"
              class="card-img-top">
         <div class="card-header">
@@ -37,7 +37,7 @@
         </div>
         <div class="card-body">
             {% if not object.ispublished %}<div class="alert alert-warning text-center"><strong>Unpublished</strong></div>{% endif %}
-            <article class="card-text">
+            <article class="card-text markdown-text">
                 {{ object.body|parse_md_safe }}
             </article>
         </div>

@@ -20,8 +20,9 @@
 
             (<small class="text-nowrap">{{ object.pub_date }}</small>)
         </h3>
-
-        {{ object.body|parse_md_safe }}
+        <div class="markdown-text">
+            {{ object.body|parse_md_safe }}
+        </div>
         <p>If you no longer want to receive these messages, visit <a
                 href="{{ request.scheme }}://{{ request.get_host }}{% url "notifications:notification_settings" %}">your
             notification subscriptions</a> to unsubscribe.</p>
