@@ -21,6 +21,7 @@ Create a `local_config.py` in the same directory as the `settings.py` file. This
 * Install required Python packages (eg `pip install -r requirements.txt`)
 * Configure environment variables (see above).
 * Ensure migrations are present: `python manage.py makemigrations`
+    * You may need to list all the apps, like so `... makemigrations assets exec forum gallery inventory messaging minutes navbar newsletters notifications pages redirect rpgs templatetags timetable users`
 * Run database migrations: `python manage.py migrate`
 * Create a super user: `python manage.py createsuperuser`
 * Run the server using `python manage.py runserver`
