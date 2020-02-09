@@ -44,6 +44,22 @@ $border-width: 3px;
   margin-bottom: 0.5rem !important;
 }
 
+.news-image-right {
+  margin: 0.5rem 0 0.5rem 0.5rem;
+  @media (min-width: 576px) {
+      float: right;
+  }
+  width: 50%;
+}
+
+.news-image-left {
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  @media (min-width: 576px) {
+      float: left;
+  }
+  width: 50%;
+}
+
 pre {
   white-space: pre-line;
   background-color: $card-bg;
