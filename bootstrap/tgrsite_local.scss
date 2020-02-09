@@ -46,6 +46,24 @@ a.anchor {
   visibility: hidden;
 }
 
+.news-image-right {
+  padding: 0.5rem;
+  @media (min-width: 576px) {
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    float: right;
+    width: 50% !important;
+  }
+}
+
+.news-image-left {
+  padding: 0.5rem;
+  @media (min-width: 576px) {
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    float: left;
+    width: 50% !important;
+  }
+}
+
 .my-responsive {
   width: 50%;
   max-width: 500px;

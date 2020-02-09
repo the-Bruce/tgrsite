@@ -6,6 +6,7 @@ from bleach.sanitizer import Cleaner
 
 register = template.Library()
 exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_lists']
+safe_exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_lists', 'attr_list']
 
 
 @register.filter(is_safe=True)
@@ -19,7 +20,7 @@ def parse_md_text(value):
 # Parses markdown WITHOUT escaping. Use with caution!
 @register.filter(is_safe=True)
 def parse_md_safe(value):
-    return mark_safe(markdown(value, extensions=exts, output_format='html5'))
+    return mark_safe(markdown(value, extensions=safe_exts, output_format='html5'))
 
 
 class FullStaticNode(static.StaticNode):
