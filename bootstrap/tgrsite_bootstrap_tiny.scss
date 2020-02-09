@@ -49,8 +49,8 @@ $border-width: 3px;
   @media (min-width: 576px) {
     margin: 0.5rem 0 0.5rem 0.5rem;
     float: right;
+    width: 50% !important;
   }
-  width: 50% !important;
 }
 
 .news-image-left {
@@ -58,8 +58,8 @@ $border-width: 3px;
   @media (min-width: 576px) {
     margin: 0.5rem 0.5rem 0.5rem 0;
     float: left;
+    width: 50% !important;
   }
-  width: 50% !important;
 }
 
 pre {
