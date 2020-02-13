@@ -115,9 +115,9 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
         form.instance.author = self.request.user.member
         form.instance.pub_date = timezone.now()
         form.instance.thread = thread
-
+        response = super().form_valid(form)
         # Create Notifications
-        url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']})
+        url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']})+"#response-"+str(form.instance.id)
         for author in thread.subscribed.all():
             if author != self.request.user.member:
                 notify(author, NotifType.FORUM_REPLY,
@@ -125,7 +125,7 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
                        thread.id)
         if self.request.user.member not in thread.subscribed.all():
             thread.subscribed.add(self.request.user.member)
-        return super().form_valid(form)
+        return response
 
 
 class ChangeSubscription(LoginRequiredMixin, View):
