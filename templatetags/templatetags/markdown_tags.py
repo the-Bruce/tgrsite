@@ -13,9 +13,11 @@ safe_exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 's
 def parse_md(value):
     return md_bleach(markdown(break_tags(value), extensions=exts, output_format='html5'))
 
+
 @register.filter(is_safe=True)
 def parse_md_text(value):
     return md_bleach_imgless(markdown(break_tags(value), extensions=exts, output_format='html5'))
+
 
 # Parses markdown WITHOUT escaping. Use with caution!
 @register.filter(is_safe=True)
