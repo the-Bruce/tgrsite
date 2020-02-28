@@ -4,7 +4,7 @@
     <a class="anchor" id="{% block id %}response-{{ response.id }}{% endblock %}"></a>
     <div class="card-header d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
         <h5 class="text-sm-nowrap d-flex justify-content-sm-between align-items-center mb-2 mb-sm-0">
-            <img class="mr-2" alt="Avatar for {{ response.author }}" src="{{ response.author.gravatar }}" width="50px">
+            <img class="mr-2" alt="Avatar for {{ response.author }}" src="{{ response.author.gravatar }}" width="50">
             {% include "parts/render_member.html" with member=response.author avatarless=True %}
         </h5>
         <p class="card-text d-flex text-muted text-left text-sm-right justify-content-sm-center align-items-sm-center">

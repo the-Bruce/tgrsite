@@ -22,7 +22,7 @@
                 <h3 class="mb-3">
                     {% for x in member.exec_roles.all %}
                         {% if not forloop.first %} / {% endif %}
-                        <a href="{% url 'exec:exec' %}#{{ x.role_title|urlencode }}">{{ x.role_title }}</a>
+                        <a href="{% url 'exec:exec' %}#{{ x.role_title|cut:" "|urlencode }}">{{ x.role_title }}</a>
                     {% endfor %}
                 </h3>
             {% endif %}

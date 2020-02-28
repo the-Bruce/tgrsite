@@ -17,7 +17,7 @@
         {% for role in execs %}
             {% if role.incumbent %}
                 <li class="card mb-2">
-                    <a class="anchor" id="{{ role.role_title }}"></a>
+                    <a class="anchor" id="{{ role.role_title|cut:" " }}"></a>
                     <div class="card-body">
                         <h4 class="card-title text-center text-sm-left">
                             {{ role.role_title }} -
@@ -32,7 +32,7 @@
                                  style="flex-basis: 144px; flex-shrink: 0; flex-grow: 0">
                                 <img class="photo card-img align-self-center"
                                      src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
-                                     alt="Photo for {{ role.incumbent }}" height="144px">
+                                     alt="Photo for {{ role.incumbent }}" height="144">
                             </div>
                             <div class="card-text">
                                 {{ role.bio|linebreaks }}
