@@ -1,4 +1,5 @@
 from django.forms import ModelForm, TextInput, Textarea, CheckboxInput
+from django.urls import reverse_lazy
 
 from .models import Newsletter
 
@@ -7,7 +8,8 @@ BOOTSTRAP_FORM_WIDGET_attrs = {
 }
 
 MD_INPUT = {
-    'class': 'markdown-input'
+    'class': 'markdown-input',
+    'data-endpoint': reverse_lazy('utilities:preview_safe')
 }
 
 

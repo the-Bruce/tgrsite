@@ -6,7 +6,7 @@ from bleach.sanitizer import Cleaner
 
 register = template.Library()
 exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_lists']
-safe_exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde', 'sane_lists', 'attr_list']
+safe_exts = ['pymdownx.caret', 'pymdownx.tilde', 'sane_lists', 'attr_list']
 
 
 @register.filter(is_safe=True)

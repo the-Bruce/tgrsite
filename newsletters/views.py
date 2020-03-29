@@ -8,6 +8,7 @@ from django.views.generic import UpdateView, CreateView, DeleteView
 
 from notifications.models import notify_everybody, NotifType
 from notifications.tasks import doNewsletterMailings
+from website_settings.models import TextProperty
 from .forms import NewsletterForm
 from .models import Newsletter
 
@@ -28,7 +29,7 @@ class Detail(generic.DetailView):
         return obj
 
     def get_context_data(self, **kwargs):
-        ctxt=super().get_context_data(**kwargs)
+        ctxt = super().get_context_data(**kwargs)
         newsletters = list(Newsletter.objects.filter(ispublished=True).order_by('pub_date'))
         if self.object.ispublished:
             index_of = newsletters.index(self.object)
@@ -37,12 +38,17 @@ class Detail(generic.DetailView):
         return ctxt
 
 
-
 class Create(PermissionRequiredMixin, CreateView):
     model = Newsletter
     form_class = NewsletterForm
 
     permission_required = 'newsletters.add_newsletter'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        template, d = TextProperty.objects.get_or_create(key='newsletter_template', defaults="")
+        initial['body'] = str(template.value)
+        return initial
 
     def form_valid(self, form):
         form.instance.author = self.request.user.member
@@ -85,7 +91,8 @@ class Update(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, U
 
     def test_func(self):
         obj = get_object_or_404(Newsletter, pk=self.kwargs['pk'])
-        if obj.author and (obj.author != self.request.user.member and not self.request.user.has_perm('newsletters.modify_others')):
+        if obj.author and (
+                obj.author != self.request.user.member and not self.request.user.has_perm('newsletters.modify_others')):
             # If neither owned it nor have modify_others
             return False
         else:
