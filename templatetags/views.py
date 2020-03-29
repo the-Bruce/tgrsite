@@ -11,3 +11,12 @@ class MarkdownPreview(View):
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
         return render(request, self.template_name, {'body': request.POST['md'].strip()})
+
+
+# Create your views here.
+class MarkdownPreviewSafe(View):
+    template_name = "markdown_preview_safe.html"
+
+    @method_decorator(csrf_exempt)
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'body': request.POST['md'].strip()})

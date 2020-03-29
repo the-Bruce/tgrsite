@@ -103,6 +103,7 @@ $.ajaxSetup({
         return this.each(function () {
             let txt = this,                          // textarea element
                 stale = true,
+                endpoint=$(this).data("endpoint") || "/api/md_preview/",
                 controls = $('<div class="controls" id="' + txt.id + '-controls" />'); // button container
 
             const format_classes = "btn btn-light";
@@ -144,7 +145,7 @@ $.ajaxSetup({
                     if (stale) {
                         stale = false;
                         controls.find('.fa-eye').removeClass('fa-eye').addClass('fa-eye-slash');
-                        createPreview(txt, controls);
+                        createPreview(txt, controls, endpoint);
                     } else {
                         controls.find('.preview').slideUp();
                         controls.find('.fa-eye-slash').removeClass('fa-eye-slash').addClass('fa-eye');
@@ -211,8 +212,8 @@ $.ajaxSetup({
 
 })(jQuery, window, document);
 
-function createPreview(txt, controls) {
-    $.post("/api/md_preview/", {'md': txt.value}, function (data, status, jqXHR) {
+function createPreview(txt, controls, endpoint) {
+    $.post(endpoint, {'md': txt.value}, function (data, status, jqXHR) {
         controls.find('.preview').html(data).slideDown();
     });
 }
