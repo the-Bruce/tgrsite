@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, Textarea, TextInput, CharField, HiddenInput, EmailInput, PasswordInput
+from django.forms import ModelForm, Textarea, TextInput, CharField, HiddenInput, EmailInput, PasswordInput, \
+    CheckboxInput
 from django.forms import ValidationError
 from django.utils.safestring import mark_safe
 
@@ -68,7 +69,7 @@ class SignupForm(ModelForm):
 
     def clean(self):
         if 'captcha' not in self.cleaned_data or 'captcha_token' not in self.cleaned_data:
-            self.add_error('captcha',"Invalid Captcha Answer")
+            self.add_error('captcha', "Invalid Captcha Answer")
             return None
         captcha = self.cleaned_data['captcha']
         captcha_token = self.cleaned_data['captcha_token']
@@ -86,16 +87,20 @@ class SignupForm(ModelForm):
 
 
 class MemberForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['graphics'].disabled = True
+
     class Meta:
         model = Member
-        fields = ['discord', 'pronoun', 'bio', 'signature', 'official_photo_url', 'dark']
+        fields = ['discord', 'pronoun', 'bio', 'signature', 'official_photo_url', 'dark', 'graphics']
 
         widgets = {
             'discord': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'pronoun': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
             'bio': Textarea(attrs=MD_INPUT),
             'signature': Textarea(attrs=MD_INPUT),
-            'official_photo_url': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs)
+            'official_photo_url': TextInput(attrs=BOOTSTRAP_FORM_WIDGET_attrs),
         }
 
         help_texts = {

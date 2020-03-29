@@ -1,0 +1,193 @@
+$white: #ffAAff;
+$gray-100: #FF88FF;
+$gray-200: #FF66FF;
+$gray-300: #FF44FF;
+$gray-400: #FF22FF;
+$gray-500: #ff00ff;
+$gray-600: #00AAAA;
+$gray-700: #008888;
+$gray-800: #006666;
+$gray-900: #004444;
+$black: #002222;
+
+$light: $gray-200;
+$dark: $gray-800;
+
+$theme-colors: (
+        "primary": #b95400,
+        "secondary": #300140,
+        "tertiary": #9114BA,
+        "pale": #e2a6ff,
+        "light": #e297e2,
+        "info": #00088a,
+        "gold": #ffc107,
+        "warning":#ffa700,
+);
+
+$font-family-base: 'Patrick Hand', cursive, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+@import "source/functions";
+@import "source/variables";
+
+$border-width: 3px;
+
+$navbar-dark-color: rgba($white, .7);
+$navbar-dark-hover-color: rgba($white, 1);
+$navbar-dark-active-color: rgba($white, 1);
+$navbar-dark-disabled-color: rgba($white, .5);
+$navbar-dark-toggler-border-color: rgba($white, .1);
+
+$navbar-light-color: rgba($black, .7);
+$navbar-light-hover-color: rgba($black, 1);
+$navbar-light-active-color: rgba($black, 1);
+$navbar-light-disabled-color: rgba($black, .5);
+$navbar-light-toggler-icon-bg: str-replace(url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='#{$navbar-light-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"), "#", "%23");
+$navbar-light-toggler-border-color: rgba($black, .1);
+
+@import "source/mixins";
+@import "source/root";
+@import "source/reboot";
+@import "source/type";
+@import "source/images";
+@import "source/code";
+@import "source/grid";
+@import "source/tables";
+@import "source/forms";
+.btn {
+  display: inline-block;
+  font-family: $btn-font-family;
+  font-weight: $btn-font-weight;
+  color: $body-color;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: $btn-border-width solid transparent;
+  @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-line-height, $btn-border-radius);
+  @include transition($btn-transition);
+  @include hover {
+    color: $body-color;
+    text-decoration: none;
+  }
+
+  &:focus,
+  &.focus {
+    outline: 0;
+    box-shadow: $btn-focus-box-shadow;
+  }
+
+  &.disabled,
+  &:disabled {
+    opacity: $btn-disabled-opacity;
+    @include box-shadow(none);
+  }
+
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    @include box-shadow($btn-active-box-shadow);
+
+    &:focus {
+      @include box-shadow($btn-focus-box-shadow, $btn-active-box-shadow);
+    }
+  }
+}
+
+a.btn.disabled,
+fieldset:disabled a.btn {
+  pointer-events: none;
+}
+
+//
+// Swap buttons
+//
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @include button-outline-variant($value); //Changed
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    @include button-variant($value, $value); //Changed
+  }
+}
+
+.btn-link {
+  font-weight: $font-weight-normal;
+  color: $link-color;
+  text-decoration: $link-decoration;
+  @include hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+
+  &:focus,
+  &.focus {
+    text-decoration: $link-hover-decoration;
+    box-shadow: none;
+  }
+
+  &:disabled,
+  &.disabled {
+    color: $btn-link-disabled-color;
+    pointer-events: none;
+  }
+}
+
+.btn-lg {
+  @include button-size($btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-line-height-lg, $btn-border-radius-lg);
+}
+
+.btn-sm {
+  @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+
+  + .btn-block {
+    margin-top: $btn-block-spacing-y;
+  }
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+@import "source/transitions";
+@import "source/dropdown";
+@import "source/button-group";
+@import "source/input-group";
+@import "source/custom-forms";
+@import "source/nav";
+@import "source/navbar";
+@import "source/card";
+@import "source/breadcrumb";
+@import "source/pagination";
+@import "source/badge";
+@import "source/jumbotron";
+@import "source/alert";
+@import "source/progress";
+@import "source/media";
+@import "source/list-group";
+@import "source/close";
+@import "source/toasts";
+@import "source/modal";
+@import "source/tooltip";
+@import "source/popover";
+@import "source/carousel";
+@import "source/spinners";
+@import "source/utilities";
+@import "source/print";
+
+@import "tgrsite_common";
+
+body {
+  background: rgb(255,0,255);
+  background: linear-gradient(0deg, rgba(255,0,255,1) 0%, rgba(0,255,255,1) 100%);
+  background-attachment: fixed;
+}
