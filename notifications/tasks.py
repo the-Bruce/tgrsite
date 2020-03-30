@@ -9,7 +9,15 @@ from users.models import Member
 
 from premailer import Premailer
 
-transformer = Premailer(base_url="https://www.warwicktabletop.co.uk", strip_important=False, allow_network=False)
+if settings.DEBUG:
+    url="http://"
+else:
+    url="https://"
+url += settings.PRIMARY_HOST
+
+transformer = Premailer(base_url=url, base_path=url,
+                        disable_leftover_css=True, disable_validation=True, remove_unset_properties=True,
+                        include_star_selectors=True, keep_style_tags=False, align_floating_images=False)
 
 def doSummaryNotificationMailings():
     users = Member.objects.all()
@@ -20,7 +28,7 @@ def doSummaryNotificationMailings():
         sub, new = NotificationSubscriptions.objects.get_or_create(member=notification.member)
         if sub.get_category_subscription(notification.notif_type) == SubType.SUMMARY:
             user_notifications[notification.member_id].append(notification)
-    
+
     mails = []
     request = HttpRequest()
     request.META['HTTP_HOST'] = settings.PRIMARY_HOST
@@ -44,7 +52,7 @@ def doSummaryNotificationMailings():
                           text, html,
                           None, [user.email]))
 
-    send_mass_html_mail(mails, fail_silently=True, )
+    send_mass_html_mail(mails, fail_silently=False)
     Notification.objects.filter(is_emailed=False).update(is_emailed=True)
 
 
@@ -59,9 +67,8 @@ def doNewsletterMailings(pk):
     html = loader.render_to_string("newsletters/email-version.html", {"object": newsletter, "unsub": True},
                                    request)
     html = transformer.transform(html)
-
     mails = [(subject, text, html, None, [sub.member.equiv_user.email]) for sub in subs]
-    send_mass_html_mail(mails, fail_silently=True)
+    send_mass_html_mail(mails, fail_silently=False)
 
 
 def send_mass_html_mail(datatuple, fail_silently=False, auth_user=None,
