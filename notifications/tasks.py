@@ -7,11 +7,9 @@ from newsletters.models import Newsletter
 from notifications.models import Notification, SubType, NotificationSubscriptions
 from users.models import Member
 
-from premailer import transform
+from premailer import Premailer
 
-def transformer(html):
-    # A helper function to do all of the relevant useful operations.
-    return transform(html, base_url="https://www.warwicktabletop.co.uk", strip_important=False)
+transformer = Premailer(base_url="https://www.warwicktabletop.co.uk", strip_important=False, allow_network=False)
 
 def doSummaryNotificationMailings():
     users = Member.objects.all()
@@ -34,7 +32,7 @@ def doSummaryNotificationMailings():
         html = loader.render_to_string("notifications/summary-email.html",
                                        {"notifications": noti,
                                         "user": user}, request)
-        html = transformer(html)
+        html = transformer.transform(html)
         return text, html
 
     for pk in user_notifications.keys():
@@ -60,8 +58,7 @@ def doNewsletterMailings(pk):
                                    request)
     html = loader.render_to_string("newsletters/email-version.html", {"object": newsletter, "unsub": True},
                                    request)
-    html = transformer(html)
-    print(html)
+    html = transformer.transform(html)
 
     mails = [(subject, text, html, None, [sub.member.equiv_user.email]) for sub in subs]
     send_mass_html_mail(mails, fail_silently=True)
