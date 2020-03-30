@@ -7,6 +7,11 @@ from newsletters.models import Newsletter
 from notifications.models import Notification, SubType, NotificationSubscriptions
 from users.models import Member
 
+from premailer import transform
+
+def transformer(html):
+    # A helper function to do all of the relevant useful operations.
+    return transform(html, base_url="https://www.warwicktabletop.co.uk", strip_important=False)
 
 def doSummaryNotificationMailings():
     users = Member.objects.all()
@@ -17,21 +22,28 @@ def doSummaryNotificationMailings():
         sub, new = NotificationSubscriptions.objects.get_or_create(member=notification.member)
         if sub.get_category_subscription(notification.notif_type) == SubType.SUMMARY:
             user_notifications[notification.member_id].append(notification)
-
+    
     mails = []
     request = HttpRequest()
     request.META['HTTP_HOST'] = settings.PRIMARY_HOST
+
+    def generateEmail(noti, user):
+        text = loader.render_to_string("notifications/plain-summary-email.txt",
+                                       {"notifications": noti,
+                                        "user": user}, request)
+        html = loader.render_to_string("notifications/summary-email.html",
+                                       {"notifications": noti,
+                                        "user": user}, request)
+        html = transformer(html)
+        return text, html
+
     for pk in user_notifications.keys():
         noti = user_notifications[pk]
         user = Member.objects.get(pk=pk).equiv_user
         if len(noti) > 0:
+            text, html = generateEmail(noti, user)
             mails.append(('Warwick Tabletop Activity Summary',
-                          loader.render_to_string("notifications/plain-summary-email.txt", {"notifications": noti,
-                                                                                            "user": user},
-                                                  request),
-                          loader.render_to_string("notifications/summary-email.html", {"notifications": noti,
-                                                                                       "user": user},
-                                                  request),
+                          text, html,
                           None, [user.email]))
 
     send_mass_html_mail(mails, fail_silently=True, )
@@ -48,6 +60,8 @@ def doNewsletterMailings(pk):
                                    request)
     html = loader.render_to_string("newsletters/email-version.html", {"object": newsletter, "unsub": True},
                                    request)
+    html = transformer(html)
+    print(html)
 
     mails = [(subject, text, html, None, [sub.member.equiv_user.email]) for sub in subs]
     send_mass_html_mail(mails, fail_silently=True)

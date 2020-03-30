@@ -20,6 +20,8 @@ class IpNetworks():
         """Check if the given address is contained in any of our Networks."""
         logger = logging.getLogger(__name__)
         logger.debug('Checking address: "%s".', address)
+        if address is None:
+            return False
         for network in self.networks:
             if ipaddress.ip_address(address) in network:
                 return True
