@@ -19,7 +19,7 @@
     <title>{% block title %}{% endblock %} - Warwick Tabletop Games and Role-Playing Society</title>
 
     {% block bootstrap %}
-        {% if user.member.graphics %}
+        {% if not user.is_authenticated or user.member.graphics %}
             <link href="https://fonts.googleapis.com/css?family=Patrick+Hand&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="{% static "tgrsite_bootstrap_april.css" %}">
         {% elif user.member.dark %}
