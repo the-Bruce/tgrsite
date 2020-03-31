@@ -10,7 +10,9 @@ exts = ['markdown.extensions.nl2br', 'pymdownx.caret', 'pymdownx.tilde']
 
 @register.filter(is_safe=True)
 def tidy_md(value):
-    text = strip_tags(value)
+    text = value
+    text = re.sub(r"<style>[\s\S]*?<\/style>", "", text)  # Remove style blocks
+    text = strip_tags(text)
     lines = text.splitlines()
     text = ""
     for i in lines:
@@ -24,8 +26,10 @@ def tidy_md(value):
     text = text.replace("**", "")
     text = text.replace("`", "|")
     # Yay! REGEX!!! I recommend regexr.com to work out what this means:
+    text = re.sub(r"{[^{}\n\r]*}", "", text)  # Remove { blarg } attr blocks
     text = re.sub(r"!\[([^\]\[]*)\]\(([^()]*)\)", r"Image: \1", text)  # Strip image links
     text = re.sub(r"\[([^\]\[]*)\]\(", r"\1: (", text)  # Convert square bracket links to colon
+    text = re.sub(r"\\(.)", r"\1", text)  # Remove escaping from chars
     while "\r\n\r\n\r\n" in text:
         text = text.replace("\r\n\r\n\r\n", "\r\n")
 

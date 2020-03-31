@@ -7,6 +7,17 @@ from newsletters.models import Newsletter
 from notifications.models import Notification, SubType, NotificationSubscriptions
 from users.models import Member
 
+from premailer import Premailer
+
+if settings.DEBUG:
+    url="http://"
+else:
+    url="https://"
+url += settings.PRIMARY_HOST
+
+transformer = Premailer(base_url=url, base_path=url,
+                        disable_leftover_css=True, disable_validation=True, remove_unset_properties=True,
+                        include_star_selectors=True, keep_style_tags=False, align_floating_images=False)
 
 def doSummaryNotificationMailings():
     users = Member.objects.all()
@@ -21,20 +32,27 @@ def doSummaryNotificationMailings():
     mails = []
     request = HttpRequest()
     request.META['HTTP_HOST'] = settings.PRIMARY_HOST
+
+    def generateEmail(noti, user):
+        text = loader.render_to_string("notifications/plain-summary-email.txt",
+                                       {"notifications": noti,
+                                        "user": user}, request)
+        html = loader.render_to_string("notifications/summary-email.html",
+                                       {"notifications": noti,
+                                        "user": user}, request)
+        html = transformer.transform(html)
+        return text, html
+
     for pk in user_notifications.keys():
         noti = user_notifications[pk]
         user = Member.objects.get(pk=pk).equiv_user
         if len(noti) > 0:
+            text, html = generateEmail(noti, user)
             mails.append(('Warwick Tabletop Activity Summary',
-                          loader.render_to_string("notifications/plain-summary-email.txt", {"notifications": noti,
-                                                                                            "user": user},
-                                                  request),
-                          loader.render_to_string("notifications/summary-email.html", {"notifications": noti,
-                                                                                       "user": user},
-                                                  request),
+                          text, html,
                           None, [user.email]))
 
-    send_mass_html_mail(mails, fail_silently=True, )
+    send_mass_html_mail(mails, fail_silently=False)
     Notification.objects.filter(is_emailed=False).update(is_emailed=True)
 
 
@@ -48,9 +66,9 @@ def doNewsletterMailings(pk):
                                    request)
     html = loader.render_to_string("newsletters/email-version.html", {"object": newsletter, "unsub": True},
                                    request)
-
+    html = transformer.transform(html)
     mails = [(subject, text, html, None, [sub.member.equiv_user.email]) for sub in subs]
-    send_mass_html_mail(mails, fail_silently=True)
+    send_mass_html_mail(mails, fail_silently=False)
 
 
 def send_mass_html_mail(datatuple, fail_silently=False, auth_user=None,
