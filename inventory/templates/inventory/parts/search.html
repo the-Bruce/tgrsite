@@ -1,0 +1,23 @@
+<div class="card card-body">
+    <h4 class="card-title">Search</h4>
+    <form class="">
+        <fieldset class="form-group">
+            <label class="sr-only" for="inventory_name">Name:</label>
+            <input id="inventory_name" class="form-control" name="name" placeholder="Name"
+                   value="{{ request.GET.name }}">
+        </fieldset>
+        {% if archived %}
+            <fieldset class="form-group">
+                <h4 class="card-text">Show...</h4>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="archived" id="events_archived"
+                           {% if request.GET.archived %}checked{% endif %}>
+                    <label class="form-check-label" for="events_archived">
+                        Archived
+                    </label>
+                </div>
+            </fieldset>
+        {% endif %}
+        <button class="btn btn-block btn-outline-primary" type="submit">Search</button>
+    </form>
+</div>
