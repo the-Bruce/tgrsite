@@ -26,7 +26,10 @@ class ListAllInventory(ListView):
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
-        return Record.objects.filter(inventory=inv)
+        if 'name' in self.request.GET:
+            return Record.objects.filter(inventory=inv, name__icontains=self.request.GET['name'])
+        else:
+            return Record.objects.filter(inventory=inv)
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
