@@ -45,6 +45,26 @@ $border-width: 3px;
   margin-bottom: 0.5rem !important;
 }
 
+#incorrect-newsletter {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#email-content img {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#email-content {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%
+}
+
 .news-image-right {
   padding: 0.5rem;
   @media (min-width: 576px) {

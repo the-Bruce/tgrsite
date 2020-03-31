@@ -14,6 +14,6 @@ urlpatterns = [
     path('email-version/<int:pk>/', views.Detail.as_view(template_name='newsletters/email-version.html'),
          name='newsletters_email'),
     path('text-version/<int:pk>/', views.Detail.as_view(template_name='newsletters/plain-email-version.txt',
-                                                        content_type="text/plain"),
+                                                        content_type="text/plain; charset=utf-8"),
          name='newsletters_plaintext'),
 ]

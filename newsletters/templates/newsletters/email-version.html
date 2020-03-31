@@ -6,11 +6,11 @@
 
 {% block body %}
     <p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a
-            href="{{ request.scheme }}://{{ request.get_host }}{% url 'newsletters:newsletters_detail' object.id %}">here</a>!
+            href="{% url 'newsletters:newsletters_detail' object.id %}">here</a>!
     </p>
     <div id="email-content">
         <img alt="Warwick Tabletop and Role-Playing Society Banner"
-             src="{{ request.scheme }}://{{ request.get_host }}{% static 'images/newsletter_banner_2.png' %}"
+             src="{% static 'images/newsletter_banner_2.png' %}"
              class="img-fluid mb-2" style="width: 100%">
 
         <h3 class="mb-2">
@@ -24,7 +24,7 @@
             {{ object.body|parse_md_safe }}
         </div>
         <p>If you no longer want to receive these messages, visit <a
-                href="{{ request.scheme }}://{{ request.get_host }}{% url "notifications:notification_settings" %}">your
+                href="{% url "notifications:notification_settings" %}">your
             notification subscriptions</a> to unsubscribe.</p>
     </div>
 {% endblock %}
