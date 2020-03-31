@@ -8,7 +8,7 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.forum.change_forums %}
-        <a class="btn btn-block btn-outline-dark" href="{% url "admin:forum_forum_changelist" %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:forum_forum_changelist" %}">Edit</a>
     {% endif %}
     <a class="btn btn-block btn-outline-primary d-none d-md-block" href="{% url "forum:recent" %}">Recent Activity</a>
 {% endblock %}

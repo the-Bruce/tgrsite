@@ -8,7 +8,7 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.inventory.change_inventory %}
-        <a class="btn btn-block btn-outline-dark" href="{% url "admin:inventory_inventory_change" inv.id %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:inventory_inventory_change" inv.id %}">Edit</a>
     {% endif %}
 {% endblock %}
 

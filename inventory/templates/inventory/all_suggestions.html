@@ -11,7 +11,7 @@
 {% block leftcontents %}
     {{ block.super }}
     {% if perms.inventory.change_suggestion %}
-        <a class="btn btn-block btn-outline-dark" href="{% url "admin:inventory_suggestion_changelist" %}">Edit</a>
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:inventory_suggestion_changelist" %}">Edit</a>
     {% endif %}
 {% endblock %}
 
