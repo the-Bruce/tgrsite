@@ -1,17 +1,9 @@
-{% extends "tgrsite/main.html" %}
+{% extends "tgrsite/error.html" %}
 {% block title %}Not Found{% endblock %}
 {% block pagetitle %}404: Not Found{% endblock %}
 
-{% block breadcrumbs_child %}Not Found{% endblock %}
-
-{% block body %}
-    <div class="card">
-        <h3 class="card-header">Sorry, that page could not be found</h3>
-        <div class="card-body">
-            <p class="card-text">
-                If you got here by following a link on this site, please contact the web admin with where the link was
-                to get it fixed, otherwise please try visiting another page.
-            </p>
-        </div>
-    </div>
+{% block help_line %}Sorry, that page could not be found{% endblock %}
+{% block help_text %}
+    If you got here by following a link on this site, please contact the web admin with where the link was
+    to get it fixed, otherwise please try visiting another page.
 {% endblock %}

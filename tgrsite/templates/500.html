@@ -1,17 +1,9 @@
-{% extends "tgrsite/main.html" %}
+{% extends "tgrsite/error.html" %}
 {% block title %}Internal Server Error{% endblock %}
 {% block pagetitle %}500: Internal Server Error{% endblock %}
 
-{% block breadcrumbs_child %}Internal Server Error{% endblock %}
-
-{% block body %}
-    <div class="card">
-        <h3 class="card-header">Sorry, that page could not be loaded</h3>
-        <div class="card-body">
-            <p class="card-text">
-                Something went wrong while fetching that page. Please try again in a little bit.
-                If this happens repeatedly, please contact the web admin so they can start working on a fix.
-            </p>
-        </div>
-    </div>
+{% block help_line %}Sorry, that page could not be loaded{% endblock %}
+{% block help_text %}
+    Something went wrong while fetching that page. Please try again in a little bit.
+    If this happens repeatedly, please contact the web admin so they can start working on a fix.
 {% endblock %}
