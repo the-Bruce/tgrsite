@@ -18,6 +18,29 @@ $.ajaxSetup({
     }
 });
 
+function toLines(text, selection) {
+    let lines = text.split('\n');
+    let pos = 0;
+    let start = null
+    let end = null
+    for (var line = 0; line < length(lines); line++) {
+        if (start === null && pos + length(lines[line]) >= selection.start) {
+            start = {line: line, pos: selection.start - pos}
+        }
+        if (pos + length(lines[line]) >= selection.end) {
+            end = {line: line, pos: selection.end - pos}
+            break;
+        }
+        pos = pos + length(lines[line]) + 1  // re-add the "/n" chars that
+    }
+
+    return {lines: lines, selection: {start: start, end: end}};
+}
+
+function length(str) {
+    return str.length;
+}
+
 (function ($, window, document, undefined) {
     $.fn.MarkdownEditor = function () {
 
@@ -51,59 +74,57 @@ $.ajaxSetup({
                 }
             },
 
-            // indents the textarea selection
-            indent = function (textArea, prefix, count) {
-
-                // extend the selection start until the previous line feed
-                let selection, newValue, range = {
-                    start: textArea.value.lastIndexOf('\n', textArea.selectionStart),
-                    end: textArea.selectionEnd
-                };
-
-                // if there isn't a line feed before,
-                // then extend the selection until the begging of the text
-                if (range.start === -1)
-                    range.start = 0;
-
-                // if the selection ends with a line feed,
-                // remove it from the selection
-                if (textArea.value.charAt(range.end - 1) === '\n')
-                    range.end -= 1;
-
-                // extend the selection end until the next line feed
-                range.end = textArea.value.indexOf('\n', range.end);
-
-                // if there isn't a line feed after,
-                // then extend the selection end until the end of the text
-                if (range.end === -1)
-                    range.end = textArea.value.length;
-
-                // move the selection to a new variable
-                selection = '\n' + textArea.value.substring(range.start, range.end) + '\n\n';
-
-                newValue = textArea.value.substring(0, range.start);
-                newValue += selection.replace(/^(?=.+)/mg, Array(count + 1).join(prefix));  // add 'count' spaces before line feeds
-                newValue += textArea.value.substring(range.end);
-
-                textArea.value = newValue;
-            },
-
             tags = {
-                bold: {start: '**', end: '**', placeholder: 'Your bold text'},
-                italic: {start: '*', end: '*', placeholder: 'Your emphasized text'},
-                link: {start: '[', end: '](N)', placeholder: 'Add your link title'},
-                head: {start: '#', end: '', placeholder: 'Your header'},
-                image: {start: '![', end: '](N)', placeholder: 'Add image description'},
-                pre: {start: '', end: '', placeholder: '\n' + '    Add your code block here' + '\n'},
-                code: {start: '`', end: '`', placeholder: 'Add inline code here'},
-                ul: {start: '* ', end: '', placeholder: 'List Item'},
-                ol: {start: '1. ', end: '', placeholder: 'List Item'},
+                bold: {
+                    start: '**', end: '**', placeholder: 'Your bold text',
+                    line: false, block: false
+                },
+                strike: {
+                    start: '~~', end: '~~', placeholder: 'Your struckthrough text',
+                    line: false, block: false
+                },
+                italic: {
+                    start: '*', end: '*', placeholder: 'Your emphasized text',
+                    line: false, block: false
+                },
+                head: {
+                    start: '#', end: '', placeholder: 'Your header',
+                    line: true, block: false
+                },
+                quote: {
+                    start: '> ', end: '', placeholder: 'Your quote',
+                    line: true, block: false
+                },
+                link: {
+                    start: '[', end: '](https://example.org/)', placeholder: 'Add your link text',
+                    line: false, block: false
+                },
+                image: {
+                    start: '![', end: '](https://example.org/)', placeholder: 'Add image description',
+                    line: false, block: false
+                },
+                code: {
+                    start: '`', end: '`', placeholder: 'Add inline code here',
+                    line: false, block: false
+                },
+                pre: {
+                    start: '    ', end: '', placeholder: 'Block Code',
+                    line: true, block: true
+                },
+                ul: {
+                    start: '* ', end: '', placeholder: 'List Item',
+                    line: true, block: true
+                },
+                ol: {
+                    start: '1. ', end: '', placeholder: 'List Item',
+                    line: true, block: true
+                },
             };
 
         return this.each(function () {
             let txt = this,                          // textarea element
                 stale = true,
-                endpoint=$(this).data("endpoint") || "/api/md_preview/",
+                endpoint = $(this).data("endpoint") || "/api/md_preview/",
                 controls = $('<div class="controls" id="' + txt.id + '-controls" />'); // button container
 
             const format_classes = "btn btn-light";
@@ -113,14 +134,19 @@ $.ajaxSetup({
                 + '<div class="btn-group mr-2 mb-1" role="group" aria-label="Formatting">'
                 + button_template + 'Bold" class="' + format_classes + ' c-bold"><i class="fas fa-bold"></i></button>'
                 + button_template + 'Italic" class="' + format_classes + ' c-italic"><i class="fas fa-italic"></i></button>'
-                + button_template + 'Heading" class="' + format_classes + ' c-head"><i class="fas fa-heading"></i></button>'
+                + button_template + 'Strikethrough" class="' + format_classes + ' c-strike"><i class="fas fa-strikethrough"></i></button>'
                 + button_template + 'Code" class="' + format_classes + ' c-code"><i class="fas fa-code"></i></button>'
+                + button_template + 'Heading" class="' + format_classes + ' c-head"><i class="fas fa-heading"></i></button>'
+                + button_template + 'Quote" class="' + format_classes + ' c-quote"><i class="fas fa-quote-right"></i></button>'
+
                 + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Utilities">'
                 + button_template + 'Link" class="' + format_classes + ' c-link"><i class="fas fa-link"></i></button>'
                 + button_template + 'Image" class="' + format_classes + ' c-image"><i class="fas fa-image"></i></button>'
+
                 + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Lists">'
                 + button_template + 'Bullet List" class="' + format_classes + ' c-ul"><i class="fas fa-list-ul"></i></button>'
                 + button_template + 'Ordered List" class="' + format_classes + ' c-ol"><i class="fas fa-list-ol"></i></button>'
+
                 + '</div><div class="btn-group mr-2 mb-1" role="group" aria-label="Preview">'
                 + button_template + 'Preview" class="' + format_classes + ' c-preview"><i class="fas fa-eye"></i></button>'
                 + '</div>'
@@ -128,7 +154,7 @@ $.ajaxSetup({
                 + '<div class="preview"></div>'
             ));
             controls.find('.preview').slideUp();
-            $(txt).on('keypress', function (event) {
+            $(txt).on('keydown', function (event) {
                 controls.find('.card').addClass("text-muted");
                 controls.find('.fa-eye-slash').removeClass('fa-eye-slash').addClass('fa-eye');
                 stale = true;
@@ -141,6 +167,8 @@ $.ajaxSetup({
 
                 let tagName = this.className.substr(format_classes.length + 3),
                     range = {start: txt.selectionStart, end: txt.selectionEnd};
+                let tag = tags[tagName]
+
                 if (tagName === "preview") {
                     if (stale) {
                         stale = false;
@@ -151,57 +179,55 @@ $.ajaxSetup({
                         controls.find('.fa-eye-slash').removeClass('fa-eye-slash').addClass('fa-eye');
                         stale = true;
                     }
-                    return true
-                }
-
-                //head should instead affect the whole line
-                if (['head', 'ul', 'ol'].includes(tagName)) {
-                    let linestart = txt.value.lastIndexOf('\n', range.start) + 1,
-                        lineend = txt.value.indexOf('\n', range.end) - 1;
-                    lineend = lineend === -2 ? range.end : lineend;
-                    range = {start: linestart, end: lineend};
-                }
-
-                let selectedText = txt.value.substring(range.start, range.end),
-                    adjacent_characters_to_selected_text = $.trim(txt.value.charAt(range.start - 1) + txt.value.charAt(range.end));
-
-                // if this is a code tag, decide if it needs to go inline or inside a block
-                tagName = (tagName === 'code') && ((selectedText.indexOf('\n') !== -1) || (!adjacent_characters_to_selected_text) || (txt.value.length < 1)) ? 'pre' : tagName;
-
-                let tag = $.extend({}, tags[tagName]),
-                    trimmed_placeholder = $.trim(tag.placeholder),
-                    number_of_spaces_removed_from_placeholder = tag.placeholder.indexOf(trimmed_placeholder);
-
-                // do nothing if the selection text matches the placeholder text
-                if (selectedText === trimmed_placeholder)
                     return true;
+                }
+                let a = toLines(txt.value, range);
+                let lines = a.lines;
+                let selection = a.selection;
 
-                // handle link/image requests
-                if ($.inArray(tagName, ['link', 'image']) !== -1) {
-                    let url = prompt((tagName !== 'image') ? 'Enter the URL' : 'Enter image URL', 'http://');
+                if (tag === tags.code && selection.start.line !== selection.end.line) {
+                    tag = tags.pre;  // Code button changes behaviour in multi-line mode
+                }
 
-                    if (url) {
-                        tag.end = tag.end.replace('N', url);
+                let start_delta = 0, end_delta = 0;
+                if (tag.line) {
+                    if (selection.start.line === selection.end.line && lines[selection.start.line] === "") {
+
+                        lines[selection.start.line] = tag.start + tag.placeholder + tag.end;
+                        end_delta += length(lines[selection.start.line]);
                     } else {
-                        return true;
+                        start_delta += length(tag.start);
+                        for (let i = selection.start.line; i <= selection.end.line; i++) {
+                            lines[i] = tag.start + lines[i] + tag.end;
+                            end_delta += length(tag.start);
+                        }
+                    }
+                } else {
+                    if (range.start !== range.end) {
+                        lines[selection.end.line] = lines[selection.end.line].substring(0, selection.end.pos) + tag.end + lines[selection.end.line].substring(selection.end.pos);
+                        lines[selection.start.line] = lines[selection.start.line].substring(0, selection.start.pos) + tag.start + lines[selection.start.line].substring(selection.start.pos);
+                        start_delta += length(tag.start);
+                        end_delta += length(tag.start);
+                    } else {
+                        lines[selection.start.line] = lines[selection.start.line].substring(0, selection.start.pos) + tag.start + tag.placeholder + tag.end + lines[selection.start.line].substring(selection.start.pos);
+                        start_delta += length(tag.start);
+                        end_delta += length(tag.start + tag.placeholder);
                     }
                 }
 
-                // no actual text selection or text selection matches default placeholder text
-                if (range.start === range.end) {
-                    txt.value = txt.value.substring(0, range.start) + tag.start + tag.placeholder + tag.end + txt.value.substring(range.end);
-                    setCaretToPos(txt, range.start + tag.start.length + number_of_spaces_removed_from_placeholder, range.end + tag.start.length + number_of_spaces_removed_from_placeholder + trimmed_placeholder.length);
-
-                    // we have selected text
-                } else {
-                    // code blocks require indenting only
-                    if (tagName === 'pre')
-                        indent(txt, ' ', 4);
-
-                    // the others need to wrapped between tags
-                    else
-                        txt.value = txt.value.substring(0, range.start) + tag.start + selectedText + tag.end + txt.value.substring(range.end);
+                if (tag.block && (selection.start.line - 1) >= 0 && lines[selection.start.line - 1] !== "") {
+                    lines[selection.start.line] = "\n" + lines[selection.start.line];
+                    start_delta += 1;
                 }
+                if (tag.block && (selection.end.line + 1) <= lines.length && lines[selection.end.line + 1] !== "") {
+                    lines[selection.end.line] = lines[selection.end.line] + "\n";
+                }
+                txt.value = lines.join("\n");
+                setCaretToPos(txt, range.start + start_delta, range.end + end_delta);
+
+                stale=true;
+                controls.find('.card').addClass("text-muted");
+                controls.find('.fa-eye-slash').removeClass('fa-eye-slash').addClass('fa-eye');
 
                 return true;
             });
