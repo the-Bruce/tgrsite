@@ -95,7 +95,15 @@ class ListAllSuggestions(ListView):
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
-        return Suggestion.objects.filter(inventory=inv, archived=False)
+        if 'archived' in self.request.GET and self.request.GET['archived']:
+            suggestions=Suggestion.objects.filter(inventory=inv)
+        else:
+            suggestions = Suggestion.objects.filter(inventory=inv, archived=False)
+        if 'name' in self.request.GET:
+            return suggestions.filter(name__icontains=self.request.GET['name'])
+        else:
+            return suggestions
+
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
