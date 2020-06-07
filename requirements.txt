@@ -1,6 +1,6 @@
 Markdown
 pymdown-extensions
-Django==2.2.10
+Django==2.2.13
 pytz
 requests
 django-crispy-forms
