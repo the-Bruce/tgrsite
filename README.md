@@ -28,6 +28,7 @@ Create a `local_config.py` in the same directory as the `settings.py` file. This
  * The server will be running on `localhost:8000`.
  * You should create a `Member` for your super user, since this is currently not automatically done.
   * Go to the admin site at `/admin`, log in, and add a Member object with `equiv_user` set to your superuser. IF you do not do this then your superuser will cause errors when viewing the site.
+* Now you can optionally load some demo data into the database using the command `python manage.py loaddata ./tgrsite/fixture.json`
 
 ## Contributing
 Contributions welcome, in the form of issue submissions, pull requests, and comments.
