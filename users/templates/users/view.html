@@ -83,9 +83,9 @@
     {{ block.super }}
     {% if perms.users.change_member %}
         {% if perms.auth.change_user %}
-            <a class="btn btn-block btn-outline-dark" href="{% url "admin:auth_user_change" member.equiv_user.pk %}">Edit</a>
+            <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:auth_user_change" member.equiv_user.pk %}">Edit</a>
         {% else %}
-            <a class="btn btn-block btn-outline-dark" href="{% url "admin:users_member_change" member.pk %}">Edit</a>
+            <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:users_member_change" member.pk %}">Edit</a>
         {% endif %}
     {% endif %}
 {% endblock %}

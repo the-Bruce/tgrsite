@@ -8,7 +8,7 @@
     <p id="incorrect-newsletter">Newsletter doesn't look right? Try viewing it on our website <a
             href="{% url 'newsletters:newsletters_detail' object.id %}">here</a>!
     </p>
-    <div id="email-content">
+    <div id="email-content" class="newsletter">
         <img alt="Warwick Tabletop and Role-Playing Society Banner"
              src="{% static 'images/newsletter_banner_2.png' %}"
              class="img-fluid mb-2" style="width: 100%">

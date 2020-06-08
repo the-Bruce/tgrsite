@@ -1,19 +1,13 @@
-{% extends "tgrsite/main.html" %}
+{% extends "tgrsite/error.html" %}
 {% block title %}Bad Request{% endblock %}
 {% block pagetitle %}400: Bad Request{% endblock %}
 
-{% block breadcrumbs_child %}Bad Request{% endblock %}
-
-{% block body %}
-    <div class="card">
-        <h3 class="card-header">Sorry, something about that request didn't look right.</h3>
-        <div class="card-body">
-            <p class="card-text">
-                Something about the request you just made failed to look correct to our server. Please try reloading the page you were on and try again.
-            </p>
-            <p class="card-text">
-                Alternately, stop penetration testing our site without talking to our web admin. They are watching you...
-            </p>
-        </div>
-    </div>
+{% block help_line %}Sorry, something about that request didn't look right{% endblock %}
+{% block help_content %}
+    <p class="card-text">
+        Something about the request you just made failed to look correct to our server. Please try reloading the page you were on and try again.
+    </p>
+    <p class="card-text">
+        Alternately, stop penetration testing our site without talking to our web admin. They are watching you...
+    </p>
 {% endblock %}
