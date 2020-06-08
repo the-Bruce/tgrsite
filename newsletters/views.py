@@ -1,16 +1,27 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin, UserPassesTestMixin
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 from django.views.generic import UpdateView, CreateView, DeleteView
+from premailer import Premailer
 
 from notifications.models import notify_everybody, NotifType
 from notifications.tasks import doNewsletterMailings
+from django.conf import settings
 from website_settings.models import TextProperty
 from .forms import NewsletterForm
 from .models import Newsletter
+
+if settings.DEBUG:
+    url = "http://"
+else:
+    url = "https://"
+url += settings.PRIMARY_HOST
+transformer = Premailer(base_url=url, base_path=url,
+                        disable_leftover_css=True, disable_validation=True, remove_unset_properties=True,
+                        include_star_selectors=True, keep_style_tags=False, align_floating_images=False)
 
 
 class Index(generic.ListView):
@@ -36,6 +47,12 @@ class Detail(generic.DetailView):
             ctxt['next'] = newsletters[index_of + 1] if index_of + 1 < len(newsletters) else None
             ctxt['prev'] = newsletters[index_of - 1] if index_of - 1 >= 0 else None
         return ctxt
+
+class Preview(Detail):
+    def render_to_response(self, context, **response_kwargs):
+        response = super().render_to_response(context, **response_kwargs)
+        new_response = HttpResponse(transformer.transform(response.rendered_content), charset=response.charset)
+        return new_response
 
 
 class Create(PermissionRequiredMixin, CreateView):

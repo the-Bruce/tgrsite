@@ -11,7 +11,7 @@ urlpatterns = [
     path('latest/', views.latest, name='newsletters_latest'),
     path('edit/<int:pk>/', views.Update.as_view(template_name='newsletters/update.html'), name='newsletters_update'),
     path('delete/<int:pk>/', views.Delete.as_view(template_name='newsletters/delete.html'), name='newsletters_delete'),
-    path('email-version/<int:pk>/', views.Detail.as_view(template_name='newsletters/email-version.html'),
+    path('email-version/<int:pk>/', views.Preview.as_view(template_name='newsletters/email-version.html'),
          name='newsletters_email'),
     path('text-version/<int:pk>/', views.Detail.as_view(template_name='newsletters/plain-email-version.txt',
                                                         content_type="text/plain; charset=utf-8"),
