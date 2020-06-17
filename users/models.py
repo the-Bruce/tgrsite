@@ -40,6 +40,18 @@ class Member(models.Model):
     def __str__(self):
         return self.equiv_user.username
 
+    @property
+    def username(self):
+        return self.equiv_user.username
+
+    @property
+    def firstname(self):
+        return self.equiv_user.first_name
+
+    @property
+    def last_name(self):
+        return self.equiv_user.last_name
+
     def notification_count(self):
         return self.notifications_owned.filter(is_unread=True).count()
 

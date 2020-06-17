@@ -20,12 +20,14 @@ class RpgInline(admin.TabularInline):
 
 class UserAdmin(BaseUserAdmin):
     inlines = (MemberInline,)
+    save_on_top = True
 
 
 class MemberAdmin(admin.ModelAdmin):
     # inlines = (RpgInline,)
-    search_fields = ('equiv_user__username','discord')
+    search_fields = ('equiv_user__username', 'discord')
     readonly_fields = ('dark',)
+    list_display = ('username', 'discord', 'firstname', 'last_name', 'pronoun')
 
 
 admin.site.unregister(User)
