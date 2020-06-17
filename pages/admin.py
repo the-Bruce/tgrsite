@@ -15,6 +15,7 @@ class WidgetInline(admin.StackedInline):
 
 class PageAdmin(admin.ModelAdmin):
     inlines = [WidgetInline, BreadcrumbInline]
+    actions_on_top = True
 
 
 admin.site.register(Page, PageAdmin)

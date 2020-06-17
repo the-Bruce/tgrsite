@@ -20,6 +20,8 @@ class ChangeBookingInline(admin.StackedInline):
 class WeekAdmin(admin.ModelAdmin):
     model = Week
     inlines = []
+    save_as = True
+    save_on_top = True
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         self.inlines = [ChangeBookingInline]
