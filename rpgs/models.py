@@ -16,6 +16,8 @@ class Rpg(models.Model):
     location = models.CharField(max_length=64, blank=True, help_text="The location where this event will occur")
     players_wanted = models.PositiveSmallIntegerField(validators=[validators.MinValueValidator(1)])
     is_in_the_past = models.BooleanField(default=False, help_text="Has the event already happened?")
+    finishes = models.DateField(blank=True, null=True,
+                                help_text="A date after which it should be automatically marked as finished")
 
     created_at = models.DateTimeField(auto_now_add=True)
     pinned = models.BooleanField(default=False, help_text='Pin this event to the top of the list')
