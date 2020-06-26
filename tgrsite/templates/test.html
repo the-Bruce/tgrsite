@@ -1,4 +1,5 @@
 {% extends "tgrsite/main.html" %}
+{% load static %}
 {% block title %}Index{% endblock %}
 {% block pagetitle %}Index{% endblock %}
 
@@ -9,146 +10,351 @@
 {% endblock %}
 
 {% block body %}
-
-    <h2>Announcements</h2>
-    The Term 2 timetable and proposed Draft schedule are now available over on the
-    <a href="/timetable/">schedule page</a>.
-
-    <h2>About Us</h2>
-    <p>We’re Warwick Tabletop Games and Roleplaying Society, the university’s largest society for all things tabletop.
-        We have a packed calendar of events covering <strong>board games</strong>, <strong>card games</strong>, <strong>wargames</strong>
-        and <strong>RPGs</strong> of all varieties (both pen and paper as well as live action), so there’s bound to be
-        an event for you! We provide a friendly and welcoming environment for newer players and experts alike, so
-        regardless of experience, you’re always welcome at our events. Members of exec (in their purple hoodies) will
-        always be around and are happy to help, so if you’d like to try something new just show up and we’ll help you
-        out.</p>
-    <p><strong>Discord</strong>: We have a Discord! You can find it using the code <code>xdDZnYQ</code> in the Discord
-        app or on the Discord site.</p>
-
-    <h2>Weekly Events (Term Time)</h2>
-    We run six events each week, which are listed below! You can find our schedule
-    <a href="https://www.warwicktabletop.co.uk/timetable/">here</a> along with Google calendars you can subscribe to.
-
-    <div class="card">
-        <h3 class="card-header">Wargames (Monday 1700-2200)</h3>
+    <div class="sr-only">
+        <h1>Tabletop Radio</h1>
+    </div>
+    <div class="card mb-3">
+        <img class="card-img" src="/media/assets/2020/05/25/FC76E1A3-0C50-4EFC-B342-401347BA1F40.png"
+             alt="Tabletop Radio Stream Banner">
         <div class="card-body">
-            <p><a class href="https://www.facebook.com/groups/276814799016749/"><i class="fab fa-facebook"></i><span
-                    class="sr-only">Wargames Facebook Group</span></a></p>
-            <p class="card-text">Every Monday we run an open session for playing wargames, games where you field armies
-                which do battle on your table! These range from small scale skirmishes to huge battles in games such as
-                Warhammer 40,000, X-wing, Star Wars: Armada, and many more - if you can think of a wargame and two
-                people have the armies for it, you’ll likely get a game out of it. We have a number of society armies
-                for you to borrow and play with as well, so if you’re undecided on whether to invest in a game, you can
-                try it out first. Games are mostly organised in advance via the Wargames Facebook Group (linked above),
-                so if you’re interested in coming along to a session, have a look there to see what people are
-                bringing.</p>
+            <h2 class="text-center">Sat 20th and Sun 21st June, 12pm - 1am Both Days</h2>
         </div>
     </div>
 
-    <div class="card">
-        <h3>Magic: the Gathering Draft (Tuesday 1800-2200)</h3>
-        <p><a href="https://www.facebook.com/groups/195335593904501/">Draft Facebook Group</a></p>
-        <p>If you like drafting Magic: the Gathering, then this is the event for you. We draft an assortment of the
-            latest standard set, cubes, unusual sets (e.g. Masters, Unstable, Battlebond...), chaos and flashbacks,
-            which are all scheduled in advance on the events page of our website <a
-                    href="https://www.warwicktabletop.co.uk/events/">here</a>.</p>
-        <p>Entry to standard drafts £10, reduced by £2.50 for every booster you supply yourself - this includes 3
-            boosters to draft with and an extra booster per player being added to a prize pool. Price and prize
-            structure may change when we draft sets other than standard, so check the schedule! We meet between 6 and
-            6.30pm to organise pods and play casual games, then begin the draft proper at 6.30pm. There are normally 3
-            matches (swiss pairings), with the pack prizes given to first place and everyone who wins at least 2 of
-            their matches.</p>
-        <p>Draft is a competitive format, so if you’re completely new to playing Magic, we recommend you turn up to a
-            Casual Card Games session and talk to one of our reps before attempting this!</p>
+    <div class="card mb-3">
+        <h2 class="card-header">What is it?</h2>
+        <div class="card-body">
+            <p class="card-text">
+                Charity fundraising has suffered greatly due to the COVID-19 pandemic, and our usual in-person charity
+                fundraising during our annual Tabletop Society Pride Week can no longer happen. So,
+                <strong>
+                    as part of our Tabletop Pride Week (15th-21st June, Term 3 Week 9), we will be participating in the
+                    <a href="https://twopointsixchallenge.justgiving.com/">2.6 challenge</a>.
+                </strong>
+            </p>
+            <p class="card-text">
+                We wanted something to bring together our community in this isolated time, and we wanted something that
+                echoed the marathon aspect of our Tabletop Weekends. And so we settled on <strong>an epic 26 hour
+                charity stream</strong> (bold, I know) to tie into the "2.6" theme, with a lot of segments incorporating
+                activities that we and the people in our community love.
+            </p>
+            <p class="card-text">
+                We're raising money for <a href="https://www.stonewall.org.uk/about-us/our-mission-and-priorities">Stonewall</a>,
+                an LGBT-focused charity that is committed to empowering LGBT individuals, transforming the culture of
+                institutions towards inclusivity and acceptance, changing hearts and minds to value and respect LGBT
+                individuals, and changing and protecting laws to contribute to LGBT equality.
+            </p>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Boardgames (Wednesday 1400-2200)</h3>
-        <p><a href="https://www.facebook.com/groups/681573368568623/">Boardgames Facebook Group</a></p>
-        <p>Our weekly boardgames event runs from 2pm until 10pm and is your chance to drop in for as long or as little
-            as you want to play some board games. We have a collection of over 130 board games (we have an inventory
-            which will be live on the site soon, but you can bring your own games too) ranging from small half-hour
-            party games to session-long epics, so whatever your taste in games we’re sure you’ll be able to find
-            something you’ll enjoy! Don’t feel like you have to come with a group or have to already know everything
-            about board games - exec and existing members will be on hand to help group people up and teach new
-            games.</p>
+    <p class="mb-3 w-50 mx-auto"><a class=""
+                                    href="https://www.justgiving.com/fundraising/the-26-hour-tabletop-radio2020"><img
+            class="img-fluid" src="/media/assets/2020/05/25/42F4367E-4BA3-4639-B0C0-D091818E890B.png"
+            alt="Donate Button"><span
+            class="sr-only sr-only-focusable">Donate Now</span></a></p>
+
+    <div id="twitch-embed" class="embed-responsive embed-responsive-16by9 mx-auto mb-3" style="max-width: 1200px"></div>
+
+    <!--
+    <div class="card mb-3">
+    <a href="/page/radio_timetable/"><img class="card-img-top"
+    src="https://www.warwicktabletop.co.uk/media/assets/2020/05/25/tabletop_radio_timetable.png" alt="Visual Schedule"></a>
+    <h2 class="card-header">Schedule Breakdown</h2>
+    <div class="card-body">
+    <p class="card-text">Visit the <a href="/page/radio_timetable/">Full Timetable</a> for details about each slot.</p>
+    </div>
+    </div>-->
+
+    <div class="card mb-3">
+        <img class="card-img-top"
+             src="https://www.warwicktabletop.co.uk/media/assets/2020/05/25/tabletop_radio_timetable.png"
+             alt="Visual Schedule">
+        <h2 class="card-header">Full Schedule</h2>
+        <div class="card-body">
+            <h3>Schedule Breakdown</h3>
+            <p>
+                Interlude: a combination of an ad break and an interlude segment, where the exec of Tabletop Society
+                spin <strong>The Wheel</strong> for every donation made.
+            </p>
+            <h4>Day 1 - Sat 20th June</h4>
+            <table class="table table-bordered table-striped">
+                <tbody>
+                <tr class="bg-pale">
+                    <td>12.00pm - 12.30pm</td>
+                    <td>The Opening: A big welcome and an introduction to the stream</td>
+                </tr>
+                <tr>
+                    <td>12.30pm - 1.30pm</td>
+                    <td>
+                        Jackbox Party Fun: we play some Jackbox Party Pack! Audience participation will be happening.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>2.00pm - 6.00pm</td>
+                    <td>
+                        Adventuring with Pride: a D&D 5e one-shot from the Adventuring with Pride supplement, run by one
+                        of its creators, Alex Dixon from The Pocket Workshop.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>6.30pm - 8.30pm</td>
+                    <td>
+                        Tabletop and Chill: evening board gaming on Tabletop Simulator
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>9.00pm - 11.00pm</td>
+                    <td>
+                        Table Talk: a talk show hosted by our past and present Tabletop Society Presidents, Callum and
+                        Finnbar respectively.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>11.30pm - 12.30am</td>
+                    <td>
+                        Happy Little Accidents: a late-night Bob Ross paint-a-long
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr class="bg-pale">
+                    <td>12.45pm - 1.00am</td>
+                    <td>
+                        Night Night: the outro for the end of the first day
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <h4>Day 2 - Sun 21st June</h4>
+            <table class="table table-bordered table-striped">
+                <tbody>
+                <tr class="bg-pale">
+                    <td>12.00pm - 12.30pm</td>
+                    <td>Welcome Back!</td>
+                </tr>
+                <tr>
+                    <td>12.30pm - 1.30pm</td>
+                    <td>
+                        The Tabletopolis Trials: join us in Tabletopolis, our minecraft world, for some healthy
+                        competition between players.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>2.00pm - 5.00pm</td>
+                    <td>
+                        Monsters on a Cruise Ship: a homebrew dating sim one-shot in which you all play monsters on a no
+                        expense spared cruise ship being filmed for a reality TV show. Run by your favourite mess<sup><a
+                            href="https://www.justgiving.com/fundraising/the-26-hour-tabletop-radio2020">[citation
+                        needed]</a></sup> and current President, Finnbar. It’s gonna be chaos.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>5.30pm - 6.30pm</td>
+                    <td>
+                        Rate my Island: we’re chilling out in Animal Crossing, taking a tour of some islands. We’ll be
+                        accepting audience Dodo Codes for this!
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>7.00pm - 8.00pm</td>
+                    <td>
+                        The Judge and the Judgement: join Alisdair (our Level 1 Magic: the Gathering Judge) and Ares
+                        (not a Magic Judge, but good at being judgemental) for an Ikoria draft on Magic: the Gathering
+                        Arena.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>8.30pm - 9.30pm</td>
+                    <td>
+                        TableTED talks: join us for some “TED” talks on some of our favourite topics. Expect frogs.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>10.00pm - 11.00pm</td>
+                    <td>
+                        D, D & D&D: Drawing, Discussion, and Dungeons and Dragons. Ares will be drawing some of the
+                        stream commissions received, while some of our hosts talk Dungeons and Dragons.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Interlude</td>
+                </tr>
+                <tr>
+                    <td>11.30pm - 12.30am</td>
+                    <td>
+                        Jackbox Party Fun 2: Sleepy Boogaloo. It’s Jackbox again, but this time on minimal sleep.
+                    </td>
+                </tr>
+                <tr class="bg-pale">
+                    <td>12.30am - 1.00am</td>
+                    <td>
+                        The Closening: our final goodbyes and thank yous to everyone who has watched and donated! We
+                        might get emotional.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Casual Card Games (Thursday 1700-2200)</h3>
-        <p><a href="https://www.facebook.com/groups/195335593904501/">Card Games Facebook Group</a></p>
-        <p>Thursday evenings are home to Casual Card Games, the event where card games such as Magic: The Gathering
-            (mostly Commander, but also Modern), Android: Netrunner, and Yu-Gi-Oh are played. This is the place for
-            competitive and non-competitive players alike to play in a friendly environment, whether they’re practicing
-            for an upcoming tournament or just wanting casual games with some silly decks. We also have intro decks and
-            players happy to teach their favourite games, so if you’d like to try Magic (before plunging into the world
-            of Magic Drafts) or any of the other great games listed, this is the event for you! Games can be organised
-            in advance via the Casual Card Games Facebook group (linked above), so you can ask which games are being
-            played, and see if there is interest in playing games aside from those listed above.</p>
+    <div class="card bg-pale mb-3">
+        <a href="http://dovahbutt.storenvy.com/products/30363589-sword-in-the-stone-charity-pride-pin">
+            <img class="card-img" src="/media/assets/2020/05/30/tabletop_radio_pin.png" alt="Pinz Banner">
+        </a>
+        <p class="sr-only">
+            Sword in the Dice Charity Pin. $9 + shipping (about £7).
+            All profits donated to Stonewall.
+            Available from 12pm BST Sat 20th June (while stocks last).
+            Limited run of 50!
+            <a href="https://dovahbutt.storenvy.com/">dovahbutt.storenvy.com</a>
+        </p>
     </div>
 
-    <div class="card">
-        <h3>RPGs (Various Times, but usually Saturdays)</h3>
-        <p><a href="https://www.facebook.com/groups/136276596998520/">RPGs Facebook Group</a></p>
-        <p>If you’ve been wanting to try Dungeons and Dragons (D&amp;D) or any of the other tabletop RPG systems
-            available, this is the part of the society you’ve been waiting for! Many campaigns and one-shots
-            (self-contained adventures that only take a single afternoon) are run through the society, with signups
-            found on the events page of our website <a href="https://www.warwicktabletop.co.uk/events/">here</a>. While
-            the majority of games here are run in D&amp;D, other systems have also been run, such as Age of Rebellion
-            (Star Wars roleplaying!), Call of Cthulu, and even some more obscure ones like Dread.</p>
-        <p>Furthermore, at the start of term 1 (during Welcome Week), we run Introductory RPG one-shots, where GMs both
-            old and new run beginner games aimed at those interested in trying out roleplaying. This is a great venue to
-            meet GMs who may be looking for players to participate in new, long-term campaigns.</p>
-        <p>Finally, we support GMs by providing a small collection of materials for them to borrow, and by booking rooms
-            for them to run their sessions in (if you need a room, just contact us).</p>
+
+    <div class="card mb-3">
+        <h2 class="card-header">Donation Incentives</h2>
+        <div class="card-body">
+            <p class="card-text">
+                Every donation comes with a reward! More incentives may pop up as we get closer to the date of the
+                stream, so keep your eyes peeled.
+            </p>
+            <table class="table table-bordered table-striped">
+                <tbody>
+                <tr>
+                    <td>Any Amount</td>
+                    <td>
+                        Spin The Wheel! The exec of Tabletop Society spin The Wheel, which is loaded with activities for
+                        them to do in their interlude segments.
+                    </td>
+                </tr>
+                <tr>
+                    <td>Any Amount</td>
+                    <td>
+                        A shout out and big thank you in the next edition of the weekly Tabletop Society newsletter.
+                    </td>
+                </tr>
+                <tr>
+                    <td>£3 / £5</td>
+                    <td>
+                        £3 nets you our resident kazooists, Finnbar and Thomas, playing a song on the kazoo. £5 allows
+                        you to choose the song (please note this on your donation!). Other instruments are also
+                        available, depending on what Thomas and Finnbar have to hand. We accept suggestions of what
+                        instruments to play, although our musical ability is limited!
+                    </td>
+                </tr>
+                <tr>
+                    <td>£20</td>
+                    <td>
+                        Our resident graphic design exec, Ares (dovahbutt), will draw you a chibi of your D&D character
+                        that can be printed out as a standee or used as an icon for your D&D game. Full details coming
+                        soon!
+                        <br>
+                        You can find Ares mainly on <a href="https://twitter.com/dovahbuttocks">Twitter</a>.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>LARP (Sunday 1200-1700)</h3>
-        <p><a href="https://www.facebook.com/groups/2204222674/">LARP Facebook Group</a></p>
-        <p>Live Action Roleplaying takes the fun of tabletop RPGs and brings them to life! Rather than sitting at a
-            table describing your actions, you don foam weaponry and costumes (provided by the society, but you can
-            bring your own LARP-safe kit) and go to the nearby woods to act as your character. This is all run within
-            the <a href="https://www.warwicktabletop.co.uk/larp-latest/">Unity system</a> - a beginner-friendly LARP
-            system unique to the society, so don’t worry about knowing all of the rules as it’s new to everyone. These
-            sessions are run by our knowledgeable LARP Reps and let you play both heroes and monsters in combat and
-            social encounters. This means you can live out your character’s experiences as well as fighting as them!</p>
+    <div class="card bg-pale mb-3">
+        <a href="http://dovahbutt.storenvy.com/products/30363589-sword-in-the-stone-charity-pride-pin">
+            <img class="card-img" src="/media/assets/2020/05/31/tabletop_radio_donation_commission.png"
+                 alt="Character Drawing Banner">
+        </a>
+        <p class="sr-only">
+            Donation Incentive
+            £20 for a RPG Character Commission!
+            Ares (dovahbutt) will draw you a chibi of your RPG Character.
+            Rules:
+            You need to have good reference of your character! (a full written description, mood board and/or art)
+            Donate £20+ to our <a href="/donate-stonewall">JustGiving</a> page during the runtime of Tabletop Radio
+            (12pm 20th June -> 1am 22nd June)
+            Send a screencap of the donation receipt + your character reference to dovahbuttart @ gmail .com
+            I'll send you a sketch for approval, but will not fo a huge amount of iteration
+            You'll receuve tge full res unwatermarked file, and a version (+ instructions) to help you make it into a
+            standee!
+            Please keep an eye on my Twitter (@dovahbuttocks) as I may have to stop taking these if I receive too many!
+        </p>
     </div>
 
-    <h2>Holidays</h2>
-    <p>We also run a reduced schedule of events during the holidays, so if you’re a postgrad still around outside of
-        term time or are otherwise still nearby, you can still get your weekly fix of board, card and wargames!
-        Schedules for these can be found with the term time schedules on our <a
-                href="https://www.warwicktabletop.co.uk/timetable/">schedule page</a> (these are typically released a
-        week or so before the respective holiday starts).</p>
+    <!-- Sponsors go here -->
 
-    <h2>Special Events</h2>
-    <p>Outside of our usual weekly events, we run a large variety of special events throughout the year.</p>
-
-    <h3>Tabletop Weekends</h3>
-    <p><em>Term 1 (Weeks <strong>4</strong> and 9), Term 2 (Weeks <strong>3</strong> and <strong>8</strong>), and Term 3
-        (Week 9)</em></p>
-    <p>The most frequent of these is our Tabletop Weekends, which we run twice in terms 1 and 2 and once (as a special
-        three day weekend) in term 3. The premise is simple - we book a room for the entire weekend (including
-        overnight) for people to come in and play whatever tabletop games they like! This is the perfect time for you to
-        try some of our longer games that struggle to fit into a normal session like Diplomacy or a longer Magic Cube
-        Draft, and if you’re feeling particularly brave you can try to stay for the whole 36 hours of gaming.</p>
-
-    <h3>Quiz</h3>
-    <p><em>Every Term, Week 9</em></p>
-    <p>We also run a termly quiz featuring all manner of quiz rounds, from naming things that sound like the things
-        pictured, to guessing whether something is the name of ikea furniture or a D&amp;D monster! This is a fun chance
-        to try answering ridiculous questions with people from all parts of the society and win some cool trophies and
-        tabletop-themes prizes.</p>
-
-    <h3>Other Special Events</h3>
-    <p>Finally, we’ve run some other one-off events in the past, including a collaboration with the Game Design society
-        involving making your own board game, a murder mystery LARP, and even a megagame! You can see all of the
-        different events we’ve run in the past over <a href="/page/eventhistory/">here</a> and those we will be running
-        in the future on <a href="https://www.facebook.com/pg/TAGAROPLE/events/">Facebook</a>.</p>
-    <p>We really look forward to playing some games with you!</p>
-
-    <p>You can buy membership (optional, but it helps the society) on our SU page <a
-            href="//www.warwicksu.com/societies-sports/societies/sff/">here</a>.</p>
-
+    <div class="card bg-pale">
+        <h2 class="card-header">Stream Sponsorship</h2>
+        <div class="card-body">
+            <p class="card-text">
+                Warwick Tabletop Games and Roleplaying Society has a membership of more than 230 people who are super
+                into tabletop
+                gaming of many varieties, including wargames, board games, card games (including Magic: the Gathering
+                and Netrunner), RPGs (including D&D), and LARP.
+            </p>
+            <p class="card-text">
+                We can bring you, as an individual or company, to the attention of this audience if you sponsor our
+                stream via a donation to our JustGiving page. You will get an ad spot in our stream interludes, a logo
+                and/or link on this webpage, and a shout out in the next edition of the weekly Tabletop Society
+                newsletter.
+            </p>
+            <h3 class="card-text">How to apply</h3>
+            <p class="card-text">
+                Are you an individual or company that wants a space in our ad breaks? Then follow these instructions:
+            </p>
+            <ol>
+                <li>Send us an email at <a href="mailto://su303@warwicksu.com?subject=TABLETOP%20RADIO%20SPONSOR">su303@warwicksu.com</a>
+                    with TABLETOP RADIO SPONSOR as the subject line. Please include who you are/what your business is
+                    and the kind of ad you want us to show for you (a static image, prerecorded video, or text for an ad
+                    read).
+                </li>
+                <li>We will respond as to whether we’re happy to advertise you. Tabletop-related ads are prioritised.
+                    Whether your ad is used is at our discretion; we reserve the right to turn you down if we do not
+                    think your ad is appropriate for our stream.
+                </li>
+                <li>You send us your ad for approval!</li>
+                <li>When approved, you should make the relevant donation to our JustGiving page.</li>
+                <li>We will then display your ad during our stream interludes.</li>
+            </ol>
+            <h4 class="card-text">Minimum Donation</h4>
+            <dl>
+                <dt>Individual</dt>
+                <dd>£10+ donation to our JustGiving</dd>
+                <dt>Company</dt>
+                <dd>£20+ donation to our JustGiving</dd>
+            </dl>
+        </div>
+    </div>
+    <script src="https://embed.twitch.tv/embed/v1.js"></script>
+    <script type="text/javascript">
+        new Twitch.Embed("twitch-embed", {
+            channel: "warwicktabletop",
+            layout: "video",
+        });
+    </script>
 {% endblock %}

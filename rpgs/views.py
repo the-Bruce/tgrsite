@@ -8,6 +8,7 @@ from django.db.models import F, Count, Q, Case, When, IntegerField, ExpressionWr
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
 
 from messaging.views import find_group
@@ -25,6 +26,7 @@ class Index(generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        Rpg.objects.filter(is_in_the_past=False, finishes__lt=timezone.now()).update(is_in_the_past=True)
         queryset = Rpg.objects.filter(unlisted=False)
         if self.request.GET.get('tag', False):
             queryset = queryset.filter(tags__name__iexact=self.request.GET['tag'])

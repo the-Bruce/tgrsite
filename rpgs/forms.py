@@ -14,7 +14,7 @@ splitter = re.compile('[|:;,]')
 
 class RpgForm(forms.ModelForm):
     tag_list = CharField(required=False, help_text="A list of tags separated by commas. "
-                                                   "Please remember to add add 'rpg' to any rpgs")
+                                                   "Please remember to add 'rpg' to any rpgs")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,7 +24,8 @@ class RpgForm(forms.ModelForm):
 
     class Meta:
         model = Rpg
-        fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'location', 'is_in_the_past', ]
+        fields = ['title', 'system', 'description', 'players_wanted',
+                  'timeslot', 'location', 'is_in_the_past', 'finishes']
         widgets = {
             'description': Textarea(attrs=MD_INPUT),
         }
@@ -42,7 +43,7 @@ class RpgForm(forms.ModelForm):
 class RpgCreateForm(RpgForm):
     class Meta:
         model = Rpg
-        fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'location']
+        fields = ['title', 'system', 'description', 'players_wanted', 'timeslot', 'location', 'finishes']
         widgets = {
             'description': Textarea(attrs=MD_INPUT),
         }
