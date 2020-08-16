@@ -26,6 +26,8 @@ class Rpg(models.Model):
                                 help_text="The creator of this event")
     members = models.ManyToManyField(Member, blank=True, help_text="The people playing the game")
     tags = models.ManyToManyField('Tag')
+    discord = models.BooleanField(default=False,
+                                  help_text="Require users to have a discord username listed before signing up")
 
     def __str__(self):
         return self.title
