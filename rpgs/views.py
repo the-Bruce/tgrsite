@@ -118,7 +118,7 @@ class Join(LoginRequiredMixin, generic.View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def post(self, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         rpg = get_object_or_404(Rpg, pk=self.kwargs['pk'])
 
         if self.request.user.member in rpg.members.all():
@@ -127,6 +127,9 @@ class Join(LoginRequiredMixin, generic.View):
             add_message(self.request, messages.WARNING, "You are running that event!")
         elif rpg.members.count() >= rpg.players_wanted:
             add_message(self.request, messages.WARNING, "Sorry, the event is already full")
+        elif len(self.request.user.member.discord.strip()) == 0 and rpg.discord:
+            add_message(self.request, messages.WARNING, "This event is being held on discord. "
+                                                        "Please add a discord account to your profile and try again.")
         else:
             rpg.members.add(self.request.user.member)
             notify(rpg.creator, NotifType.RPG_JOIN,
