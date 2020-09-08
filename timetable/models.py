@@ -18,7 +18,7 @@ class GoogleCalender(models.Model):
 # Create your models here.
 class Week(models.Model):
     startDate = models.CharField(max_length=10)
-    number = models.PositiveSmallIntegerField()
+    number = models.SmallIntegerField()
     year = models.PositiveSmallIntegerField(default=date.today().year,
                                             validators=[validators.MinValueValidator(2000, message="Invalid year")],
                                             help_text="Academic year (use greater year, i.e. 18/19 is 2019)")
