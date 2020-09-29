@@ -16,6 +16,6 @@
     <button class="btn btn-block btn-lg btn-outline-success" type="submit">Sign me up!</button>
   </form>
   <p>
-    <a href="/" class="btn btn-block btn-outline-dark">No thanks</a>
+    <a href="{% url "users:me" %}" class="btn btn-block btn-outline-dark">No thanks</a>
   </p>
 {% endblock %}

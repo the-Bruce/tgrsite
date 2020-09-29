@@ -38,7 +38,7 @@ class QuickNewsletterSubscribe(LoginRequiredMixin, View):
         notification_subs.full_clean()
         notification_subs.save()
         add_message(request, messages.SUCCESS, "You have subscribed to the newsletter.")
-        return HttpResponseRedirect(reverse("notifications:notification_settings"))
+        return HttpResponseRedirect(reverse("users:me"))
 
     def get(self, request):
         return render(request, 'notifications/newsletter_subscribe.html')
