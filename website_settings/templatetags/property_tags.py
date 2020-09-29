@@ -8,17 +8,13 @@ register = template.Library()
 
 @register.simple_tag
 def string_setting(key):
-    try:
-        res = models.StringProperty.objects.get(key__iexact=key).value
-    except models.StringProperty.DoesNotExist:
-        res = ""
+    obj, new = models.StringProperty.objects.get_or_create(key__iexact=key, defaults={"key": key.lower(), "value": ""})
+    res = obj.value
     return mark_safe(res)
 
 
 @register.simple_tag
 def text_setting(key):
-    try:
-        res = models.TextProperty.objects.get(key__iexact=key).value
-    except models.TextProperty.DoesNotExist:
-        res = ""
+    obj, new = models.TextProperty.objects.get_or_create(key__iexact=key, defaults={"key": key.lower(), "value": ""})
+    res = obj.value
     return mark_safe(res)

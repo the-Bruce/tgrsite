@@ -30,16 +30,18 @@ class UpdateSubscriptions(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return "Personal Subscription Settings Updated!"
 
 
-@login_required
-def quick_newsletter_subscribe(request):
-    member = request.user.member
-    notification_subs = member.notificationsubscriptions
-    notification_subs.newsletter = SubType.FULL
-    notification_subs.full_clean()
-    notification_subs.save()
-    add_message(request, messages.SUCCESS, "You have subscribed to the newsletter.")
-    return HttpResponseRedirect(reverse("notifications:notification_settings"))
+class QuickNewsletterSubscribe(LoginRequiredMixin, View):
+    def post(self, request):
+        member = request.user.member
+        notification_subs = member.notificationsubscriptions
+        notification_subs.newsletter = SubType.FULL
+        notification_subs.full_clean()
+        notification_subs.save()
+        add_message(request, messages.SUCCESS, "You have subscribed to the newsletter.")
+        return HttpResponseRedirect(reverse("notifications:notification_settings"))
 
+    def get(self, request):
+        return render(request, 'notifications/newsletter_subscribe.html')
 
 # Debug only. Probably should remove from prod...
 @login_required
