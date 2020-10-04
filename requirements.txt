@@ -7,3 +7,4 @@ django-crispy-forms
 Pillow
 django_bleach
 premailer
+django-debug-toolbar

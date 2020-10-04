@@ -28,7 +28,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     from django.views.generic import TemplateView
-
     print("debug urls added")
     urlpatterns += [
         path('400', TemplateView.as_view(template_name='400.html')),
@@ -36,4 +35,11 @@ if settings.DEBUG:
         path('404', TemplateView.as_view(template_name='404.html')),
         path('500', TemplateView.as_view(template_name='500.html')),
         path('test', TemplateView.as_view(template_name='test.html')),
+
     ]
+    if settings.DEBUG_TOOLBAR:
+        try:
+            import debug_toolbar
+            urlpatterns.append(path('__debug__/', include(debug_toolbar.urls)))
+        except ModuleNotFoundError:
+            pass
