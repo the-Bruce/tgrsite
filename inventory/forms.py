@@ -46,7 +46,7 @@ class LoanRequestForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['items'].queryset = Record.objects.filter(inventory=inv, owner__isnull=True)
         self.fields['start_date'].initial = datetime.date.today()
-        self.fields['end_date'].initial = datetime.date.today()
+        self.fields['end_date'].initial = datetime.date.today()+datetime.timedelta(days=7)
 
     class Meta:
         model = Loan
