@@ -1,0 +1,21 @@
+{% extends 'tgrsite/main.html' %}
+{% load property_tags %}
+{% block title %}Newsletter Preferences{% endblock %}
+{% block pagetitle %}Newsletter Subscription{% endblock %}
+
+{% block breadcrumbs_parents %}
+  <li class="breadcrumb-item"><a href="{% url "notifications:all_notifications" %}">Notifications</a></li>
+  <li class="breadcrumb-item"><a href="{% url "notifications:notification_settings" %}">Preferences</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Newsletters{% endblock %}
+
+{% block body %}
+  <p>{% text_setting "newsletter_pitch" %}</p>
+  <form class="mb-3" method="post">
+    {% csrf_token %}
+    <button class="btn btn-block btn-lg btn-outline-success" type="submit">Sign me up!</button>
+  </form>
+  <p>
+    <a href="{% url "users:me" %}" class="btn btn-block btn-outline-dark">No thanks</a>
+  </p>
+{% endblock %}
