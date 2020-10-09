@@ -47,7 +47,7 @@ class Record(models.Model):
     def can_be_borrowed(self, start_date, end_date):
         # This is not quite correct, but doing it right is complicated and expensive
         # and we probably won't experience the issue enough to cause problems
-        loans = Loan.objects.filter(Q(items__in=[self]) & Q(rejected=False) & (
+        loans = Loan.objects.filter(Q(items__in=[self]) & (
                 Q(start_date__lte=start_date, end_date__gte=start_date) |
                 Q(start_date__lte=end_date, end_date__gte=end_date) |
                 Q(start_date__gte=start_date, end_date__lte=end_date)))
