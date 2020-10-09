@@ -33,7 +33,7 @@ class UpdateSubscriptions(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 class QuickNewsletterSubscribe(LoginRequiredMixin, View):
     def post(self, request):
         member = request.user.member
-        notification_subs = member.notificationsubscriptions
+        notification_subs, new = NotificationSubscriptions.objects.get_or_create(member=member)
         notification_subs.newsletter = SubType.FULL
         notification_subs.full_clean()
         notification_subs.save()
