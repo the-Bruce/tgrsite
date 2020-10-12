@@ -9,4 +9,5 @@ local_config.py
 /MEDIA/
 /bootstrap/build/
 /.idea/
-/local/
+*/local/
+/venv/
