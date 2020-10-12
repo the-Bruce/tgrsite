@@ -10,6 +10,7 @@ from users import models as users
 # Create your models here.
 class Inventory(models.Model):
     name = models.CharField(max_length=30, unique=True)
+    display = models.CharField(max_length=35)
     suggestions = models.BooleanField(default=True)
     loans = models.BooleanField(default=False)
     loan_conditions = models.TextField(blank=True)
@@ -18,7 +19,7 @@ class Inventory(models.Model):
         verbose_name_plural = "Inventories"
 
     def __str__(self):
-        return self.name
+        return self.display
 
     def canonical_(self):
         return str(self.name).lower()
@@ -40,7 +41,7 @@ class Record(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return self.name
+        return self.inventory.name+": "+self.name
 
     def get_absolute_url(self):
         return reverse("inventory:item_detail", kwargs={"inv": self.inventory.canonical_(), "pk": self.pk})
