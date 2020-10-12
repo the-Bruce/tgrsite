@@ -12,8 +12,8 @@
             <img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">
         {% endif %}
         <a class="{{ link_class }}" href="{% url 'users:user' member.id %}">{{ member }}</a>
-        {% if member.badge %}
-            <i class="{{ member.badge }}"></i>
+        {% if member.badge_type %}
+            <i class="{{ member.badge_icon }}" title="{{ member.badge_title }}"></i>
         {% endif %}
         </span>
     {% endif %}
@@ -28,8 +28,8 @@
         {% if not avatarless %}
             <img class="inline-gravatar" src="{{ member.gravatar }}" alt="Avatar for {{ member }}">
         {% endif %}
-        {{ member }}{% if member.badge %}
-            <i class="{{ member.badge }}"></i>
+        {{ member }}{% if member.badge_type %}
+            <i class="{{ member.badge_icon }}" title="{{ member.badge_title }}"></i>
         {% endif %}
         </span>
     {% endif %}

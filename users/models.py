@@ -9,6 +9,32 @@ from django.db.models.query import Q
 # extension to django's User class which has authentication details
 # as well as some basic info such as name
 class Member(models.Model):
+    class BADGES:
+        SUPERUSER = 1
+        EXEC = 2
+        EXEXEC = 3
+        NONE = False
+
+        _icons = {
+            SUPERUSER: "fas fa-crown text-gold",
+            EXEC: "fas fa-star text-gold",
+            EXEXEC: "fas fa-award text-muted"
+        }
+        _desc = {
+            SUPERUSER: "Admin",
+            EXEC: "Exec",
+            EXEXEC: "Ex-exec"
+        }
+
+        @classmethod
+        def icon(cls, category):
+            return cls._icons.get(category, False)
+
+        @classmethod
+        def desc(cls, category):
+            return cls._desc.get(category, False)
+
+
     equiv_user = models.OneToOneField(User, on_delete=models.CASCADE)
     discord = models.CharField(max_length=100, blank=True)
     pronoun = models.CharField(max_length=50, blank=True, verbose_name="pronouns")
@@ -27,15 +53,24 @@ class Member(models.Model):
         })
         return 'https://www.gravatar.com/avatar/{}?{}'.format(h, q)
 
-    def badge(self):
+    @property
+    def badge_type(self):
         if self.equiv_user.is_superuser:
-            return "fas fa-crown text-gold"
+            return self.BADGES.SUPERUSER
         elif self.is_exec():
-            return "fas fa-star text-gold"
+            return self.BADGES.EXEC
         elif self.is_ex_exec():
-            return "fas fa-award text-muted"
+            return self.BADGES.EXEXEC
         else:
-            return False
+            return self.BADGES.NONE
+
+    @property
+    def badge_title(self):
+        return self.BADGES.desc(self.badge_type)
+
+    @property
+    def badge_icon(self):
+        return self.BADGES.icon(self.badge_type)
 
     def __str__(self):
         return self.equiv_user.username
