@@ -12,6 +12,7 @@ class Inventory(models.Model):
     name = models.CharField(max_length=30, unique=True)
     suggestions = models.BooleanField(default=True)
     loans = models.BooleanField(default=False)
+    loan_conditions = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = "Inventories"
