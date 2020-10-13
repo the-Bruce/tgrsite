@@ -14,7 +14,7 @@ from django.views.generic import FormView, View, DetailView
 from forum.models import Thread, Response
 from rpgs.models import Rpg
 from .captcha import create_signed_captcha
-from .forms import MemberForm, UserForm, SignupForm
+from .forms import MemberForm, UserForm, SignupForm, UniIDForm
 from .models import Member
 
 
@@ -145,6 +145,14 @@ class Signup(FormView):
         data['captcha'] = ""
         form.data = data
         return super().form_invalid(form)
+
+
+class VerifyRequest(FormView):
+    form_class = UniIDForm
+
+    def form_valid(self, form):
+        # TODO code goes here
+        return super().form_valid(form)
 
 
 @login_required
