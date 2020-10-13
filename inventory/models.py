@@ -3,8 +3,16 @@ from datetime import date
 from django.db import models
 from django.db.models.query import Q
 from django.urls import reverse
+from django.utils import timezone
 
 from users import models as users
+
+
+def daterange(start, end, step=timezone.timedelta(days=1)):
+    curr = start
+    while curr <= end:
+        yield curr
+        curr += step
 
 
 # Create your models here.
@@ -50,16 +58,16 @@ class Record(models.Model):
     def get_absolute_url(self):
         return reverse("inventory:item_detail", kwargs={"inv": self.inventory.canonical_(), "pk": self.pk})
 
-    def can_be_borrowed(self, start_date, end_date):
-        loans = Loan.objects.filter(Q(items__in=[self]) & Q(rejected=False) &
+    def can_be_borrowed(self, start_date, end_date, exclude=()):
+        loans = self.loan_set.filter(Q(rejected__isnull=True) &
                 Q(start_date__lte=end_date, end_date__gte=start_date))
-
-        for day in range(start_date, end_date):
+        print(loans)
+        for day in daterange(start_date, end_date):
             count = 0
             for loan in loans:
-                if loan.contains(day) and loan.is_live():
+                if loan.contains(day) and loan.is_live() and loan.id not in exclude:
                     count += 1
-            if count > self.quantity:
+            if count >= self.quantity:
                 return False
         return True
 
