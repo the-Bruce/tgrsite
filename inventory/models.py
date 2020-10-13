@@ -3,13 +3,22 @@ from datetime import date
 from django.db import models
 from django.db.models.query import Q
 from django.urls import reverse
+from django.utils import timezone
 
 from users import models as users
+
+
+def daterange(start, end, step=timezone.timedelta(days=1)):
+    curr = start
+    while curr <= end:
+        yield curr
+        curr += step
 
 
 # Create your models here.
 class Inventory(models.Model):
     name = models.CharField(max_length=30, unique=True)
+    display = models.CharField(max_length=35, blank=True)
     suggestions = models.BooleanField(default=True)
     loans = models.BooleanField(default=False)
     loan_conditions = models.TextField(blank=True)
@@ -18,7 +27,11 @@ class Inventory(models.Model):
         verbose_name_plural = "Inventories"
 
     def __str__(self):
-        return self.name
+        return self.fullname
+
+    @property
+    def fullname(self):
+        return self.display if self.display else self.name
 
     def canonical_(self):
         return str(self.name).lower()
@@ -40,19 +53,23 @@ class Record(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return self.name
+        return self.inventory.name+": "+self.name
 
     def get_absolute_url(self):
         return reverse("inventory:item_detail", kwargs={"inv": self.inventory.canonical_(), "pk": self.pk})
 
-    def can_be_borrowed(self, start_date, end_date):
-        # This is not quite correct, but doing it right is complicated and expensive
-        # and we probably won't experience the issue enough to cause problems
-        loans = Loan.objects.filter(Q(items__in=[self]) & (
-                Q(start_date__lte=start_date, end_date__gte=start_date) |
-                Q(start_date__lte=end_date, end_date__gte=end_date) |
-                Q(start_date__gte=start_date, end_date__lte=end_date)))
-        return loans.count() < self.quantity
+    def can_be_borrowed(self, start_date, end_date, exclude=()):
+        loans = self.loan_set.filter(Q(rejected__isnull=True) &
+                Q(start_date__lte=end_date, end_date__gte=start_date))
+        print(loans)
+        for day in daterange(start_date, end_date):
+            count = 0
+            for loan in loans:
+                if loan.contains(day) and loan.is_live() and loan.id not in exclude:
+                    count += 1
+            if count >= self.quantity:
+                return False
+        return True
 
     def get_live_loans(self):
         return [x for x in self.loan_set.all() if x.is_live()]

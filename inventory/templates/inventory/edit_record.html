@@ -1,10 +1,10 @@
 {% extends 'tgrsite/main.html' %}
 
-{% block title %}Edit - {{ inv.name }}{% endblock %}
-{% block pagetitle %}{{ inv.name }} Record{% endblock %}
+{% block title %}Edit - {{ inv.fullname }}{% endblock %}
+{% block pagetitle %}{{ inv.fullname }} Record{% endblock %}
 
 {% block breadcrumbs_parents %}
-    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.fullname }}</a></li>
     {% if object %}
         <li class="breadcrumb-item"><a href="{% url "inventory:item_detail" inv=inv.canonical_ pk=object.pk %}">Details</a></li>
     {% else %}

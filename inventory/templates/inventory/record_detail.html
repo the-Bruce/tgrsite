@@ -1,11 +1,12 @@
 {% extends 'tgrsite/main.html' %}
+{% load markdown_tags %}
 {% load staticfiles %}
 
-{% block title %}{{ inv.name }}{% endblock %}
-{% block pagetitle %}{{ inv.name }}{% endblock %}
+{% block title %}{{ inv.fullname }}{% endblock %}
+{% block pagetitle %}{{ inv.fullname }}{% endblock %}
 
 {% block breadcrumbs_parents %}
-    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.fullname }}</a></li>
 {% endblock %}
 {% block breadcrumbs_child %}Details{% endblock %}
 
@@ -46,7 +47,9 @@
 
                     {% if object.description %}
                         <h3>Description</h3>
-                        {{ object.description|linebreaks }}
+                        <div class="markdown-text">
+                            {{ object.description|parse_md_safe }}
+                        </div>
                     {% endif %}
                 </div>
             </div>
