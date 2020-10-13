@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm, SelectDateWidget, NumberInput, ModelMultipleChoiceField
 
 from .models import Suggestion, Record, Loan
@@ -68,11 +69,32 @@ class LoanRequestForm(ModelForm):
             'items': 'Use Ctrl to select multiple items'
         }
 
+    def clean_start_date(self):
+        print('clean_start_date')
+        if 'start_date' not in self.cleaned_data:
+            raise ValidationError("Invalid start date")
+        if self.cleaned_data['start_date'] < datetime.date.today():
+            raise ValidationError("Start date must be in the future")
+        print(self.cleaned_data['start_date'])
+        return self.cleaned_data['start_date']
+
+    def clean_end_date(self):
+        print('clean_end_date')
+        if 'end_date' not in self.cleaned_data:
+            raise ValidationError("Invalid end date")
+        if 'start_date' in self.cleaned_data and self.cleaned_data['end_date'] < self.cleaned_data['start_date']:
+            raise ValidationError("End date must be after start date")
+        print(self.cleaned_data['end_date'])
+        return self.cleaned_data['end_date']
+
     def clean(self):
         cleaned_data = super().clean()
-        # print(cleaned_data)
+        print(cleaned_data)
         if not self.is_bound:  # Stop further processing.
             return
+
+        if self.errors:
+            return cleaned_data
 
         exclude = []
         if self.instance:
@@ -86,12 +108,6 @@ class LoanRequestForm(ModelForm):
         if len(unavailable) > 0:
             error = (", ".join(unavailable)) + " not available for loan between those dates"
             self.add_error('items', error)
-
-        if cleaned_data['end_date'] < cleaned_data['start_date']:
-            self.add_error('end_date', "End date must be after start date")
-
-        if cleaned_data['start_date'] < datetime.date.today():
-            self.add_error('start_date', "Start date must be in the future")
 
         return cleaned_data
 
