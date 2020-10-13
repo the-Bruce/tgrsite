@@ -10,7 +10,7 @@ from users import models as users
 # Create your models here.
 class Inventory(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    display = models.CharField(max_length=35)
+    display = models.CharField(max_length=35, blank=True)
     suggestions = models.BooleanField(default=True)
     loans = models.BooleanField(default=False)
     loan_conditions = models.TextField(blank=True)
@@ -19,7 +19,11 @@ class Inventory(models.Model):
         verbose_name_plural = "Inventories"
 
     def __str__(self):
-        return self.display
+        return self.fullname
+
+    @property
+    def fullname(self):
+        return self.display if self.display else self.name
 
     def canonical_(self):
         return str(self.name).lower()
