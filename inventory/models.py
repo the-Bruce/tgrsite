@@ -51,13 +51,17 @@ class Record(models.Model):
         return reverse("inventory:item_detail", kwargs={"inv": self.inventory.canonical_(), "pk": self.pk})
 
     def can_be_borrowed(self, start_date, end_date):
-        # This is not quite correct, but doing it right is complicated and expensive
-        # and we probably won't experience the issue enough to cause problems
-        loans = Loan.objects.filter(Q(items__in=[self]) & (
-                Q(start_date__lte=start_date, end_date__gte=start_date) |
-                Q(start_date__lte=end_date, end_date__gte=end_date) |
-                Q(start_date__gte=start_date, end_date__lte=end_date)))
-        return loans.count() < self.quantity
+        loans = Loan.objects.filter(Q(items__in=[self]) & Q(rejected=False) &
+                Q(start_date__lte=end_date, end_date__gte=start_date))
+
+        for day in range(start_date, end_date):
+            count = 0
+            for loan in loans:
+                if loan.contains(day) and loan.is_live():
+                    count += 1
+            if count > self.quantity:
+                return False
+        return True
 
     def get_live_loans(self):
         return [x for x in self.loan_set.all() if x.is_live()]
