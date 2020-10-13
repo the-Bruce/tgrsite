@@ -97,6 +97,13 @@ class Member(models.Model):
     def is_ex_exec(self):
         return self.equiv_user.groups.filter(name='ex_exec').exists()
 
+    @property
+    def is_soc_member(self):
+        if self.membership and self.membership.active:
+            return True
+        else:
+            return False
+
     # Make .member idempotent i.e. user.member is valid even if user is actually a member
     @property
     def member(self):

@@ -1,0 +1,8 @@
+{% autoescape off %}Greetings {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.
+
+Here is your link to verify your membership:
+{% url "users:verifyconfirm" %}?token={{ token }}
+
+Cheers,
+The Warwick Tabletop and Role-Playing Society!
+{% endautoescape %}

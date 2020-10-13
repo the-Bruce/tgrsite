@@ -17,7 +17,9 @@ MD_INPUT = {
 
 
 class UniIDForm(Form):
-    uni_id = CharField(max_length=7, validators=[validators.RegexValidator(r'^[0-9]{7}$')])
+    uni_id = CharField(max_length=8, validators=[validators.RegexValidator(r'^u?[0-9]{7}$')],
+                       help_text="Enter your University ID", label="University ID",
+                       widget=TextInput(attrs={"placeholder": "u0000000"}))
 
 
 class LoginForm(ModelForm):

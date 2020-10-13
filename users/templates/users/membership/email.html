@@ -1,0 +1,13 @@
+{% extends "tgrsite/email.html" %}
+{% load static %}
+
+{% block title %}Membership Verification{% endblock %}
+
+{% block body %}
+    <div id="email-content">
+        <h1>Greetings {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.</h1>
+        <h3>Here is your link to verify your membership:</h3>
+        <p><a href="{% url "users:verifyconfirm" %}?token={{ token }}" class="btn-outline-primary btn">Confirm</a></p>
+        <h3>Cheers,<br>The Warwick Tabletop and Role-Playing Society!</h3>
+    </div>
+{% endblock %}

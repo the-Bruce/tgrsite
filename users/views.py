@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,13 +10,14 @@ from django.contrib.messages import constants as messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import FormView, View, DetailView
+from django.views.generic import FormView, View, DetailView, TemplateView
 
 from forum.models import Thread, Response
 from rpgs.models import Rpg
 from .captcha import create_signed_captcha
 from .forms import MemberForm, UserForm, SignupForm, UniIDForm
-from .models import Member
+from .models import Member, Membership, VerificationRequest
+from .utils import sendRequestMailings, getApiMembers
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -149,10 +151,38 @@ class Signup(FormView):
 
 class VerifyRequest(FormView):
     form_class = UniIDForm
+    template_name = "users/membership/verify.html"
+    success_url = reverse_lazy("users:me")
 
     def form_valid(self, form):
-        # TODO code goes here
-        return super().form_valid(form)
+        valid = super().form_valid(form)
+        uni_id = form.cleaned_data['uni_id']
+        members = getApiMembers()
+        if uni_id in members:
+            m, new = Membership.objects.get_or_create(member=self.request.user.member,
+                                                      defaults={"uni_id": uni_id, "uni_email": members[uni_id]})
+            v = VerificationRequest.objects.create(membership=m)
+
+            sendRequestMailings(v.token, m.uni_email)
+
+        add_message(self.request, messages.SUCCESS,
+                    "A verification has been sent to your uni email. "
+                    "Please click the link included in that email to verify your membership.")
+        return valid
+
+
+class VerifyConfirm(View):
+    def get(self, request):
+        try:
+            v=VerificationRequest.objects.get(token__exact=self.request.GET['token'])
+            m=v.membership
+            m.active=True
+            m.save()
+            v.delete()
+            add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
+        except (VerificationRequest.DoesNotExist, KeyError):
+            add_message(request, messages.ERROR, "Verification Failed. Please try again.")
+        return HttpResponseRedirect(reverse("users:me"))
 
 
 @login_required

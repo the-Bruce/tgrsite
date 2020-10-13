@@ -11,9 +11,12 @@
 
     <h1>Your Profile</h1>
 
-    (Note: to change your profile image, see <a href="https://github.com/WarwickTabletop/tgrsite/wiki/Gravatar">this guide.</a>)
+    <p>
+        (Note: to change your profile image, see <a href="https://github.com/WarwickTabletop/tgrsite/wiki/Gravatar">this
+        guide.</a>)
+    </p>
 
-    <form method="POST">
+    <form class="mb-3" method="POST">
         {% csrf_token %}
 
         <div class="form-group">
@@ -28,4 +31,7 @@
         <input type="submit" class="form-control btn btn-block btn-outline-primary" value="Save">
     </form>
 
+    <h3>Membership</h3>
+    <p>You are not currently a registered member</p>
+    <a class="btn btn-outline-primary btn-block" href="{% url "users:verifyrequest" %}">Verify Membership</a>
 {% endblock %}
