@@ -24,7 +24,6 @@ QUANTITY_attrs = {
 MD_INPUT = {
     'class': 'markdown-input',
     'data-endpoint': reverse_lazy('utilities:preview_newsletter'),
-    'rows': 25
 }
 
 
