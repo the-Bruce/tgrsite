@@ -1,11 +1,11 @@
 {% extends 'tgrsite/main.html' %}
 {% load markdown_tags %}
 
-{% block title %}Loans - {{ inv.name }}{% endblock %}
-{% block pagetitle %}{{ inv.name }} Loans{% endblock %}
+{% block title %}Loans - {{ inv.fullname }}{% endblock %}
+{% block pagetitle %}{{ inv.fullname }} Loans{% endblock %}
 
 {% block breadcrumbs_parents %}
-    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.fullname }}</a></li>
 {% endblock %}
 {% block breadcrumbs_child %}Loans{% endblock %}
 

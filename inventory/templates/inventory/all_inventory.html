@@ -1,9 +1,9 @@
 {% extends 'tgrsite/main.html' %}
 
-{% block title %}{{ inv.name }}{% endblock %}
-{% block pagetitle %}{{ inv.name }}{% endblock %}
+{% block title %}{{ inv.fullname }}{% endblock %}
+{% block pagetitle %}{{ inv.fullname }}{% endblock %}
 
-{% block breadcrumbs_child %}{{ inv.name }}{% endblock %}
+{% block breadcrumbs_child %}{{ inv.fullname }}{% endblock %}
 
 {% block leftcontents %}
     {{ block.super }}

@@ -1,10 +1,10 @@
 {% extends 'tgrsite/main.html' %}
 
-{% block title %}Edit - Loan - {{ inv.name }}{% endblock %}
-{% block pagetitle %}{{ inv.name }} Request Loan of Equipment{% endblock %}
+{% block title %}Edit - Loan - {{ inv.fullname }}{% endblock %}
+{% block pagetitle %}{{ inv.fullname }} Request Loan of Equipment{% endblock %}
 
 {% block breadcrumbs_parents %}
-    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.fullname }}</a></li>
     <li class="breadcrumb-item"><a href="{% url "inventory:list_loans" inv=inv.canonical_ %}">Loans</a></li>
     {% if object %}
         <li class="breadcrumb-item"><a href="{% url "inventory:loan_detail" inv=inv.canonical_ pk=object.pk %}">Details</a></li>

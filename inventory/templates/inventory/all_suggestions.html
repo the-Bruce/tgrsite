@@ -1,10 +1,10 @@
 {% extends 'tgrsite/main.html' %}
 
-{% block title %}Suggestions - {{ inv.name }}{% endblock %}
-{% block pagetitle %}{{ inv.name }} Suggestions{% endblock %}
+{% block title %}Suggestions - {{ inv.fullname }}{% endblock %}
+{% block pagetitle %}{{ inv.fullname }} Suggestions{% endblock %}
 
 {% block breadcrumbs_parents %}
-    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "inventory:index" inv.canonical_ %}">{{ inv.fullname }}</a></li>
 {% endblock %}
 {% block breadcrumbs_child %}Suggestions{% endblock %}
 
