@@ -1,4 +1,5 @@
 {% extends 'tgrsite/main.html' %}
+{% load markdown_tags %}
 {% load staticfiles %}
 
 {% block title %}{{ inv.fullname }}{% endblock %}
@@ -46,7 +47,9 @@
 
                     {% if object.description %}
                         <h3>Description</h3>
-                        {{ object.description|linebreaks }}
+                        <div class="markdown-text">
+                            {{ object.description|parse_md_safe }}
+                        </div>
                     {% endif %}
                 </div>
             </div>

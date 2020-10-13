@@ -1,7 +1,8 @@
 import datetime
 
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, SelectDateWidget, NumberInput, ModelMultipleChoiceField
+from django.forms import ModelForm, SelectDateWidget, NumberInput, ModelMultipleChoiceField, Textarea
+from django.urls import reverse_lazy
 
 from .models import Suggestion, Record, Loan
 
@@ -20,6 +21,11 @@ BOOTSTRAP_FORM_WIDGET_attrs = {
 QUANTITY_attrs = {
     'min': 1
 }
+MD_INPUT = {
+    'class': 'markdown-input',
+    'data-endpoint': reverse_lazy('utilities:preview_newsletter'),
+    'rows': 25
+}
 
 
 class RecordForm(ModelForm):
@@ -32,6 +38,7 @@ class RecordForm(ModelForm):
         fields = ['name', 'description', 'quantity', 'image', 'acquired', 'owner']
         widgets = {
             'quantity': NumberInput(attrs=QUANTITY_attrs),
+            'description': Textarea(attrs=MD_INPUT),
             'acquired': SelectDate(years=range(datetime.date.today().year - 9, datetime.date.today().year + 1)),
         }
 
