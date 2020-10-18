@@ -8,7 +8,7 @@ from .models import Loan, Suggestion
 
 
 @require_http_methods(["POST"])
-@permission_required('change_suggestion')
+@permission_required('inventory.change_suggestion')
 def archiveSuggestion(request, pk):
     item = get_object_or_404(Suggestion, pk=pk)
     item.archived = True
@@ -17,7 +17,7 @@ def archiveSuggestion(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('can_authorise')
+@permission_required('inventory.can_authorise')
 def rejectLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.rejected = request.user.member
@@ -26,7 +26,7 @@ def rejectLoan(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('can_authorise')
+@permission_required('inventory.can_authorise')
 def authoriseLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.authorised = request.user.member
@@ -35,7 +35,7 @@ def authoriseLoan(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('can_witness')
+@permission_required('inventory.can_witness')
 def takeLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.taken_who = request.user.member
@@ -45,7 +45,7 @@ def takeLoan(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('can_witness')
+@permission_required('inventory.can_witness')
 def returnLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.returned_who = request.user.member

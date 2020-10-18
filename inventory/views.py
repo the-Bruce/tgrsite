@@ -75,8 +75,8 @@ class LoanDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
     def test_func(self):
         object = get_object_or_404(Loan, pk=self.kwargs['pk'])
-        return ((object.requester == self.request.user.member and not object.authorised) or
-                self.request.user.has_perm('view_loan'))
+        return ((object.requester == self.request.user.member) or
+                self.request.user.has_perm('inventory.view_loan'))
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
@@ -152,7 +152,7 @@ class UpdateSuggestion(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return (self.request.user.member == self.object.requester or
-                self.request.user.has_perm('change_suggestion'))
+                self.request.user.has_perm('inventory.change_suggestion'))
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
@@ -205,7 +205,7 @@ class UpdateLoan(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         object = get_object_or_404(Loan, pk=self.kwargs['pk'])
         return ((object.requester == self.request.user.member and object.can_edit()) or
-                self.request.user.has_perm('change_loan'))
+                self.request.user.has_perm('inventory.change_loan'))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -226,7 +226,7 @@ class NotateLoan(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Loan
     form_class = LoanNotesForm
     template_name = "inventory/edit_loan.html"
-    permission_required = "change_loan"
+    permission_required = "inventory.change_loan"
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
