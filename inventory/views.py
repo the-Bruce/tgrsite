@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.views import redirect_to_login
 
+from users.permissions import PERMS
 from .forms import SuggestionForm, LoanRequestForm, RecordForm, LoanNotesForm
 from .models import Inventory, Loan, Record, Suggestion
 
@@ -58,7 +59,7 @@ class ListAllLoans(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
-        if self.request.user.has_perm("view_loan"):
+        if self.request.user.has_perm(PERMS.inventory.view_loan):
             return Loan.objects.filter(inventory=inv)
         else:
             return Loan.objects.filter(inventory=inv, requester=self.request.user.member)
@@ -76,7 +77,7 @@ class LoanDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         object = get_object_or_404(Loan, pk=self.kwargs['pk'])
         return ((object.requester == self.request.user.member) or
-                self.request.user.has_perm('inventory.view_loan'))
+                self.request.user.has_perm(PERMS.inventory.view_loan))
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
@@ -152,7 +153,7 @@ class UpdateSuggestion(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return (self.request.user.member == self.object.requester or
-                self.request.user.has_perm('inventory.change_suggestion'))
+                self.request.user.has_perm(PERMS.inventory.change_suggestion))
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
@@ -168,7 +169,7 @@ class UpdateRecord(PermissionRequiredMixin, UpdateView):
     model = Record
     form_class = RecordForm
     template_name = "inventory/edit_record.html"
-    permission_required = "inventory.change_record"
+    permission_required = PERMS.inventory.change_record
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, name__iexact=self.kwargs['inv'])
@@ -184,7 +185,7 @@ class CreateRecord(PermissionRequiredMixin, CreateView):
     model = Suggestion
     form_class = RecordForm
     template_name = "inventory/edit_record.html"
-    permission_required = "inventory.add_record"
+    permission_required = PERMS.inventory.add_record
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
@@ -205,7 +206,7 @@ class UpdateLoan(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         object = get_object_or_404(Loan, pk=self.kwargs['pk'])
         return ((object.requester == self.request.user.member and object.can_edit()) or
-                self.request.user.has_perm('inventory.change_loan'))
+                self.request.user.has_perm(PERMS.inventory.change_loan))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -226,7 +227,7 @@ class NotateLoan(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Loan
     form_class = LoanNotesForm
     template_name = "inventory/edit_loan.html"
-    permission_required = "inventory.change_loan"
+    permission_required = PERMS.inventory.change_loan
 
     def get_queryset(self):
         inv = get_object_or_404(Inventory, loans=True, name__iexact=self.kwargs['inv'])
