@@ -121,6 +121,7 @@ class Membership(models.Model):
     uni_id = models.CharField(max_length=7, validators=[validators.RegexValidator(r'^[0-9]{7}$')])
     uni_email = models.EmailField()
     active = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
 
 
