@@ -4,11 +4,12 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_http_methods
 
+from users.permissions import PERMS
 from .models import Loan, Suggestion
 
 
 @require_http_methods(["POST"])
-@permission_required('inventory.change_suggestion')
+@permission_required(PERMS.inventory.change_suggestion)
 def archiveSuggestion(request, pk):
     item = get_object_or_404(Suggestion, pk=pk)
     item.archived = True
@@ -17,7 +18,7 @@ def archiveSuggestion(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('inventory.can_authorise')
+@permission_required(PERMS.inventory.can_authorise)
 def rejectLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.rejected = request.user.member
@@ -26,7 +27,7 @@ def rejectLoan(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('inventory.can_authorise')
+@permission_required(PERMS.inventory.can_authorise)
 def authoriseLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.authorised = request.user.member
@@ -35,7 +36,7 @@ def authoriseLoan(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('inventory.can_witness')
+@permission_required(PERMS.inventory.can_witness)
 def takeLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.taken_who = request.user.member
@@ -45,7 +46,7 @@ def takeLoan(request, pk):
 
 
 @require_http_methods(["POST"])
-@permission_required('inventory.can_witness')
+@permission_required(PERMS.inventory.can_witness)
 def returnLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.returned_who = request.user.member
