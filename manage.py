@@ -2,8 +2,11 @@
 import os
 import sys
 
+from tgrsite.utils import PermsError
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tgrsite.settings")
+    PermsError.suppress()
     try:
         from django.core.management import execute_from_command_line
     except ImportError:

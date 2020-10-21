@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from django.db import models
 
+from tgrsite.utils import PermsError
 
 class Permissions:
     _instance = None
@@ -18,7 +19,8 @@ class Permissions:
             if item in self.perms:
                 return self.app + "." + item
             else:
-                raise AttributeError("Unknown Permission: " + item)
+                if PermsError():
+                    raise AttributeError("Unknown Permission: " + item)
 
         def register(self, element):
             if not self.final:

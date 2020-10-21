@@ -2,8 +2,10 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
+from notifications.models import notify, NotifType
 from users.permissions import PERMS
 from .models import Loan, Suggestion
 
@@ -23,6 +25,9 @@ def rejectLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.rejected = request.user.member
     item.save()
+    notify(item.requester, NotifType.LOAN_REQUESTS, f"A pending loan request has been rejected.",
+                                  reverse('inventory:loan_detail',
+                                          kwargs={'inv': item.inventory.canonical_(), 'pk': item.id}))
     return redirect(item.get_absolute_url())
 
 
@@ -32,6 +37,10 @@ def authoriseLoan(request, pk):
     item = get_object_or_404(Loan, pk=pk)
     item.authorised = request.user.member
     item.save()
+    notify(item.requester, NotifType.LOAN_REQUESTS,
+                                  f"A pending loan request has been authorised.",
+                                  reverse('inventory:loan_detail',
+                                          kwargs={'inv': item.inventory.canonical_(), 'pk': item.id}))
     return redirect(item.get_absolute_url())
 
 

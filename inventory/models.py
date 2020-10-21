@@ -186,4 +186,5 @@ class Loan(models.Model):
         permissions = (
             ("can_authorise", "Can authorise loan"),
             ("can_witness", "Can witness withdrawal or return of items"),
+            ("can_surrogate", "Can create loans on other's behalf"),
         )
