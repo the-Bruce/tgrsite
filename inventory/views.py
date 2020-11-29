@@ -293,7 +293,7 @@ class CreateSurrogateLoan(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
                     reverse('inventory:loan_detail', kwargs={'inv':self.object.inventory.canonical_(), 'pk': self.object.id}), merge_key=self.object.id)
 
         notify(form.instance.requester, NotifType.LOAN_REQUESTS,
-                                      f"A loan request has been create for you by {self.request.user.username}.",
+                                      f"A loan request has been created for you by {self.request.user.username}.",
                                       reverse('inventory:loan_detail', kwargs={'inv':self.object.inventory.canonical_(), 'pk': self.object.id}))
 
         return response
