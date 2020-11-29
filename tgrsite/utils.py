@@ -1,9 +1,9 @@
 class PermsError:
-    val = False
+    val = True
 
     @classmethod
     def suppress(cls):
-        cls.val = True
+        cls.val = False
 
     def __bool__(self):
         return self.val
