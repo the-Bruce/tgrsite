@@ -8,5 +8,5 @@ class SubscriptionForm(ModelForm):
     class Meta:
         model = NotificationSubscriptions
 
-        fields = ['newsletter', 'message', 'rpg_join', 'rpg_leave', 'rpg_kick', 'rpg_add',
+        fields = ['newsletter', 'message', 'loan_request', 'rpg_join', 'rpg_leave', 'rpg_kick', 'rpg_add',
                   'rpg_new', 'forum_reply', 'other']

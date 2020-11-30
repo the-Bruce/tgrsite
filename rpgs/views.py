@@ -72,7 +72,7 @@ class Create(LoginRequiredMixin, generic.CreateView):
         self.object.game_masters.add(self.request.user.member)
         self.object.save()
         add_message(self.request, messages.SUCCESS, "Event successfully created")
-        notify_everybody(NotifType.RPG_CREATE, "New Events are available for signup.",
+        notify_everybody(NotifType.RPG_CREATE, f"A new event '{form.cleaned_data['title']}' is available for signup.",
                          reverse('rpgs:detail', kwargs={'pk': self.object.id}), merge_key=self.object.id)
         return response
 

@@ -33,5 +33,11 @@
         <a class="btn btn-block btn-outline-success"
            href="{% url "inventory:create_loan" inv=inv.canonical_ %}">Request Loan</a>
     </div>
+    {% if perms.inventory.can_surrogate %}
+    <div class="mb-3">
+        <a class="btn btn-block btn-outline-warning"
+           href="{% url "inventory:create_surrogate_loan" inv=inv.canonical_ %}">Request Loan for Member</a>
+    </div>
+    {% endif %}
     {% include "inventory/parts/loanlist.html" with loans=object_list %}
 {% endblock %}

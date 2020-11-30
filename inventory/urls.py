@@ -15,6 +15,7 @@ urlpatterns = [
     path('<str:inv>/suggestions/<int:pk>/', views.SuggestionDetail.as_view(), name='suggestion_detail'),
     path('<str:inv>/suggestions/<int:pk>/edit/', views.CreateSuggestion.as_view(), name='edit_suggestion'),
     path('<str:inv>/borrow/new/', views.CreateLoan.as_view(), name='create_loan'),
+    path('<str:inv>/borrow/new/surrogate/', views.CreateSurrogateLoan.as_view(), name='create_surrogate_loan'),
     path('<str:inv>/borrow/', views.ListAllLoans.as_view(), name='list_loans'),
     path('<str:inv>/borrow/<int:pk>/', views.LoanDetail.as_view(), name='loan_detail'),
     path('<str:inv>/borrow/<int:pk>/edit/', views.UpdateLoan.as_view(), name='edit_loan'),

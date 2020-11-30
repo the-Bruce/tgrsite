@@ -20,6 +20,7 @@ class NotifType:
     FORUM_REPLY = 7
     OTHER = 8
     RPG_CREATE = 9
+    LOAN_REQUESTS = 10
 
 
 class SubType:
@@ -33,6 +34,7 @@ class NotificationSubscriptions(models.Model):
     notification_types = [
         (NotifType.NEWSLETTER, 'Newsletter'),
         (NotifType.MESSAGE, 'PMs'),
+        (NotifType.LOAN_REQUESTS, 'Loan Request Updates'),
         (NotifType.RPG_JOIN, 'RPG Gains Member'),
         (NotifType.RPG_LEAVE, 'RPG Looses Member'),
         (NotifType.RPG_KICK, 'Kicked from RPG'),
@@ -54,6 +56,8 @@ class NotificationSubscriptions(models.Model):
     newsletter = models.IntegerField(verbose_name='Newsletters', choices=subscription_types, default=SubType.WEB)
     message = models.IntegerField(verbose_name='Receive Direct Messages', choices=reduced_subscription_types,
                                   default=SubType.WEB)
+    loan_request = models.IntegerField(verbose_name='A Loan Request Gets Updated', choices=reduced_subscription_types,
+                                  default=SubType.WEB)
     rpg_join = models.IntegerField(verbose_name='Someone Joins Your Event', choices=reduced_subscription_types,
                                    default=SubType.WEB)
     rpg_leave = models.IntegerField(verbose_name='Someone Leaves Your Event', choices=reduced_subscription_types,
@@ -74,6 +78,7 @@ class NotificationSubscriptions(models.Model):
         mapping = {
             NotifType.NEWSLETTER: self.newsletter,
             NotifType.MESSAGE: self.message,
+            NotifType.LOAN_REQUESTS: self.loan_request,
             NotifType.RPG_JOIN: self.rpg_join,
             NotifType.RPG_LEAVE: self.rpg_leave,
             NotifType.RPG_KICK: self.rpg_kick,
@@ -94,17 +99,8 @@ class NotificationSubscriptions(models.Model):
 
 
 class Notification(models.Model):
-    notification_types = [
-        (NotifType.NEWSLETTER, 'Newsletter'),
-        (NotifType.MESSAGE, 'Message Received'),
-        (NotifType.RPG_JOIN, 'Joined RPG'),
-        (NotifType.RPG_LEAVE, 'Left RPG'),
-        (NotifType.RPG_KICK, 'Kicked from RPG'),
-        (NotifType.RPG_ADDED, 'Added to RPG'),
-        (NotifType.FORUM_REPLY, 'Replied to Forum'),
-        (NotifType.RPG_CREATE, 'New RPG Available'),
-        (NotifType.OTHER, 'Other Notification')
-    ]
+    notification_types = NotificationSubscriptions.notification_types
+
     member = models.ForeignKey(Member, related_name='notifications_owned', on_delete=models.CASCADE)
     notif_type = models.IntegerField(choices=notification_types, default=NotifType.OTHER)
     url = models.CharField(max_length=512)
@@ -120,6 +116,7 @@ class Notification(models.Model):
         icons = {
             NotifType.NEWSLETTER: 'fas fa-newspaper',
             NotifType.MESSAGE: 'fas fa-comment-dots',
+            NotifType.LOAN_REQUESTS: 'fas fa-exchange-alt',
             NotifType.RPG_JOIN: 'fas fa-sign-in-alt',
             NotifType.RPG_LEAVE: 'fas fa-sign-out-alt',
             NotifType.RPG_KICK: 'fas fa-times',
@@ -172,8 +169,12 @@ def delete_all_old():
     Notification.objects.filter(time__lt=year_ago).delete()
 
 
-def notify_everybody(notif_type, content, url, merge_key=None):
-    notifs = [create_notification_if_subbed(m, notif_type, content, url, merge_key) for m in Member.objects.all()]
+def notify_bulk(members, notif_type, content, url, merge_key=None):
+    notifs = [create_notification_if_subbed(m, notif_type, content, url, merge_key) for m in members]
     notifications = list(filter(None, notifs))
     Notification.objects.bulk_create(notifications)
     delete_all_old()
+
+
+def notify_everybody(notif_type, content, url, merge_key=None):
+    notify_bulk(Member.objects.all(), notif_type, content, url, merge_key)

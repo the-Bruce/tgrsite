@@ -117,7 +117,8 @@ class Loan(models.Model):
     returned_when = models.DateTimeField(blank=True, null=True)
     returned_who = models.ForeignKey(users.Member, on_delete=models.PROTECT,
                                      related_name="inventory_loan_return_witnesses", blank=True, null=True)
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True,
+                             help_text="Notes visible only to loan administrators (damage, late, excuses ect.)")
 
     def on_loan(self):
         if self.taken_when is None:
@@ -185,4 +186,5 @@ class Loan(models.Model):
         permissions = (
             ("can_authorise", "Can authorise loan"),
             ("can_witness", "Can witness withdrawal or return of items"),
+            ("can_surrogate", "Can create loans on other's behalf"),
         )

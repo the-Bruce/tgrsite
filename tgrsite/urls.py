@@ -22,7 +22,7 @@ urlpatterns = [
     path('minutes/', include('minutes.urls')),
     path('gallery/', include('gallery.urls')),
     path('', include('pages.urls')),
-    path('<slug:source>/', redirect)
+    path('<path:source>/', redirect, name="redirect")
 ] + static(settings.MEDIA_URL,
            document_root=settings.MEDIA_ROOT)  # This only runs if DEBUG=True. Its a bad idea on prod
 

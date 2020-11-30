@@ -74,7 +74,7 @@
 
 
             {% if not object.rejected %}
-                {% if perms.inventory.can_authorise and not object.authorised %}
+                {% if perms.inventory.can_authorise and not object.authorised and object.is_live %}
                     <form action="{% url "inventory:authorise_loan" pk=object.pk %}" id="authorise" method="post">
                         {% csrf_token %}
                     </form>
@@ -89,7 +89,7 @@
                         </button>
                     </div>
                 {% endif %}
-                {% if perms.inventory.can_witness and object.authorised %}
+                {% if perms.inventory.can_witness and object.authorised and object.is_live %}
                     {% if not object.taken_who %}
                         <form class="mb-2" action="{% url "inventory:taken_loan" pk=object.pk %}" method="post">
                             {% csrf_token %}
