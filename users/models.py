@@ -122,8 +122,11 @@ class Membership(models.Model):
     uni_email = models.EmailField()
     active = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
-    member = models.OneToOneField(Member, on_delete=models.CASCADE)
+    checked = models.DateField(blank=True, null=True)
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="membership")
 
+    def __str__(self):
+        return self.uni_id + ": " + self.member.username
 
 def generate_token():
     return secrets.token_urlsafe(64)
@@ -131,4 +134,10 @@ def generate_token():
 
 class VerificationRequest(models.Model):
     token = models.CharField(default=generate_token, max_length=100)
-    membership = models.ForeignKey(Membership, on_delete=models.CASCADE)
+    datetime = models.DateTimeField(auto_now=True)
+    uni_id = models.CharField(max_length=7, validators=[validators.RegexValidator(r'^[0-9]{7}$')])
+    uni_email = models.EmailField()
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="verifications")
+
+    def __str__(self):
+        return self.uni_id + ": " + self.member.username

@@ -3,6 +3,7 @@ from django.db.models import Count
 
 from notifications.tasks import doSummaryNotificationMailings
 from messaging.models import MessageThread
+from users.utils import updateMemberships
 
 
 class Command(BaseCommand):
@@ -12,3 +13,5 @@ class Command(BaseCommand):
         doSummaryNotificationMailings()
         MessageThread.objects.annotate(Count("message")).filter(message__count=0).all().delete()
         self.stdout.write('Messages Thread Cleaned')
+        updateMemberships()
+        self.stdout.write('Memberships updated')

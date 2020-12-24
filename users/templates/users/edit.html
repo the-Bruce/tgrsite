@@ -31,7 +31,23 @@
         <input type="submit" class="form-control btn btn-block btn-outline-primary" value="Save">
     </form>
 
-    <h3>Membership</h3>
-    <p>You are not currently a registered member</p>
-    <a class="btn btn-outline-primary btn-block" href="{% url "users:verifyrequest" %}">Verify Membership</a>
+    <h2>Membership</h2>
+    {% if not user.member.membership and not user.member.verifications.all %}
+        <p>You are not currently a registered member</p>
+        <a class="btn btn-outline-primary btn-block" href="{% url "users:verifyrequest" %}">Verify Membership</a>
+    {% else %}
+        {% if user.member.is_soc_member %}
+            <p>You're an active member! It was verified on {{ user.member.membership.checked }}.</p>
+        {% elif user.member.membership.verified and not user.member.membership.active %}
+            <p>Your membership has lapsed. Please visit our <a href="/su">SU page</a> to purchase membership once again.
+            </p>
+            <p>If you have recently done so, please give upto 24h for the system to update, after which please contact
+                the Web Admin for support.</p>
+        {% elif not user.member.membership.verified and user.member.verifications.all %}
+            <p>Your membership verification is currently pending. Please check your university email for a verification
+                email.</p>
+            <p>Please give it a few minutes to arrive. Otherwise, you can request a new email below</p>
+            <a class="btn btn-outline-primary btn-block" href="{% url "users:verifyrequest" %}">Verify Membership</a>
+        {% endif %}
+    {% endif %}
 {% endblock %}

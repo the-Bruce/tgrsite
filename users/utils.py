@@ -2,6 +2,8 @@ import requests
 from django.http import HttpRequest
 from django.template import loader
 
+from .models import Membership
+
 from premailer import Premailer
 
 try:
@@ -27,7 +29,7 @@ def sendRequestMailings(token, email):
     request = HttpRequest()
     request.META['HTTP_HOST'] = settings.PRIMARY_HOST
     subject = "Membership Verification | Warwick Tabletop Games and Role-Playing Society"
-    text = loader.render_to_string("users/membership/plain-email.txt", {"token": token},
+    text = loader.render_to_string("users/membership/plain-email.txt", {"host": url, "token": token},
                                    request)
     html = loader.render_to_string("users/membership/email.html", {"token": token},
                                    request)
@@ -46,3 +48,17 @@ def getApiMembers():
         email = member.find('EmailAddress').text
         members[id] = email
     return members
+
+
+def updateMemberships():
+    members = getApiMembers()
+    for m in Membership.objects.all():
+        if m.verified:
+            if m.uni_id.lstrip('u') in members:
+                if not m.active:
+                    m.active = True
+                    m.save()
+            else:
+                if m.active:
+                    m.active = False
+                    m.save()

@@ -1,7 +1,9 @@
 {% autoescape off %}Greetings {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.
 
 Here is your link to verify your membership:
-{% url "users:verifyconfirm" %}?token={{ token }}
+{{ host }}{% url "users:verifyconfirm" %}?token={{ token }}
+
+This link will expire in 2 hours.
 
 Cheers,
 The Warwick Tabletop and Role-Playing Society!

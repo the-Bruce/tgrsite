@@ -10,6 +10,7 @@ from django.contrib.messages import constants as messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.views.generic import FormView, View, DetailView, TemplateView
 
 from forum.models import Thread, Response
@@ -156,14 +157,15 @@ class VerifyRequest(FormView):
 
     def form_valid(self, form):
         valid = super().form_valid(form)
-        uni_id = form.cleaned_data['uni_id']
+        uni_id = form.cleaned_data['uni_id'].lower().lstrip('u')
+
         members = getApiMembers()
         if uni_id in members:
-            m, new = Membership.objects.get_or_create(member=self.request.user.member,
-                                                      defaults={"uni_id": uni_id, "uni_email": members[uni_id]})
-            v = VerificationRequest.objects.create(membership=m)
+            print(members[uni_id])
+            v = VerificationRequest.objects.create(member=self.request.user.member,
+                                                   uni_id=uni_id, uni_email=members[uni_id])
 
-            sendRequestMailings(v.token, m.uni_email)
+            sendRequestMailings(v.token, v.uni_email)
 
         add_message(self.request, messages.SUCCESS,
                     "A verification has been sent to your uni email. "
@@ -174,11 +176,16 @@ class VerifyRequest(FormView):
 class VerifyConfirm(View):
     def get(self, request):
         try:
-            v=VerificationRequest.objects.get(token__exact=self.request.GET['token'])
-            m=v.membership
-            m.active=True
+            v = VerificationRequest.objects.get(datetime__gte=timezone.now() - timezone.timedelta(hours=2),
+                                                token__exact=self.request.GET['token'])
+            m, _ = Membership.objects.get_or_create(member=v.member)
+            m.uni_id = v.uni_id
+            m.uni_email = v.uni_email
+            m.active = True
+            m.verified = True
+            m.checked = timezone.now()
             m.save()
-            v.delete()
+            v.member.verifications.all().delete()
             add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
