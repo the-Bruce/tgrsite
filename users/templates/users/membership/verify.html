@@ -1,0 +1,20 @@
+{% extends 'tgrsite/main.html' %}
+{% block title %}Verify Membership{% endblock %}
+{% block pagetitle %}Verify Membership{% endblock %}
+
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url "users:me" %}">Your Profile</a></li>
+    <li class="breadcrumb-item"><a href="{% url "users:edit" %}">Membership</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Verification{% endblock %}
+
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {% include "parts/render_form_content.html" with form=form %}
+        </div>
+        <input type="submit" class="form-control btn btn-block btn-outline-primary" value="Send Email">
+    </form>
+{% endblock %}

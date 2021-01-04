@@ -17,6 +17,9 @@ urlpatterns = [
 
     path('signup/', views.Signup.as_view(), name='signup'),
 
+    path('membership/verify/', views.VerifyRequest.as_view(), name='verifyrequest'),
+    path('membership/verify-confirm/', views.VerifyConfirm.as_view(), name='verifyconfirm'),
+
     path('change-password/',
          views.ChangePassword.as_view(),
          name='password_change'),

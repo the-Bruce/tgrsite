@@ -36,7 +36,7 @@
                 <div class="alert alert-dark">Expired</div>
             {% endif %}
 
-            {% if object.can_edit %}
+            {% if perms.inventory.change_loan or object.member == user.member and object.can_edit  %}
                 <p class="mb-2"><a class="btn btn-block btn-outline-primary"
                                    href="{% url "inventory:edit_loan" inv=inv.canonical_ pk=object.pk %}">Edit</a>
                 </p>

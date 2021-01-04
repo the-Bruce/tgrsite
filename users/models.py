@@ -1,8 +1,10 @@
 import hashlib
+import secrets
 import urllib.parse as urllib
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.core import validators
 from django.db.models.query import Q
 
 
@@ -33,7 +35,6 @@ class Member(models.Model):
         @classmethod
         def desc(cls, category):
             return cls._desc.get(category, False)
-
 
     equiv_user = models.OneToOneField(User, on_delete=models.CASCADE)
     discord = models.CharField(max_length=100, blank=True)
@@ -96,6 +97,13 @@ class Member(models.Model):
     def is_ex_exec(self):
         return self.equiv_user.groups.filter(name='ex_exec').exists()
 
+    @property
+    def is_soc_member(self):
+        if self.membership and self.membership.active:
+            return True
+        else:
+            return False
+
     # Make .member idempotent i.e. user.member is valid even if user is actually a member
     @property
     def member(self):
@@ -107,3 +115,30 @@ class Member(models.Model):
             Q(equiv_user__is_superuser=True) |
             Q(equiv_user__user_permissions__codename=perm_name) |
             Q(equiv_user__groups__permissions__codename=perm_name)).distinct()
+
+
+class Membership(models.Model):
+    uni_id = models.CharField(max_length=7, validators=[validators.RegexValidator(r'^[0-9]{7}$')])
+    uni_email = models.EmailField()
+    active = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
+    checked = models.DateField(blank=True, null=True)
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="membership")
+
+    def __str__(self):
+        return self.uni_id + ": " + self.member.username
+
+
+def generate_token():
+    return secrets.token_urlsafe(64)
+
+
+class VerificationRequest(models.Model):
+    token = models.CharField(default=generate_token, max_length=100)
+    datetime = models.DateTimeField(auto_now=True)
+    uni_id = models.CharField(max_length=7, validators=[validators.RegexValidator(r'^[0-9]{7}$')])
+    uni_email = models.EmailField()
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="verifications")
+
+    def __str__(self):
+        return self.uni_id + ": " + self.member.username
