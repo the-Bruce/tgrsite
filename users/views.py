@@ -153,7 +153,7 @@ class Signup(FormView):
 class VerifyRequest(FormView):
     form_class = UniIDForm
     template_name = "users/membership/verify.html"
-    success_url = reverse_lazy("users:me")
+    success_url = reverse_lazy("users:edit")
 
     def form_valid(self, form):
         valid = super().form_valid(form)
@@ -195,7 +195,7 @@ class VerifyConfirm(View):
                 add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
-        return HttpResponseRedirect(reverse("users:edit"))
+        return HttpResponseRedirect(reverse("users:me"))
 
 
 @login_required
