@@ -29,11 +29,11 @@
             <a class="btn btn-outline-primary btn-block" href="{% url "users:verifyrequest" %}">Verify Membership</a>
         {% endif %}
     {% endif %}
+    <h2>Profile</h2>
     <p>
         (Note: to change your profile image, see <a href="https://github.com/WarwickTabletop/tgrsite/wiki/Gravatar">this
         guide.</a>)
     </p>
-    <h2>Profile</h2>
     <form class="mb-3" method="POST">
         {% csrf_token %}
 
