@@ -178,15 +178,21 @@ class VerifyConfirm(View):
         try:
             v = VerificationRequest.objects.get(datetime__gte=timezone.now() - timezone.timedelta(hours=2),
                                                 token__exact=self.request.GET['token'])
-            m, _ = Membership.objects.get_or_create(member=v.member)
-            m.uni_id = v.uni_id
-            m.uni_email = v.uni_email
-            m.active = True
-            m.verified = True
-            m.checked = timezone.now()
-            m.save()
-            v.member.verifications.all().delete()
-            add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
+            if Membership.objects.filter(uni_id=v.uni_id).exists():
+                v.member.verifications.all().delete()
+                add_message(request, messages.ERROR,
+                            "Verification Failed. User is already associated with that ID. "
+                            "Please contact the web admin if this is not you.")
+            else:
+                m, _ = Membership.objects.get_or_create(member=v.member)
+                m.uni_id = v.uni_id
+                m.uni_email = v.uni_email
+                m.active = True
+                m.verified = True
+                m.checked = timezone.now()
+                m.save()
+                v.member.verifications.all().delete()
+                add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
         return HttpResponseRedirect(reverse("users:me"))
