@@ -195,7 +195,7 @@ class VerifyConfirm(View):
                 add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
-        return HttpResponseRedirect(reverse("users:me"))
+        return HttpResponseRedirect(reverse("users:edit"))
 
 
 @login_required

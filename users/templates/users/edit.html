@@ -10,27 +10,6 @@
 {% block body %}
 
     <h1>Your Profile</h1>
-
-    <p>
-        (Note: to change your profile image, see <a href="https://github.com/WarwickTabletop/tgrsite/wiki/Gravatar">this
-        guide.</a>)
-    </p>
-
-    <form class="mb-3" method="POST">
-        {% csrf_token %}
-
-        <div class="form-group">
-            {% include "parts/render_form_content.html" with form=userform %}
-
-            {% for field in memberform %}
-                {% if field.name != 'official_photo_url' or request.user.member.is_exec %}
-                    {% include "parts/render_form_widget.html" with field=field %}
-                {% endif %}
-            {% endfor %}
-        </div>
-        <input type="submit" class="form-control btn btn-block btn-outline-primary" value="Save">
-    </form>
-
     <h2>Membership</h2>
     {% if not user.member.membership and not user.member.verifications.all %}
         <p>You are not currently a registered member</p>
@@ -50,4 +29,23 @@
             <a class="btn btn-outline-primary btn-block" href="{% url "users:verifyrequest" %}">Verify Membership</a>
         {% endif %}
     {% endif %}
+    <p>
+        (Note: to change your profile image, see <a href="https://github.com/WarwickTabletop/tgrsite/wiki/Gravatar">this
+        guide.</a>)
+    </p>
+    <h2>Profile</h2>
+    <form class="mb-3" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {% include "parts/render_form_content.html" with form=userform %}
+
+            {% for field in memberform %}
+                {% if field.name != 'official_photo_url' or request.user.member.is_exec %}
+                    {% include "parts/render_form_widget.html" with field=field %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <input type="submit" class="form-control btn btn-block btn-outline-primary" value="Save">
+    </form>
 {% endblock %}
