@@ -166,6 +166,12 @@ class VerifyRequest(FormView):
                                                    uni_id=uni_id, uni_email=members[uni_id])
 
             sendRequestMailings(v.token, v.uni_email)
+        else:
+            # create a request to a dummy email to prevent leaking membership info
+            v = VerificationRequest.objects.create(member=self.request.user.member,
+                                                   uni_id='0000000', uni_email='website@warwicktabletop.co.uk')
+
+            sendRequestMailings(v.token, v.uni_email)
 
         add_message(self.request, messages.SUCCESS,
                     "A verification has been sent to your uni email. "

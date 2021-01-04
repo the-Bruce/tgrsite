@@ -128,6 +128,7 @@ class Membership(models.Model):
     def __str__(self):
         return self.uni_id + ": " + self.member.username
 
+
 def generate_token():
     return secrets.token_urlsafe(64)
 
