@@ -25,13 +25,13 @@ transformer = Premailer(base_url=url, base_path=url,
                         include_star_selectors=True, keep_style_tags=False, align_floating_images=False)
 
 
-def sendRequestMailings(token, email):
+def sendRequestMailings(user, token, email):
     request = HttpRequest()
     request.META['HTTP_HOST'] = settings.PRIMARY_HOST
     subject = "Membership Verification | Warwick Tabletop Games and Role-Playing Society"
-    text = loader.render_to_string("users/membership/plain-email.txt", {"host": url, "token": token},
+    text = loader.render_to_string("users/membership/plain-email.txt", {"user": user, "host": url, "token": token},
                                    request)
-    html = loader.render_to_string("users/membership/email.html", {"token": token},
+    html = loader.render_to_string("users/membership/email.html", {"user": user, "token": token},
                                    request)
     html = transformer.transform(html)
     mails = [(subject, text, html, None, [email])]
