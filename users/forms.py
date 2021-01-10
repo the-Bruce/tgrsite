@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, Textarea, TextInput, CharField, HiddenInput, EmailInput, PasswordInput
+from django.forms import ModelForm, Textarea, TextInput, CharField, HiddenInput, EmailInput, PasswordInput, Form
 from django.forms import ValidationError
 from django.utils.safestring import mark_safe
+from django.core import validators
 
 from .models import Member
 from .captcha import check_signed_captcha
@@ -13,6 +14,12 @@ BOOTSTRAP_FORM_WIDGET_attrs = {
 MD_INPUT = {
     'class': 'markdown-input'
 }
+
+
+class UniIDForm(Form):
+    uni_id = CharField(max_length=8, validators=[validators.RegexValidator(r'^u?[0-9]{7}$')],
+                       help_text="Enter your University ID", label="University ID",
+                       widget=TextInput(attrs={"placeholder": "u0000000"}))
 
 
 class LoginForm(ModelForm):

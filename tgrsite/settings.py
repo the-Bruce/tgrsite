@@ -60,6 +60,7 @@ DEFAULT_PROTOCOL = "https://"
 
 if DEBUG:
     from .ipnetworks import IpNetworks
+
     INTERNAL_IPS = IpNetworks(['127.0.0.1', '192.168.0.0/255.255.0.0'])
 else:
     INTERNAL_IPS = ['127.0.0.1']
@@ -180,7 +181,7 @@ USE_TZ = True
 # site URL that static files are served from
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL=reverse_lazy("homepage")
+LOGIN_REDIRECT_URL = reverse_lazy("homepage")
 
 # directories to collect static files from
 STATICFILES_DIRS = [
@@ -224,6 +225,8 @@ MESSAGE_TAGS = {
     message_constants.WARNING: 'alert-warning',
     message_constants.ERROR: 'alert-danger',
 }
+
+MEMBERSHIP_API_KEY = ""
 
 # Allow local configuration (change deploy options etc.)
 try:
