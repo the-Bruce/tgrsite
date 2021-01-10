@@ -150,7 +150,7 @@ class Signup(FormView):
         return super().form_invalid(form)
 
 
-class VerifyRequest(FormView):
+class VerifyRequest(LoginRequiredMixin, FormView):
     form_class = UniIDForm
     template_name = "users/membership/verify.html"
     success_url = reverse_lazy("users:edit")
