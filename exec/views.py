@@ -14,6 +14,12 @@ class Index(ListView):
     context_object_name = "execs"
     ordering = ("sort_index",)
 
+    def get_context_data(self, *args, **kwargs):
+        ctxt = super().get_context_data(*args, **kwargs)
+        ctxt['resp'] = 'full' in self.request.GET
+        return ctxt
+
+
 
 class Edit(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = ExecRole
