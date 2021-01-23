@@ -1,4 +1,5 @@
 {% extends 'tgrsite/main.html' %}
+{% load markdown_tags %}
 {% block title %}
     Exec page
 {% endblock %}
@@ -34,15 +35,32 @@
                                      src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
                                      alt="Photo for {{ role.incumbent }}" height="144">
                             </div>
-                            <div class="card-text">
-                                {{ role.bio|linebreaks }}
+                            <div class="card-text w-100">
+                                <div class="markdown-text">
+                                    {{ role.bio|parse_md_text }}
+                                </div>
+                                {% if role.responsibilities %}
+                                    <button class="mt-3 btn btn-outline-dark btn-block" data-toggle="collapse"
+                                            data-target="#resp-{{ role.role_title|cut:" " }}" aria-expanded="false"
+                                            aria-controls="collapseExample">Responsibilities
+                                    </button>
+                                    <div id="resp-{{ role.role_title|cut:" " }}" class="collapse{% if resp %} show{% endif %}">
+                                        <div class="card-text markdown-text mt-3">
+                                            {{ role.responsibilities|parse_md_text }}
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </li>
             {% endif %}
         {% empty %}
-            <li class="card bg-warning mb-2"><div class="card-body">No roles have been defined. Get the web admin to add them in the admin interface</div></li>
+            <li class="card bg-warning mb-2">
+                <div class="card-body">No roles have been defined. Get the web admin to add them in the admin
+                    interface
+                </div>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}

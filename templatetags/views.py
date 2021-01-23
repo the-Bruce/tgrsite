@@ -21,8 +21,17 @@ class MarkdownPreviewSafe(View):
     def post(self, request, *args, **kwargs):
         return render(request, self.template_name, {'body': request.POST['md'].strip()})
 
+
 class MarkdownPreviewNewsletter(View):
     template_name = "markdown_preview_newsletter.html"
+
+    @method_decorator(csrf_exempt)
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'body': request.POST['md'].strip()})
+
+
+class MarkdownPreviewText(View):
+    template_name = "markdown_preview_text.html"
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
