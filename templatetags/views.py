@@ -31,7 +31,7 @@ class MarkdownPreviewNewsletter(View):
 
 
 class MarkdownPreviewText(View):
-    template_name = "markdown_preview_newsletter.html"
+    template_name = "markdown_preview_text.html"
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
