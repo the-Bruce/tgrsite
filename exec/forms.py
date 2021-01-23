@@ -5,7 +5,7 @@ from .models import ExecRole
 
 MD_INPUT = {
     'class': 'markdown-input',
-    'data-endpoint': reverse_lazy('utilities:preview'),
+    'data-endpoint': reverse_lazy('utilities:preview_text'),
 }
 
 

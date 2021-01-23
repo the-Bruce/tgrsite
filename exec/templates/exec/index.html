@@ -35,7 +35,7 @@
                                      src="{{ role.incumbent.official_photo_url | default:role.incumbent.gravatar }}"
                                      alt="Photo for {{ role.incumbent }}" height="144">
                             </div>
-                            <div class="card-text">
+                            <div class="card-text w-100">
                                 <div class="markdown-text">
                                     {{ role.bio|parse_md_text }}
                                 </div>
