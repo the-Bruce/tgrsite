@@ -16,16 +16,19 @@ class ViewPage(UserPassesTestMixin, generic.DetailView):
         o = self.get_object()
         if o.permission == Page.Permissions.PUBLIC:
             return True
-        elif o.permission == Page.Permissions.USER:
-            return self.request.user.is_authenticated
-        elif o.permission == Page.Permissions.MEMBER:
-            return (self.request.user.member.is_exec()
-                    or self.request.user.member.is_ex_exec()
-                    or self.request.user.member.is_soc_member)
-        elif o.permission == Page.Permissions.EX_EXEC:
-            return (self.request.user.member.is_exec()
-                    or self.request.user.member.is_ex_exec())
-        elif o.permission == Page.Permissions.EXEC:
-            return self.request.user.member.is_exec()
+        if self.request.user.is_authenticated:
+            if o.permission == Page.Permissions.USER:
+                return self.request.user.is_authenticated
+            elif o.permission == Page.Permissions.MEMBER:
+                return (self.request.user.member.is_exec()
+                        or self.request.user.member.is_ex_exec()
+                        or self.request.user.member.is_soc_member)
+            elif o.permission == Page.Permissions.EX_EXEC:
+                return (self.request.user.member.is_exec()
+                        or self.request.user.member.is_ex_exec())
+            elif o.permission == Page.Permissions.EXEC:
+                return self.request.user.member.is_exec()
+            else:
+                raise NotImplemented("Invalid Page Permission Value")
         else:
-            raise NotImplemented("Invalid Page Permission Value")
+            return False
