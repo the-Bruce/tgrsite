@@ -1,10 +1,10 @@
 Markdown
 pymdown-extensions
-Django==2.2.13
+Django==3.1.5
 pytz
 requests
 django-crispy-forms
 Pillow
 django_bleach
 premailer
-django-debug-toolbar
+#django-debug-toolbar
