@@ -127,6 +127,9 @@ class Join(LoginRequiredMixin, generic.View):
             add_message(self.request, messages.WARNING, "You are running that event!")
         elif rpg.members.count() >= rpg.players_wanted:
             add_message(self.request, messages.WARNING, "Sorry, the event is already full")
+        elif not self.request.user.member.is_soc_member and rpg.member_only:
+            add_message(self.request, messages.WARNING, "This event is only available to current members. "
+                                                        "Please verify your membership from your profile and try again.")
         elif len(self.request.user.member.discord.strip()) == 0 and rpg.discord:
             add_message(self.request, messages.WARNING, "This event is being held on discord. "
                                                         "Please add a discord account to your profile and try again.")

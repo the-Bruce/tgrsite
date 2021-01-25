@@ -28,6 +28,8 @@ class Rpg(models.Model):
     tags = models.ManyToManyField('Tag')
     discord = models.BooleanField(default=False,
                                   help_text="Require users to have a discord username listed before signing up")
+    member_only = models.BooleanField(default=False,
+                                      help_text="Require users to be verified members to sign up")
 
     def __str__(self):
         return self.title
