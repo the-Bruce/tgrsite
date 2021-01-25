@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.messages import add_message, WARNING
 
 from .models import Page
 
@@ -13,6 +14,8 @@ class ViewPage(UserPassesTestMixin, generic.DetailView):
     template_name = "pages/page.html"
 
     def test_func(self):
+        if self.request.user.is_superuser:
+            return True
         o = self.get_object()
         if o.permission == Page.Permissions.PUBLIC:
             return True
@@ -31,4 +34,5 @@ class ViewPage(UserPassesTestMixin, generic.DetailView):
             else:
                 raise NotImplemented("Invalid Page Permission Value")
         else:
+            add_message(self.request, WARNING, "Please log in to see that page")
             return False

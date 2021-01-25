@@ -4,7 +4,7 @@ import urllib.parse as urllib
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.core import validators
+from django.core import validators, exceptions
 from django.db.models.query import Q
 
 
@@ -99,10 +99,14 @@ class Member(models.Model):
 
     @property
     def is_soc_member(self):
-        if self.membership and self.membership.active:
-            return True
-        else:
+        try:
+            if self.membership and self.membership.active:
+                return True
+            else:
+                return False
+        except exceptions.ObjectDoesNotExist:
             return False
+
 
     # Make .member idempotent i.e. user.member is valid even if user is actually a member
     @property
