@@ -11,4 +11,6 @@ urlpatterns = [
     path('thread/<int:thread>/full/', views.FullThread.as_view(), name='message_thread_full'),
     path('thread/name/', views.rename_thread, name='rename_thread'),
     path('dm_thread/<int:recipient>/', views.DMThread.as_view(), name='get_dm_thread'),
+    path('delete/', views.DeleteView.as_view(), name='delete_message'),
+    path('report/', views.ReportView.as_view(), name='report_message'),
 ]
