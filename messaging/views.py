@@ -27,6 +27,24 @@ def create_group(*members, name=""):
     return m_thread
 
 
+def find_dm(*members):
+    print(members)
+    query = MessageThread.objects.all()
+    query = query.filter(dmthread=True).annotate(num_participants=Count('participants')).filter(
+        num_participants=len(members))
+    for i in members:
+        query = query.filter(participants=i)
+    print(query)
+    if query.exists():
+        return query.first()
+    else:
+        m_thread = MessageThread.objects.create(dmthread=True)
+        for member in members:
+            m_thread.participants.add(member)
+        m_thread.save()
+        return m_thread
+
+
 def send_message(member, thread, message):
     # Send the notification to everyone in the thread except the sender.
     url = reverse('message:message_thread', args=[thread.id])
@@ -171,8 +189,10 @@ class Index(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         target = form.cleaned_data['recipient']
         assert isinstance(target, Member)
-
-        t = create_group(target, self.request.user.member)
+        print(target.__repr__())
+        t = find_dm(target, self.request.user.member)
+        if t is None:
+            raise ValueError
         m = send_message(self.request.user.member, t, form.cleaned_data['message'])
         self.object = m
         return super().form_valid(form)
@@ -187,7 +207,6 @@ class Reports(PermissionRequiredMixin, TemplateView):
         threads = MessageThread.objects.filter(message__messagereport__resolved=False).annotate(
             latest=Max('message__timestamp'))
         ctxt['threads'] = threads.order_by(F('latest').desc(nulls_last=True))
-
         return ctxt
 
 
@@ -272,21 +291,7 @@ class FullThread(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class DMThread(LoginRequiredMixin, RedirectView):
     permanent = False
 
-    def _find_group(self, *members, name=""):
-        query = MessageThread.objects.all()
-        query = query.annotate(num_participants=Count('participants')).filter(num_participants=len(members))
-        for i in members:
-            query = query.filter(participants=i)
-        try:
-            return query.first()
-        except MessageThread.DoesNotExist:
-            m_thread = MessageThread.objects.create(title=name)
-            for member in members:
-                m_thread.participants.add(member)
-            m_thread.save()
-            return m_thread
-
     def get_redirect_url(self, *args, **kwargs):
         rec = Member.objects.get(id=kwargs['recipient'])
-        q = self._find_group(self.request.user.member, rec)
+        q = find_dm(self.request.user.member, rec)
         return reverse("message:message_thread", args=[q.id])

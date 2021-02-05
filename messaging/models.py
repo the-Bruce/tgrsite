@@ -6,6 +6,7 @@ from users.models import Member
 class MessageThread(models.Model):
     participants = models.ManyToManyField(Member)
     title = models.CharField(max_length=64, blank=True)
+    dmthread = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title or (', '.join([str(x) for x in self.participants.all()]))
