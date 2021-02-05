@@ -116,7 +116,7 @@ class ReportView(LoginRequiredMixin, UserPassesTestMixin, View):
         notify_bulk(Member.users_with_perm(PERMS.messaging.can_moderate),
                     NotifType.OTHER,
                     f"A message has been reported for moderation by {request.user.member.username}",
-                    reverse('message:message_list'))
+                    reverse('message:message_thread_full', kwargs={'pk': message.thread_id}))
         return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': message.thread_id}))
 
 
