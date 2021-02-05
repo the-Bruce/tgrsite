@@ -204,8 +204,9 @@ class Thread(LoginRequiredMixin, UserPassesTestMixin, FormView):
         count = 10
         ctxt = super().get_context_data(**kwargs)
         ctxt['thread'] = thread = get_object_or_404(MessageThread, id=self.kwargs['pk'])
-        ctxt['thread_messages'] = thread.message_set.filter(deleted__isnull=True).order_by('-timestamp')[:count]
-        ctxt['more'] = (thread.message_set.count() > count)
+        messages = thread.message_set.filter(deleted__isnull=True)
+        ctxt['thread_messages'] = messages.order_by('-timestamp')[:count]
+        ctxt['more'] = (messages.count() > count)
         return ctxt
 
     def get_success_url(self):
