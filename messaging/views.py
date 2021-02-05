@@ -82,7 +82,11 @@ class DeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         message.save()
         django_add_message(request, django_message.SUCCESS,
                            "Message successfully deleted")
-        return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': message.thread_id}))
+        if self.request.user.member == message.sender:
+            return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': message.thread_id}))
+        else:
+            # moderator must have done it
+            return HttpResponseRedirect(reverse('message:message_thread_full', kwargs={'thread': message.thread_id}))
 
 
 class ReportView(LoginRequiredMixin, UserPassesTestMixin, View):
