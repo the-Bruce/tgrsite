@@ -3,6 +3,13 @@ from django.shortcuts import reverse
 
 
 class Page(models.Model):
+    class Permissions(models.IntegerChoices):
+        PUBLIC = 0, 'Public'
+        USER = 1, 'Logged In'
+        MEMBER = 2, 'Member'
+        EX_EXEC = 3, 'Ex-Exec'
+        EXEC = 4, 'Exec'
+
     name = models.CharField(max_length=64, blank=False, help_text='Internal name of page')
     title = models.CharField(max_length=64, blank=True, help_text='Page title to display in titlebar of browser/tab')
     page_title = models.CharField(max_length=64, blank=True, help_text='Title to appear at the top of the page')
@@ -12,6 +19,7 @@ class Page(models.Model):
     css = models.TextField(max_length=16384, blank=True, help_text='Custom CSS styles for the page')
     leftbar = models.TextField(max_length=16384, blank=True, help_text='Left sidebar contents (use cards)')
     markdown = models.BooleanField(default=True, help_text='Enable markdown rendering in this page')
+    permission = models.IntegerField(choices=Permissions.choices, default=Permissions.PUBLIC)
 
     def __str__(self):
         return self.name

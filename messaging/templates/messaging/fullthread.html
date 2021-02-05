@@ -8,15 +8,25 @@
 {% block pagetitle %}{% get_conversation_name thread user %}{% endblock %}
 
 {% block breadcrumbs_parents %}
-    <li class="breadcrumb-item"><a href="{% url 'message:message_list' %}">Messages</a></li>
-    <li class="breadcrumb-item"><a
-            href="{% url 'message:message_thread' thread.pk %}">{% get_conversation_name thread user %}</a></li>
+    {% if not moderating %}
+        <li class="breadcrumb-item"><a href="{% url 'message:message_list' %}">Messages</a></li>
+        <li class="breadcrumb-item"><a
+                href="{% url 'message:message_thread' thread.pk %}">{% get_conversation_name thread user %}</a></li>
+    {% else %}
+        <li class="breadcrumb-item"><a href="{% url 'message:message_list' %}">Messages</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'message:pending_reports' %}">Reports</a></li>
+    {% endif %}
 {% endblock %}
-{% block breadcrumbs_child %}Full Thread{% endblock %}
+{% block breadcrumbs_child %}{% if moderating %}{% get_conversation_name thread user %}{% else %}Full Thread{% endif %}{% endblock %}
 
 {% block body %}
+    {% include "messaging/parts/modals.html" %}
     <div class="mb-3">
         {% include 'messaging/parts/messages.html' with full=True message_list=thread_messages %}
     </div>
     {% include 'parts/pagination.html' %}
+{% endblock %}
+{% block bottomscripts %}
+{{ block.super }}
+{% include "messaging/parts/scripts.html" %}
 {% endblock %}

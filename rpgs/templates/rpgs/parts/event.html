@@ -7,7 +7,8 @@
 <div class="card mb-3">
     <a href="{% url "rpgs:detail" rpg.pk %}"
        class="card-link card-header d-flex flex-column flex-sm-row justify-content-between align-items-center">
-        <h5 class="mb-0 text-center text-sm-left">{% if embed and rpg.pinned %}<i class="fas fa-thumbtack"></i> {% endif %}{{ rpg.title }}</h5>
+        <h5 class="mb-0 text-center text-sm-left">{% if embed and rpg.pinned %}
+            <i class="fas fa-thumbtack"></i> {% endif %}{{ rpg.title }}</h5>
         <div class="d-flex flex-column align-items-center align-items-sm-end">
             <span class="mb-0 text-muted text-center text-sm-right">{{ rpg.timeslot }}</span>
             <span class="mb-0 text-muted text-center text-sm-right">{{ rpg.location }}</span>
@@ -43,60 +44,80 @@
             <span class="badge badge-pill badge-primary">{{ rpg.members.count }}/{{ rpg.players_wanted }}</span>
         </p>
         {% if not embed %}
+            {% if rpg.discord %}
+                <p class="alert-primary alert card-text">
+                    <i class="fas fa-exclamation-triangle"></i> This event requires your account to have a discord
+                    username
+                </p>
+            {% endif %}
+            {% if rpg.member_only %}
+                <p class="alert-primary alert card-text">
+                    <i class="fas fa-exclamation-triangle"></i> This event is only open to current members
+                </p>
+            {% endif %}
+        {% endif %}
+        {% if not embed %}
             <ul class="list-group">
                 {% for member in rpg.members.all %}
                     <li class="list-group-item d-flex flex-row justify-content-between align-items-center">
                         {% include "parts/render_member.html" with avatarless=True %}
                         {% if manager %}
-                        <form method="POST" action="{% url "rpgs:kick" rpg.pk %}">
-                            {% csrf_token %}
-                            <input type="hidden" value="{{ rpg.pk }}" name="id">
-                            <input type="hidden" value="{{ member.pk }}" name="user-to-remove">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" title="Kick User">
-                                <i class="fas fa-times"></i><span class="sr-only">Kick User</span>
-                            </button>
-                        </form>
+                            <form method="POST" action="{% url "rpgs:kick" rpg.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ rpg.pk }}" name="id">
+                                <input type="hidden" value="{{ member.pk }}" name="user-to-remove">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" data-toggle="tooltip"
+                                        title="Kick User">
+                                    <i class="fas fa-times"></i><span class="sr-only">Kick User</span>
+                                </button>
+                            </form>
                         {% endif %}
                     </li>
                 {% endfor %}
             </ul>
             {% if user.member in rpg.members.all or user.member in rpg.game_masters.all %}
-                <a class="btn btn-block btn-outline-primary mt-2" href="{% url "rpgs:message" rpg.pk %}">Message Current Members</a>
+                <a class="btn btn-block btn-outline-primary mt-2" href="{% url "rpgs:message" rpg.pk %}">Message Current
+                    Members</a>
             {% endif %}
         {% endif %}
     </div>
     {% if not embed and user.is_authenticated %}
         {% if user.member in rpg.members.all %}
             <form id="event_leave" action="{% url "rpgs:leave" rpg.pk %}" method="post">
-            {% csrf_token %}
+                {% csrf_token %}
             </form>
         {% else %}
             <form id="event_join" action="{% url "rpgs:join" rpg.pk %}" method="post">
-            {% csrf_token %}
+                {% csrf_token %}
             </form>
         {% endif %}
         <div class="card-footer d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
             <div class="flex-grow-1 mb-0">
                 {% if user.member not in rpg.game_masters.all %}
                     <div class="btn-group btn-block">
-                    {% if user.member in rpg.members.all %}
-                        <button form="event_leave" type="submit" class="btn btn-outline-warning">Leave</button>
-                    {% else %}
-                        {% if rpg.members.count < rpg.players_wanted %}
-                            <button form="event_join" type="submit" class="btn btn-outline-success">Join</button>
+                        {% if user.member in rpg.members.all %}
+                            <button form="event_leave" type="submit" class="btn btn-outline-warning">Leave</button>
+                        {% else %}
+                            {% if rpg.members.count < rpg.players_wanted %}
+                                <button form="event_join" type="submit" class="btn btn-outline-success">Join</button>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
                     </div>
                 {% endif %}
             </div>
             {% if manager %}
-                <form method="post" class="d-flex flex-grow-1 mx-0 mb-2 mb-sm-0 ml-sm-3" id="event_add_to" action="{% url "rpgs:add_to" rpg.pk %}">
+                <form method="post" class="d-flex flex-grow-1 mx-0 mb-2 mb-sm-0 ml-sm-3" id="event_add_to"
+                      action="{% url "rpgs:add_to" rpg.pk %}">
                     <div class="form-group d-flex flex-grow-1 m-0 justify-content-around align-items-center">
                         {% csrf_token %}
                         <label for="event_add_by_username" class="sr-only"></label>
-                        <div class="flex-fill ml-0 mr-1"><input type="text" class="form-control add-member-input" data-provide="typeahead" autocomplete="off" name="username" id="event_add_by_username" placeholder="Username"></div>
+                        <div class="flex-fill ml-0 mr-1"><input type="text" class="form-control add-member-input"
+                                                                data-provide="typeahead" autocomplete="off"
+                                                                name="username" id="event_add_by_username"
+                                                                placeholder="Username"></div>
                         <div class="mr-0">
-                            <button type="submit" class="btn btn-block btn-outline-success" form="event_add_to" data-toggle="tooltip" title="Add Member">
+                            <button type="submit" class="btn btn-block btn-outline-success" form="event_add_to"
+                                    data-toggle="tooltip" title="Add Member">
                                 <i class="fas fa-user-plus"></i><span class="sr-only">Add Member</span>
                             </button>
                         </div>
@@ -104,9 +125,11 @@
                 </form>
 
                 <div class="btn-group ml-sm-3">
-                    <a class="btn btn-outline-primary" href="{% url "rpgs:edit" rpg.pk %}"  data-toggle="tooltip" title="Edit Event"><i
+                    <a class="btn btn-outline-primary" href="{% url "rpgs:edit" rpg.pk %}" data-toggle="tooltip"
+                       title="Edit Event"><i
                             class="fas fa-edit"></i><span class="sr-only">Edit Event</span></a>
-                    <a class="btn btn-outline-danger" href="{% url "rpgs:delete" rpg.pk %}" data-toggle="tooltip" title="Delete Event"><i
+                    <a class="btn btn-outline-danger" href="{% url "rpgs:delete" rpg.pk %}" data-toggle="tooltip"
+                       title="Delete Event"><i
                             class="fas fa-trash-alt"></i><span class="sr-only">Delete Event</span></a>
                 </div>
             {% endif %}
@@ -114,10 +137,10 @@
     {% elif not embed %}
         <div class="card-footer d-flex flex-column flex-sm-row justify-content-center align-items-sm-center">
             <p class="card-text">
-                    <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
-                    or
-                    <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to join this event.
-                </p>
+                <a href="{% url 'users:signup' %}?next={{ request.path }}">Sign up</a>
+                or
+                <a href="{% url 'users:login' %}?next={{ request.path }}">log in</a> to join this event.
+            </p>
         </div>
     {% endif %}
 </div>

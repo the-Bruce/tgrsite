@@ -1,0 +1,21 @@
+<script>
+    $('#reportModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var messageid = button.data('messageid'); // Extract info from data-* attributes
+        var modal = $(this);
+        modal.find('#report-message-id').val(messageid);
+    });
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var messageid = button.data('messageid'); // Extract info from data-* attributes
+        var modal = $(this);
+        modal.find('#delete-message-id').val(messageid);
+    });
+    $('#resolveModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var reportid = button.data('reportid'); // Extract info from data-* attributes
+        var modal = $(this);
+        modal.find('#resolve-report-id').val(reportid);
+    });
+    $('[data-tooltip="tooltip"]').tooltip();
+</script>

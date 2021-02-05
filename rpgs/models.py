@@ -3,6 +3,7 @@ from django.core import validators
 from django.shortcuts import reverse
 
 from users.models import Member
+from messaging.models import MessageThread
 
 
 # Create your models here.
@@ -28,6 +29,9 @@ class Rpg(models.Model):
     tags = models.ManyToManyField('Tag')
     discord = models.BooleanField(default=False,
                                   help_text="Require users to have a discord username listed before signing up")
+    member_only = models.BooleanField(default=False,
+                                      help_text="Require users to be verified members to sign up")
+    messaging_thread = models.ForeignKey(MessageThread, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.title

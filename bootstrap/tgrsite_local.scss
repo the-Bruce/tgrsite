@@ -65,4 +65,26 @@ a.anchor {
 
 }
 
+.hover-parent {
+  .hover-only {
+    visibility: hidden;
+  }
+}
+
+.hover-parent:hover {
+  .hover-only {
+    visibility: visible;
+  }
+}
+
+.hover-only:hover {
+  visibility: visible;
+}
+
+.right-above {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
 @import "tgrsite_newsletter";

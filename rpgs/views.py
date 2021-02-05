@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
-from messaging.views import find_group
+from messaging.views import create_group
 from notifications.models import NotifType, notify_everybody, notify
 from .forms import RpgForm, RpgCreateForm
 from .models import Rpg, Tag
@@ -127,6 +127,9 @@ class Join(LoginRequiredMixin, generic.View):
             add_message(self.request, messages.WARNING, "You are running that event!")
         elif rpg.members.count() >= rpg.players_wanted:
             add_message(self.request, messages.WARNING, "Sorry, the event is already full")
+        elif not self.request.user.member.is_soc_member and rpg.member_only:
+            add_message(self.request, messages.WARNING, "This event is only available to current members. "
+                                                        "Please verify your membership from your profile and try again.")
         elif len(self.request.user.member.discord.strip()) == 0 and rpg.discord:
             add_message(self.request, messages.WARNING, "This event is being held on discord. "
                                                         "Please add a discord account to your profile and try again.")
@@ -213,10 +216,16 @@ class MessageGroup(LoginRequiredMixin, UserPassesTestMixin, generic.RedirectView
 
     def get_redirect_url(self, *args, **kwargs):
         members = {*self.rpg.members.all(), *self.rpg.game_masters.all()}
-        group = find_group(*members, name=self.rpg.title)
-        add_message(self.request, messages.WARNING, "Please note, if the people in the event change you will need to "
-                                                    "create a new messaging group.")
-        return reverse("message:message_thread", kwargs={'pk': group.pk})
+        if self.rpg.messaging_thread:
+            self.rpg.messaging_thread.members.set(members)
+            return reverse("message:message_thread", kwargs={'pk': self.rpg.messaging_thread.pk})
+        else:
+            group = create_group(*members, name=self.rpg.title)
+            self.rpg.messaging_thread = group
+            add_message(self.request, messages.WARNING,
+                        "Please note, if the people in the event change you will need to "
+                        "click again to update the messaging group.")
+            return reverse("message:message_thread", kwargs={'pk': group.pk})
 
 
 def alltags(request):

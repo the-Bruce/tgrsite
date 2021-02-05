@@ -1,40 +1,30 @@
-import re
-
+from django.db.models import Count, Max, F, Q
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Max, F
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, get_object_or_404, reverse
+from django.contrib.messages import add_message as django_add_message
+from django.contrib import messages as django_message
+from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import FormView, ListView, View, RedirectView, TemplateView
+from django.shortcuts import get_object_or_404, reverse
+from django.utils.timezone import datetime
 
-from django.views.generic import FormView, ListView, TemplateView, RedirectView
-
-from notifications.models import notify, NotifType
+from notifications.models import notify, NotifType, notify_bulk
 from users.models import Member
-from .models import Message, MessageThread
+from users.permissions import PERMS
+from .models import Message, MessageThread, MessageReport
 from .forms import QuickDM, Respond, MemberFormset
 
 
 # not a view
 # helper function to send messages
-def find_group(*members, name=""):
+def create_group(*members, name=""):
     members = set(members)
-    query = MessageThread.objects.all()
-    query = query.annotate(num_participants=Count('participants')).filter(num_participants=len(members))
-    for i in members:
-        query = query.filter(participants=i)
-    try:
-        return query.get()
-    except MessageThread.DoesNotExist:
-        m_thread = MessageThread.objects.create(title=name)
-        for member in members:
-            m_thread.participants.add(member)
-        m_thread.save()
-        return m_thread
-    except MessageThread.MultipleObjectsReturned:
-        for i in query:
-            print(i)
-        raise AssertionError("Impossible State Reached")  # TODO: DO NOT LEAVE IN PROD!!!
+    m_thread = MessageThread.objects.create(title=name)
+    for member in members:
+        m_thread.participants.add(member)
+    m_thread.save()
+    return m_thread
 
 
 def send_message(member, thread, message):
@@ -65,6 +55,104 @@ def rename_thread(request):
     return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': request.POST.get('thread')}))
 
 
+class DeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get_object(self):
+        if 'message' not in self.request.POST:
+            raise ValueError('Missing required post field')
+        m_id = self.request.POST.get('message')
+        message = get_object_or_404(Message, id=m_id)
+        return message
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except ValueError:
+            return HttpResponseBadRequest("Missing required post fields")
+
+    def test_func(self):
+        message = self.get_object()
+        if self.request.user.member == message.sender or self.request.user.has_perm(PERMS.messaging.can_moderate):
+            return True
+        else:
+            return False
+
+    def post(self, request):
+        message = self.get_object()
+        message.deleted = datetime.now()
+        message.save()
+        django_add_message(request, django_message.SUCCESS,
+                           "Message successfully deleted")
+        if self.request.user.member == message.sender:
+            return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': message.thread_id}))
+        else:
+            # moderator must have done it
+            return HttpResponseRedirect(reverse('message:message_thread_full', kwargs={'thread': message.thread_id}))
+
+
+class ReportView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get_object(self):
+        if 'message' not in self.request.POST:
+            raise ValueError('Missing required post field')
+        m_id = self.request.POST.get('message')
+        message = get_object_or_404(Message, id=m_id)
+        return message
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except ValueError:
+            return HttpResponseBadRequest("Missing required post fields")
+
+    def test_func(self):
+        message = self.get_object()
+        if (self.request.user.member in message.thread.participants.all()
+                or self.request.user.has_perm(PERMS.messaging.can_moderate)):
+            return True
+        else:
+            return False
+
+    def post(self, request):
+        message = self.get_object()
+        comment = self.request.POST.get('comment', default="")
+        MessageReport.objects.create(member=self.request.user.member, message=message, comment=comment)
+        django_add_message(request, django_message.SUCCESS,
+                           "A report has been sent. An admin should review this message soon")
+        notify_bulk(Member.users_with_perm(PERMS.messaging.can_moderate),
+                    NotifType.OTHER,
+                    f"A message has been reported for moderation by {request.user.member.username}",
+                    reverse('message:message_thread_full', args=[message.thread_id]))
+        return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': message.thread_id}))
+
+
+class ResolveView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get_object(self):
+        if 'report' not in self.request.POST:
+            raise ValueError('Missing required post field')
+        m_id = self.request.POST.get('report')
+        report = get_object_or_404(MessageReport, id=m_id)
+        return report
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except ValueError:
+            return HttpResponseBadRequest("Missing required post fields")
+
+    def test_func(self):
+        return self.request.user.has_perm(PERMS.messaging.can_moderate)
+
+    def post(self, request):
+        comment = self.request.POST.get('comment', default="")
+        report = self.get_object()
+        report.resolved = True
+        report.resolution = comment
+        report.clean()
+        report.save()
+        django_add_message(request, django_message.SUCCESS,
+                           "Report resolved successfully.")
+        return HttpResponseRedirect(reverse('message:pending_reports'))
+
+
 class Index(LoginRequiredMixin, FormView):
     form_class = QuickDM
     template_name = "messaging/index.html"
@@ -72,7 +160,7 @@ class Index(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
         threads = MessageThread.objects.filter(participants=self.request.user.member).annotate(
-            latest=Max('message__timestamp'))
+            latest=Max('message__timestamp', filter=Q(message__deleted__isnull=True)))
         ctxt['threads'] = threads.order_by(F('latest').desc(nulls_last=True))
 
         return ctxt
@@ -84,10 +172,23 @@ class Index(LoginRequiredMixin, FormView):
         target = form.cleaned_data['recipient']
         assert isinstance(target, Member)
 
-        t = find_group(target, self.request.user.member)
+        t = create_group(target, self.request.user.member)
         m = send_message(self.request.user.member, t, form.cleaned_data['message'])
         self.object = m
         return super().form_valid(form)
+
+
+class Reports(PermissionRequiredMixin, TemplateView):
+    template_name = "messaging/reports.html"
+    permission_required = PERMS.messaging.can_moderate
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        threads = MessageThread.objects.filter(message__messagereport__resolved=False).annotate(
+            latest=Max('message__timestamp'))
+        ctxt['threads'] = threads.order_by(F('latest').desc(nulls_last=True))
+
+        return ctxt
 
 
 class Thread(LoginRequiredMixin, UserPassesTestMixin, FormView):
@@ -103,7 +204,7 @@ class Thread(LoginRequiredMixin, UserPassesTestMixin, FormView):
         count = 10
         ctxt = super().get_context_data(**kwargs)
         ctxt['thread'] = thread = get_object_or_404(MessageThread, id=self.kwargs['pk'])
-        ctxt['thread_messages'] = thread.message_set.order_by('-timestamp')[:count]
+        ctxt['thread_messages'] = thread.message_set.filter(deleted__isnull=True).order_by('-timestamp')[:count]
         ctxt['more'] = (thread.message_set.count() > count)
         return ctxt
 
@@ -127,7 +228,7 @@ class CreateGroup(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         members = set()
         for subform in form:
-            #print(subform.cleaned_data)
+            # print(subform.cleaned_data)
             if subform.is_bound and 'recipient' in subform.cleaned_data:
                 r = subform.cleaned_data['recipient']
                 if r not in members:
@@ -135,7 +236,7 @@ class CreateGroup(LoginRequiredMixin, FormView):
         if self.request.user.member not in members:
             members.add(self.request.user.member)
 
-        self.object = find_group(*members)
+        self.object = create_group(*members)
         return super().form_valid(form)
 
 
@@ -146,24 +247,45 @@ class FullThread(LoginRequiredMixin, UserPassesTestMixin, ListView):
     context_object_name = "thread_messages"
 
     def test_func(self):
-        thread = get_object_or_404(MessageThread, id=self.kwargs['thread'])
+        self.thread = thread = get_object_or_404(MessageThread, id=self.kwargs['thread'])
         # make sure the user is in the thread
-        return self.request.user.member in thread.participants.all()
+        return self.request.user.member in thread.participants.all() or (
+                self.request.user.has_perm(PERMS.messaging.can_moderate) and thread.message_set.filter(
+            messagereport__resolved=False).exists())
 
     def get_context_data(self, object_list=None, **kwargs):
         ctxt = super().get_context_data(object_list=object_list, **kwargs)
         ctxt['thread'] = get_object_or_404(MessageThread, id=self.kwargs['thread'])
+        if self.request.user.member not in ctxt['thread'].participants.all():
+            ctxt['moderating'] = True
         return ctxt
 
     def get_queryset(self):
         thread_ = get_object_or_404(MessageThread, pk=self.kwargs['thread'])
-        return thread_.message_set.order_by('-timestamp').all()
+        if self.request.user.has_perm(PERMS.messaging.can_moderate) and self.thread.reported():
+            return thread_.message_set.order_by('-timestamp').all()
+        else:
+            return thread_.message_set.order_by('-timestamp').filter(deleted__isnull=True)
 
 
 class DMThread(LoginRequiredMixin, RedirectView):
     permanent = False
 
+    def _find_group(self, *members, name=""):
+        query = MessageThread.objects.all()
+        query = query.annotate(num_participants=Count('participants')).filter(num_participants=len(members))
+        for i in members:
+            query = query.filter(participants=i)
+        try:
+            return query.first()
+        except MessageThread.DoesNotExist:
+            m_thread = MessageThread.objects.create(title=name)
+            for member in members:
+                m_thread.participants.add(member)
+            m_thread.save()
+            return m_thread
+
     def get_redirect_url(self, *args, **kwargs):
         rec = Member.objects.get(id=kwargs['recipient'])
-        q = find_group(self.request.user.member, rec)
+        q = self._find_group(self.request.user.member, rec)
         return reverse("message:message_thread", args=[q.id])

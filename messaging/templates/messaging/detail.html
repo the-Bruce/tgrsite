@@ -16,6 +16,7 @@
 {% block breadcrumbs_child %}{% get_conversation_name thread user %}{% endblock %}
 
 {% block body %}
+    {% include "messaging/parts/modals.html" %}
     <div id="rename_form" class="collapse mb-2" aria-hidden="true">
         <form class="form form-inline" method="post" action="{% url "message:rename_thread" %}">
             {% csrf_token %}
@@ -54,4 +55,8 @@
     </div>
 
 
+{% endblock %}
+{% block bottomscripts %}
+{{ block.super }}
+{% include "messaging/parts/scripts.html" %}
 {% endblock %}
