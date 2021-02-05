@@ -222,6 +222,7 @@ class MessageGroup(LoginRequiredMixin, UserPassesTestMixin, generic.RedirectView
         else:
             group = create_group(*members, name=self.rpg.title)
             self.rpg.messaging_thread = group
+            self.rpg.save()
             add_message(self.request, messages.WARNING,
                         "Please note, if the people in the event change you will need to "
                         "click again to update the messaging group.")
