@@ -1,4 +1,4 @@
-from django.db.models import Count, Max, F
+from django.db.models import Count, Max, F, Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message as django_add_message
@@ -156,7 +156,7 @@ class Index(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
         threads = MessageThread.objects.filter(participants=self.request.user.member).annotate(
-            latest=Max('message__timestamp'))
+            latest=Max('message__timestamp', filter=Q(message__deleted__isnull=True)))
         ctxt['threads'] = threads.order_by(F('latest').desc(nulls_last=True))
 
         return ctxt
