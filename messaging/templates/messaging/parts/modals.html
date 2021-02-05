@@ -1,0 +1,88 @@
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalTitle">Report Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>This will report a message to the admins</strong></p>
+                <p>
+                    They will be able to review the message thread and the offending message, and take the appropriate
+                    action.
+                </p>
+                <form id="reportform" action="{% url 'message:report_message' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="report-message-id" name="message" value="-1">
+                    <label for="report-comment">Reason</label>
+                    <textarea class="form-control" id="report-comment" name="comment"></textarea>
+                    <small class="form-text">Please add any more information you would like to help our
+                        moderation</small>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-outline-danger" form="reportform">Report message</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalTitle">Delete Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="deleteform" action="{% url 'message:delete_message' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="delete-message-id" name="message" value="-1">
+                </form>
+                <p><strong>This will permanently delete your message from the thread</strong></p>
+                <p>Are you sure you want to do this?</p>
+                <p class="text-muted">
+                    Please note, moderators may still be able to view the message in the event of a report being
+                    filed
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-outline-danger" form="deleteform">Delete message</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="resolveModal" tabindex="-1" aria-labelledby="resolveModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resolveModalTitle">Resolve Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Mark resolved</strong></p>
+                <p>
+                    This will mark the issues as resolved
+                </p>
+                <form id="resolveform" action="{% url 'message:resolve_report' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="resolve-report-id" name="report" value="-1">
+                    <label for="resolve-comment">Comments</label>
+                    <textarea class="form-control" id="resolve-comment" name="comment"></textarea>
+                    <small class="form-text">Please add any more information about the outcome of the report</small>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-outline-success" form="resolveform">Resolve</button>
+            </div>
+        </div>
+    </div>
+</div>

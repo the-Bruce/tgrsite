@@ -4,34 +4,23 @@
 {% block title %}Messages{% endblock %}
 {% block pagetitle %}Messages{% endblock %}
 
-{% block breadcrumbs_child %}Messages{% endblock %}
+{% block breadcrumbs_parents %}
+    <li class="breadcrumb-item"><a href="{% url 'message:message_list' %}">Messages</a></li>
+{% endblock %}
+{% block breadcrumbs_child %}Reports{% endblock %}
 
 {% block body %}
-    <a class="btn btn-outline-primary btn-block mb-3" data-toggle="collapse" href="#quickdm" role="button"
-       aria-expanded="false"
-       aria-controls="quickdm">
-        Quick DM
-    </a>
-    <div class="card collapse mb-3{% if form.errors %} show{% endif %}" id="quickdm">
-        <div class="card-body">
-            {% include "parts/render_form.html" with save="Send" %}
-        </div>
-    </div>
-    <a class="btn btn-block btn-outline-success mb-3" href="{% url "message:create_group" %}">New Group</a>
-    {% if perms.messaging.can_moderate %}
-    <a class="btn btn-block btn-outline-warning mb-3" href="{% url "message:pending_reports" %}">Pending Reports</a>
-    {% endif %}
     <ul class="list-unstyled">
         {% for thread in threads %}
             <li class="card mb-3">
                 <a class="card-header card-link d-flex flex-column flex-sm-row justify-content-sm-between"
-                   href="{% url 'message:message_thread' thread.id %}">
+                   href="{% url 'message:message_thread_full' thread.id %}">
                     <span class="card-text">{% get_conversation_name thread request.user %}</span>
                     {% if thread.get_latest %}
                         <span class="text-muted">({{ thread.get_latest.timestamp }})</span>{% endif %}
                 </a>
                 <div class="card-body">
-                    {% include 'messaging/parts/messages.html' with message_list=thread.five %}
+                    {% include 'messaging/parts/messages.html' with message_list=thread.reported %}
                 </div>
             </li>
         {% empty %}

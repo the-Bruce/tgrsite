@@ -20,6 +20,9 @@ class MessageThread(models.Model):
     def get_latest(self):
         return self.message_set.filter(deleted__isnull=True).latest('timestamp')
 
+    def reported(self):
+        return self.message_set.filter(messagereport__resolved=False)
+
 
 class Message(models.Model):
     def __str__(self):
@@ -36,9 +39,18 @@ class Message(models.Model):
             ("can_moderate", "Can moderate message threads"),
         )
 
+    @property
+    def reports(self):
+        return self.messagereport_set.filter(resolved=False)
+
 
 class MessageReport(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     resolved = models.BooleanField(default=False)
+    comment = models.TextField(blank=True)
+    resolution = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.member.username}: {self.message.content[:35]}"

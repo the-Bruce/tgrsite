@@ -1,11 +1,11 @@
 from django.db.models import Count, Max, F
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message as django_add_message
 from django.contrib import messages as django_message
 from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
-from django.views.generic import FormView, ListView, View, RedirectView
+from django.views.generic import FormView, ListView, View, RedirectView, TemplateView
 from django.shortcuts import get_object_or_404, reverse
 from django.utils.timezone import datetime
 
@@ -61,6 +61,7 @@ class DeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
             raise ValueError('Missing required post field')
         m_id = self.request.POST.get('message')
         message = get_object_or_404(Message, id=m_id)
+        return message
 
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -79,6 +80,8 @@ class DeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         message = self.get_object()
         message.deleted = datetime.now()
         message.save()
+        django_add_message(request, django_message.SUCCESS,
+                           "Message successfully deleted")
         return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': message.thread_id}))
 
 
@@ -106,7 +109,8 @@ class ReportView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def post(self, request):
         message = self.get_object()
-        report = MessageReport.objects.create(member=self.request.user.member, message=message)
+        comment = self.request.POST.get('comment', default="")
+        MessageReport.objects.create(member=self.request.user.member, message=message, comment=comment)
         django_add_message(request, django_message.SUCCESS,
                            "A report has been sent. An admin should review this message soon")
         notify_bulk(Member.users_with_perm(PERMS.messaging.can_moderate),
@@ -114,6 +118,35 @@ class ReportView(LoginRequiredMixin, UserPassesTestMixin, View):
                     f"A message has been reported for moderation by {request.user.member.username}",
                     reverse('message:message_list'))
         return HttpResponseRedirect(reverse('message:message_thread', kwargs={'pk': message.thread_id}))
+
+
+class ResolveView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get_object(self):
+        if 'report' not in self.request.POST:
+            raise ValueError('Missing required post field')
+        m_id = self.request.POST.get('report')
+        report = get_object_or_404(MessageReport, id=m_id)
+        return report
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except ValueError:
+            return HttpResponseBadRequest("Missing required post fields")
+
+    def test_func(self):
+        return self.request.user.has_perm(PERMS.messaging.can_moderate)
+
+    def post(self, request):
+        comment = self.request.POST.get('comment', default="")
+        report = self.get_object()
+        report.resolved = True
+        report.resolution = comment
+        report.clean()
+        report.save()
+        django_add_message(request, django_message.SUCCESS,
+                           "Report resolved successfully.")
+        return HttpResponseRedirect(reverse('message:pending_reports'))
 
 
 class Index(LoginRequiredMixin, FormView):
@@ -139,6 +172,19 @@ class Index(LoginRequiredMixin, FormView):
         m = send_message(self.request.user.member, t, form.cleaned_data['message'])
         self.object = m
         return super().form_valid(form)
+
+
+class Reports(PermissionRequiredMixin, TemplateView):
+    template_name = "messaging/reports.html"
+    permission_required = PERMS.messaging.can_moderate
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        threads = MessageThread.objects.filter(message__messagereport__resolved=False).annotate(
+            latest=Max('message__timestamp'))
+        ctxt['threads'] = threads.order_by(F('latest').desc(nulls_last=True))
+
+        return ctxt
 
 
 class Thread(LoginRequiredMixin, UserPassesTestMixin, FormView):
@@ -197,18 +243,25 @@ class FullThread(LoginRequiredMixin, UserPassesTestMixin, ListView):
     context_object_name = "thread_messages"
 
     def test_func(self):
-        thread = get_object_or_404(MessageThread, id=self.kwargs['thread'])
+        self.thread = thread = get_object_or_404(MessageThread, id=self.kwargs['thread'])
         # make sure the user is in the thread
-        return self.request.user.member in thread.participants.all()
+        return self.request.user.member in thread.participants.all() or (
+                self.request.user.has_perm(PERMS.messaging.can_moderate) and thread.message_set.filter(
+            messagereport__resolved=False).exists())
 
     def get_context_data(self, object_list=None, **kwargs):
         ctxt = super().get_context_data(object_list=object_list, **kwargs)
         ctxt['thread'] = get_object_or_404(MessageThread, id=self.kwargs['thread'])
+        if self.request.user.member not in ctxt['thread'].participants.all():
+            ctxt['moderating'] = True
         return ctxt
 
     def get_queryset(self):
         thread_ = get_object_or_404(MessageThread, pk=self.kwargs['thread'])
-        return thread_.message_set.order_by('-timestamp').filter(deleted__isnull=True)
+        if self.request.user.has_perm(PERMS.messaging.can_moderate) and self.thread.reported():
+            return thread_.message_set.order_by('-timestamp').all()
+        else:
+            return thread_.message_set.order_by('-timestamp').filter(deleted__isnull=True)
 
 
 class DMThread(LoginRequiredMixin, RedirectView):
