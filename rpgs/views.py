@@ -217,7 +217,7 @@ class MessageGroup(LoginRequiredMixin, UserPassesTestMixin, generic.RedirectView
     def get_redirect_url(self, *args, **kwargs):
         members = {*self.rpg.members.all(), *self.rpg.game_masters.all()}
         if self.rpg.messaging_thread:
-            self.rpg.messaging_thread.members.set(members)
+            self.rpg.messaging_thread.participants.set(members)
             return reverse("message:message_thread", kwargs={'pk': self.rpg.messaging_thread.pk})
         else:
             group = create_group(*members, name=self.rpg.title)
