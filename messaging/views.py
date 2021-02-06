@@ -28,7 +28,7 @@ def create_group(*members, name=""):
 
 
 def find_dm(*members):
-    print(members)
+    members=set(members)
     query = MessageThread.objects.all()
     query = query.filter(dmthread=True).annotate(num_participants=Count('participants')).filter(
         num_participants=len(members))
