@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'timetable',
     'messaging',
     'gallery',
+    'votes',
     'pages',
     'newsletters',
     'notifications',
