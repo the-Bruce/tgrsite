@@ -238,6 +238,7 @@ def two_available_three():
     e = Election(c, v, 2)
     e.full_election()
 
+
 def two_available_four():
     c = {1, 2, 3, 4}
     v = [(4, 2, 1, 3)] * 4 + [(3, 2, 4, 1)] * 5 + [(2, 1, 4, 3)] * 3 + [(1, 4, 2, 3)] * 2
@@ -264,6 +265,7 @@ def malformed2():
     v = [(1, 2, 3, 4)] * 10
     e = Election(c, v, 1)
     e.full_election()
+
 
 if __name__ == '__main__':
     delayed_majority()

@@ -5,13 +5,14 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import View, TemplateView, ListView, DetailView, RedirectView
+from django.views.generic import View, TemplateView, ListView, DetailView, RedirectView, CreateView, UpdateView
 from django.shortcuts import get_object_or_404, HttpResponseRedirect, reverse
 
 from users.permissions import PERMS
+from .forms import ElectionForm, CandidateForm
 from .models import Election, STVVote, STVPreference, FPTPVote, APRVVote, Candidate, Ticket, Vote, STVResult
 from .stv import Election as StvCalculator
-from .stv import Candidate as StvCalculatorCandidate
+
 
 # Create your views here.
 class HomeView(ListView):
@@ -21,7 +22,45 @@ class HomeView(ListView):
 
     def get_queryset(self):
         tickets = self.request.user.member.ticket_set.filter(spent=False)
-        return Election.objects.filter(ticket__in=tickets)
+        return Election.objects.filter(ticket__in=tickets, open=True)
+
+
+class AdminView(PermissionRequiredMixin, ListView):
+    permission_required = PERMS.votes.view_election
+    template_name = "votes/home.html"
+    model = Election
+    context_object_name = "elections"
+
+    def get_queryset(self):
+        return Election.objects.all()
+
+
+class CreateElection(CreateView):
+    model = Election
+    template_name = "votes/create_election.html"
+    form_class = ElectionForm
+
+
+class UpdateElection(UpdateView):
+    model = Election
+    template_name = "votes/create_election.html"
+    form_class = ElectionForm
+
+
+class CreateCandidate(CreateView):
+    model = Candidate
+    template_name = "votes/create_candidate.html"
+    form_class = CandidateForm
+
+    def form_valid(self, form):
+        form.instance.inventory = get_object_or_404(Election, id=self.kwargs['election'])
+        return super().form_valid(form)
+
+
+class UpdateCandidate(UpdateView):
+    model = Candidate
+    template_name = "votes/create_candidate.html"
+    form_class = CandidateForm
 
 
 class DoneView(DetailView):
@@ -43,16 +82,16 @@ class DoneView(DetailView):
 
 class VoteView(RedirectView):
     def get_object(self):
-        return get_object_or_404(Election, id=self.kwargs['id'])
+        return get_object_or_404(Election, id=self.kwargs['election'])
 
     def get_redirect_url(self, *args, **kwargs):
         election = self.get_object()
         if election.vote_type == Election.Types.APRV:
-            return reverse('votes:approval_vote', args=[self.kwargs['id']])
+            return reverse('votes:approval_vote', args=[self.kwargs['election']])
         elif election.vote_type == Election.Types.FPTP:
-            return reverse('votes:fptp_vote', args=[self.kwargs['id']])
+            return reverse('votes:fptp_vote', args=[self.kwargs['election']])
         elif election.vote_type == Election.Types.STV:
-            return reverse('votes:stv_vote', args=[self.kwargs['id']])
+            return reverse('votes:stv_vote', args=[self.kwargs['election']])
         else:
             raise NotImplementedError()
 
@@ -72,7 +111,7 @@ class ApprovalResultView(PermissionRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
         ctxt['election'] = self.election
-        ctxt['choices'] = sorted(ctxt['choices'], key=lambda x: -x.votes())
+        ctxt['choices'] = sorted(ctxt['choices'], key=lambda x: -x.votes().count())
         return ctxt
 
 
@@ -118,7 +157,7 @@ class ApprovalVoteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        self.election = get_object_or_404(Election, id=self.kwargs['id'], open=True, vote_type=Election.Types.APRV)
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.APRV)
         ctxt['election'] = self.election
         ctxt['choices'] = list(self.election.candidate_set.all())
         random.shuffle(ctxt['choices'])
@@ -140,7 +179,7 @@ class FPTPResultView(PermissionRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
         ctxt['election'] = self.election
-        ctxt['choices'] = sorted(ctxt['choices'], key=lambda x: -x.votes())
+        ctxt['choices'] = sorted(ctxt['choices'], key=lambda x: -x.votes().count())
         return ctxt
 
 
@@ -183,7 +222,7 @@ class FPTPVoteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        self.election = get_object_or_404(Election, id=self.kwargs['id'], open=True, vote_type=Election.Types.FPTP)
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.FPTP)
         ctxt['election'] = self.election
         ctxt['choices'] = list(self.election.candidate_set.all())
         random.shuffle(ctxt['choices'])
@@ -284,7 +323,7 @@ class STVVoteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        self.election = get_object_or_404(Election, id=self.kwargs['id'], open=True, vote_type=Election.Types.STV)
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.STV)
         ctxt['election'] = self.election
         ctxt['choices'] = list(self.election.candidate_set.all())
         random.shuffle(ctxt['choices'])
