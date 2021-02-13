@@ -62,6 +62,9 @@ class Ticket(models.Model):
     def __str__(self):
         return str(self.uuid)
 
+    class Meta:
+        unique_together = (('member', 'election'),)
+
 
 class Vote(models.Model):
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
