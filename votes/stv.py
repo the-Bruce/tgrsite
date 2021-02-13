@@ -202,10 +202,24 @@ class Election:
     def winners(self):
         return map(attrgetter('id'), filter(lambda x: x.status == States.ELECTED, self.candidates))
 
+def fptp_equivalent():
+    c = {1, 2}
+    v = [(1, 2)] * 9 + [(2, 1)] * 8 + [(2,)] + [(1,)]
+    e = Election(c, v, 1)
+    e.full_election()
 
-if __name__ == '__main__':
+def immediate_majority() :
+    c = {1, 2, 3, 4}
+    v = [(1, 2, 3, 4)] * 19 + [(2, 3, 1, 4)] * 4 + [(3, 1, 4, 2)] * 3 + [(4, 1)] * 2
+    e = Election(c, v, 1)
+    e.full_election()
+
+def two_available_three():
     c = {1, 2, 3}
     v = [(1, 2, 3), (1, 3, 2), (2,), (3, 1), (3, 1), (1, 2, 3), (2,), (1, 3, 2), (1, 3, 2), (1, 3, 2), (1, 3, 2),
          (1, 3, 2), ]
     e = Election(c, v, 2)
     e.full_election()
+
+if __name__ == '__main__':
+    immediate_majority()
