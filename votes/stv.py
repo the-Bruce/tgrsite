@@ -90,7 +90,7 @@ class Election:
         candidates = list(map(Candidate.get, candidates))
         for i in candidates:
             i.status = States.WITHDRAWN
-            i.keep_factor = 0
+            i.keep_factor = Fraction(0)
 
     def round(self):
         self.rounds += 1
