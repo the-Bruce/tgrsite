@@ -33,19 +33,10 @@ class States(Enum):
 
 
 class Candidate:
-    CANDIDATES = {}
-
     def __init__(self, id_: int):
         self.id = id_
         self.status = States.HOPEFUL
         self.keep_factor: Fraction = Fraction(1)
-
-    # eww, singletons
-    @classmethod
-    def get(cls, id_: int):
-        if id_ not in cls.CANDIDATES:
-            cls.CANDIDATES[id_] = Candidate(id_)
-        return cls.CANDIDATES[id_]
 
     def __str__(self):
         return f"{self.id}: {self.status} ({str(self.keep_factor)})"
@@ -55,8 +46,8 @@ class Candidate:
 
 
 class Vote:
-    def __init__(self, prefs: Tuple[int]):
-        self.prefs = tuple(map(Candidate.get, prefs))
+    def __init__(self, candidates: Dict[int, Candidate], prefs: Tuple[int]):
+        self.prefs = tuple(map(candidates.get, prefs))
 
     def check(self, candidates: Set[int]):
         if len(self.prefs) != len(set(self.prefs)):
@@ -74,8 +65,9 @@ class Vote:
 
 class Election:
     def __init__(self, candidates: Set[int], votes: List[Tuple[int]], seats: int):
-        self.candidates = list(map(Candidate.get, candidates))
-        self.votes = list(map(Vote, votes))
+        self.candidatedict = {i: Candidate(i) for i in candidates}
+        self.candidates = set(self.candidatedict.values())
+        self.votes = [Vote(self.candidatedict, i) for i in votes]
         self.seats = seats
         self.rounds = 0
         self.fulllog = []
@@ -85,9 +77,11 @@ class Election:
         # If this code is still used when population is this high,
         # why the fuck haven't you moved this to a faster language??????
         self.previous_surplus = Fraction(10000000000000000000000000, 1)
+        for i in self.votes:
+            i.check(self.candidates)
 
     def withdraw(self, candidates: Set[int]):
-        candidates = list(map(Candidate.get, candidates))
+        candidates = [self.candidatedict[cand] for cand in candidates]
         for i in candidates:
             i.status = States.WITHDRAWN
             i.keep_factor = Fraction(0)
@@ -145,7 +139,8 @@ class Election:
             # B3
             sorted_results = sorted(filter(lambda x: x[0].status == States.HOPEFUL, scores.items()), key=itemgetter(1))
             min_score = sorted_results[0][1]
-            eliminated_candidate: Candidate = self._choose(list(filter(lambda x: x[1] <= min_score + surplus, sorted_results)))
+            eliminated_candidate: Candidate = self._choose(
+                list(filter(lambda x: x[1] <= min_score + surplus, sorted_results)))
             eliminated_candidate.status = States.DEFEATED
             eliminated_candidate.keep_factor = Fraction(0)
         else:
@@ -157,7 +152,7 @@ class Election:
         self._log(scores, wastage)
 
     def _choose(self, candidates):
-        if len(candidates)>1:
+        if len(candidates) > 1:
             a = secrets.choice(candidates)[0]
             self._addlog("-Tiebreak-")
             self._addlog(a)
