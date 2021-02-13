@@ -123,6 +123,7 @@ class ApprovalVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "votes/approval_votescreen.html"
 
     def test_func(self):
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.APRV)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
@@ -194,6 +195,7 @@ class FPTPVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "votes/fptp_votescreen.html"
 
     def test_func(self):
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.FPTP)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
@@ -279,6 +281,7 @@ class STVVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "votes/stv_votescreen.html"
 
     def test_func(self):
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.STV)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
