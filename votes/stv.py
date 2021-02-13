@@ -9,7 +9,7 @@ STV calculator
 
 Based on procedure as defined in https://prfound.org/resources/reference/reference-meek-rule/
 Uses exact ratio arithmetic to prevent need to use epsilon float comparisons.
-Uses a secure random generator to split ties randomly. 
+Uses a secure random generator to split ties randomly.
 Unfortunately this is more likely to trigger than I'd prefer due to the small populations and single seats.
 """
 
@@ -210,7 +210,19 @@ def fptp_equivalent():
 
 def immediate_majority() :
     c = {1, 2, 3, 4}
-    v = [(1, 2, 3, 4)] * 19 + [(2, 3, 1, 4)] * 4 + [(3, 1, 4, 2)] * 3 + [(4, 1)] * 2
+    v = [(1, 2, 3, 4)] * 9 + [(2, 3, 1, 4)] * 4 + [(3, 1, 4, 2)] * 3 + [(4, 1)] * 2
+    e = Election(c, v, 1)
+    e.full_election()
+
+def delayed_majority():
+    c = {1, 2, 3, 4}
+    v = [(4, 2, 1, 3)] * 4 + [(3, 2, 4, 1)] * 4 + [(2, 4, 1, 3)]
+    e = Election(c, v, 1)
+    e.full_election()
+
+def delayeder_majority():
+    c = {1, 2, 3, 4}
+    v = [(4, 2, 1, 3)] * 4 + [(3, 2, 4, 1)] * 5 + [(2, 1, 4, 3)] + [(1, 4, 2, 3)]
     e = Election(c, v, 1)
     e.full_election()
 
@@ -221,5 +233,29 @@ def two_available_three():
     e = Election(c, v, 2)
     e.full_election()
 
+def two_available_four():
+    c = {1, 2, 3, 4}
+    v = [(4, 2, 1, 3)] * 4 + [(3, 2, 4, 1)] * 5 + [(2, 1, 4, 3)] * 3 + [(1, 4, 2, 3)] * 2
+    e = Election(c, v, 2)
+    e.full_election()
+
+def tiebreaker():
+    c = {1, 2, 3, 4}
+    v = [(1,), (2,), (3,), (4,)]
+    e = Election(c, v, 1)
+    e.full_election()
+
+def malformed():
+    c = {1, 2}
+    v = [(1, 2, 1)] * 10
+    e = Election(c, v, 1)
+    e.full_election()
+
+def malformed2():
+    c = {1, 2, 3}
+    v = [(1, 2, 3, 4)] * 10
+    e = Election(c, v, 1)
+    e.full_election()
+
 if __name__ == '__main__':
-    immediate_majority()
+    delayed_majority()
