@@ -15,7 +15,7 @@ from .stv import Election as StvCalculator
 
 
 # Create your views here.
-class HomeView(ListView):
+class HomeView(LoginRequiredMixin, ListView):
     template_name = "votes/home.html"
     model = Election
     context_object_name = "elections"
