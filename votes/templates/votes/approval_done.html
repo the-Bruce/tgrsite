@@ -24,13 +24,14 @@
             <p><strong>Date/time:</strong> {{ object.time }}</p>
             <h4>Selection{{ object.selection.count|pluralize }}:</h4>
             {% block selection %}
-                <ul class="list-group">
+                <ul class="list-group mb-3">
                     {% for i in object.selection.all %}
                         <li class="list-group-item">{{ i.name }}</li>
                     {% endfor %}
                 </ul>
             {% endblock %}
-            <p>If anything appears wrong, please contact the returning officer immediately, with the following uuid: {{ object.uuid }}</p>
+            <p class="card-text">Consider bookmarking this page for your personal reference</p>
+            <p class="card-text">If anything appears wrong, please contact the returning officer immediately, with the following uuid: {{ object.uuid }}</p>
         </div>
     </div>
 {% endblock %}

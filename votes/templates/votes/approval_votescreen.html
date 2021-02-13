@@ -17,17 +17,16 @@
 {% endblock %}
 
 {% block body %}
-    <div class="modal fade" id="resolveModal" tabindex="-1" aria-labelledby="resolveModalTitle" aria-hidden="true">
+    <div class="modal fade" id="voteModal" tabindex="-1" aria-labelledby="voteModalTitle" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="resolveModalTitle">Submit Vote</h5>
+                    <h5 class="modal-title" id="voteModalTitle">Submit Vote</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Submit Vote</strong></p>
                     <p>
                         You will not be able to change your vote after this point
                     </p>
@@ -81,7 +80,7 @@
                     </div>
                 {% endfor %}
             </form>
-            <button class="btn-outline-primary btn-block btn" data-toggle="modal" data-target="#resolveModal">Submit Vote</button>
+            <button class="btn-outline-primary btn-block btn" data-toggle="modal" data-target="#voteModal">Submit Vote</button>
         </div>
     </div>
 {% endblock %}

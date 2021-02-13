@@ -17,6 +17,27 @@
 {% endblock %}
 
 {% block body %}
+    <div class="modal fade" id="voteModal" tabindex="-1" aria-labelledby="voteModalTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="voteModalTitle">Submit Vote</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        You will not be able to change your vote after this point
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-outline-success" form="voteform">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-body">
             {% if election.description %}
@@ -25,9 +46,7 @@
                 </div>
             {% endif %}
             {% block alerts %}
-                {% if election.max_votes != 0 %}
-                    <div class="alert alert-primary">Please order these options.</div>
-                {% endif %}
+                <div class="alert alert-primary">Please order these options using click and drag to reorder.</div>
             {% endblock %}
             {% if errors %}
                 {% for e in errors %}
@@ -36,12 +55,12 @@
             {% endif %}
 
             <div class="card mb-3">
-                <h2 class="card-header">Accepted</h2>
+                <h2 class="card-header">Selected</h2>
                 <div id="sortable_accept" class="card-body">
                 </div>
             </div>
             <div class="card mb-3">
-                <h2 class="card-header">Rejected</h2>
+                <h2 class="card-header">Options</h2>
                 <div id="sortable_reject" class="card-body">
                     {% for choice in choices %}
                         <div class="card mb-3" data-voteid="{{ choice.formid }}">
@@ -57,15 +76,15 @@
                     {% endfor %}
                 </div>
             </div>
-            <form method="post">
+            <form method="post" id="voteform">
                 {% csrf_token %}
                 {% for choice in choices %}
                     <input type="hidden" min="1" max="{{ choices|length }}" class="form-control"
                            name="{{ choice.id }}"
                            id="{{ choice.formid }}">
                 {% endfor %}
-                <button class="btn-outline-primary btn-block btn" type="submit">Submit Vote</button>
             </form>
+            <button class="btn-outline-primary btn-block btn" data-toggle="modal" data-target="#voteModal">Submit Vote</button>
         </div>
     </div>
 {% endblock %}
@@ -91,12 +110,14 @@
 
         accept.sortable({
             group: 'votes',
+            animation: 50,
             onSort: function (/**Event*/evt) {
                 reassosc();
             },
         })
         reject.sortable({
             group: 'votes',
+            animation: 50,
         })
     </script>
 {% endblock %}

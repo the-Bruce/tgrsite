@@ -24,14 +24,16 @@
                     {{ election.description|parse_md_safe }}
                 </div>
             {% endif %}
-            <div class="list-group">
-                {% for choice in choices %}
-                    <div class="list-group-item mb-3">
-                        {{ choice.name }}
-                        <span class="badge badge-primary rounded-pill">{{ choice.aprvvote_set.count }}</span>
-                    </div>
-                {% endfor %}
-            </div>
+            {% block results %}
+                <div class="list-group">
+                    {% for choice in choices %}
+                        <div class="list-group-item mb-3">
+                            {{ choice.name }}
+                            <span class="badge badge-primary rounded-pill">{{ choice.aprvvote_set.count }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endblock %}
 
         </div>
     </div>
