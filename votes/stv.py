@@ -9,7 +9,7 @@ STV calculator
 
 Based on procedure as defined in https://prfound.org/resources/reference/reference-meek-rule/
 Uses exact ratio arithmetic to prevent need to use epsilon float comparisons.
-Uses a secure random generator to split ties randomly.
+Uses a secure random generator to split ties randomly. 
 Unfortunately this is more likely to trigger than I'd prefer due to the small populations and single seats.
 """
 
@@ -119,7 +119,7 @@ class Election:
         # B2c
         elected = False
         for candidate in self.candidates:
-            if candidate.status == States.HOPEFUL and scores[candidate] >= quota:
+            if candidate.status == States.HOPEFUL and scores[candidate] > quota:
                 candidate.status = States.ELECTED
                 elected = True
 
@@ -202,17 +202,20 @@ class Election:
     def winners(self):
         return map(attrgetter('id'), filter(lambda x: x.status == States.ELECTED, self.candidates))
 
+
 def fptp_equivalent():
     c = {1, 2}
     v = [(1, 2)] * 9 + [(2, 1)] * 8 + [(2,)] + [(1,)]
     e = Election(c, v, 1)
     e.full_election()
 
-def immediate_majority() :
+
+def immediate_majority():
     c = {1, 2, 3, 4}
     v = [(1, 2, 3, 4)] * 9 + [(2, 3, 1, 4)] * 4 + [(3, 1, 4, 2)] * 3 + [(4, 1)] * 2
     e = Election(c, v, 1)
     e.full_election()
+
 
 def delayed_majority():
     c = {1, 2, 3, 4}
@@ -220,11 +223,13 @@ def delayed_majority():
     e = Election(c, v, 1)
     e.full_election()
 
+
 def delayeder_majority():
     c = {1, 2, 3, 4}
     v = [(4, 2, 1, 3)] * 4 + [(3, 2, 4, 1)] * 5 + [(2, 1, 4, 3)] + [(1, 4, 2, 3)]
     e = Election(c, v, 1)
     e.full_election()
+
 
 def two_available_three():
     c = {1, 2, 3}
@@ -239,17 +244,20 @@ def two_available_four():
     e = Election(c, v, 2)
     e.full_election()
 
+
 def tiebreaker():
     c = {1, 2, 3, 4}
     v = [(1,), (2,), (3,), (4,)]
     e = Election(c, v, 1)
     e.full_election()
 
+
 def malformed():
     c = {1, 2}
     v = [(1, 2, 1)] * 10
     e = Election(c, v, 1)
     e.full_election()
+
 
 def malformed2():
     c = {1, 2, 3}
