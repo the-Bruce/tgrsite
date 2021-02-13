@@ -4,7 +4,7 @@ from operator import itemgetter, attrgetter
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView, ListView, DetailView, RedirectView, CreateView, UpdateView
 from django.shortcuts import get_object_or_404, HttpResponseRedirect, reverse
 
@@ -35,19 +35,22 @@ class AdminView(PermissionRequiredMixin, ListView):
         return Election.objects.all()
 
 
-class CreateElection(CreateView):
+class CreateElection(PermissionRequiredMixin, CreateView):
+    permission_required = PERMS.votes.add_election
     model = Election
     template_name = "votes/create_election.html"
     form_class = ElectionForm
 
 
-class UpdateElection(UpdateView):
+class UpdateElection(PermissionRequiredMixin, UpdateView):
+    permission_required = PERMS.votes.edit_election
     model = Election
     template_name = "votes/create_election.html"
     form_class = ElectionForm
 
 
-class CreateCandidate(CreateView):
+class CreateCandidate(PermissionRequiredMixin, CreateView):
+    permission_required = PERMS.votes.add_candidate
     model = Candidate
     template_name = "votes/create_candidate.html"
     form_class = CandidateForm
@@ -57,13 +60,14 @@ class CreateCandidate(CreateView):
         return super().form_valid(form)
 
 
-class UpdateCandidate(UpdateView):
+class UpdateCandidate(PermissionRequiredMixin, UpdateView):
+    permission_required = PERMS.votes.edit_candidate
     model = Candidate
     template_name = "votes/create_candidate.html"
     form_class = CandidateForm
 
 
-class DoneView(DetailView):
+class DoneView(LoginRequiredMixin, DetailView):
     model = Vote
     slug_field = "uuid"
 
@@ -80,7 +84,7 @@ class DoneView(DetailView):
         return self.election.votes()
 
 
-class VoteView(RedirectView):
+class VoteView(LoginRequiredMixin, RedirectView):
     def get_object(self):
         return get_object_or_404(Election, id=self.kwargs['election'])
 
@@ -115,8 +119,11 @@ class ApprovalResultView(PermissionRequiredMixin, ListView):
         return ctxt
 
 
-class ApprovalVoteView(TemplateView):
+class ApprovalVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "votes/approval_votescreen.html"
+
+    def test_func(self):
+        return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
         self.get_context_data(**kwargs)
@@ -183,8 +190,11 @@ class FPTPResultView(PermissionRequiredMixin, ListView):
         return ctxt
 
 
-class FPTPVoteView(TemplateView):
+class FPTPVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "votes/fptp_votescreen.html"
+
+    def test_func(self):
+        return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
         self.get_context_data(**kwargs)
@@ -265,8 +275,11 @@ class STVResultView(PermissionRequiredMixin, ListView):
         return ctxt
 
 
-class STVVoteView(TemplateView):
+class STVVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "votes/stv_votescreen.html"
+
+    def test_func(self):
+        return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
         self.get_context_data(**kwargs)
