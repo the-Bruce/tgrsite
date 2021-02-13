@@ -119,10 +119,12 @@ class ApprovalResultView(PermissionRequiredMixin, ListView):
         return ctxt
 
 
-class ApprovalVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ApprovalVoteView(UserPassesTestMixin, TemplateView):
     template_name = "votes/approval_votescreen.html"
 
     def test_func(self):
+        if self.request.user.is_anonymous:
+            return False
         self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.APRV)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
@@ -191,10 +193,12 @@ class FPTPResultView(PermissionRequiredMixin, ListView):
         return ctxt
 
 
-class FPTPVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class FPTPVoteView(UserPassesTestMixin, TemplateView):
     template_name = "votes/fptp_votescreen.html"
 
     def test_func(self):
+        if self.request.user.is_anonymous:
+            return False
         self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.FPTP)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
@@ -277,10 +281,12 @@ class STVResultView(PermissionRequiredMixin, ListView):
         return ctxt
 
 
-class STVVoteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class STVVoteView(UserPassesTestMixin, TemplateView):
     template_name = "votes/stv_votescreen.html"
 
     def test_func(self):
+        if self.request.user.is_anonymous:
+            return False
         self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.STV)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
