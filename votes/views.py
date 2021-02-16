@@ -26,8 +26,8 @@ class HomeView(LoginRequiredMixin, ListView):
 
 
 class AdminView(PermissionRequiredMixin, ListView):
-    permission_required = PERMS.votes.view_election
     template_name = "votes/home.html"
+    permission_required = PERMS.votes.view_election
     model = Election
     context_object_name = "elections"
 
@@ -36,22 +36,23 @@ class AdminView(PermissionRequiredMixin, ListView):
 
 
 class CreateElection(PermissionRequiredMixin, CreateView):
-    permission_required = PERMS.votes.add_election
     model = Election
+    permission_required = PERMS.votes.add_election
     template_name = "votes/create_election.html"
     form_class = ElectionForm
 
 
+
 class UpdateElection(PermissionRequiredMixin, UpdateView):
-    permission_required = PERMS.votes.edit_election
     model = Election
+    permission_required = PERMS.votes.change_election
     template_name = "votes/create_election.html"
     form_class = ElectionForm
 
 
 class CreateCandidate(PermissionRequiredMixin, CreateView):
-    permission_required = PERMS.votes.add_candidate
     model = Candidate
+    permission_required = PERMS.votes.add_candidate
     template_name = "votes/create_candidate.html"
     form_class = CandidateForm
 
@@ -61,8 +62,8 @@ class CreateCandidate(PermissionRequiredMixin, CreateView):
 
 
 class UpdateCandidate(PermissionRequiredMixin, UpdateView):
-    permission_required = PERMS.votes.edit_candidate
     model = Candidate
+    permission_required = PERMS.votes.change_candidate
     template_name = "votes/create_candidate.html"
     form_class = CandidateForm
 

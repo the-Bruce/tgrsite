@@ -1,4 +1,5 @@
 {% extends 'tgrsite/main.html' %}
+{% load markdown_tags %}
 
 {% block title %}Edit - Votes{% endblock %}
 {% block pagetitle %}{% if object %}Edit{% else %}Create{% endif %} Election{% endblock %}
@@ -15,4 +16,33 @@
 
 {% block body %}
     {% include "parts/render_form.html" %}
+
+    {% if object %}
+        <h2>Candidates</h2>
+        {% for candidate in object.candidate_set.all %}
+            <div class="card">
+                <h3 class="card-header">
+                    {{ candidate.name }}
+                </h3>
+                {% if candidate.description %}
+                    <div class="card-body markdown-text">
+                        {{ candidate.description|parse_md_text }}
+                    </div>
+                {% endif %}
+                <div class="card-footer">
+                    <p class="btn-group">
+                        <a class="btn btn-outline-primary"
+                           href="{% url "votes:update_candidate" object.election candidate.id %}">
+                            <i class="fas fa-edit"></i><span class="sr-only-focusable">Edit Candidate</span>
+                        </a>
+                        <a class="btn btn-outline-danger"
+                           href="{% url "votes:update_candidate" object.election candidate.id %}">
+                            <i class="fas fa-trash-alt"></i><span class="sr-only-focusable">Delete Candidate</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}
