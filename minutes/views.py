@@ -93,5 +93,5 @@ def meetingBounce(request, pk):
 
 
 def index(request):
-    meeting = Meeting.objects.latest(field_name="date")
+    meeting = Meeting.objects.latest("date")
     return HttpResponseRedirect(meeting.get_absolute_url())
