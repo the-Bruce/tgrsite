@@ -5,11 +5,14 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.views.generic import View, TemplateView, ListView, DetailView, RedirectView, CreateView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import View, TemplateView, ListView, DetailView, RedirectView, CreateView, UpdateView, \
+    FormView
 from django.shortcuts import get_object_or_404, HttpResponseRedirect, reverse
 
+from users.models import Membership
 from users.permissions import PERMS
-from .forms import ElectionForm, CandidateForm
+from .forms import ElectionForm, CandidateForm, DateTicketForm
 from .models import Election, STVVote, STVPreference, FPTPVote, APRVVote, Candidate, Ticket, Vote, STVResult
 from .stv import Election as StvCalculator
 
@@ -26,13 +29,26 @@ class HomeView(LoginRequiredMixin, ListView):
 
 
 class AdminView(PermissionRequiredMixin, ListView):
-    template_name = "votes/home.html"
+    template_name = "votes/admin.html"
     permission_required = PERMS.votes.view_election
     model = Election
     context_object_name = "elections"
 
     def get_queryset(self):
         return Election.objects.all()
+
+
+class TicketView(PermissionRequiredMixin, FormView):
+    permission_required = PERMS.votes.add_ticket
+    form_class = DateTicketForm
+    template_name = "votes/tickets.html"
+    success_url = reverse_lazy('votes:admin')
+
+    def form_valid(self, form):
+        for membership in Membership.objects.filter(checked__lte=form.cleaned_data['date']):
+            for election in form.cleaned_data['elections']:
+                Ticket.objects.get_or_create(member_id=membership.member_id, election=election)
+        return super().form_valid(form)
 
 
 class CreateElection(PermissionRequiredMixin, CreateView):
@@ -42,12 +58,15 @@ class CreateElection(PermissionRequiredMixin, CreateView):
     form_class = ElectionForm
 
 
-
 class UpdateElection(PermissionRequiredMixin, UpdateView):
     model = Election
     permission_required = PERMS.votes.change_election
     template_name = "votes/create_election.html"
     form_class = ElectionForm
+    pk_url_kwarg = "election"
+
+    def get_success_url(self):
+        return reverse("votes:home", args=[self.kwargs['election']])
 
 
 class CreateCandidate(PermissionRequiredMixin, CreateView):
@@ -56,8 +75,11 @@ class CreateCandidate(PermissionRequiredMixin, CreateView):
     template_name = "votes/create_candidate.html"
     form_class = CandidateForm
 
+    def get_success_url(self):
+        return reverse("votes:update_election", args=[self.kwargs['election']])
+
     def form_valid(self, form):
-        form.instance.inventory = get_object_or_404(Election, id=self.kwargs['election'])
+        form.instance.election = get_object_or_404(Election, id=self.kwargs['election'])
         return super().form_valid(form)
 
 
@@ -66,6 +88,13 @@ class UpdateCandidate(PermissionRequiredMixin, UpdateView):
     permission_required = PERMS.votes.change_candidate
     template_name = "votes/create_candidate.html"
     form_class = CandidateForm
+    pk_url_kwarg = "candidate"
+
+    def get_success_url(self):
+        return reverse("votes:update_election", args=[self.kwargs['election']])
+
+    def get_queryset(self):
+        return Candidate.objects.filter(election_id=self.kwargs['election'])
 
 
 class DoneView(LoginRequiredMixin, DetailView):
@@ -126,7 +155,8 @@ class ApprovalVoteView(UserPassesTestMixin, TemplateView):
     def test_func(self):
         if self.request.user.is_anonymous:
             return False
-        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.APRV)
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True,
+                                          vote_type=Election.Types.APRV)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
@@ -168,7 +198,8 @@ class ApprovalVoteView(UserPassesTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.APRV)
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True,
+                                          vote_type=Election.Types.APRV)
         ctxt['election'] = self.election
         ctxt['choices'] = list(self.election.candidate_set.all())
         random.shuffle(ctxt['choices'])
@@ -200,7 +231,8 @@ class FPTPVoteView(UserPassesTestMixin, TemplateView):
     def test_func(self):
         if self.request.user.is_anonymous:
             return False
-        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.FPTP)
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True,
+                                          vote_type=Election.Types.FPTP)
         return self.request.user.member.ticket_set.filter(election=self.election, spent=False).exists()
 
     def post(self, request, **kwargs):
@@ -239,7 +271,8 @@ class FPTPVoteView(UserPassesTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True, vote_type=Election.Types.FPTP)
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], open=True,
+                                          vote_type=Election.Types.FPTP)
         ctxt['election'] = self.election
         ctxt['choices'] = list(self.election.candidate_set.all())
         random.shuffle(ctxt['choices'])

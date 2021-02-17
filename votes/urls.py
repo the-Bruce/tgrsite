@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from .views import ApprovalVoteView, DoneView, ApprovalResultView, HomeView, VoteView, FPTPResultView, FPTPVoteView, \
-    STVVoteView, STVResultView, UpdateElection, CreateElection, CreateCandidate, UpdateCandidate
+    STVVoteView, STVResultView, UpdateElection, CreateElection, CreateCandidate, UpdateCandidate, AdminView, TicketView
 
 app_name = "votes"
 
@@ -16,8 +16,10 @@ urlpatterns = [
     path('<int:election>/results/approval/', ApprovalResultView.as_view(), name="approval_results"),
     path('<int:election>/results/fptp/', FPTPResultView.as_view(), name="fptp_results"),
     path('<int:election>/results/stv/', STVResultView.as_view(), name="stv_results"),
-    path('create/', CreateElection.as_view(), name="create_election"),
-    path('edit/<int:election>/', UpdateElection.as_view(), name="update_election"),
-    path('edit/<int:election>/create/', CreateCandidate.as_view(), name="create_candidate"),
-    path('edit/<int:election>/edit/<int:candidate>/', UpdateCandidate.as_view(), name="update_candidate"),
+    path('admin/', AdminView.as_view(), name="admin"),
+    path('admin/tickets/', TicketView.as_view(), name="tickets"),
+    path('admin/create/', CreateElection.as_view(), name="create_election"),
+    path('admin/edit/<int:election>/', UpdateElection.as_view(), name="update_election"),
+    path('admin/edit/<int:election>/create/', CreateCandidate.as_view(), name="create_candidate"),
+    path('admin/edit/<int:election>/edit/<int:candidate>/', UpdateCandidate.as_view(), name="update_candidate"),
 ]

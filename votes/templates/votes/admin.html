@@ -1,0 +1,36 @@
+{% extends 'tgrsite/main.html' %}
+
+{% block title %}Votes{% endblock %}
+{% block pagetitle %}Votes{% endblock %}
+
+{% block breadcrumbs_child %}Votes{% endblock %}
+
+{% block leftcontents %}
+    {{ block.super }}
+    {% if perms.votes.change_elections %}
+        <a class="btn btn-block btn-outline-dark mb-3" href="{% url "admin:votes_election_changelist" %}">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <p>
+        <a href="{% url "votes:create_election" %}"
+           class="btn btn-outline-success btn-block">
+            Create New
+        </a>
+    </p>
+    <p>
+        <a href="{% url "votes:tickets" %}"
+           class="btn btn-outline-success btn-block">
+            Issue Tickets
+        </a>
+    </p>
+    <div class="list-group">
+        {% for election in object_list %}
+            <a href="{% url "votes:update_election" election.id %}"
+               class="list-group-item list-group-item-action">
+                {{ election.name }}
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
