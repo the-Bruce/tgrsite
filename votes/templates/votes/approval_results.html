@@ -6,6 +6,7 @@
 
 {% block breadcrumbs_parents %}
     <li class="breadcrumb-item"><a href="{% url 'votes:elections' %}">Votes</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'votes:admin' %}">Admin</a></li>
 {% endblock %}
 {% block breadcrumbs_child %}{{ election.name }}{% endblock %}
 
@@ -25,11 +26,13 @@
                 </div>
             {% endif %}
             {% block results %}
-                <div class="list-group">
+                <h2>Total Turnout: {{ election.aprvvote_set.count }}</h2>
+                <div class="list-group mb-3">
                     {% for choice in choices %}
-                        <div class="list-group-item mb-3">
+                        <div class="list-group-item">
+                            <span
+                              class="badge badge-primary rounded-pill px-2 mr-2">{{ choice.aprvvote_set.count }}</span>
                             {{ choice.name }}
-                            <span class="badge badge-primary rounded-pill">{{ choice.aprvvote_set.count }}</span>
                         </div>
                     {% endfor %}
                 </div>

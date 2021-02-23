@@ -1,10 +1,11 @@
 {% extends "votes/approval_results.html" %}
 {% block results %}
-    <div class="list-group">
+    <h2>Total Turnout: {{ election.fptpvote_set.count }}</h2>
+    <div class="list-group mb-3">
         {% for choice in choices %}
-            <div class="list-group-item mb-3">
+            <div class="list-group-item">
+                <span class="badge badge-primary rounded-pill px-2 mr-2">{{ choice.fptpvote_set.count }}</span>
                 {{ choice.name }}
-                <span class="badge badge-primary rounded-pill">{{ choice.fptpvote_set.count }}</span>
             </div>
         {% endfor %}
     </div>

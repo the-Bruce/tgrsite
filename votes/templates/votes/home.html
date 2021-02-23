@@ -13,6 +13,14 @@
 {% endblock %}
 
 {% block body %}
+    {% if perms.votes.change_elections %}
+    <p>
+        <a href="{% url "votes:admin" %}"
+           class="btn btn-outline-warning btn-block">
+            Admin
+        </a>
+    </p>
+    {% endif %}
     <div class="list-group">
         {% for election in object_list %}
             <a href="{% url "votes:vote" election.id %}"

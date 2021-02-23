@@ -10,8 +10,9 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Redir
     FormView
 from django.shortcuts import get_object_or_404, HttpResponseRedirect, reverse
 
-from users.models import Membership
 from users.permissions import PERMS
+
+from users.models import Membership
 from .forms import ElectionForm, CandidateForm, DateTicketForm
 from .models import Election, STVVote, STVPreference, FPTPVote, APRVVote, Candidate, Ticket, Vote, STVResult
 from .stv import Election as StvCalculator
@@ -57,6 +58,9 @@ class CreateElection(PermissionRequiredMixin, CreateView):
     template_name = "votes/create_election.html"
     form_class = ElectionForm
 
+    def get_success_url(self):
+        return reverse("votes:admin")
+
 
 class UpdateElection(PermissionRequiredMixin, UpdateView):
     model = Election
@@ -66,7 +70,7 @@ class UpdateElection(PermissionRequiredMixin, UpdateView):
     pk_url_kwarg = "election"
 
     def get_success_url(self):
-        return reverse("votes:home", args=[self.kwargs['election']])
+        return reverse("votes:admin")
 
 
 class CreateCandidate(PermissionRequiredMixin, CreateView):
@@ -126,6 +130,24 @@ class VoteView(LoginRequiredMixin, RedirectView):
             return reverse('votes:fptp_vote', args=[self.kwargs['election']])
         elif election.vote_type == Election.Types.STV:
             return reverse('votes:stv_vote', args=[self.kwargs['election']])
+        else:
+            raise NotImplementedError()
+
+
+class ResultView(PermissionRequiredMixin, RedirectView):
+    permission_required = PERMS.votes.view_election
+
+    def get_object(self):
+        return get_object_or_404(Election, id=self.kwargs['election'])
+
+    def get_redirect_url(self, *args, **kwargs):
+        election = self.get_object()
+        if election.vote_type == Election.Types.APRV:
+            return reverse('votes:approval_results', args=[self.kwargs['election']])
+        elif election.vote_type == Election.Types.FPTP:
+            return reverse('votes:fptp_results', args=[self.kwargs['election']])
+        elif election.vote_type == Election.Types.STV:
+            return reverse('votes:stv_results', args=[self.kwargs['election']])
         else:
             raise NotImplementedError()
 

@@ -31,7 +31,11 @@
                 </ul>
             {% endblock %}
             <p class="card-text">Consider bookmarking this page for your personal reference</p>
-            <p class="card-text">If anything appears wrong, please contact the returning officer immediately, with the following uuid: {{ object.uuid }}</p>
+            <p class="card-text">If anything appears wrong, please contact the returning officer immediately, with the
+                following uuid:
+                <br>
+                <code>{{ object.uuid }}</code>
+            </p>
         </div>
     </div>
 {% endblock %}
