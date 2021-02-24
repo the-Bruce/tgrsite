@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, HttpResponseRedirect, reverse
 from users.permissions import PERMS
 
 from users.models import Membership
-from .forms import ElectionForm, CandidateForm, DateTicketForm
+from .forms import ElectionForm, CandidateForm, DateTicketForm, IDTicketForm
 from .models import Election, STVVote, STVPreference, FPTPVote, APRVVote, Candidate, Ticket, Vote, STVResult
 from .stv import Election as StvCalculator
 
@@ -38,8 +38,28 @@ class AdminView(PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return Election.objects.all()
 
+class TicketView(PermissionRequiredMixin, TemplateView):
+    permission_required = PERMS.votes.add_ticket
+    template_name = "votes/ticket.html"
 
-class TicketView(PermissionRequiredMixin, FormView):
+class IDTicketView(PermissionRequiredMixin, FormView):
+    permission_required = PERMS.votes.add_ticket
+    form_class = IDTicketForm
+    template_name = "votes/tickets.html"
+    success_url = reverse_lazy('votes:admin')
+
+    def form_valid(self, form):
+        for uniid in form.cleaned_data['ids'].split():
+            try:
+                membership = Membership.objects.get(uni_id=uniid.lstrip('u'))
+                for election in form.cleaned_data['elections']:
+                    Ticket.objects.get_or_create(member_id=membership.member_id, election=election)
+            except Membership.DoesNotExist:
+                pass
+        return super().form_valid(form)
+
+
+class DateTicketView(PermissionRequiredMixin, FormView):
     permission_required = PERMS.votes.add_ticket
     form_class = DateTicketForm
     template_name = "votes/tickets.html"

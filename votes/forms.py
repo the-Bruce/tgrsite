@@ -1,4 +1,4 @@
-from django.forms import Form, ModelForm, Textarea, DateField, ModelMultipleChoiceField
+from django.forms import Form, ModelForm, Textarea, DateField, ModelMultipleChoiceField, SelectDateWidget, CharField
 from django.urls import reverse_lazy
 
 from .models import Election, Candidate
@@ -28,6 +28,12 @@ class CandidateForm(ModelForm):
         widgets = {'description': Textarea(attrs=MD_INPUT_TEXT)}
 
 
+class IDTicketForm(Form):
+    ids = CharField(help_text="A list of whitespace separated uni-ids", widget=Textarea(), label="IDs")
+    elections = ModelMultipleChoiceField(Election.objects.all())
+
+
 class DateTicketForm(Form):
-    date = DateField()
+    date = DateField(widget=SelectDateWidget(),
+                     help_text="Select the date before which their membership should have been verified")
     elections = ModelMultipleChoiceField(Election.objects.all())

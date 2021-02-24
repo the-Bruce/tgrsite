@@ -3,7 +3,7 @@ from django.urls import path, include
 
 from .views import ApprovalVoteView, DoneView, ApprovalResultView, HomeView, VoteView, FPTPResultView, FPTPVoteView, \
     STVVoteView, STVResultView, UpdateElection, CreateElection, CreateCandidate, UpdateCandidate, AdminView, TicketView, \
-    ResultView
+    ResultView, IDTicketView, DateTicketView
 
 app_name = "votes"
 
@@ -20,6 +20,8 @@ urlpatterns = [
     path('<int:election>/results/stv/', STVResultView.as_view(), name="stv_results"),
     path('admin/', AdminView.as_view(), name="admin"),
     path('admin/tickets/', TicketView.as_view(), name="tickets"),
+    path('admin/tickets/id', IDTicketView.as_view(), name="tickets_id"),
+    path('admin/tickets/date', DateTicketView.as_view(), name="tickets_date"),
     path('admin/create/', CreateElection.as_view(), name="create_election"),
     path('admin/edit/<int:election>/', UpdateElection.as_view(), name="update_election"),
     path('admin/edit/<int:election>/create/', CreateCandidate.as_view(), name="create_candidate"),
