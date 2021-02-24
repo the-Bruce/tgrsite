@@ -5,7 +5,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from notifications.models import notify, NotifType
+from notifications.models import NotifType
+from notifications.utils import notify
 from users.permissions import PERMS
 from .models import Loan, Suggestion
 

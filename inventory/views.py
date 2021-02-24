@@ -7,7 +7,8 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.views import redirect_to_login
 
-from notifications.models import notify_bulk, NotifType, notify
+from notifications.models import NotifType
+from notifications.utils import notify, notify_bulk
 from users.models import Member
 from users.permissions import PERMS
 from .forms import SuggestionForm, LoanRequestForm, LoanSurrogateRequestForm, RecordForm, LoanNotesForm

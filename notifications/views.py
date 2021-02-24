@@ -9,7 +9,8 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView, ListView, RedirectView, View
 
 from .forms import SubscriptionForm
-from .models import Notification, delete_old, NotificationSubscriptions, SubType
+from .models import Notification, NotificationSubscriptions, SubType
+from .utils import delete_old
 
 
 class UpdateSubscriptions(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
