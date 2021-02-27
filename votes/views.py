@@ -38,9 +38,11 @@ class AdminView(PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return Election.objects.all()
 
+
 class TicketView(PermissionRequiredMixin, TemplateView):
     permission_required = PERMS.votes.add_ticket
     template_name = "votes/ticket.html"
+
 
 class IDTicketView(PermissionRequiredMixin, FormView):
     permission_required = PERMS.votes.add_ticket
@@ -425,6 +427,23 @@ class STVVoteView(UserPassesTestMixin, TemplateView):
         ctxt['election'] = self.election
         ctxt['choices'] = list(self.election.candidate_set.all())
         random.shuffle(ctxt['choices'])
+        return ctxt
+
+
+class STVAllVoteView(PermissionRequiredMixin, ListView):
+    model = Candidate
+    permission_required = PERMS.votes.view_stvvote
+    template_name = "votes/stv_vote_list.html"
+    context_object_name = "choices"
+
+    def get_queryset(self):
+        self.election = get_object_or_404(Election, id=self.kwargs['election'], vote_type=Election.Types.STV,
+                                          open=False)
+        return self.election.candidate_set.all()
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        ctxt['election'] = self.election
         return ctxt
 
 
