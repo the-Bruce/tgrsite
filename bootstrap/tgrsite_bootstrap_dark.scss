@@ -171,6 +171,18 @@ input[type="button"] {
   }
 }
 
+.vote-option > label:hover {
+  background: $light;
+}
+
+input:checked + .vote-option > label {
+  background: theme-color("primary");
+}
+
+input:checked + .vote-option > label:hover {
+  background: theme-color-level("primary", 2);
+}
+
 @import "source/transitions";
 @import "source/dropdown";
 @import "source/button-group";
