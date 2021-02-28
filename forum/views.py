@@ -7,7 +7,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 from django.http import HttpResponseRedirect
 
-from notifications.models import notify, NotifType
+from notifications.models import NotifType
+from notifications.utils import notify
 from .forms import ThreadForm, ResponseForm
 from .models import Thread, Response, Forum
 

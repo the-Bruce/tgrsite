@@ -7,7 +7,8 @@ from django.views import generic
 from django.views.generic import UpdateView, CreateView, DeleteView
 from premailer import Premailer
 
-from notifications.models import notify_everybody, NotifType
+from notifications.models import NotifType
+from notifications.utils import notify_everybody
 from notifications.tasks import doNewsletterMailings
 from django.conf import settings
 from website_settings.models import TextProperty

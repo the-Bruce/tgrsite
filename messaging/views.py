@@ -9,7 +9,8 @@ from django.views.generic import FormView, ListView, View, RedirectView, Templat
 from django.shortcuts import get_object_or_404, reverse
 from django.utils.timezone import datetime
 
-from notifications.models import notify, NotifType, notify_bulk
+from notifications.models import NotifType
+from notifications.utils import notify, notify_bulk
 from users.models import Member
 from users.permissions import PERMS
 from .models import Message, MessageThread, MessageReport

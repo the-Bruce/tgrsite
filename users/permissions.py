@@ -53,7 +53,10 @@ class Permissions:
     def __getattr__(self, item):
         if item in self.apps:
             return self.apps[item]
-        raise AttributeError("Unknown App: " + item)
+        if PermsError():
+            raise AttributeError("Unknown App: " + item)
+        else:
+            return Permissions.AppPermissions()
 
 
 PERMS = Permissions.get()

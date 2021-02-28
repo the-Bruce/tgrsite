@@ -12,7 +12,8 @@ from django.utils import timezone
 from django.views import generic
 
 from messaging.views import create_group
-from notifications.models import NotifType, notify_everybody, notify
+from notifications.models import NotifType
+from notifications.utils import notify, notify_everybody, notify_discord
 from .forms import RpgForm, RpgCreateForm
 from .models import Rpg, Tag
 from .templatetags.rpg_tags import can_manage
@@ -72,8 +73,20 @@ class Create(LoginRequiredMixin, generic.CreateView):
         self.object.game_masters.add(self.request.user.member)
         self.object.save()
         add_message(self.request, messages.SUCCESS, "Event successfully created")
+        url = reverse('rpgs:detail', kwargs={'pk': self.object.id})
         notify_everybody(NotifType.RPG_CREATE, f"A new event '{form.cleaned_data['title']}' is available for signup.",
-                         reverse('rpgs:detail', kwargs={'pk': self.object.id}), merge_key=self.object.id)
+                         url, merge_key=self.object.id)
+        discord_message = (f"A new event **{form.cleaned_data['title']}** is now available for signup!\n"
+                           f"**Available slots**: {self.object.players_wanted}")
+        if self.object.system:
+            discord_message += f"\n**System**: {self.object.system}"
+        if self.object.timeslot:
+            discord_message += f"\n**Timeslot**: {self.object.timeslot}"
+        if self.object.location:
+            discord_message += f"\n**Location**: {self.object.location}"
+        discord_message += f"\nVisit https://www.warwicktabletop.co.uk{url} to sign up."
+
+        notify_discord(discord_message, self.request.user.member)
         return response
 
 
