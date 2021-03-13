@@ -1,0 +1,15 @@
+<div class="list-group">
+    {% for achievement in achievements %}
+        <div class="achievement list-group-item flex-column">
+            <strong>
+            {% if achievement.image %}
+                <img src="{{achievement.image.image.url}}" />
+            {% else %}
+                <i class="fas {{achievement.fa_icon}}"></i>
+            {% endif %}
+            {{achievement.name}}
+            </strong>
+            {{achievement.description}}
+        </div>
+    {% endfor %}
+</div>
