@@ -7,6 +7,7 @@ from django.db import models
 from django.core import validators, exceptions
 from django.db.models.query import Q
 
+from assets.models import Asset
 
 # extension to django's User class which has authentication details
 # as well as some basic info such as name
@@ -146,3 +147,17 @@ class VerificationRequest(models.Model):
 
     def __str__(self):
         return self.uni_id + ": " + self.member.username
+
+class AchievementAward(models.Model):
+    achievement = models.ForeignKey("Achievement", on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    achieved_at = models.DateTimeField(auto_now_add=True)
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=25, unique=True)
+    description = models.CharField(max_length=100)
+    members = models.ManyToManyField(Member, through=AchievementAward)
+    trigger_name = models.CharField(max_length=20, unique=True)
+    image = models.ForeignKey(Asset, on_delete=models.SET_NULL, blank=True, null=True)
+    fa_icon = models.CharField(max_length=50, default="fa-medal",
+            help_text="Enter the fa-icon-name string. Optional if an image is provided.")
