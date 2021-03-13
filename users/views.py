@@ -35,7 +35,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
-                     'achievements': self.object.achievement_set.values()})
+                     'achievements': self.object.achievement_set.all()})
         return ctxt
 
 
