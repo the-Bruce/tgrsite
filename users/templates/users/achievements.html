@@ -1,15 +1,17 @@
 <div class="list-group">
-    {% for achievement in achievements %}
+    {% for aw in achievements %}
         <div class="achievement list-group-item flex-column">
             <strong>
-            {% if achievement.image %}
-                <img src="{{achievement.image.assetFile.url}}" style="max-height: 50px;" />
+            {% if aw.achievement.image %}
+                <img src="{{aw.achievement.image.assetFile.url}}"
+                style="max-height: 50px; margin-right: 10px;" />
             {% else %}
-                <i class="fas {{achievement.fa_icon}}"></i>
+                <i class="fas {{aw.achievement.fa_icon}}"></i>
             {% endif %}
-            {{achievement.name}}
+            {{aw.achievement.name}}
             </strong>
-            {{achievement.description}}
+            {{aw.achievement.description}}
+            [achieved {{aw.achieved_at|date:"d-m-Y"}}]
         </div>
     {% endfor %}
 </div>
