@@ -3,7 +3,7 @@
         <div class="achievement list-group-item flex-column">
             <strong>
             {% if achievement.image %}
-                <img src="{{achievement.image.assetFile.url}}" height="50" />
+                <img src="{{achievement.image.assetFile.url}}" style="max-height: 50px;" />
             {% else %}
                 <i class="fas {{achievement.fa_icon}}"></i>
             {% endif %}
