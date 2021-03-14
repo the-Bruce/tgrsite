@@ -1,23 +1,21 @@
 <div class="list-group">
     {% for aw in achievements %}
-        <div class="achievement list-group-item d-flex flex-row justify-content-left">
-            <div class="achievement-icon col-2" style="display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+    <div class="list-group-item">
+        <div class="achievement media">
             {% if aw.achievement.image %}
-                <img src="{{aw.achievement.image.assetFile.url}}" style="max-height: 50px;" />
+                <img src="{{aw.achievement.image.assetFile.url}}" class="mr-3" style="max-height: 50px;" />
             {% else %}
-                <i class="fas {{aw.achievement.fa_icon}} fa-3x fa-fw"></i>
+                <i class="fas {{aw.achievement.fa_icon}} fa-3x fa-fw mr-3"></i>
             {% endif %}
-            </div>
-            <div class="achievement-name col-9">
-            <p><strong>{{aw.achievement.name}}</strong>
-            {{aw.achievement.description}}</p>
-            {% if aw.achieved_at %}
-                <p class="text-muted">achieved {{aw.achieved_at|timesince}} ago</p>
-            {% else %}
-                <p>&nbsp;</p>
-            {% endif %}
+            <div class="media-body achievement-name">
+                <h5 class="mt-0">{{aw.achievement.name}}</h5>
+                <p>{{aw.achievement.description}}</p>
+                {% if aw.achieved_at %}
+                    <p class="text-muted">achieved {{aw.achieved_at|timesince}} ago</p>
+                {% endif %}
             </div>
         </div>
+    </div>
     {% empty %}
     <p>No achievements earned yet!</p>
     {% endfor %}
