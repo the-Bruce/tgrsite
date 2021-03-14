@@ -161,3 +161,4 @@ class Achievement(models.Model):
     image = models.ForeignKey(Asset, on_delete=models.SET_NULL, blank=True, null=True)
     fa_icon = models.CharField(max_length=50, default="fa-medal",
             help_text="Enter the fa-icon-name string. Optional if an image is provided.")
+    is_hidden = models.BooleanField(default=False)

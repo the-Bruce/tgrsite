@@ -35,7 +35,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
-                     'achievements': self.object.achievementaward_set.all()})
+                     'achievements': self.object.achievementaward_set.order_by('-achieved_at').all()})
         return ctxt
 
 
@@ -185,7 +185,7 @@ class VerifyRequest(LoginRequiredMixin, FormView):
 
 class AllAchievements(View):
     def get(self, request):
-        context = {"achievements": [{"achievement": i} for i in Achievement.objects.all()]}
+        context = {"achievements": [{"achievement": i} for i in Achievement.objects.filter(is_hidden=False)]}
         return render(request, 'users/allachievements.html', context)
 
 class VerifyConfirm(View):
