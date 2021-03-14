@@ -12,7 +12,9 @@
             <div class="achievement-name col-9">
             <p><strong>{{aw.achievement.name}}</strong>
             {{aw.achievement.description}}</p>
-            <p class="text-muted">achieved {{aw.achieved_at|timesince}} ago</p>
+            {% if aw.achieved_at %}
+                <p class="text-muted">achieved {{aw.achieved_at|timesince}} ago</p>
+            {% endif %}
             </div>
         </div>
     {% endfor %}

@@ -17,7 +17,7 @@ from forum.models import Thread, Response
 from rpgs.models import Rpg
 from .captcha import create_signed_captcha
 from .forms import MemberForm, UserForm, SignupForm, UniIDForm
-from .models import Member, Membership, VerificationRequest
+from .models import Member, Membership, VerificationRequest, Achievement
 from .utils import sendRequestMailings, getApiMembers
 
 
@@ -183,6 +183,10 @@ class VerifyRequest(LoginRequiredMixin, FormView):
                     "Please click the link included in that email to verify your membership.")
         return valid
 
+class AllAchievements(View):
+    def get(self, request):
+        context = {"achievements": [{"achievement": i} for i in Achievement.objects.all()]}
+        return render(request, 'users/allachievements.html', context)
 
 class VerifyConfirm(View):
     def get(self, request):
