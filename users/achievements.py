@@ -2,6 +2,8 @@ from users.models import Member, Achievement, AchievementAward
 from notifications.utils import notify
 from notifications.models import NotifType
 
+from datetime import datetime, timezone
+
 def give_achievement(member : Member, trigger : str):
     achiev, _ = Achievement.objects.get_or_create(
             trigger_name__iexact=trigger,
@@ -22,3 +24,14 @@ def give_achievement_once(member : Member, trigger : str):
         achiev_name = f"You got an achievement: {achiev.name}!"
         notify(member, NotifType.ACHIEVEMENTS, achiev_name, "/user/me/")
     return award
+
+age_awards = {1: "one_year", 2: "two_years", 3: "three_years", 4: "four_years", 5: "five_years", 10: "resurrected"}
+
+def age_achievements(member : Member):
+    date = member.equiv_user.date_joined
+    timesince = datetime.now(timezone.utc) - date
+    # This will be inaccurate every 400 years or something, so is good enough.
+    years = timesince.days / 365.2425
+    for i in age_awards.keys():
+        if years >= i:
+            give_achievement_once(member, age_awards[i])

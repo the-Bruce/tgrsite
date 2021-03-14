@@ -19,6 +19,7 @@ from .captcha import create_signed_captcha
 from .forms import MemberForm, UserForm, SignupForm, UniIDForm
 from .models import Member, Membership, VerificationRequest, Achievement
 from .utils import sendRequestMailings, getApiMembers
+from .achievements import age_achievements
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -79,6 +80,10 @@ class Login(LoginView):
     def form_valid(self, form):
         add_message(self.request, messages.SUCCESS, "Successfully logged in!")
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        age_achievements(self.request.user.member)
+        return super().get_success_url()
 
 
 class Logout(LogoutView):
