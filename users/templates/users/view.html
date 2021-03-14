@@ -36,12 +36,10 @@
                 <div class="card card-body card-text markdown-text mb-3">{{ member.bio|parse_md }}</div>
             {% endif %}
 
-            {% if achievements %}
-                <div class="mb-3">
-                    <h4>Achievements</h4>
-                    {% include "users/achievements.html" with achievements=achievements %}
-                </div>
-            {% endif %}
+            <div class="mb-3">
+                <h4>Achievements <small>(you can see all possible achievements <a href="/allachievements">here</a>)</small></h4>
+                {% include "users/achievements.html" with achievements=achievements %}
+            </div>
 
             {% if recent_threads %}
                 <div class="mb-3">
