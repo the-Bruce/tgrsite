@@ -5,8 +5,7 @@
             {% if aw.achievement.image %}
                 <img src="{{aw.achievement.image.assetFile.url}}" style="max-height: 50px;" />
             {% else %}
-                <i class="fas {{aw.achievement.fa_icon}} fa-3x"
-                style="line-height: inherit; text-align: center; width: 100%; vertical-align: middle;"></i>
+                <i class="fas {{aw.achievement.fa_icon}} fa-3x fa-fw"></i>
             {% endif %}
             </div>
             <div class="achievement-name col-9">
