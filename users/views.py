@@ -19,7 +19,7 @@ from .captcha import create_signed_captcha
 from .forms import MemberForm, UserForm, SignupForm, UniIDForm
 from .models import Member, Membership, VerificationRequest, Achievement
 from .utils import sendRequestMailings, getApiMembers
-from .achievements import age_achievements
+from .achievements import age_achievements, give_achievement
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -213,6 +213,7 @@ class VerifyConfirm(View):
                 m.save()
                 v.member.verifications.all().delete()
                 add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
+                give_achievement(v.member, "verify_membership")
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
         return HttpResponseRedirect(reverse("users:me"))
