@@ -19,6 +19,9 @@ def give_achievement_once(member : Member, trigger : str):
             trigger_name__iexact=trigger,
             trigger_name=trigger,
             defaults = {'name': trigger.title()})
+    return give_this_achievement_once(member, achiev)
+
+def give_this_achievement_once(member : Member, achiev : Achievement):
     award, created = AchievementAward.objects.get_or_create(member=member, achievement=achiev)
     if created:
         achiev_name = f"You got an achievement: {achiev.name}!"

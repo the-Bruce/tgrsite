@@ -1,6 +1,7 @@
 from django.db import models
 from django.shortcuts import reverse
 
+from users.models import Achievement
 
 class Page(models.Model):
     class Permissions(models.IntegerChoices):
@@ -20,6 +21,7 @@ class Page(models.Model):
     leftbar = models.TextField(max_length=16384, blank=True, help_text='Left sidebar contents (use cards)')
     markdown = models.BooleanField(default=True, help_text='Enable markdown rendering in this page')
     permission = models.IntegerField(choices=Permissions.choices, default=Permissions.PUBLIC)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     def __str__(self):
         return self.name
