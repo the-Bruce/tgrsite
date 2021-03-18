@@ -8,10 +8,10 @@
                 <i class="{{aw.achievement.icon_set}} {{aw.achievement.fa_icon}} fa-3x fa-fw mr-3"></i>
             {% endif %}
             <div class="media-body achievement-name">
-                <h5 class="mt-0">{{aw.achievement.name}}</h5>
-                <p>{{aw.achievement.description}}</p>
+                <h5 class="mt-0 mb-0">{{aw.achievement.name}}</h5>
+                <p class="mb-0">{{aw.achievement.description}}</p>
                 {% if aw.achieved_at %}
-                    <p class="text-muted">achieved {{aw.achieved_at|timesince}} ago</p>
+                    <p class="text-muted mb-0">achieved {{aw.achieved_at|timesince}} ago</p>
                 {% endif %}
             </div>
         </div>
