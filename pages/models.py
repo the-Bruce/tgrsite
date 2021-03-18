@@ -3,6 +3,7 @@ from django.shortcuts import reverse
 
 from users.models import Achievement
 
+
 class Page(models.Model):
     class Permissions(models.IntegerChoices):
         PUBLIC = 0, 'Public'

@@ -80,7 +80,7 @@ class Login(LoginView):
     def form_valid(self, form):
         add_message(self.request, messages.SUCCESS, "Successfully logged in!")
         return super().form_valid(form)
-    
+
     def get_success_url(self):
         age_achievements(self.request.user.member)
         return super().get_success_url()
@@ -188,10 +188,12 @@ class VerifyRequest(LoginRequiredMixin, FormView):
                     "Please click the link included in that email to verify your membership.")
         return valid
 
+
 class AllAchievements(View):
     def get(self, request):
         context = {"achievements": [{"achievement": i} for i in Achievement.objects.filter(is_hidden=False)]}
         return render(request, 'users/allachievements.html', context)
+
 
 class VerifyConfirm(View):
     def get(self, request):

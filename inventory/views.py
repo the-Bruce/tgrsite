@@ -263,7 +263,9 @@ class CreateLoan(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
         notify_bulk(Member.users_with_perm(PERMS.inventory.view_loan), NotifType.LOAN_REQUESTS,
                     f"A new loan has been requested by {self.request.user.username}.",
-                    reverse('inventory:loan_detail', kwargs={'inv':self.object.inventory.canonical_(), 'pk': self.object.id}), merge_key=self.object.id)
+                    reverse('inventory:loan_detail',
+                            kwargs={'inv': self.object.inventory.canonical_(), 'pk': self.object.id}),
+                    merge_key=self.object.id)
         return response
 
 
@@ -291,10 +293,13 @@ class CreateSurrogateLoan(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 
         notify_bulk(Member.users_with_perm(PERMS.inventory.view_loan), NotifType.LOAN_REQUESTS,
                     f"A new loan has been requested for {form.instance.requester.username} by {self.request.user.username}.",
-                    reverse('inventory:loan_detail', kwargs={'inv':self.object.inventory.canonical_(), 'pk': self.object.id}), merge_key=self.object.id)
+                    reverse('inventory:loan_detail',
+                            kwargs={'inv': self.object.inventory.canonical_(), 'pk': self.object.id}),
+                    merge_key=self.object.id)
 
         notify(form.instance.requester, NotifType.LOAN_REQUESTS,
-                                      f"A loan request has been created for you by {self.request.user.username}.",
-                                      reverse('inventory:loan_detail', kwargs={'inv':self.object.inventory.canonical_(), 'pk': self.object.id}))
+               f"A loan request has been created for you by {self.request.user.username}.",
+               reverse('inventory:loan_detail',
+                       kwargs={'inv': self.object.inventory.canonical_(), 'pk': self.object.id}))
 
         return response

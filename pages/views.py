@@ -21,7 +21,7 @@ class ViewPage(UserPassesTestMixin, generic.DetailView):
         if o.achievement and self.request.user:
             give_this_achievement_once(self.request.user.member, o.achievement)
         return True
-    
+
     def test_page_perms(self):
         if self.request.user.is_superuser:
             return True

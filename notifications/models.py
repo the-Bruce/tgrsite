@@ -56,7 +56,7 @@ class NotificationSubscriptions(models.Model):
     message = models.IntegerField(verbose_name='Receive Direct Messages', choices=reduced_subscription_types,
                                   default=SubType.WEB)
     loan_request = models.IntegerField(verbose_name='A Loan Request Gets Updated', choices=reduced_subscription_types,
-                                  default=SubType.WEB)
+                                       default=SubType.WEB)
     rpg_join = models.IntegerField(verbose_name='Someone Joins Your Event', choices=reduced_subscription_types,
                                    default=SubType.WEB)
     rpg_leave = models.IntegerField(verbose_name='Someone Leaves Your Event', choices=reduced_subscription_types,
@@ -70,7 +70,8 @@ class NotificationSubscriptions(models.Model):
                                       default=SubType.WEB)
     rpg_new = models.IntegerField(verbose_name='A New Event is Created', choices=reduced_subscription_types,
                                   default=SubType.NONE)
-    achievement_got = models.IntegerField(verbose_name='You Get an Achievement', choices=reduced_subscription_types, default=SubType.WEB)
+    achievement_got = models.IntegerField(verbose_name='You Get an Achievement', choices=reduced_subscription_types,
+                                          default=SubType.WEB)
     other = models.IntegerField(verbose_name='Miscellaneous', choices=reduced_subscription_types, default=SubType.NONE)
 
     def get_category_subscription(self, category):
@@ -131,5 +132,3 @@ class Notification(models.Model):
             return icons[self.notif_type]
         else:
             return default_icon
-
-

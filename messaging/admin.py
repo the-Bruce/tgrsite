@@ -14,7 +14,7 @@ from .models import MessageThread, MessageReport
 
 class MessageReportAdmin(admin.ModelAdmin):
     readonly_fields = ['member', 'message', 'time', 'comment']
-    list_display = ['member', 'time','message']
+    list_display = ['member', 'time', 'message']
 
 
 # more sensible, though might still need to be removed

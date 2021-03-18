@@ -64,13 +64,3 @@ def updateMemberships():
                 if m.active:
                     m.active = False
                     m.save()
-
-
-# This needs to be run on first deployment to set up some programmatic achievements.
-def firstTimeAchievements():
-    for m in Member.objects.all():
-        rpgs = m.rpgs_owned.count()
-        if rpgs > 0:
-            give_achievement_once(m, "first_event")
-        if rpgs > 4:
-            give_achievement_once(m, "five_events")

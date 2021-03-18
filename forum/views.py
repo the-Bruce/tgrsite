@@ -118,7 +118,8 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
         form.instance.thread = thread
         response = super().form_valid(form)
         # Create Notifications
-        url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']})+"#response-"+str(form.instance.id)
+        url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']}) + "#response-" + str(
+            form.instance.id)
         for author in thread.subscribed.all():
             if author != self.request.user.member:
                 notify(author, NotifType.FORUM_REPLY,
