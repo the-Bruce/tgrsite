@@ -160,5 +160,13 @@ class Achievement(models.Model):
     trigger_name = models.CharField(max_length=20, unique=True)
     image = models.ForeignKey(Asset, on_delete=models.SET_NULL, blank=True, null=True)
     fa_icon = models.CharField(max_length=50, default="fa-medal",
-            help_text="Enter the fa-icon-name string. Optional if an image is provided.")
+                    validators=(validators.RegexValidator("^fa-", message="Please ensure that the icon name "
+                                                                            "includes the fa- prefix"),
+                                validators.RegexValidator("^[a-z-]+$",
+                                                            message="Icon names should contain only lowercase "
+                                                                    "and hyphens")),
+                    help_text="The name of the icon to use (including the fa- prefix)")
+    icon_set = models.CharField(max_length=3, choices=(("fas", "Solid Style (fas)"), ("fab", "Brands Style (fab)")),
+                                help_text="The fontawesome icon set this logo is from. (Please don't use Regular "
+                                          "Style (far) icons: keep the style consistent)", default="fas")
     is_hidden = models.BooleanField(default=False)
