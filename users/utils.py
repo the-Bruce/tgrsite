@@ -2,7 +2,8 @@ import requests
 from django.http import HttpRequest
 from django.template import loader
 
-from .models import Membership
+from .models import Membership, Member
+from .achievements import give_achievement, give_achievement_once
 
 from premailer import Premailer
 
@@ -58,7 +59,18 @@ def updateMemberships():
                 if not m.active:
                     m.active = True
                     m.save()
+                    give_achievement(m.member, "verify_membership")
             else:
                 if m.active:
                     m.active = False
                     m.save()
+
+
+# This needs to be run on first deployment to set up some programmatic achievements.
+def firstTimeAchievements():
+    for m in Member.objects.all():
+        rpgs = m.rpgs_owned.count()
+        if rpgs > 0:
+            give_achievement_once(m, "first_event")
+        if rpgs > 4:
+            give_achievement_once(m, "five_events")
