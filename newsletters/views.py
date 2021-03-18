@@ -49,6 +49,7 @@ class Detail(generic.DetailView):
             ctxt['prev'] = newsletters[index_of - 1] if index_of - 1 >= 0 else None
         return ctxt
 
+
 class Preview(Detail):
     def render_to_response(self, context, **response_kwargs):
         response = super().render_to_response(context, **response_kwargs)

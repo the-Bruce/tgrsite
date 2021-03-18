@@ -27,8 +27,8 @@ def rejectLoan(request, pk):
     item.rejected = request.user.member
     item.save()
     notify(item.requester, NotifType.LOAN_REQUESTS, f"A pending loan request has been rejected.",
-                                  reverse('inventory:loan_detail',
-                                          kwargs={'inv': item.inventory.canonical_(), 'pk': item.id}))
+           reverse('inventory:loan_detail',
+                   kwargs={'inv': item.inventory.canonical_(), 'pk': item.id}))
     return redirect(item.get_absolute_url())
 
 
@@ -39,9 +39,9 @@ def authoriseLoan(request, pk):
     item.authorised = request.user.member
     item.save()
     notify(item.requester, NotifType.LOAN_REQUESTS,
-                                  f"A pending loan request has been authorised.",
-                                  reverse('inventory:loan_detail',
-                                          kwargs={'inv': item.inventory.canonical_(), 'pk': item.id}))
+           f"A pending loan request has been authorised.",
+           reverse('inventory:loan_detail',
+                   kwargs={'inv': item.inventory.canonical_(), 'pk': item.id}))
     return redirect(item.get_absolute_url())
 
 

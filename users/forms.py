@@ -75,7 +75,7 @@ class SignupForm(ModelForm):
 
     def clean(self):
         if 'captcha' not in self.cleaned_data or 'captcha_token' not in self.cleaned_data:
-            self.add_error('captcha',"Invalid Captcha Answer")
+            self.add_error('captcha', "Invalid Captcha Answer")
             return None
         captcha = self.cleaned_data['captcha']
         captcha_token = self.cleaned_data['captcha_token']

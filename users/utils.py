@@ -2,7 +2,8 @@ import requests
 from django.http import HttpRequest
 from django.template import loader
 
-from .models import Membership
+from .models import Membership, Member
+from .achievements import give_achievement, give_achievement_once
 
 from premailer import Premailer
 
@@ -58,6 +59,7 @@ def updateMemberships():
                 if not m.active:
                     m.active = True
                     m.save()
+                    give_achievement(m.member, "verify_membership")
             else:
                 if m.active:
                     m.active = False

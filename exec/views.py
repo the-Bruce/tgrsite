@@ -20,7 +20,6 @@ class Index(ListView):
         return ctxt
 
 
-
 class Edit(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = ExecRole
     form_class = ExecBioForm

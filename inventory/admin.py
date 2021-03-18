@@ -4,8 +4,9 @@ from .models import Inventory, Loan, Record, Suggestion
 
 
 class InventoryAdmin(admin.ModelAdmin):
-    list_display = ("name","suggestions", "loans")
+    list_display = ("name", "suggestions", "loans")
     list_filter = ("suggestions", "loans")
+
 
 class LoanAdmin(admin.ModelAdmin):
     model = Loan
@@ -26,7 +27,7 @@ class RecordAdmin(admin.ModelAdmin):
 class SuggestionAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_display = ("name", "archived", "inventory")
-    list_filter = ("inventory","archived")
+    list_filter = ("inventory", "archived")
 
 
 # Register your models here.

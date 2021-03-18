@@ -1,0 +1,10 @@
+{% extends 'tgrsite/main.html' %}
+{% block title %}All Achievements{% endblock %}
+{% block pagetitle %}All Achievements{% endblock %}
+
+{% block breadcrumbs_child %}All Achievements{% endblock %}
+
+{% block body %}
+    <p>Here are all of the achievements currently available in the system.</p>
+    {% include "users/achievements.html" with achievements=achievements %}
+{% endblock %}

@@ -12,6 +12,7 @@ def next_poster():
     except (SpecialEvent.DoesNotExist, IndexError):
         return None
 
+
 @register.simple_tag
 def upcoming_events():
     return SpecialEvent.objects.filter(hide_date__gte=date.today()).order_by('sort_date')[:5]

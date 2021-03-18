@@ -36,6 +36,10 @@ urlpatterns = [
          views.PasswordResetConfirm.as_view(),
          name='password_reset_confirm'),
 
+    path('allachievements/',
+         views.AllAchievements.as_view(),
+         name='all_achievements'),
+
     # API stuff
     path('user/allmembers/', views.allmembers, name='allmembers'),
 ]

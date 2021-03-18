@@ -17,8 +17,9 @@ from forum.models import Thread, Response
 from rpgs.models import Rpg
 from .captcha import create_signed_captcha
 from .forms import MemberForm, UserForm, SignupForm, UniIDForm
-from .models import Member, Membership, VerificationRequest
+from .models import Member, Membership, VerificationRequest, Achievement
 from .utils import sendRequestMailings, getApiMembers
+from .achievements import age_achievements, give_achievement
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -34,7 +35,8 @@ class ProfileView(LoginRequiredMixin, DetailView):
         ctxt = super().get_context_data(**kwargs)
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
-                     'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False)})
+                     'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
+                     'achievements': self.object.achievementaward_set.order_by('-achieved_at').all()})
         return ctxt
 
 
@@ -78,6 +80,10 @@ class Login(LoginView):
     def form_valid(self, form):
         add_message(self.request, messages.SUCCESS, "Successfully logged in!")
         return super().form_valid(form)
+
+    def get_success_url(self):
+        age_achievements(self.request.user.member)
+        return super().get_success_url()
 
 
 class Logout(LogoutView):
@@ -183,6 +189,12 @@ class VerifyRequest(LoginRequiredMixin, FormView):
         return valid
 
 
+class AllAchievements(View):
+    def get(self, request):
+        context = {"achievements": [{"achievement": i} for i in Achievement.objects.filter(is_hidden=False)]}
+        return render(request, 'users/allachievements.html', context)
+
+
 class VerifyConfirm(View):
     def get(self, request):
         try:
@@ -203,6 +215,7 @@ class VerifyConfirm(View):
                 m.save()
                 v.member.verifications.all().delete()
                 add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
+                give_achievement(v.member, "verify_membership")
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
         return HttpResponseRedirect(reverse("users:me"))

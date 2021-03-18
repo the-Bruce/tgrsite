@@ -6,6 +6,7 @@ from django.db import models
 
 from tgrsite.utils import PermsError
 
+
 class Permissions:
     _instance = None
 

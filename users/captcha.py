@@ -75,5 +75,5 @@ def check_signed_captcha(given, answer):
         answer = getSigner().unsign(answer, max_age=timedelta(minutes=10))
     except (SignatureExpired, BadSignature):
         return False
-    #print("hash:", hash2(given), answer)
+    # print("hash:", hash2(given), answer)
     return compare_digest(hash2(given), answer)
