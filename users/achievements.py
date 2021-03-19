@@ -9,7 +9,7 @@ def give_achievement(member: Member, trigger: str):
     achiev, _ = Achievement.objects.get_or_create(
         trigger_name__iexact=trigger,
         trigger_name=trigger,
-        defaults={'name': trigger.title()})
+        defaults={'name': trigger.title().replace("_", " ")})
     award = AchievementAward.objects.create(member=member, achievement=achiev)
     achiev_name = f"You got an achievement: {achiev.name}!"
     notify(member, NotifType.ACHIEVEMENTS, achiev_name, "/user/me/")
