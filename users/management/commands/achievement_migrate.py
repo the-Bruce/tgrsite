@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from users.models import Member
-from users.achievements import give_achievement_once
+from users.achievements import give_achievement_once, age_achievements
 
 
 class Command(BaseCommand):
@@ -14,5 +14,6 @@ class Command(BaseCommand):
                 give_achievement_once(m, "first_event")
             if rpgs > 4:
                 give_achievement_once(m, "five_events")
+            age_achievements(m)
 
         self.stdout.write('Achievements Migrated')
