@@ -19,7 +19,7 @@ from .captcha import create_signed_captcha
 from .forms import MemberForm, UserForm, SignupForm, UniIDForm
 from .models import Member, Membership, VerificationRequest, Achievement
 from .utils import sendRequestMailings, getApiMembers
-from .achievements import age_achievements, give_achievement
+from .achievements import age_achievements, give_achievement, give_achievement_once
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -67,6 +67,10 @@ class Edit(LoginRequiredMixin, View):
             memberform.save()
             userform.save()
             add_message(request, messages.SUCCESS, "Profile successfully updated.")
+            if request.POST["discord"]:
+                give_achievement_once(request.user.member, "discord", request=request)
+            if request.POST["pronoun"]:
+                give_achievement_once(request.user.member, "pronoun", request=request)
             return HttpResponseRedirect(reverse('users:me'))
         else:
             context = {

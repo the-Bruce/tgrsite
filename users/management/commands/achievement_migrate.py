@@ -24,5 +24,9 @@ class Command(BaseCommand):
             first_message = m.message_set.order_by("timestamp").first()
             if first_message:
                 give_achievement_once(m, "messaged", first_message.timestamp)
+            if m.discord != "":
+                give_achievement_once(m, "discord")
+            if m.pronoun != "":
+                give_achievement_once(m, "pronoun")
 
         self.stdout.write('Achievements Migrated')
