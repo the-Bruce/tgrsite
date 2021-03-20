@@ -19,7 +19,7 @@ def get_achievement_from_trigger(trigger: str):
 
 def notify_achievement(member: Member, name: str, request):
     achiev_name = f"You got an achievement: {name}!"
-    notify(member, NotifType.ACHIEVEMENTS, achiev_name, "/user/me/")
+    notify(member, NotifType.ACHIEVEMENTS, achiev_name, "/user/me/achievements/")
     if request:
         add_message(request, messages.SUCCESS, achiev_name)
 

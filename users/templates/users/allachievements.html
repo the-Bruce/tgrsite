@@ -1,11 +1,13 @@
 {% extends 'tgrsite/main.html' %}
 {% block title %}All Achievements{% endblock %}
-{% block pagetitle %}All Achievements{% endblock %}
+{% block pagetitle %}Achievements <span class="badge badge-primary badge-pill">{{achievement_count}} / {{achievement_total}}</span>{% endblock %}
 
-{% block breadcrumbs_child %}All Achievements{% endblock %}
+{% block breadcrumbs_child %}Achievements{% endblock %}
 
 {% block body %}
-    <p>Here are all of the achievements currently available in the system.</p>
-    <p>If you believe that you should have an achievement but don't, contact the Web Admin!</p>
+    <p>{% if is_yours %}<strong>You</strong> have{% else %}<strong>{{name}}</strong> has{% endif %}
+        achieved {{achievement_count}} out of {{achievement_total}} possible achievements!</p>
+    <p>If you believe that {% if is_yours %}you{% else %}{{name}}{% endif %} should have an achievement but it's not here, contact the Web Admin.</p>
+    <p>Try to catch them all!</p>
     {% include "users/achievements.html" with achievements=achievements %}
 {% endblock %}

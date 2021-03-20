@@ -33,10 +33,13 @@ class ProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         pk = self.object.pk
         ctxt = super().get_context_data(**kwargs)
+        achievements = self.object.achievementaward_set.order_by('-achieved_at')
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
-                     'achievements': self.object.achievementaward_set.order_by('-achieved_at')[:5]})
+                     'achievements': achievements[:5],
+                     'achievement_count': achievements.count(),
+                     'achievement_total': Achievement.objects.count()})
         return ctxt
 
 
@@ -189,10 +192,30 @@ class VerifyRequest(LoginRequiredMixin, FormView):
         return valid
 
 
-class AllAchievements(View):
-    def get(self, request):
-        context = {"achievements": [{"achievement": i} for i in Achievement.objects.filter(is_hidden=False)]}
-        return render(request, 'users/allachievements.html', context)
+class AllAchievements(DetailView, LoginRequiredMixin):
+    model = Member
+    template_name = "users/allachievements.html"
+    context_object_name = "member"
+
+    def get_queryset(self):
+        return Member.objects.filter(equiv_user__is_active=True)
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        awards = self.object.achievementaward_set.order_by('-achieved_at')
+        nonachievements = Achievement.objects.exclude(achievementaward__member=self.object).filter(is_hidden=False)
+        nonawards = [{"achievement": i} for i in nonachievements]
+        achievements = list(awards) + nonawards
+        ctxt.update({'achievements': achievements,
+                     'achievement_count': awards.count(),
+                     'achievement_total': Achievement.objects.count(),
+                     'is_yours': self.object == self.request.user.member,
+                     'name': self.object.equiv_user.username})
+        return ctxt
+
+class MyAchievements(AllAchievements):
+    def get_object(self, queryset=None):
+        return self.request.user.member
 
 
 class VerifyConfirm(View):

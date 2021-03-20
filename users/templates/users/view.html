@@ -37,7 +37,10 @@
             {% endif %}
 
             <div class="mb-3">
-                <h4>Achievements <small>(you can see all possible achievements <a href="/allachievements">here</a>)</small></h4>
+                <h4>Recent Achievements
+                    <a href="achievements"><span class="badge badge-primary badge-pill">{{achievement_count}} / {{achievement_total}}</span></a>
+                </h4>
+                <p>All of this user's achievements can be seen <a href="achievements">here</a>.</p>
                 {% include "users/achievements.html" with achievements=achievements %}
             </div>
 
