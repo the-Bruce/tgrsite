@@ -24,7 +24,9 @@ def notify_achievement(member: Member, name: str, request):
         add_message(request, messages.SUCCESS, achiev_name)
 
 
-def give_achievement(member: Member, trigger: str, date: datetime = timezone.now(), request = None):
+def give_achievement(member: Member, trigger: str, date: datetime = None, request = None):
+    if date is None:
+        date = timezone.now()
     achiev = get_achievement_from_trigger(trigger)
     award = AchievementAward.objects.update_or_create(
         member=member,
@@ -34,12 +36,16 @@ def give_achievement(member: Member, trigger: str, date: datetime = timezone.now
     return award
 
 
-def give_achievement_once(member: Member, trigger: str, date: datetime = timezone.now(), request = None):
+def give_achievement_once(member: Member, trigger: str, date: datetime = None, request = None):
+    if date is None:
+        date = timezone.now()
     achiev = get_achievement_from_trigger(trigger)
     return give_this_achievement_once(member, achiev, date, request)
 
 
-def give_this_achievement_once(member: Member, achiev: Achievement, date: datetime = timezone.now(), request = None):
+def give_this_achievement_once(member: Member, achiev: Achievement, date: datetime = None, request = None):
+    if date is None:
+        date = timezone.now()
     award, created = AchievementAward.objects.get_or_create(
         member=member,
         achievement=achiev,
