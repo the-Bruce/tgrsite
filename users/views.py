@@ -215,7 +215,7 @@ class VerifyConfirm(View):
                 m.save()
                 v.member.verifications.all().delete()
                 add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
-                give_achievement(v.member, "verify_membership")
+                give_achievement(v.member, "verify_membership", request=request)
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
         return HttpResponseRedirect(reverse("users:me"))

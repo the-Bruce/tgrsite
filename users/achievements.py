@@ -3,6 +3,8 @@ from notifications.utils import notify
 from notifications.models import NotifType
 
 from django.utils import timezone
+from django.contrib.messages import add_message
+from django.contrib.messages import constants as messages
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
@@ -15,27 +17,35 @@ def get_achievement_from_trigger(trigger: str):
     return achiev
 
 
-def notify_achievement(member: Member, name: str):
+def notify_achievement(member: Member, name: str, request):
     achiev_name = f"You got an achievement: {name}!"
     notify(member, NotifType.ACHIEVEMENTS, achiev_name, "/user/me/")
+    if request:
+        add_message(request, messages.SUCCESS, achiev_name)
 
 
-def give_achievement(member: Member, trigger: str, date: datetime = timezone.now()):
+def give_achievement(member: Member, trigger: str, date: datetime = timezone.now(), request = None):
     achiev = get_achievement_from_trigger(trigger)
-    award = AchievementAward.objects.create(member=member, achievement=achiev, achieved_at=date)
-    notify_achievement(member, achiev.name)
+    award = AchievementAward.objects.update_or_create(
+        member=member,
+        achievement=achiev,
+        defaults={'achieved_at': date})
+    notify_achievement(member, achiev.name, request)
     return award
 
 
-def give_achievement_once(member: Member, trigger: str, date: datetime = timezone.now()):
+def give_achievement_once(member: Member, trigger: str, date: datetime = timezone.now(), request = None):
     achiev = get_achievement_from_trigger(trigger)
-    return give_this_achievement_once(member, achiev, date)
+    return give_this_achievement_once(member, achiev, date, request)
 
 
-def give_this_achievement_once(member: Member, achiev: Achievement, date: datetime = timezone.now()):
-    award, created = AchievementAward.objects.get_or_create(member=member, achievement=achiev, achieved_at=date)
+def give_this_achievement_once(member: Member, achiev: Achievement, date: datetime = timezone.now(), request = None):
+    award, created = AchievementAward.objects.get_or_create(
+        member=member,
+        achievement=achiev,
+        defaults={'achieved_at': date})
     if created:
-        notify_achievement(member, achiev.name)
+        notify_achievement(member, achiev.name, request)
     return award
 
 

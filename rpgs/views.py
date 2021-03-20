@@ -88,9 +88,9 @@ class Create(LoginRequiredMixin, generic.CreateView):
         discord_message += f"\nVisit https://www.warwicktabletop.co.uk{url} to sign up."
 
         notify_discord(discord_message, self.request.user.member)
-        give_achievement_once(form.instance.creator, "first_event")
+        give_achievement_once(form.instance.creator, "first_event", request=self.request)
         if (Rpg.objects.filter(creator=form.instance.creator).count() >= 5):
-            give_achievement_once(form.instance.creator, "five_events")
+            give_achievement_once(form.instance.creator, "five_events", request=self.request)
         return response
 
 

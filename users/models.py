@@ -153,7 +153,7 @@ class VerificationRequest(models.Model):
 class AchievementAward(models.Model):
     achievement = models.ForeignKey("Achievement", on_delete=models.CASCADE)
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    achieved_at = models.DateTimeField(default=timezone.now())
+    achieved_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.member.equiv_user.username + ": " + self.achievement.name
