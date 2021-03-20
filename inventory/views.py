@@ -10,6 +10,7 @@ from django.contrib.auth.views import redirect_to_login
 from notifications.models import NotifType
 from notifications.utils import notify, notify_bulk
 from users.models import Member
+from users.achievements import give_achievement_once
 from users.permissions import PERMS
 from .forms import SuggestionForm, LoanRequestForm, LoanSurrogateRequestForm, RecordForm, LoanNotesForm
 from .models import Inventory, Loan, Record, Suggestion
@@ -145,6 +146,7 @@ class CreateSuggestion(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.requester = self.request.user.member
         form.instance.inventory = get_object_or_404(Inventory, suggestions=True, name__iexact=self.kwargs['inv'])
+        give_achievement_once(self.request.user.member, "suggested_game", request=self.request)
         return super().form_valid(form)
 
 
