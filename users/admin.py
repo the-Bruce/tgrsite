@@ -43,7 +43,7 @@ class UserAdmin(BaseUserAdmin):
 
 class MemberAdmin(admin.ModelAdmin):
     inlines = (MembershipInline,)
-    search_fields = ('equiv_user__username', 'discord')
+    search_fields = ('equiv_user__username', 'discord', 'firstname', 'last_name',)
     readonly_fields = ('dark',)
     list_display = ('username', 'discord', 'firstname', 'last_name', 'pronoun')
 
