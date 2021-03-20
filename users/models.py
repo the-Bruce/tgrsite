@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core import validators, exceptions
 from django.db.models.query import Q
+from django.utils import timezone
 
 from assets.models import Asset
 
@@ -152,7 +153,10 @@ class VerificationRequest(models.Model):
 class AchievementAward(models.Model):
     achievement = models.ForeignKey("Achievement", on_delete=models.CASCADE)
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    achieved_at = models.DateTimeField(auto_now_add=True)
+    achieved_at = models.DateTimeField(default=timezone.now())
+
+    def __str__(self):
+        return self.member.equiv_user.username + ": " + self.achievement.name
 
 
 class Achievement(models.Model):

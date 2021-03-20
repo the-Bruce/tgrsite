@@ -8,4 +8,5 @@ Pillow
 django_bleach
 premailer
 uuid
+python-dateutil
 #django-debug-toolbar

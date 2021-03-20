@@ -3,32 +3,39 @@ from notifications.utils import notify
 from notifications.models import NotifType
 
 from django.utils import timezone
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 
-def give_achievement(member: Member, trigger: str):
+def get_achievement_from_trigger(trigger: str):
     achiev, _ = Achievement.objects.get_or_create(
         trigger_name__iexact=trigger,
         trigger_name=trigger,
         defaults={'name': trigger.title().replace("_", " ")})
-    award = AchievementAward.objects.create(member=member, achievement=achiev)
-    achiev_name = f"You got an achievement: {achiev.name}!"
+    return achiev
+
+
+def notify_achievement(member: Member, name: str):
+    achiev_name = f"You got an achievement: {name}!"
     notify(member, NotifType.ACHIEVEMENTS, achiev_name, "/user/me/")
+
+
+def give_achievement(member: Member, trigger: str, date: datetime = timezone.now()):
+    achiev = get_achievement_from_trigger(trigger)
+    award = AchievementAward.objects.create(member=member, achievement=achiev, achieved_at=date)
+    notify_achievement(member, achiev.name)
     return award
 
 
-def give_achievement_once(member: Member, trigger: str):
-    achiev, _ = Achievement.objects.get_or_create(
-        trigger_name__iexact=trigger,
-        trigger_name=trigger,
-        defaults={'name': trigger.title()})
-    return give_this_achievement_once(member, achiev)
+def give_achievement_once(member: Member, trigger: str, date: datetime = timezone.now()):
+    achiev = get_achievement_from_trigger(trigger)
+    return give_this_achievement_once(member, achiev, date)
 
 
-def give_this_achievement_once(member: Member, achiev: Achievement):
-    award, created = AchievementAward.objects.get_or_create(member=member, achievement=achiev)
+def give_this_achievement_once(member: Member, achiev: Achievement, date: datetime = timezone.now()):
+    award, created = AchievementAward.objects.get_or_create(member=member, achievement=achiev, achieved_at=date)
     if created:
-        achiev_name = f"You got an achievement: {achiev.name}!"
-        notify(member, NotifType.ACHIEVEMENTS, achiev_name, "/user/me/")
+        notify_achievement(member, achiev.name)
     return award
 
 
@@ -37,10 +44,9 @@ age_awards = {1: "one_year", 2: "two_years", 3: "three_years", 4: "four_years", 
 
 def age_achievements(member: Member):
     date = member.equiv_user.date_joined
-    timesince = timezone.now() - date
-    # This will be inaccurate every 400 years or something, so is good enough.
-    # The alternative is adding a new dependency.
-    years = timesince.days / 365.2425
+    timesince = relativedelta(timezone.now(), date)
+    years = timesince.years
     for i in age_awards.keys():
         if years >= i:
-            give_achievement_once(member, age_awards[i])
+            achieved_date = date + relativedelta(years=i)
+            give_achievement_once(member, age_awards[i], achieved_date)
