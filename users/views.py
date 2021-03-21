@@ -34,11 +34,12 @@ class ProfileView(LoginRequiredMixin, DetailView):
         pk = self.object.pk
         ctxt = super().get_context_data(**kwargs)
         achievements = self.object.achievementaward_set.order_by('-achieved_at')
+        num_distinct = self.object.achievementaward_set.distinct('achievement').count()
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
                      'achievements': achievements[:5],
-                     'achievement_count': achievements.count(),
+                     'achievement_count': num_distinct,
                      'achievement_total': Achievement.objects.count()})
         return ctxt
 
@@ -210,8 +211,9 @@ class AllAchievements(DetailView, LoginRequiredMixin):
         nonachievements = Achievement.objects.exclude(achievementaward__member=self.object).filter(is_hidden=False)
         nonawards = [{"achievement": i} for i in nonachievements]
         achievements = list(awards) + nonawards
+        num_distinct = self.object.achievementaward_set.distinct('achievement').count()
         ctxt.update({'achievements': achievements,
-                     'achievement_count': awards.count(),
+                     'achievement_count': num_distinct,
                      'achievement_total': Achievement.objects.count(),
                      'is_yours': self.object == self.request.user.member,
                      'name': self.object.equiv_user.username})
