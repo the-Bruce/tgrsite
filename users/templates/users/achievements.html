@@ -11,7 +11,12 @@
                 <span class="d-flex flex-column flex-sm-row justify-content-between align-items-baseline">
                     <h5>{{aw.achievement.name}}</h5>
                     {% if aw.achieved_at %}
-                        <span class="text-muted mb-0 text-right flex-sm-shrink-0 ml-sm-2">achieved {{aw.achieved_at|timesince}} ago</span>
+                        <span class="text-muted mb-0 text-right flex-sm-shrink-0 ml-sm-2">
+                            achieved {{aw.achieved_at.0|timesince}} ago
+                            {% if aw.achieved_at|length > 1 %}(and {{aw.achieved_at|length|add:"-1"}} other
+                            time{% if aw.achieved_at|length > 2 %}s{% endif %})
+                            {% endif %}
+                        </span>
                     {% else %}
                         <span class="text-muted mb-0 text-right flex-sm-shrink-0 ml-sm-2">not achieved yet!</span>
                     {% endif %}

@@ -22,6 +22,21 @@ from .utils import sendRequestMailings, getApiMembers
 from .achievements import age_achievements, give_achievement, give_achievement_once
 
 
+def get_achievements_with_merged(object):
+    # Note: may contain duplicates.
+    achievements = object.achievementaward_set.order_by('-achieved_at')
+    mapping = {}
+    result = []
+    for achiev in achievements:
+        key = achiev.achievement.name
+        if key in mapping:
+            result[mapping[key]]['achieved_at'].append(achiev.achieved_at)
+        else:
+            mapping[key] = len(result)
+            result.append({'achievement': achiev.achievement, 'achieved_at': [achiev.achieved_at]})
+    return result
+
+
 class ProfileView(LoginRequiredMixin, DetailView):
     model = Member
     template_name = "users/view.html"
@@ -33,13 +48,13 @@ class ProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         pk = self.object.pk
         ctxt = super().get_context_data(**kwargs)
-        achievements = self.object.achievementaward_set.order_by('-achieved_at')
-        num_distinct = self.object.achievementaward_set.distinct('achievement').count()
+        achievements = get_achievements_with_merged(self.object)
+        print(achievements)
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
                      'achievements': achievements[:5],
-                     'achievement_count': num_distinct,
+                     'achievement_count': len(achievements),
                      'achievement_total': Achievement.objects.count()})
         return ctxt
 
@@ -207,13 +222,12 @@ class AllAchievements(DetailView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
-        awards = self.object.achievementaward_set.order_by('-achieved_at')
+        awards = get_achievements_with_merged(self.object)
         nonachievements = Achievement.objects.exclude(achievementaward__member=self.object).filter(is_hidden=False)
         nonawards = [{"achievement": i} for i in nonachievements]
         achievements = list(awards) + nonawards
-        num_distinct = self.object.achievementaward_set.distinct('achievement').count()
         ctxt.update({'achievements': achievements,
-                     'achievement_count': num_distinct,
+                     'achievement_count': len(awards),
                      'achievement_total': Achievement.objects.count(),
                      'is_yours': self.object == self.request.user.member,
                      'name': self.object.equiv_user.username})
