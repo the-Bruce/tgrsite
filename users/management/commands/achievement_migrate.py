@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 
 from users.models import Member
-from users.achievements import give_achievement_once, age_achievements
+from users.achievements import give_achievement_once, age_achievements, give_achievement
+from django.utils.timezone import timedelta
 
 
 class Command(BaseCommand):
@@ -30,5 +31,9 @@ class Command(BaseCommand):
                 give_achievement_once(m, "discord")
             if m.pronoun:
                 give_achievement_once(m, "pronoun")
+            if m.is_soc_member and m.membership.active:
+                if not (m.achievementaward_set.filter(achievement__trigger_name="verify_membership")
+                        .filter(achieved_at__gte=m.membership.checked-timedelta(days=7)).exists()):
+                    give_achievement(m, "verify_membership", m.membership.checked)
 
         self.stdout.write('Achievements Migrated')

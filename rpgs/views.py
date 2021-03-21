@@ -89,7 +89,7 @@ class Create(LoginRequiredMixin, generic.CreateView):
 
         notify_discord(discord_message, self.request.user.member)
         give_achievement_once(form.instance.creator, "first_event", request=self.request)
-        if (Rpg.objects.filter(creator=form.instance.creator).count() >= 5):
+        if Rpg.objects.filter(creator=form.instance.creator).count() >= 5:
             give_achievement_once(form.instance.creator, "five_events", request=self.request)
         return response
 
