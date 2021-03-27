@@ -103,6 +103,11 @@ class Member(models.Model):
     def coin(self):
         tabletopcoin, _ = TabletopCoin.objects.get_or_create(rel_member=self)
         return tabletopcoin.coin
+    
+    def award_coin(self, amount):
+        _ = self.coin()
+        self.tabletopcoin.coin += amount
+        self.tabletopcoin.save()
 
     @property
     def is_soc_member(self):
