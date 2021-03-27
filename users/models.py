@@ -46,6 +46,7 @@ class Member(models.Model):
     signature = models.TextField(max_length=1024, blank=True)
     official_photo_url = models.CharField(max_length=512, null=True, blank=True)
     dark = models.BooleanField(default=False, help_text="Enable Dark Mode(beta) on this account")
+    coin = models.IntegerField(default=0)
 
     def gravatar(self, size=128):
         h = hashlib.md5(

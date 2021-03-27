@@ -39,6 +39,11 @@
         <ul class="navbar-nav">
             {% if request.user.is_authenticated %}
                 <li class="nav-item">
+                    <a class="nav-link" href="/coin">
+                        <i class="fas fa-coins fa-fw" aria-label="TabletopCoin"></i>&nbsp;{{request.user.member.coin}}
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {% if request.user.member.notification_count > 0 %}text-danger{% endif %}"
                        href="{% url 'notifications:all_notifications' %}">
                         <i class="fas fa-bell"
