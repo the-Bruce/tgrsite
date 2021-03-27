@@ -50,6 +50,12 @@
                     username
                 </p>
             {% endif %}
+            {% if rpg.tabletopcoin %}
+                <p class="alert-primary alert card-text">
+                    <i class="fas fa-exclamation-triangle"></i> This event requires you to have {{rpg.tabletopcoin.coins_needed}}
+                    TabletopCoins!
+                </p>
+            {% endif %}
             {% if rpg.member_only %}
                 <p class="alert-primary alert card-text">
                     <i class="fas fa-exclamation-triangle"></i> This event is only open to current members

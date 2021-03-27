@@ -47,6 +47,14 @@ class Rpg(models.Model):
         verbose_name_plural = "events"
 
 
+class TabletopCoinRequirement(models.Model):
+    related_rpg = models.OneToOneField(Rpg, on_delete=models.CASCADE, related_name="tabletopcoin")
+    coins_needed = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.related_rpg)
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=72)
 

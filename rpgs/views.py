@@ -150,6 +150,10 @@ class Join(LoginRequiredMixin, generic.View):
         elif len(self.request.user.member.discord.strip()) == 0 and rpg.discord:
             add_message(self.request, messages.WARNING, "This event is being held on discord. "
                                                         "Please add a discord account to your profile and try again.")
+        elif rpg.tabletopcoin and rpg.tabletopcoin.coins_needed > self.request.user.member.coin():
+            add_message(self.request, messages.WARNING,
+                f"You're too poor to join this event! It needs {rpg.tabletopcoin.coins_needed} TabletopCoin!"
+                f" (You have {self.request.user.member.coin()} TabletopCoin.)")
         else:
             rpg.members.add(self.request.user.member)
             notify(rpg.creator, NotifType.RPG_JOIN,
