@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
 from rpgs.models import Rpg
-from .models import Member, Membership, VerificationRequest, Achievement, AchievementAward
+from .models import Member, Membership, VerificationRequest, Achievement, AchievementAward, TabletopCoin
 
 
 def field_property(field_name, **kwargs):
@@ -55,3 +55,4 @@ admin.site.register(Membership)
 admin.site.register(VerificationRequest)
 admin.site.register(Achievement)
 admin.site.register(AchievementAward)
+admin.site.register(TabletopCoin)

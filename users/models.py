@@ -46,7 +46,6 @@ class Member(models.Model):
     signature = models.TextField(max_length=1024, blank=True)
     official_photo_url = models.CharField(max_length=512, null=True, blank=True)
     dark = models.BooleanField(default=False, help_text="Enable Dark Mode(beta) on this account")
-    coin = models.IntegerField(default=0)
 
     def gravatar(self, size=128):
         h = hashlib.md5(
@@ -100,6 +99,10 @@ class Member(models.Model):
 
     def is_ex_exec(self):
         return self.equiv_user.groups.filter(name='ex_exec').exists()
+    
+    def coin(self):
+        tabletopcoin, _ = TabletopCoin.objects.get_or_create(rel_member=self)
+        return tabletopcoin.coin
 
     @property
     def is_soc_member(self):
@@ -122,6 +125,14 @@ class Member(models.Model):
             Q(equiv_user__is_superuser=True) |
             Q(equiv_user__user_permissions__codename=perm_name) |
             Q(equiv_user__groups__permissions__codename=perm_name)).distinct()
+
+
+class TabletopCoin(models.Model):
+    rel_member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="tabletopcoin")
+    coin = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.rel_member)
 
 
 class Membership(models.Model):
