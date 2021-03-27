@@ -49,7 +49,6 @@ class ProfileView(LoginRequiredMixin, DetailView):
         pk = self.object.pk
         ctxt = super().get_context_data(**kwargs)
         achievements = get_achievements_with_merged(self.object)
-        print(achievements)
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
@@ -212,7 +211,7 @@ class VerifyRequest(LoginRequiredMixin, FormView):
         return valid
 
 
-class AllAchievements(DetailView, LoginRequiredMixin):
+class AllAchievements(LoginRequiredMixin, DetailView):
     model = Member
     template_name = "users/allachievements.html"
     context_object_name = "member"
