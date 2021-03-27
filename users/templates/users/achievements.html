@@ -14,7 +14,7 @@
                         <span class="text-muted mb-0 text-right flex-sm-shrink-0 ml-sm-2">
                             achieved {{aw.achieved_at.0|timesince}} ago
                             {% if aw.achieved_at|length > 1 %}(and {{aw.achieved_at|length|add:"-1"}} other
-                            time{% if aw.achieved_at|length > 2 %}s{% endif %})
+                            time{{ aw.achieved_at|length|add:"-1"|pluralize }})
                             {% endif %}
                         </span>
                     {% else %}
