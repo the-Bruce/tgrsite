@@ -53,14 +53,14 @@ class Record(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return self.inventory.name+": "+self.name
+        return self.inventory.name + ": " + self.name
 
     def get_absolute_url(self):
         return reverse("inventory:item_detail", kwargs={"inv": self.inventory.canonical_(), "pk": self.pk})
 
     def can_be_borrowed(self, start_date, end_date, exclude=()):
         loans = self.loan_set.filter(Q(rejected__isnull=True) &
-                Q(start_date__lte=end_date, end_date__gte=start_date))
+                                     Q(start_date__lte=end_date, end_date__gte=start_date))
         print(loans)
         for day in daterange(start_date, end_date):
             count = 0
@@ -174,7 +174,7 @@ class Loan(models.Model):
     def __str__(self):
         # ThomasB: 20/12/18-25/12/18 (3)
         return str(self.requester) + ": " + str(self.start_date) + "-" + str(self.end_date) + "(" + str(
-            self.items.all().count()) + ") - "+self.state_text
+            self.items.all().count()) + ") - " + self.state_text
 
     def contains(self, check_date):
         return self.start_date <= check_date <= self.end_date

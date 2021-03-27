@@ -1,6 +1,6 @@
 Markdown
 pymdown-extensions
-Django==3.1.5
+Django==3.1.6
 pytz
 requests
 django-crispy-forms
@@ -8,4 +8,5 @@ Pillow
 django_bleach
 premailer
 uuid
+python-dateutil
 #django-debug-toolbar

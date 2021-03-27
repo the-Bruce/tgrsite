@@ -18,6 +18,7 @@ class NotifType:
     OTHER = 8
     RPG_CREATE = 9
     LOAN_REQUESTS = 10
+    ACHIEVEMENTS = 11
 
 
 class SubType:
@@ -38,6 +39,7 @@ class NotificationSubscriptions(models.Model):
         (NotifType.RPG_ADDED, 'Added to RPG'),
         (NotifType.FORUM_REPLY, 'Forum Replies'),
         (NotifType.RPG_CREATE, 'New RPG Available'),
+        (NotifType.ACHIEVEMENTS, 'Achievement Got'),
         (NotifType.OTHER, 'Other Notification')
     ]
     subscription_types = [
@@ -54,7 +56,7 @@ class NotificationSubscriptions(models.Model):
     message = models.IntegerField(verbose_name='Receive Direct Messages', choices=reduced_subscription_types,
                                   default=SubType.WEB)
     loan_request = models.IntegerField(verbose_name='A Loan Request Gets Updated', choices=reduced_subscription_types,
-                                  default=SubType.WEB)
+                                       default=SubType.WEB)
     rpg_join = models.IntegerField(verbose_name='Someone Joins Your Event', choices=reduced_subscription_types,
                                    default=SubType.WEB)
     rpg_leave = models.IntegerField(verbose_name='Someone Leaves Your Event', choices=reduced_subscription_types,
@@ -68,6 +70,8 @@ class NotificationSubscriptions(models.Model):
                                       default=SubType.WEB)
     rpg_new = models.IntegerField(verbose_name='A New Event is Created', choices=reduced_subscription_types,
                                   default=SubType.NONE)
+    achievement_got = models.IntegerField(verbose_name='You Get an Achievement', choices=reduced_subscription_types,
+                                          default=SubType.WEB)
     other = models.IntegerField(verbose_name='Miscellaneous', choices=reduced_subscription_types, default=SubType.NONE)
 
     def get_category_subscription(self, category):
@@ -82,6 +86,7 @@ class NotificationSubscriptions(models.Model):
             NotifType.RPG_ADDED: self.rpg_add,
             NotifType.FORUM_REPLY: self.forum_reply,
             NotifType.RPG_CREATE: self.rpg_new,
+            NotifType.ACHIEVEMENTS: self.achievement_got,
             NotifType.OTHER: self.other
         }
 
@@ -120,11 +125,10 @@ class Notification(models.Model):
             NotifType.RPG_ADDED: 'fas fa-magic',
             NotifType.FORUM_REPLY: 'fas fa-quote-right',
             NotifType.RPG_CREATE: 'fas fa-hat-wizard',
+            NotifType.ACHIEVEMENTS: 'fas fa-medal',
             NotifType.OTHER: default_icon
         }
         if self.notif_type in icons:
             return icons[self.notif_type]
         else:
             return default_icon
-
-

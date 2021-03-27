@@ -33,7 +33,16 @@
                 <h3 class="mb-3"><i class="fab fa-fw fa-discord"></i> {{ member.discord }}</h3>
             {% endif %}
             {% if member.bio %}
-                <div class="card card-body card-text markdown-text mb-3">{{ member.bio|parse_md }}</div>{% endif %}
+                <div class="card card-body card-text markdown-text mb-3">{{ member.bio|parse_md }}</div>
+            {% endif %}
+
+            <div class="mb-3">
+                <h4>Recent Achievements
+                    <a href="achievements"><span class="badge badge-primary badge-pill">{{achievement_count}} / {{achievement_total}}</span></a>
+                </h4>
+                <p>All of this user's achievements can be seen <a href="achievements">here</a>.</p>
+                {% include "users/achievements.html" with achievements=achievements %}
+            </div>
 
             {% if recent_threads %}
                 <div class="mb-3">

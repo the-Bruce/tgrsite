@@ -75,7 +75,7 @@ class Forum(models.Model):
     # i.e. number of threads here and in all subforums
     def get_threads_count_r(self, seen=None):
         if seen is None:
-            seen = {self.pk:True}
+            seen = {self.pk: True}
         count = 0
         for subforum in self.get_subforums():
             if not subforum.pk in seen:
@@ -132,6 +132,7 @@ class Thread(models.Model):
 
     def get_absolute_url(self):
         return reverse("forum:viewthread", args=(self.id,))
+
 
 # a reply in a forum thread
 # there are fundamental similarities between thread OPs and responses;

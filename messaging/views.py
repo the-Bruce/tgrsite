@@ -13,6 +13,7 @@ from notifications.models import NotifType
 from notifications.utils import notify, notify_bulk
 from users.models import Member
 from users.permissions import PERMS
+from users.achievements import give_achievement_once
 from .models import Message, MessageThread, MessageReport
 from .forms import QuickDM, Respond, MemberFormset
 
@@ -29,7 +30,7 @@ def create_group(*members, name=""):
 
 
 def find_dm(*members):
-    members=set(members)
+    members = set(members)
     query = MessageThread.objects.all()
     query = query.filter(dmthread=True).annotate(num_participants=Count('participants')).filter(
         num_participants=len(members))
@@ -46,7 +47,7 @@ def find_dm(*members):
         return m_thread
 
 
-def send_message(member, thread, message):
+def send_message(member, thread, message, request = None):
     # Send the notification to everyone in the thread except the sender.
     url = reverse('message:message_thread', args=[thread.id])
     for receiver in thread.participants.all():
@@ -57,6 +58,7 @@ def send_message(member, thread, message):
         if member != receiver:
             notify(receiver, NotifType.MESSAGE,
                    message_txt, url)
+    give_achievement_once(member, "messaged", request=request)
     return Message.objects.create(sender=member, thread=thread, content=message)
 
 
@@ -194,7 +196,7 @@ class Index(LoginRequiredMixin, FormView):
         t = find_dm(target, self.request.user.member)
         if t is None:
             raise ValueError
-        m = send_message(self.request.user.member, t, form.cleaned_data['message'])
+        m = send_message(self.request.user.member, t, form.cleaned_data['message'], self.request)
         self.object = m
         return super().form_valid(form)
 
@@ -234,7 +236,7 @@ class Thread(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     def form_valid(self, form):
         t = MessageThread.objects.get(pk=self.kwargs['pk'])
-        m = send_message(self.request.user.member, t, form.cleaned_data['message'])
+        m = send_message(self.request.user.member, t, form.cleaned_data['message'], self.request)
         self.object = m
         return super().form_valid(form)
 

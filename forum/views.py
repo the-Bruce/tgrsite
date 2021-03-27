@@ -11,6 +11,7 @@ from notifications.models import NotifType
 from notifications.utils import notify
 from .forms import ThreadForm, ResponseForm
 from .models import Thread, Response, Forum
+from users.achievements import give_achievement_once
 
 
 class RootForum(ListView):
@@ -48,6 +49,7 @@ class ViewSubforum(AccessMixin, SuccessMessageMixin, CreateView):
         if not request.user.is_authenticated:
             self.handle_no_permission()
         else:
+            give_achievement_once(request.user.member, "created_thread", request=request)
             return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -94,6 +96,7 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
                 add_message(request, constants.ERROR, "Sorry, this thread is locked. No responses can be created")
                 self.handle_no_permission()
             else:
+                give_achievement_once(request.user.member, "replied_forum", request=request)
                 return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -118,7 +121,8 @@ class ViewThread(AccessMixin, SuccessMessageMixin, CreateView):
         form.instance.thread = thread
         response = super().form_valid(form)
         # Create Notifications
-        url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']})+"#response-"+str(form.instance.id)
+        url = reverse('forum:viewthread', kwargs={'thread': self.kwargs['thread']}) + "#response-" + str(
+            form.instance.id)
         for author in thread.subscribed.all():
             if author != self.request.user.member:
                 notify(author, NotifType.FORUM_REPLY,

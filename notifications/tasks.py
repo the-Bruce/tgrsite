@@ -10,14 +10,15 @@ from users.models import Member
 from premailer import Premailer
 
 if settings.DEBUG:
-    url="http://"
+    url = "http://"
 else:
-    url="https://"
+    url = "https://"
 url += settings.PRIMARY_HOST
 
 transformer = Premailer(base_url=url, base_path=url,
                         disable_leftover_css=True, disable_validation=True, remove_unset_properties=True,
                         include_star_selectors=True, keep_style_tags=False, align_floating_images=False)
+
 
 def doSummaryNotificationMailings():
     users = Member.objects.all()

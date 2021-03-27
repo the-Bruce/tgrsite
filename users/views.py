@@ -17,8 +17,24 @@ from forum.models import Thread, Response
 from rpgs.models import Rpg
 from .captcha import create_signed_captcha
 from .forms import MemberForm, UserForm, SignupForm, UniIDForm
-from .models import Member, Membership, VerificationRequest
+from .models import Member, Membership, VerificationRequest, Achievement
 from .utils import sendRequestMailings, getApiMembers
+from .achievements import age_achievements, give_achievement, give_achievement_once
+
+
+def get_achievements_with_merged(object):
+    # Note: may contain duplicates.
+    achievements = object.achievementaward_set.order_by('-achieved_at')
+    mapping = {}
+    result = []
+    for achiev in achievements:
+        key = achiev.achievement.name
+        if key in mapping:
+            result[mapping[key]]['achieved_at'].append(achiev.achieved_at)
+        else:
+            mapping[key] = len(result)
+            result.append({'achievement': achiev.achievement, 'achieved_at': [achiev.achieved_at]})
+    return result
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -32,9 +48,13 @@ class ProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         pk = self.object.pk
         ctxt = super().get_context_data(**kwargs)
+        achievements = get_achievements_with_merged(self.object)
         ctxt.update({'recent_threads': Thread.objects.filter(author__id=pk).order_by('-pub_date')[:3],
                      'recent_responses': Response.objects.filter(author__id=pk).order_by('-pub_date')[:3],
-                     'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False)})
+                     'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
+                     'achievements': achievements[:5],
+                     'achievement_count': len(achievements),
+                     'achievement_total': Achievement.objects.count()})
         return ctxt
 
 
@@ -62,6 +82,10 @@ class Edit(LoginRequiredMixin, View):
             memberform.save()
             userform.save()
             add_message(request, messages.SUCCESS, "Profile successfully updated.")
+            if request.POST["discord"]:
+                give_achievement_once(request.user.member, "discord", request=request)
+            if request.POST["pronoun"]:
+                give_achievement_once(request.user.member, "pronoun", request=request)
             return HttpResponseRedirect(reverse('users:me'))
         else:
             context = {
@@ -78,6 +102,10 @@ class Login(LoginView):
     def form_valid(self, form):
         add_message(self.request, messages.SUCCESS, "Successfully logged in!")
         return super().form_valid(form)
+
+    def get_success_url(self):
+        age_achievements(self.request.user.member)
+        return super().get_success_url()
 
 
 class Logout(LogoutView):
@@ -183,6 +211,32 @@ class VerifyRequest(LoginRequiredMixin, FormView):
         return valid
 
 
+class AllAchievements(LoginRequiredMixin, DetailView):
+    model = Member
+    template_name = "users/allachievements.html"
+    context_object_name = "member"
+
+    def get_queryset(self):
+        return Member.objects.filter(equiv_user__is_active=True)
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        awards = get_achievements_with_merged(self.object)
+        nonachievements = Achievement.objects.exclude(achievementaward__member=self.object).filter(is_hidden=False)
+        nonawards = [{"achievement": i} for i in nonachievements]
+        achievements = list(awards) + nonawards
+        ctxt.update({'achievements': achievements,
+                     'achievement_count': len(awards),
+                     'achievement_total': Achievement.objects.count(),
+                     'is_yours': self.object == self.request.user.member,
+                     'name': self.object.equiv_user.username})
+        return ctxt
+
+class MyAchievements(AllAchievements):
+    def get_object(self, queryset=None):
+        return self.request.user.member
+
+
 class VerifyConfirm(View):
     def get(self, request):
         try:
@@ -203,6 +257,7 @@ class VerifyConfirm(View):
                 m.save()
                 v.member.verifications.all().delete()
                 add_message(request, messages.SUCCESS, "You have successfully verified your membership.")
+                give_achievement(v.member, "verify_membership", request=request)
         except (VerificationRequest.DoesNotExist, KeyError):
             add_message(request, messages.ERROR, "Verification Failed. Please try again.")
         return HttpResponseRedirect(reverse("users:me"))

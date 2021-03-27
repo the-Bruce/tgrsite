@@ -44,12 +44,13 @@ class QuickNewsletterSubscribe(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'notifications/newsletter_subscribe.html')
 
+
 # Debug only. Probably should remove from prod...
 @login_required
 def email_notifications(request):
     context = {
         'notifications': Notification.objects.filter(member=request.user.member, is_unread=True).order_by('-time'),
-        }
+    }
     return render(request, 'notifications/summary-email.html', context)
 
 

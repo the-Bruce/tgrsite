@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core import validators, exceptions
 from django.db.models.query import Q
+from django.utils import timezone
+
+from assets.models import Asset
 
 
 # extension to django's User class which has authentication details
@@ -107,7 +110,6 @@ class Member(models.Model):
         except exceptions.ObjectDoesNotExist:
             return False
 
-
     # Make .member idempotent i.e. user.member is valid even if user is actually a member
     @property
     def member(self):
@@ -146,3 +148,34 @@ class VerificationRequest(models.Model):
 
     def __str__(self):
         return self.uni_id + ": " + self.member.username
+
+
+class AchievementAward(models.Model):
+    achievement = models.ForeignKey("Achievement", on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    achieved_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.member.equiv_user.username + ": " + self.achievement.name
+
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=25, unique=True)
+    description = models.CharField(max_length=100)
+    members = models.ManyToManyField(Member, through=AchievementAward)
+    trigger_name = models.CharField(max_length=20, unique=True)
+    image = models.ForeignKey(Asset, on_delete=models.SET_NULL, blank=True, null=True)
+    fa_icon = models.CharField(max_length=50, default="fa-medal",
+                               validators=(validators.RegexValidator("^fa-", message="Please ensure that the icon name "
+                                                                                     "includes the fa- prefix"),
+                                           validators.RegexValidator("^[a-z-]+$",
+                                                                     message="Icon names should contain only lowercase "
+                                                                             "and hyphens")),
+                               help_text="The name of the icon to use (including the fa- prefix)")
+    icon_set = models.CharField(max_length=3, choices=(("fas", "Solid Style (fas)"), ("fab", "Brands Style (fab)")),
+                                help_text="The fontawesome icon set this logo is from. (Please don't use Regular "
+                                          "Style (far) icons: keep the style consistent)", default="fas")
+    is_hidden = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
