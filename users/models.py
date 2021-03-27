@@ -105,8 +105,8 @@ class Member(models.Model):
         return tabletopcoin.coin
     
     def award_coin(self, amount):
-        _ = self.coin()
-        self.tabletopcoin.coin += amount
+        new_coin = self.coin() + amount
+        self.tabletopcoin.coin = new_coin
         self.tabletopcoin.save()
 
     @property
