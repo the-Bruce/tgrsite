@@ -54,7 +54,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
                      'rpgs': Rpg.objects.filter(game_masters__id=pk, is_in_the_past=False),
                      'achievements': achievements[:5],
                      'achievement_count': len(achievements),
-                     'achievement_total': Achievement.objects.count()})
+                     'achievement_total': Achievement.objects.filter(is_fair=True).count()})
         return ctxt
 
 
@@ -227,7 +227,7 @@ class AllAchievements(LoginRequiredMixin, DetailView):
         achievements = list(awards) + nonawards
         ctxt.update({'achievements': achievements,
                      'achievement_count': len(awards),
-                     'achievement_total': Achievement.objects.count(),
+                     'achievement_total': Achievement.objects.filter(is_fair=True).count(),
                      'is_yours': self.object == self.request.user.member,
                      'name': self.object.equiv_user.username})
         return ctxt

@@ -176,6 +176,7 @@ class Achievement(models.Model):
                                 help_text="The fontawesome icon set this logo is from. (Please don't use Regular "
                                           "Style (far) icons: keep the style consistent)", default="fas")
     is_hidden = models.BooleanField(default=False)
+    is_fair = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
