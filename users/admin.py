@@ -30,6 +30,9 @@ class MemberInline(admin.StackedInline):
 class MembershipInline(admin.StackedInline):
     model = Membership
 
+class AchievementAwardInline(admin.StackedInline):
+    model = Membership
+    extra = 0
 
 class RpgInline(admin.TabularInline):
     model = Rpg
@@ -48,10 +51,20 @@ class MemberAdmin(admin.ModelAdmin):
     list_display = ('username', 'discord', 'firstname', 'last_name', 'pronoun')
 
 
+class AchievementAwardAdmin(admin.ModelAdmin):
+    list_display = ('member', 'achievement', 'achieved_at')
+    list_filter = ('achievement',)
+    autocomplete_fields = ('member',)
+
+
+class AchievementAdmin(admin.ModelAdmin):
+    autocomplete_fields = ('image',)
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Member, MemberAdmin)
 admin.site.register(Membership)
 admin.site.register(VerificationRequest)
-admin.site.register(Achievement)
-admin.site.register(AchievementAward)
+admin.site.register(Achievement, AchievementAdmin)
+admin.site.register(AchievementAward, AchievementAwardAdmin)
