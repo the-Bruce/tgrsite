@@ -20,6 +20,9 @@ from .forms import QuickDM, Respond, MemberFormset
 
 # not a view
 # helper function to send messages
+from .utils import visible
+
+
 def create_group(*members, name=""):
     members = set(members)
     m_thread = MessageThread.objects.create(title=name)
@@ -54,7 +57,7 @@ def send_message(member, thread, message, request = None):
         message_txt = 'You got a message from ' + str(member.equiv_user.username)
         if thread.title:
             message_txt += ' in chat "' + str(thread.title) + '"'
-        message_txt += ': ' + message
+        message_txt += ': ' + visible(message)
         if member != receiver:
             notify(receiver, NotifType.MESSAGE,
                    message_txt, url)
