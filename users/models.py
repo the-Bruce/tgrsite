@@ -8,7 +8,7 @@ from django.core import validators, exceptions
 from django.db.models.query import Q
 from django.utils import timezone
 
-from assets.models import Asset
+from assets.models import Asset, VisualAsset
 
 
 # extension to django's User class which has authentication details
@@ -164,7 +164,7 @@ class Achievement(models.Model):
     description = models.CharField(max_length=100)
     members = models.ManyToManyField(Member, through=AchievementAward)
     trigger_name = models.CharField(max_length=20, unique=True)
-    image = models.ForeignKey(Asset, on_delete=models.SET_NULL, blank=True, null=True)
+    image = models.ForeignKey(VisualAsset, on_delete=models.SET_NULL, blank=True, null=True)
     fa_icon = models.CharField(max_length=50, default="fa-medal",
                                validators=(validators.RegexValidator("^fa-", message="Please ensure that the icon name "
                                                                                      "includes the fa- prefix"),

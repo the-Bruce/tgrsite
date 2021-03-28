@@ -1,9 +1,10 @@
+{% load assets %}
 <div class="list-group">
     {% for aw in achievements %}
     <div class="list-group-item {% if not aw.achieved_at %} disabled {% endif %}">
         <div class="achievement media">
             {% if aw.achievement.image %}
-                <img src="{{aw.achievement.image.assetFile.url}}" class="mr-3" style="max-height: 50px;" />
+                <img src="{% visual_asset aw.achievement.image %}" alt="{{ aw.achievement.image.name }}" class="mr-3" style="max-height: 50px;" />
             {% else %}
                 <i class="{{aw.achievement.icon_set}} {{aw.achievement.fa_icon}} fa-3x fa-fw mr-3"></i>
             {% endif %}
