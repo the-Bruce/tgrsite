@@ -10,7 +10,7 @@ from .utils import visible
 
 MD_INPUT = {
     'class': 'markdown-input',
-    'data-endpoint': reverse_lazy('utilities:preview_text'),
+    'data-endpoint': reverse_lazy('utilities:preview'),
     'rows': '3',
 }
 
