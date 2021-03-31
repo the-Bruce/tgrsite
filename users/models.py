@@ -134,7 +134,7 @@ class Member(models.Model):
 
 class TabletopCoin(models.Model):
     rel_member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="tabletopcoin")
-    coin = models.IntegerField(default=0)
+    coin = models.IntegerField(default=69)
 
     def __str__(self):
         return str(self.rel_member)
