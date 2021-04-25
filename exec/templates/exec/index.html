@@ -41,10 +41,10 @@
                                 </div>
                                 {% if role.responsibilities %}
                                     <button class="mt-3 btn btn-outline-dark btn-block" data-toggle="collapse"
-                                            data-target="#resp-{{ role.role_title|cut:" " }}" aria-expanded="false"
+                                            data-target="#resp-{{ role.role_title|slugify }}" aria-expanded="false"
                                             aria-controls="collapseExample">Responsibilities
                                     </button>
-                                    <div id="resp-{{ role.role_title|cut:" " }}" class="collapse{% if resp %} show{% endif %}">
+                                    <div id="resp-{{ role.role_title|slugify }}" class="collapse{% if resp %} show{% endif %}">
                                         <div class="card-text markdown-text mt-3">
                                             {{ role.responsibilities|parse_md_text }}
                                         </div>
