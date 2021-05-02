@@ -17,7 +17,7 @@
     </p>
     <div class="list-group mb-3">
         {% for newsletter in object_list %}
-            {% if perms.newsletters.change_newsletter or newsletter.ispublished %}
+            {% if perms.newsletters.view_newsletter or newsletter.ispublished %}
                 <a href="{% url 'newsletters:newsletters_detail' newsletter.id %}"
                    class="list-group-item list-group-item-action">
                     <span class="d-flex flex-column"><strong>

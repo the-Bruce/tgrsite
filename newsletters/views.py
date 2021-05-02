@@ -36,7 +36,7 @@ class Detail(generic.DetailView):
 
     def get_object(self, queryset=None):
         obj = super(Detail, self).get_object()
-        if not obj.ispublished and not self.request.user.has_perm('newsletters.change_newsletter'):
+        if not obj.ispublished and not self.request.user.has_perm('newsletters.view_newsletter'):
             raise Http404
         return obj
 
