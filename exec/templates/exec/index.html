@@ -18,7 +18,7 @@
         {% for role in execs %}
             {% if role.incumbent %}
                 <li class="card mb-2">
-                    <a class="anchor" id="{{ role.role_title|cut:" " }}"></a>
+                    <a class="anchor" id="{{ role.role_title|slugify }}"></a>
                     <div class="card-body">
                         <h4 class="card-title text-center text-sm-left">
                             {{ role.role_title }} -
